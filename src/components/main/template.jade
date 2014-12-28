@@ -1,6 +1,6 @@
 mixin player(x, y, rad)
   g(
-    transform='translate(' + x + ', ' + y + ') rotate(' + rad + ')'
+    transform='translate(' + x + ', ' + y + ') rotate(' + rad*180/3.14 + ')'
   )
     circle(cx=0 cy=0 r=15 fill='white' stroke='black')
     line(

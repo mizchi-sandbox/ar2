@@ -22,7 +22,6 @@ class Entity extends EventEmitter
       @x
       @y
       @rad
-      @id
       type: @constructor.type
     }
 
@@ -56,7 +55,7 @@ class Player extends Battler
     # update rad
     mx = @inputBuffer.focus.x
     my = @inputBuffer.focus.y
-    @rad = Math.atan2(my-ny, mx-nx) * 180 / Math.PI + 90
+    @rad = Math.atan2(my-ny, mx-nx) + Math.PI/2
 
 class Stage extends EventEmitter
   constructor: (@player) ->

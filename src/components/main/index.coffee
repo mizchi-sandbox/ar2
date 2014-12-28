@@ -1,7 +1,6 @@
 extend = require 'extend'
 template = require './template.jade'
 
-
 getMainRect = do ->
   main = document.querySelector '.main'
   rect = null
@@ -17,7 +16,6 @@ module.exports = React.createClass
     x = e.clientX - rect.left
     y = e.clientY - rect.top
     game?.emit 'io:update-focus', {x, y}
-    console.log x, y
     return
 
   render: ->
