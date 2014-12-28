@@ -1,0 +1,3 @@
+module.exports = (subscribe) ->
+  subscribe '{{$1}}:update', (context) -> (args...) ->
+    context.update {}

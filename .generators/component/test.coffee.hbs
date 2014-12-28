@@ -1,0 +1,8 @@
+require '../test-helper'
+component = require '../../src/components/{{$1}}'
+element = React.createFactory component
+
+describe 'components/{{$1}}', ->
+  describe '#render', ->
+    it 'should validate output', ->
+      rendered = React.renderToString(element {})
