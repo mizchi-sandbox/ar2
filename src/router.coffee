@@ -1,2 +1,1 @@
-Main = require './scenes/main/'
-portal.link 'main', require './scenes/main'
+app.link 'main', require './scenes/main'

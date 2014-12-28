@@ -1,4 +1,20 @@
-div(key='foo')
-  h1 App
-  button(onClick=onClick) click me
-  p= body
+mixin player(x, y, rad)
+  g(
+    transform='translate(' + x + ', ' + y + ') rotate(' + rad + ')'
+  )
+    circle(cx=0 cy=0 r=15 fill='white' stroke='black')
+    line(
+      x1=0 y1=0
+      x2=0 y2=-15
+      stroke='black')
+      
+mixin focus(x, y)
+  g(
+    transform='translate(' + x + ', ' + y + ')'
+  )
+    circle(cx=0 cy=0 r=10 fill='transparent' stroke='red')
+
+svg(key='main' className='main' width=640 height=480 onMouseMove=onMouseMove)
+  for entity in entities
+    +player(entity.x, entity.y, entity.rad)
+  +focus(focus.x, focus.y)

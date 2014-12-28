@@ -1,3 +1,9 @@
 module.exports =
-  initState: (props) -> {id: 'initial'}
-  aggregate: (props, state) -> {body: 'body of '+state.id}
+  initState: (props) ->
+    entities: []
+    focus:
+      x: -1000
+      y: -1000
+
+  aggregate: (props, state) ->
+    state

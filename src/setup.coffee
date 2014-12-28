@@ -5,4 +5,30 @@ global.React = require 'react'
 global.Overworld = require 'overworld'
 Overworld.setReact React
 
-global.portal = new Overworld.Portal
+global.app = new Overworld.Portal
+
+KeyMap =
+  37: 'left'
+  38: 'up'
+  39: 'right'
+  40: 'down'
+  87: 'w'
+  65: 'a'
+  83: 's'
+  68: 'd'
+
+window.addEventListener 'keydown', (e) ->
+  return unless game
+  switch KeyMap[e.keyCode]
+    when 'left' , 'a' then game.emit 'io:update-key', 'left', true
+    when 'up'   , 'w' then game.emit 'io:update-key', 'up',   true
+    when 'right', 'd' then game.emit 'io:update-key', 'right',true
+    when 'down' , 's' then game.emit 'io:update-key', 'down', true
+
+window.addEventListener 'keyup', (e) ->
+  return unless game
+  switch KeyMap[e.keyCode]
+    when 'left' , 'a' then game.emit 'io:update-key', 'left', false
+    when 'up'   , 'w' then game.emit 'io:update-key', 'up',   false
+    when 'right', 'd' then game.emit 'io:update-key', 'right',false
+    when 'down' , 's' then game.emit 'io:update-key', 'down', false

@@ -1,8 +1,13 @@
 # requires
-window.portal = null
+window.app = null
 require './setup'
 require './router'
 
+Game = require './game/core'
+game = Game.getInstance()
 window.addEventListener 'DOMContentLoaded', ->
-  portal.mount(document.body)
-  portal.transition('main', {id: 'foo'})
+  app.mount(document.body)
+
+  app.transition('main', {}).then =>
+    game.createNewStage()
+    game.start()
