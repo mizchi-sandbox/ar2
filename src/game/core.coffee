@@ -15,6 +15,9 @@ class Entity extends EventEmitter
   step: ->
     # console.log 'update:', @id
 
+  isAlive: -> true
+  isDead: -> not @isAlive()
+
   dispose: ->
 
   serialize: ->
@@ -24,6 +27,24 @@ class Entity extends EventEmitter
       @rad
       type: @constructor.type
     }
+
+class Bullet extends Entity
+  @type: 'bullet'
+  constructor: (x, y, rad) ->
+    super
+    @x = x
+    @y = y
+    @rad = rad
+    @life = 40
+
+  step: ->
+    speed = 8
+    @x += Math.cos(@rad) * speed
+    @y += Math.sin(@rad) * speed
+    @life-- if @life > 0
+
+  isAlive: ->
+    @life > 0
 
 class Battler extends Entity
   @type: 'battler'
@@ -55,16 +76,22 @@ class Player extends Battler
     # update rad
     mx = @inputBuffer.focus.x
     my = @inputBuffer.focus.y
-    @rad = Math.atan2(my-ny, mx-nx) + Math.PI/2
+    @rad = Math.atan2(my-ny, mx-nx) # + Math.PI/2
+
+    if @inputBuffer.mouseLeft
+      bullet = (new Bullet @x, @y, @rad)
+      game.stage.entities.push bullet
 
 class Stage extends EventEmitter
   constructor: (@player) ->
     @cnt = 0
     @entities = []
 
-  update: ->
+  update: -> new Promise (done) =>
     @cnt++
-    Promise.all(@entities.map (e) -> e.step())
+    Promise.all(@entities.map (e) -> e.step()).then =>
+      @entities = @entities.filter (e) -> e.isAlive()
+      done()
 
 module.exports =
 class Game extends EventEmitter
@@ -86,13 +113,19 @@ class Game extends EventEmitter
       right: false
       up: false
       down: false
+
+      mouseLeft: false
+      mouseRight: false
       focus: {x: 0, y: 0}
     }
     @player = new Player @inputBuffer
     @fps = ~~(1000/60)
 
-    @on 'io:update-focus', (pos) =>
-      @updateFocus pos
+    @on 'io:update-focus', (mouseState) =>
+      @updateFocus mouseState
+
+    @on 'io:fire-right', (mouseState) =>
+      @inputBuffer.focus.rightWaiting = true
 
     @on 'io:update-key', (key, val) =>
       @updateKey key, val
@@ -106,8 +139,9 @@ class Game extends EventEmitter
       throw key+'is unknown'
     @inputBuffer[key] = val
 
-  updateFocus: (pos) ->
-    @inputBuffer.focus = pos
+  updateFocus: (mouseState) ->
+    @inputBuffer.focus.x = mouseState.x
+    @inputBuffer.focus.y = mouseState.y
 
   serialize: ->
     cnt: @stage.cnt

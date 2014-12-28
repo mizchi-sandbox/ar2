@@ -1,12 +1,20 @@
-mixin player(x, y, rad)
+mixin Entity(id, type, x, y, rad)
   g(
-    transform='translate(' + x + ', ' + y + ') rotate(' + rad*180/3.14 + ')'
+    transform='translate(' + x + ', ' + y + ') rotate(' + (rad+3.14/2)*180/3.14 + ')'
+    id=id
   )
-    circle(cx=0 cy=0 r=15 fill='white' stroke='black')
-    line(
-      x1=0 y1=0
-      x2=0 y2=-15
-      stroke='black')
+    if type === 'player'
+      circle(cx=0 cy=0 r=15 fill='white' stroke='black')
+      line(
+        x1=0 y1=0
+        x2=0 y2=-15
+        stroke='black')
+    else
+      circle(cx=0 cy=0 r=5 fill='black' stroke='red')
+      line(
+        x1=0 y1=0
+        x2=0 y2=-5
+        stroke='white')
       
 mixin focus(x, y)
   g(
@@ -14,7 +22,15 @@ mixin focus(x, y)
   )
     circle(cx=0 cy=0 r=10 fill='transparent' stroke='red')
 
-svg(key='main' className='main' width=640 height=480 onMouseMove=onMouseMove)
+svg(
+  key='main'
+  className='main'
+  width=640 height=480
+  onMouseMove=onMouseMove
+  onMouseDown=onMouseDown
+  onMouseUp=onMouseUp
+  onContextMenu=onContextMenu
+)
   for entity in entities
-    +player(entity.x, entity.y, entity.rad)
+    +Entity(entity.id, entity.type, entity.x, entity.y, entity.rad)
   +focus(focus.x, focus.y)
