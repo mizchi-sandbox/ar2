@@ -12,7 +12,8 @@ npm install -g dtsm gulp
 
 dtsm install
 npm install
-gulp
+gulp build
+gulp build:webpack
 open public/index.html
 ```
 
