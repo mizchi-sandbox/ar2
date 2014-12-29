@@ -4,13 +4,14 @@ global.EventEmitter = require('events').EventEmitter;
 
 export = Entity;
 class Entity extends EventEmitter {
-  static type:string = 'entity';
-  id: string;
-  x: number;
-  y: number;
-  rad: number;
-  life: number;
-  attackableTypes: any[];
+  public static type:string = 'entity';
+
+  public id: string;
+  public x: number;
+  public y: number;
+  public rad: number;
+  public life: number;
+  public attackableTypes: any[];
 
   constructor() {
     super();
@@ -19,7 +20,6 @@ class Entity extends EventEmitter {
     this.y = 0;
     this.rad = 0;
     this.life = 1;
-    /*this.attackableTypes = null;*/
     this.attackableTypes = [];
   }
 
@@ -27,41 +27,41 @@ class Entity extends EventEmitter {
     // console.log 'update:', this.id
   }
 
-  isAlive(){ return this.life > 0; }
-  isDead(){ return !this.isAlive();}
+  public isAlive(): boolean { return this.life > 0; }
+  public isDead(): boolean { return !this.isAlive();}
 
-  dispose(){
+  public dispose(){
   }
 
-  serialize(){
-    var cons: any = this.constructor;
+  public serialize(): {x: number; y:number; rad: number; id: string; type: string;} {
     return {
+      id: this.id,
       x: this.x,
       y:this.y,
       rad: this.rad,
-      type: cons.type
-    }
+      type: (<any>this.constructor).type
+    };
   }
 
-  isAttackable(){
+  public isAttackable(): boolean {
     return this.attackableTypes && Boolean(this.attackableTypes.length);
   }
 
-  canAttackTo(entity) {
-    return entity !== this &&
-      entity.suffer &&  // TODO 攻撃対象となり得るのかを属性で定義する
-      _.include(this.attackableTypes, entity.constructor.type) &&
-      entity.isAlive() &&
-      this.x - 15 <= entity.x && entity.x <= this.x + 15 &&
-      this.y - 15 <= entity.y && entity.y <= this.y + 15
+  canAttackTo(other: Entity) {
+    return other !== this &&
+      other['suffer'] &&  // TODO 攻撃対象となり得るのかを属性で定義する
+      _.include(this.attackableTypes, (<any>other.constructor).type) &&
+      other.isAlive() &&
+      this.x - 15 <= other.x && other.x <= this.x + 15 &&
+      this.y - 15 <= other.y && other.y <= this.y + 15
     ;
   }
 
-  computeAttackPower(){ return 1; }
+  private computeAttackPower(){ return 1; }
 
-  attack(entity) {
+  public attack(other: Entity) {
     // TODO 対象と自分のパラメータからダメージ量を算出
     var damage = this.computeAttackPower();
-    entity.suffer(damage);
+    other['suffer'](damage);
   }
 }
