@@ -52,6 +52,6 @@ Network Trash Folder
 Temporary Items
 .apdisk
 .tmp
-public/bundle
+public/bundle.js
 lib
 typings
