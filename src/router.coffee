@@ -1,1 +1,1 @@
-app.link 'main', require './scenes/main'
+app.link 'field', require './scenes/field'
