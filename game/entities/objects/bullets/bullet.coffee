@@ -15,6 +15,3 @@ class Bullet extends Entity
     @x += Math.cos(@rad) * speed
     @y += Math.sin(@rad) * speed
     @life-- if @life > 0
-
-  isAlive: ->
-    @life > 0

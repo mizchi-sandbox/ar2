@@ -10,11 +10,12 @@ class Entity extends EventEmitter
     @x = 0
     @y = 0
     @rad = 0
+    @life = 1
 
   step: ->
     # console.log 'update:', @id
 
-  isAlive: -> true
+  isAlive: -> @life > 0
   isDead: -> not @isAlive()
 
   dispose: ->
