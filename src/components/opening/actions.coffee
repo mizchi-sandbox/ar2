@@ -1,3 +1,3 @@
 module.exports =
   onClick: ->
-    @emit 'opening:event', {}
+    app.pushWorld 'field', {}

@@ -16,14 +16,19 @@ KeyMap =
   65: 'a'
   83: 's'
   68: 'd'
+  73: 'i'
 
 window.addEventListener 'keydown', (e) ->
+  console.log e.keyCode
+
+  emitter = app.getActiveEmitter()
   return unless game
   switch KeyMap[e.keyCode]
     when 'left' , 'a' then game.emit 'io:update-key', 'left', true
     when 'up'   , 'w' then game.emit 'io:update-key', 'up',   true
     when 'right', 'd' then game.emit 'io:update-key', 'right',true
     when 'down' , 's' then game.emit 'io:update-key', 'down', true
+    when 'i' then emitter.emit 'io:open-menu'
 
 window.addEventListener 'keyup', (e) ->
   return unless game
