@@ -1,3 +1,3 @@
 module.exports =
   onClick: ->
-    @emit '{{$1}}:event', {}
+    @emit 'opening:event', {}

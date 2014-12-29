@@ -10,6 +10,7 @@
   "license": "MIT",
   "dependencies": {
     "bluebird": "^2.3.11",
+    "change-case": "^2.1.6",
     "clone": "^0.2.0",
     "extend": "^2.0.0",
     "global": "^4.3.0",

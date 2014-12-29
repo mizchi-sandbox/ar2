@@ -8,6 +8,10 @@ game = Game.getInstance()
 window.addEventListener 'DOMContentLoaded', ->
   app.mount(document.body)
 
-  app.transition('field', {}).then =>
+  # app.transition('field', {}).then =>
+  #   game.createNewStage()
+  #   game.start()
+
+  app.transition('opening', {}).then =>
     game.createNewStage()
     game.start()
