@@ -1,6 +1,6 @@
 {
-  "name": "overworld-skeleton",
-  "version": "1.0.0",
+  "name": "ar2",
+  "version": "0.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -23,7 +23,6 @@
     "overworld": "0.0.2",
     "react": "^0.12.1",
     "react-jade": "^2.3.0",
-    "rot": "^0.1.0",
     "webpack": "^1.4.13"
   },
   "devDependencies": {
