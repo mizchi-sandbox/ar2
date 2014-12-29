@@ -5,9 +5,10 @@ import Entity = require('../entities/entity');
 
 export = Stage;
 class Stage extends EventEmitter {
-  cnt: number;
-  entities: Entity[]
-  constructor(public player: Player){
+  public cnt: number;
+  public entities: Entity[];
+
+  constructor(){
     super();
     this.cnt = 0;
     this.entities = [];

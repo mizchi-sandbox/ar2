@@ -30,8 +30,8 @@ gulp.task 'watch', ['build'], ->
   gulp.watch 'src/**/*.jade', ['build:jade']
   gulp.watch 'lib/**/*.js', ['build:webpack']
 
-gulp.task 'build', ['build:coffee', 'build:jade', 'build:ts', 'build:webpack']
-gulp.task 'default', ['build']
+gulp.task 'build', ['build:coffee', 'build:jade', 'build:ts']
+gulp.task 'default', ['build', 'build:webpack']
 
 ## Deploy tasks
 gulp.task 'prepare-deploy', ['build'], ->
