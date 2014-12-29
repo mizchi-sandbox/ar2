@@ -28,6 +28,7 @@ class Game extends EventEmitter
       mouseRight: false
       focus: {x: 0, y: 0}
     }
+    console.log 'player', Player
     @player = new Player @inputBuffer
     @fps = ~~(1000/60)
 
