@@ -4,5 +4,5 @@ module.exports =
 class Battler extends Entity
   @type: 'battler'
 
-  suffer: ->
-    @life-- if @life > 0
+  suffer: (damage) ->
+    @life -= damage if @life > 0
