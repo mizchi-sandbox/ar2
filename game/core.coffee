@@ -2,6 +2,7 @@
 
 global = require 'global'
 Player = require './entities/battlers/player'
+Enemy = require './entities/battlers/enemies/enemy'
 Stage = require './stages/stage'
 
 module.exports =
@@ -39,6 +40,12 @@ class Game extends EventEmitter
   createNewStage: ->
     @stage = new Stage
     @stage.entities.push @player
+
+    [[250, 200], [400, 100], [100, 450]].forEach ([x, y]) =>
+      enemy = new Enemy
+      enemy.x = x
+      enemy.y = y
+      @stage.entities.push enemy
 
   updateKey: (key, val) ->
     unless @inputBuffer[key]?

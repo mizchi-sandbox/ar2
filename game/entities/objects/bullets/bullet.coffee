@@ -9,12 +9,10 @@ class Bullet extends Entity
     @y = y
     @rad = rad
     @life = 40
+    @attackableTypes = ['enemy']
 
   step: ->
     speed = 8
     @x += Math.cos(@rad) * speed
     @y += Math.sin(@rad) * speed
     @life-- if @life > 0
-
-  isAlive: ->
-    @life > 0

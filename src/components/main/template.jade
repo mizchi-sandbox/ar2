@@ -10,6 +10,12 @@ mixin Entity(id, type, x, y, rad)
         x1=0 y1=0
         x2=0 y2=-15
         stroke='black')
+    else if type === 'enemy'
+      circle(cx=0 cy=0 r=15 fill='orange' stroke='black')
+      line(
+        x1=0 y1=0
+        x2=0 y2=-15
+        stroke='black')
     else
       circle(cx=0 cy=0 r=5 fill='black' stroke='red')
       line(
