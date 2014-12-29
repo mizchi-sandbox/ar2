@@ -23,7 +23,7 @@ class Entity extends EventEmitter {
     this.attackableTypes = [];
   }
 
-  step(){
+  step(): Promise<any> | any{
     // console.log 'update:', this.id
   }
 
