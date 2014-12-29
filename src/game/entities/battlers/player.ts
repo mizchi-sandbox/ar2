@@ -1,4 +1,4 @@
-var Bullet = require('../objects/bullets/bullet');
+import Bullet = require('../objects/bullets/bullet');
 import Battler = require('./battler');
 declare var game: any;
 
