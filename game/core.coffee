@@ -46,10 +46,16 @@ class Game extends EventEmitter
     @inputBuffer[key] = val
 
   updateFocus: (mouseState) ->
-    @inputBuffer.focus.x = mouseState.x
-    @inputBuffer.focus.y = mouseState.y
+    @inputBuffer.focus.x = mouseState.x+@player.x-320
+    @inputBuffer.focus.y = mouseState.y+@player.y-240
 
   serialize: ->
+    target = @player
+    cx = target.x-320
+    cy = target.y-240
+
+    cx: cx
+    cy: cy
     cnt: @stage.cnt
     entities: @stage.entities.map (e) -> e.serialize()
     focus: @inputBuffer.focus
