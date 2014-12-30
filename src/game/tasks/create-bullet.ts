@@ -11,7 +11,11 @@ class CreateBullet implements Task {
   ){}
 
   exec(stage){
-    var bullet = new Bullet(this.owner, this.x, this.y, this.rad);
+    /*var bullet = new Bullet(this.owner, this.x, this.y, this.rad);*/
+    var bullet = new Bullet(this.owner);
+    bullet.x = this.x;
+    bullet.y = this.y;
+    bullet.rad = this.rad;
     stage.entities.push(bullet);
   }
 }

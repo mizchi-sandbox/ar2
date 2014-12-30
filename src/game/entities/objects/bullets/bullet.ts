@@ -9,11 +9,8 @@ export = Bullet;
 class Bullet extends Entity {
   static type = 'bullet';
   private cnt: number;
-  constructor(public owner: Battler, x: number, y: number, rad: number) {
+  constructor(public owner: Battler) {
     super();
-    this.x = x;
-    this.y = y;
-    this.rad = rad;
     this.life = 1;
     this.cnt = 0;
   }

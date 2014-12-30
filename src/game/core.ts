@@ -15,6 +15,7 @@ class Game extends EventEmitter {
   inputBuffer: any;
   stage: Stage;
   fps: number;
+  running: boolean;
 
   static getInstance(): Game {
     if(this.instance == null)
@@ -81,7 +82,6 @@ class Game extends EventEmitter {
     };
   }
 
-  running: boolean;
   start(){
     console.log('started')
     if(this.running){

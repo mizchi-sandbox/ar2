@@ -20,7 +20,6 @@ class Entity extends EventEmitter {
   public groupId: GroupId;
 
   remove(): void{
-    console.log('add task to remove self', this.id);
     game.stage.addTask(new RemoveEntity(this.id));
   }
 
