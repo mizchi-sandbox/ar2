@@ -44,418 +44,441 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Game, game;
+	(function() {
+	  var Game;
 
-	window.app = null;
+	  window.app = null;
 
-	__webpack_require__(1);
+	  __webpack_require__(1);
 
-	__webpack_require__(2);
+	  __webpack_require__(2);
 
-	Game = __webpack_require__(3);
+	  Game = __webpack_require__(3);
 
-	game = Game.getInstance();
+	  window.game = Game.getInstance();
 
-	window.addEventListener('DOMContentLoaded', function() {
-	  app.mount(document.body);
-	  return app.transition('main', {}).then((function(_this) {
-	    return function() {
-	      game.createNewStage();
-	      return game.start();
-	    };
-	  })(this));
-	});
+	  window.addEventListener('DOMContentLoaded', function() {
+	    app.mount(document.body);
+	    return app.transition('opening', {});
+	  });
+
+	}).call(this);
 
 
 /***/ },
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var KeyMap, global;
+	(function() {
+	  var KeyMap, global;
 
-	global = __webpack_require__(9);
+	  global = __webpack_require__(11);
 
-	global.Promise = __webpack_require__(12);
+	  global.Promise = __webpack_require__(20);
 
-	global.React = __webpack_require__(10);
+	  global.React = __webpack_require__(12);
 
-	global.Overworld = __webpack_require__(11);
+	  global.Overworld = __webpack_require__(13);
 
-	Overworld.setReact(React);
+	  Overworld.setReact(React);
 
-	global.app = new Overworld.Portal;
+	  global.app = new Overworld.Portal;
 
-	KeyMap = {
-	  37: 'left',
-	  38: 'up',
-	  39: 'right',
-	  40: 'down',
-	  87: 'w',
-	  65: 'a',
-	  83: 's',
-	  68: 'd'
-	};
+	  KeyMap = {
+	    37: 'left',
+	    38: 'up',
+	    39: 'right',
+	    40: 'down',
+	    87: 'w',
+	    65: 'a',
+	    83: 's',
+	    68: 'd',
+	    73: 'i'
+	  };
 
-	window.addEventListener('keydown', function(e) {
-	  if (!game) {
-	    return;
-	  }
-	  switch (KeyMap[e.keyCode]) {
-	    case 'left':
-	    case 'a':
-	      return game.emit('io:update-key', 'left', true);
-	    case 'up':
-	    case 'w':
-	      return game.emit('io:update-key', 'up', true);
-	    case 'right':
-	    case 'd':
-	      return game.emit('io:update-key', 'right', true);
-	    case 'down':
-	    case 's':
-	      return game.emit('io:update-key', 'down', true);
-	  }
-	});
+	  window.addEventListener('keydown', function(e) {
+	    var emitter;
+	    console.log(e.keyCode);
+	    emitter = app.getActiveEmitter();
+	    if (!game) {
+	      return;
+	    }
+	    switch (KeyMap[e.keyCode]) {
+	      case 'left':
+	      case 'a':
+	        return game.emit('io:update-key', 'left', true);
+	      case 'up':
+	      case 'w':
+	        return game.emit('io:update-key', 'up', true);
+	      case 'right':
+	      case 'd':
+	        return game.emit('io:update-key', 'right', true);
+	      case 'down':
+	      case 's':
+	        return game.emit('io:update-key', 'down', true);
+	      case 'i':
+	        return emitter.emit('io:open-menu');
+	    }
+	  });
 
-	window.addEventListener('keyup', function(e) {
-	  if (!game) {
-	    return;
-	  }
-	  switch (KeyMap[e.keyCode]) {
-	    case 'left':
-	    case 'a':
-	      return game.emit('io:update-key', 'left', false);
-	    case 'up':
-	    case 'w':
-	      return game.emit('io:update-key', 'up', false);
-	    case 'right':
-	    case 'd':
-	      return game.emit('io:update-key', 'right', false);
-	    case 'down':
-	    case 's':
-	      return game.emit('io:update-key', 'down', false);
-	  }
-	});
+	  window.addEventListener('keyup', function(e) {
+	    if (!game) {
+	      return;
+	    }
+	    switch (KeyMap[e.keyCode]) {
+	      case 'left':
+	      case 'a':
+	        return game.emit('io:update-key', 'left', false);
+	      case 'up':
+	      case 'w':
+	        return game.emit('io:update-key', 'up', false);
+	      case 'right':
+	      case 'd':
+	        return game.emit('io:update-key', 'right', false);
+	      case 'down':
+	      case 's':
+	        return game.emit('io:update-key', 'down', false);
+	    }
+	  });
+
+	}).call(this);
 
 
 /***/ },
 /* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
-	app.link('main', __webpack_require__(4));
+	(function() {
+	  app.link('field', __webpack_require__(4));
+
+	  app.link('opening', __webpack_require__(5));
+
+	  app.link('menu', __webpack_require__(6));
+
+	}).call(this);
 
 
 /***/ },
 /* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Enemy, EventEmitter, Game, Player, Stage, global,
-	  __hasProp = {}.hasOwnProperty,
-	  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-	EventEmitter = __webpack_require__(8).EventEmitter;
-
-	global = __webpack_require__(9);
-
-	Player = __webpack_require__(6);
-
-	Enemy = __webpack_require__(7);
-
-	Stage = __webpack_require__(5);
-
-	module.exports = Game = (function(_super) {
-	  var instance, queues;
-
-	  __extends(Game, _super);
-
-	  instance = null;
-
-	  queues = [];
-
-	  Game.getInstance = function() {
-	    return instance != null ? instance : instance = new Game;
-	  };
-
-	  Game.getActiveStage = function() {
-	    var _ref;
-	    return (_ref = this.getInstance()) != null ? _ref.stage : void 0;
-	  };
-
-	  function Game() {
-	    global.game = this;
-	    this.stage = null;
-	    this.inputBuffer = {
-	      left: false,
-	      right: false,
-	      up: false,
-	      down: false,
-	      mouseLeft: false,
-	      mouseRight: false,
-	      focus: {
-	        x: 0,
-	        y: 0
-	      }
-	    };
-	    this.player = new Player(this.inputBuffer);
-	    this.fps = ~~(1000 / 60);
-	    this.on('io:update-focus', (function(_this) {
-	      return function(mouseState) {
-	        return _this.updateFocus(mouseState);
-	      };
-	    })(this));
-	    this.on('io:update-key', (function(_this) {
-	      return function(key, val) {
-	        return _this.updateKey(key, val);
-	      };
-	    })(this));
-	  }
-
-	  Game.prototype.createNewStage = function() {
-	    this.stage = new Stage;
-	    this.stage.entities.push(this.player);
-	    return [[250, 200], [400, 100], [100, 450]].forEach((function(_this) {
-	      return function(_arg) {
-	        var enemy, x, y;
-	        x = _arg[0], y = _arg[1];
-	        enemy = new Enemy;
-	        enemy.x = x;
-	        enemy.y = y;
-	        return _this.stage.entities.push(enemy);
-	      };
-	    })(this));
-	  };
-
-	  Game.prototype.updateKey = function(key, val) {
-	    if (this.inputBuffer[key] == null) {
-	      throw key + 'is unknown';
-	    }
-	    return this.inputBuffer[key] = val;
-	  };
-
-	  Game.prototype.updateFocus = function(mouseState) {
-	    this.inputBuffer.focus.x = mouseState.x + this.player.x - 320;
-	    return this.inputBuffer.focus.y = mouseState.y + this.player.y - 240;
-	  };
-
-	  Game.prototype.serialize = function() {
-	    var cx, cy, target;
-	    target = this.player;
-	    cx = target.x - 320;
-	    cy = target.y - 240;
-	    return {
-	      cx: cx,
-	      cy: cy,
-	      cnt: this.stage.cnt,
-	      entities: this.stage.entities.map(function(e) {
-	        return e.serialize();
-	      }),
-	      focus: this.inputBuffer.focus
-	    };
-	  };
-
-	  Game.prototype.start = function() {
-	    var fn;
-	    if (this.running) {
-	      console.info('game already running');
-	      return;
-	    }
-	    this.running = true;
-	    if (this.stage == null) {
-	      throw 'you should initialize stage first';
-	    }
-	    return (fn = (function(_this) {
-	      return function() {
-	        var beforeUpdate;
-	        if (!_this.running) {
-	          return;
-	        }
-	        beforeUpdate = Date.now();
-	        return _this.stage.update().then(function() {
-	          var afterUpdate, emitter;
-	          emitter = typeof app !== "undefined" && app !== null ? app.getActiveEmitter() : void 0;
-	          emitter.emit('stage:update', _this.serialize());
-	          afterUpdate = Date.now();
-	          return setTimeout(fn, _this.fps - (afterUpdate - beforeUpdate));
+	/* WEBPACK VAR INJECTION */(function(global) {var __extends = this.__extends || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    __.prototype = b.prototype;
+	    d.prototype = new __();
+	};
+	global.EventEmitter = __webpack_require__(10).EventEmitter;
+	/*vr global = require 'global'*/
+	var Player = __webpack_require__(8);
+	var Enemy = __webpack_require__(9);
+	var Stage = __webpack_require__(7);
+	var instance;
+	var Game = (function (_super) {
+	    __extends(Game, _super);
+	    function Game() {
+	        var _this = this;
+	        _super.call(this);
+	        global.game = this;
+	        this.stage = null;
+	        this.inputBuffer = {
+	            left: false,
+	            right: false,
+	            up: false,
+	            down: false,
+	            mouseLeft: false,
+	            mouseRight: false,
+	            focus: { x: 0, y: 0 }
+	        };
+	        this.player = new Player(this.inputBuffer);
+	        this.fps = ~~(1000 / 60);
+	        this.on('io:update-focus', function (pos) {
+	            _this.updateFocus(pos);
 	        });
-	      };
-	    })(this))();
-	  };
-
-	  Game.prototype.pause = function() {
-	    return this.running = false;
-	  };
-
-	  return Game;
-
+	        this.on('io:update-key', function (key, val) {
+	            _this.updateKey(key, val);
+	        });
+	    }
+	    Game.getInstance = function () {
+	        if (this.instance == null)
+	            this.instance = new Game();
+	        return this.instance;
+	    };
+	    Game.getActiveStage = function () {
+	        return this.getInstance().stage;
+	    };
+	    Game.prototype.updateKey = function (key, val) {
+	        /*if(this.inputBuffer[key] == null)
+	          throw key+'is unknown';*/
+	        this.inputBuffer[key] = val;
+	    };
+	    Game.prototype.updateFocus = function (pos) {
+	        this.inputBuffer.focus.x = pos.x + this.player.x - 320;
+	        this.inputBuffer.focus.y = pos.y + this.player.y - 240;
+	    };
+	    Game.prototype.createNewStage = function () {
+	        var _this = this;
+	        this.stage = new Stage;
+	        this.stage.entities.push(this.player);
+	        [[250, 200], [400, 100], [100, 450]].forEach(function (pos) {
+	            var enemy = new Enemy();
+	            enemy.x = pos[0];
+	            enemy.y = pos[1];
+	            _this.stage.entities.push(enemy);
+	        });
+	    };
+	    Game.prototype.serialize = function () {
+	        var target = this.player;
+	        var cx = target.x - 320;
+	        var cy = target.y - 240;
+	        return {
+	            cx: cx,
+	            cy: cy,
+	            cnt: this.stage.cnt,
+	            entities: this.stage.entities.map(function (e) { return e.serialize(); }),
+	            focus: this.inputBuffer.focus
+	        };
+	    };
+	    Game.prototype.start = function () {
+	        var _this = this;
+	        console.log('started');
+	        if (this.running) {
+	            console.info('game already running');
+	            return;
+	        }
+	        this.running = true;
+	        if (this.stage == null)
+	            throw 'you should initialize stage first';
+	        var fn = function () {
+	            if (!_this.running)
+	                return;
+	            var beforeUpdate = Date.now();
+	            _this.stage.update().then(function () {
+	                var emitter = app.getActiveEmitter();
+	                emitter.emit('stage:update', _this.serialize());
+	                var afterUpdate = Date.now();
+	                setTimeout(fn, _this.fps - (afterUpdate - beforeUpdate));
+	            });
+	        };
+	        fn();
+	    };
+	    Game.prototype.pause = function () {
+	        this.running = false;
+	    };
+	    Game.instance = null;
+	    return Game;
 	})(EventEmitter);
-
+	module.exports = Game;
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
 /* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Main,
-	  __hasProp = {}.hasOwnProperty,
-	  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+	(function() {
+	  var Field,
+	    __hasProp = {}.hasOwnProperty,
+	    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-	module.exports = Main = (function(_super) {
-	  __extends(Main, _super);
+	  module.exports = Field = (function(_super) {
+	    __extends(Field, _super);
 
-	  function Main() {
-	    return Main.__super__.constructor.apply(this, arguments);
-	  }
+	    function Field() {
+	      return Field.__super__.constructor.apply(this, arguments);
+	    }
 
-	  Main.component = __webpack_require__(16);
+	    Field.component = __webpack_require__(22);
 
-	  Main.aggregator = __webpack_require__(13);
+	    Field.aggregator = __webpack_require__(14);
 
-	  Main.subscriber = __webpack_require__(14);
+	    Field.subscriber = __webpack_require__(15);
 
-	  return Main;
+	    return Field;
 
-	})(Overworld.World);
+	  })(Overworld.World);
+
+	}).call(this);
 
 
 /***/ },
 /* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var EventEmitter, Stage,
-	  __hasProp = {}.hasOwnProperty,
-	  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+	(function() {
+	  var __hasProp = {}.hasOwnProperty,
+	    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-	EventEmitter = __webpack_require__(8);
+	  module.exports = (function(_super) {
+	    __extends(_Class, _super);
 
-	module.exports = Stage = (function(_super) {
-	  __extends(Stage, _super);
+	    function _Class() {
+	      return _Class.__super__.constructor.apply(this, arguments);
+	    }
 
-	  function Stage(player) {
-	    this.player = player;
-	    this.cnt = 0;
-	    this.entities = [];
-	  }
+	    _Class.component = __webpack_require__(24);
 
-	  Stage.prototype.update = function() {
-	    return new Promise((function(_this) {
-	      return function(done) {
-	        _this.cnt++;
-	        _this.entities.filter(function(e) {
-	          return e.isAttackable() && e.isAlive();
-	        }).forEach(function(attacker) {
-	          var target, _i, _len, _ref;
-	          _ref = _this.entities;
-	          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-	            target = _ref[_i];
-	            if (!(attacker.canAttackTo(target))) {
-	              continue;
-	            }
-	            attacker.attack(target);
-	            if (attacker.isDead()) {
-	              return;
-	            }
-	          }
-	        });
-	        return Promise.all(_this.entities.map(function(e) {
-	          return e.step();
-	        })).then(function() {
-	          _this.entities = _this.entities.filter(function(e) {
-	            return e.isAlive();
-	          });
-	          return done();
-	        });
-	      };
-	    })(this));
-	  };
+	    _Class.aggregator = __webpack_require__(18);
 
-	  return Stage;
+	    _Class.subscriber = __webpack_require__(19);
 
-	})(EventEmitter);
+	    return _Class;
+
+	  })(Overworld.World);
+
+	}).call(this);
 
 
 /***/ },
 /* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Battler, Bullet, Player,
-	  __hasProp = {}.hasOwnProperty,
-	  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+	(function() {
+	  var __hasProp = {}.hasOwnProperty,
+	    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-	Bullet = __webpack_require__(17);
+	  module.exports = (function(_super) {
+	    __extends(_Class, _super);
 
-	Battler = __webpack_require__(15);
-
-	module.exports = Player = (function(_super) {
-	  __extends(Player, _super);
-
-	  Player.type = 'player';
-
-	  function Player(inputBuffer) {
-	    this.inputBuffer = inputBuffer;
-	    Player.__super__.constructor.apply(this, arguments);
-	  }
-
-	  Player.prototype.step = function() {
-	    var bullet, mx, my, nx, ny, speed;
-	    speed = 4;
-	    nx = this.x;
-	    ny = this.y;
-	    if (this.inputBuffer.left) {
-	      nx -= speed;
-	    } else if (this.inputBuffer.right) {
-	      nx += speed;
+	    function _Class() {
+	      return _Class.__super__.constructor.apply(this, arguments);
 	    }
-	    if (this.inputBuffer.up) {
-	      ny -= speed;
-	    } else if (this.inputBuffer.down) {
-	      ny += speed;
-	    }
-	    this.x = nx;
-	    this.y = ny;
-	    mx = this.inputBuffer.focus.x;
-	    my = this.inputBuffer.focus.y;
-	    this.rad = Math.atan2(my - ny, mx - nx);
-	    if (this.inputBuffer.mouseLeft) {
-	      bullet = new Bullet(this.x, this.y, this.rad);
-	      game.stage.entities.push(bullet);
-	    }
-	    if (this.inputBuffer.mouseRight) {
-	      bullet = new Bullet(mx, my, this.rad);
-	      return game.stage.entities.push(bullet);
-	    }
-	  };
 
-	  return Player;
+	    _Class.component = __webpack_require__(23);
 
-	})(Battler);
+	    _Class.aggregator = __webpack_require__(16);
+
+	    _Class.subscriber = __webpack_require__(17);
+
+	    return _Class;
+
+	  })(Overworld.World);
+
+	}).call(this);
 
 
 /***/ },
 /* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Battler, Bullet, Enemy,
-	  __hasProp = {}.hasOwnProperty,
-	  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-	Bullet = __webpack_require__(17);
-
-	Battler = __webpack_require__(15);
-
-	module.exports = Enemy = (function(_super) {
-	  __extends(Enemy, _super);
-
-	  Enemy.type = 'enemy';
-
-	  function Enemy() {
-	    Enemy.__super__.constructor.apply(this, arguments);
-	  }
-
-	  return Enemy;
-
-	})(Battler);
-
+	/* WEBPACK VAR INJECTION */(function(global) {var __extends = this.__extends || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    __.prototype = b.prototype;
+	    d.prototype = new __();
+	};
+	global.EventEmitter = __webpack_require__(10).EventEmitter;
+	var Stage = (function (_super) {
+	    __extends(Stage, _super);
+	    function Stage() {
+	        _super.call(this);
+	        this.cnt = 0;
+	        this.entities = [];
+	    }
+	    Stage.prototype.update = function () {
+	        var _this = this;
+	        return new Promise(function (done) {
+	            _this.cnt++;
+	            // TODO 計算量の圧縮と衝突判定すり抜け対策
+	            _this.entities.filter(function (e) { return e.isAttackable() && e.isAlive(); }).forEach(function (attacker) {
+	                _this.entities.filter(function (e) { return attacker.canAttackTo(e); }).forEach(function (target) {
+	                    attacker.attack(target);
+	                    if (attacker.isDead())
+	                        return;
+	                });
+	            });
+	            Promise.all(_this.entities.map(function (e) { return e.step(); })).then(function () {
+	                _this.entities = _this.entities.filter(function (e) { return e.isAlive(); });
+	                done();
+	            });
+	        });
+	    };
+	    return Stage;
+	})(EventEmitter);
+	module.exports = Stage;
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
 /* 8 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __extends = this.__extends || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    __.prototype = b.prototype;
+	    d.prototype = new __();
+	};
+	var Bullet = __webpack_require__(25);
+	var Battler = __webpack_require__(21);
+	var Player = (function (_super) {
+	    __extends(Player, _super);
+	    function Player(inputBuffer) {
+	        _super.call(this);
+	        this.inputBuffer = inputBuffer;
+	    }
+	    Player.prototype.step = function () {
+	        var speed = 4;
+	        var nx = this.x;
+	        var ny = this.y;
+	        // update pos
+	        if (this.inputBuffer.left) {
+	            nx -= speed;
+	        }
+	        else if (this.inputBuffer.right) {
+	            nx += speed;
+	        }
+	        if (this.inputBuffer.up) {
+	            ny -= speed;
+	        }
+	        else if (this.inputBuffer.down) {
+	            ny += speed;
+	        }
+	        this.x = nx;
+	        this.y = ny;
+	        // update rad
+	        var mx = this.inputBuffer.focus.x;
+	        var my = this.inputBuffer.focus.y;
+	        this.rad = Math.atan2(my - ny, mx - nx); // + Math.PI/2
+	        if (this.inputBuffer.mouseLeft) {
+	            var bullet = new Bullet(this.x, this.y, this.rad);
+	            game.stage.entities.push(bullet);
+	        }
+	        if (this.inputBuffer.mouseRight) {
+	            var bullet = new Bullet(mx, my, this.rad);
+	            game.stage.entities.push(bullet);
+	        }
+	    };
+	    Player.type = 'player';
+	    return Player;
+	})(Battler);
+	module.exports = Player;
+
+
+/***/ },
+/* 9 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __extends = this.__extends || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    __.prototype = b.prototype;
+	    d.prototype = new __();
+	};
+	var Battler = __webpack_require__(21);
+	var Enemy = (function (_super) {
+	    __extends(Enemy, _super);
+	    function Enemy() {
+	        _super.apply(this, arguments);
+	    }
+	    Enemy.type = 'enemy';
+	    return Enemy;
+	})(Battler);
+	module.exports = Enemy;
+
+
+/***/ },
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// Copyright Joyent, Inc. and other Node contributors.
@@ -762,7 +785,7 @@
 
 
 /***/ },
-/* 9 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {if (typeof window !== "undefined") {
@@ -778,21 +801,21 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 10 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(18);
+	module.exports = __webpack_require__(26);
 
 
 /***/ },
-/* 11 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	///<reference path='../typings/bundle.d.ts' />
-	exports.utils = __webpack_require__(22);
-	exports.mixinFor = __webpack_require__(23);
-	exports.Portal = __webpack_require__(20);
-	exports.World = __webpack_require__(21);
+	exports.utils = __webpack_require__(30);
+	exports.mixinFor = __webpack_require__(31);
+	exports.Portal = __webpack_require__(28);
+	exports.World = __webpack_require__(29);
 	exports.setReact = exports.utils.setReact;
 	exports.aliasForMixin = exports.utils.aliasForMixin;
 	exports.mixinAliasMap = exports.utils.mixinAliasMap;
@@ -801,7 +824,148 @@
 
 
 /***/ },
-/* 12 */
+/* 14 */
+/***/ function(module, exports, __webpack_require__) {
+
+	(function() {
+	  module.exports = {
+	    initState: function(props) {
+	      return {
+	        entities: [],
+	        cx: 0,
+	        cy: 0,
+	        focus: {
+	          x: -1000,
+	          y: -1000
+	        }
+	      };
+	    },
+	    aggregate: function(props, state) {
+	      return state;
+	    }
+	  };
+
+	}).call(this);
+
+
+/***/ },
+/* 15 */
+/***/ function(module, exports, __webpack_require__) {
+
+	(function() {
+	  var clone;
+
+	  clone = __webpack_require__(60);
+
+	  module.exports = function(subscribe) {
+	    subscribe('stage:update', function(context) {
+	      return function(serialized) {
+	        return context.update(serialized);
+	      };
+	    });
+	    subscribe('lifecycle:created', function(context) {
+	      return function() {
+	        game.createNewStage();
+	        return game.start();
+	      };
+	    });
+	    subscribe('lifecycle:paused', function(context) {
+	      return function() {
+	        return game.pause();
+	      };
+	    });
+	    subscribe('lifecycle:resumed', function(context) {
+	      return function() {
+	        return game.start();
+	      };
+	    });
+	    return subscribe('io:open-menu', function(context) {
+	      return function(serialized) {
+	        console.log('open menu');
+	        return app.pushWorld('menu', {});
+	      };
+	    });
+	  };
+
+	}).call(this);
+
+
+/***/ },
+/* 16 */
+/***/ function(module, exports, __webpack_require__) {
+
+	(function() {
+	  module.exports = {
+	    initState: function(props) {
+	      return {};
+	    },
+	    aggregate: function(props, state) {
+	      return {};
+	    }
+	  };
+
+	}).call(this);
+
+
+/***/ },
+/* 17 */
+/***/ function(module, exports, __webpack_require__) {
+
+	(function() {
+	  var __slice = [].slice;
+
+	  module.exports = function(subscribe) {
+	    return subscribe('menu:close', function(context) {
+	      return function() {
+	        var args;
+	        args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+	        return app.popWorld();
+	      };
+	    });
+	  };
+
+	}).call(this);
+
+
+/***/ },
+/* 18 */
+/***/ function(module, exports, __webpack_require__) {
+
+	(function() {
+	  module.exports = {
+	    initState: function(props) {
+	      return {};
+	    },
+	    aggregate: function(props, state) {
+	      return {};
+	    }
+	  };
+
+	}).call(this);
+
+
+/***/ },
+/* 19 */
+/***/ function(module, exports, __webpack_require__) {
+
+	(function() {
+	  var __slice = [].slice;
+
+	  module.exports = function(subscribe) {
+	    return subscribe('opening:update', function(context) {
+	      return function() {
+	        var args;
+	        args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+	        return context.update({});
+	      };
+	    });
+	  };
+
+	}).call(this);
+
+
+/***/ },
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -829,141 +993,158 @@
 	 * 
 	 */
 	"use strict";
-	var Promise = __webpack_require__(19)();
-	module.exports = Promise;
+	var old;
+	if (typeof Promise !== "undefined") old = Promise;
+	function noConflict(bluebird) {
+	    try { if (Promise === bluebird) Promise = old; }
+	    catch (e) {}
+	    return bluebird;
+	}
+	module.exports = __webpack_require__(27)();
+	module.exports.noConflict = noConflict;
+
 
 /***/ },
-/* 13 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = {
-	  initState: function(props) {
-	    return {
-	      entities: [],
-	      cx: 0,
-	      cy: 0,
-	      focus: {
-	        x: -1000,
-	        y: -1000
-	      }
-	    };
-	  },
-	  aggregate: function(props, state) {
-	    return state;
-	  }
+	var __extends = this.__extends || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    __.prototype = b.prototype;
+	    d.prototype = new __();
 	};
+	var Entity = __webpack_require__(32);
+	var Battler = (function (_super) {
+	    __extends(Battler, _super);
+	    function Battler() {
+	        _super.apply(this, arguments);
+	    }
+	    Battler.prototype.suffer = function (damage) {
+	        if (this.isAlive())
+	            this.life -= damage;
+	    };
+	    Battler.type = 'battler';
+	    return Battler;
+	})(Entity);
+	module.exports = Battler;
 
 
 /***/ },
-/* 14 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var clone;
+	(function() {
+	  var extend, template;
 
-	clone = __webpack_require__(83);
+	  extend = __webpack_require__(93);
 
-	module.exports = function(subscribe) {
-	  return subscribe('stage:update', function(context) {
-	    return function(serialized) {
-	      return context.update(serialized);
-	    };
+	  template = __webpack_require__(94);
+
+	  module.exports = React.createClass({
+	    mixins: [
+	      Overworld.mixinFor(function() {
+	        return app;
+	      }), __webpack_require__(33)
+	    ],
+	    render: function() {
+	      return template(extend({}, this, this.props, this.state));
+	    }
 	  });
+
+	}).call(this);
+
+
+/***/ },
+/* 23 */
+/***/ function(module, exports, __webpack_require__) {
+
+	(function() {
+	  var actions, extend, template;
+
+	  template = __webpack_require__(95);
+
+	  actions = __webpack_require__(34);
+
+	  extend = __webpack_require__(93);
+
+	  module.exports = React.createClass({
+	    mixins: [
+	      Overworld.mixinFor(function() {
+	        return app;
+	      }), actions
+	    ],
+	    render: function() {
+	      return template(extend({}, this, this.props, this.state));
+	    }
+	  });
+
+	}).call(this);
+
+
+/***/ },
+/* 24 */
+/***/ function(module, exports, __webpack_require__) {
+
+	(function() {
+	  var actions, extend, template;
+
+	  template = __webpack_require__(96);
+
+	  actions = __webpack_require__(35);
+
+	  extend = __webpack_require__(93);
+
+	  module.exports = React.createClass({
+	    mixins: [
+	      Overworld.mixinFor(function() {
+	        return app;
+	      }), actions
+	    ],
+	    render: function() {
+	      return template(extend({}, this, this.props, this.state));
+	    }
+	  });
+
+	}).call(this);
+
+
+/***/ },
+/* 25 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __extends = this.__extends || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    __.prototype = b.prototype;
+	    d.prototype = new __();
 	};
-
-
-/***/ },
-/* 15 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Battler, Entity,
-	  __hasProp = {}.hasOwnProperty,
-	  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-	Entity = __webpack_require__(24);
-
-	module.exports = Battler = (function(_super) {
-	  __extends(Battler, _super);
-
-	  function Battler() {
-	    return Battler.__super__.constructor.apply(this, arguments);
-	  }
-
-	  Battler.type = 'battler';
-
-	  Battler.prototype.suffer = function(damage) {
-	    if (this.life > 0) {
-	      return this.life -= damage;
+	var Entity = __webpack_require__(32);
+	var Bullet = (function (_super) {
+	    __extends(Bullet, _super);
+	    function Bullet(x, y, rad) {
+	        _super.call(this);
+	        this.x = x;
+	        this.y = y;
+	        this.rad = rad;
+	        this.life = 40;
+	        this.attackableTypes = ['enemy'];
 	    }
-	  };
-
-	  return Battler;
-
+	    Bullet.prototype.step = function () {
+	        var speed = 8;
+	        this.x += Math.cos(this.rad) * speed;
+	        this.y += Math.sin(this.rad) * speed;
+	        if (this.life > 0)
+	            this.life--;
+	    };
+	    Bullet.type = 'bullet';
+	    return Bullet;
 	})(Entity);
+	module.exports = Bullet;
 
 
 /***/ },
-/* 16 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var extend, template;
-
-	extend = __webpack_require__(82);
-
-	template = __webpack_require__(84);
-
-	module.exports = React.createClass({
-	  mixins: [
-	    Overworld.mixinFor(function() {
-	      return app;
-	    }), __webpack_require__(25)
-	  ],
-	  render: function() {
-	    return template(extend({}, this, this.props, this.state));
-	  }
-	});
-
-
-/***/ },
-/* 17 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Bullet, Entity,
-	  __hasProp = {}.hasOwnProperty,
-	  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-	Entity = __webpack_require__(24);
-
-	module.exports = Bullet = (function(_super) {
-	  __extends(Bullet, _super);
-
-	  Bullet.type = 'bullet';
-
-	  function Bullet(x, y, rad) {
-	    Bullet.__super__.constructor.apply(this, arguments);
-	    this.x = x;
-	    this.y = y;
-	    this.rad = rad;
-	    this.life = 40;
-	    this.attackableTypes = ['enemy'];
-	  }
-
-	  Bullet.prototype.step = function() {
-	    var speed;
-	    speed = 8;
-	    this.x += Math.cos(this.rad) * speed;
-	    this.y += Math.sin(this.rad) * speed;
-	    if (this.life > 0) {
-	      return this.life--;
-	    }
-	  };
-
-	  return Bullet;
-
-	})(Entity);
-
-
-/***/ },
-/* 18 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -979,30 +1160,30 @@
 
 	"use strict";
 
-	var DOMPropertyOperations = __webpack_require__(26);
-	var EventPluginUtils = __webpack_require__(27);
-	var ReactChildren = __webpack_require__(28);
-	var ReactComponent = __webpack_require__(29);
-	var ReactCompositeComponent = __webpack_require__(30);
-	var ReactContext = __webpack_require__(31);
-	var ReactCurrentOwner = __webpack_require__(32);
-	var ReactElement = __webpack_require__(33);
-	var ReactElementValidator = __webpack_require__(34);
-	var ReactDOM = __webpack_require__(35);
-	var ReactDOMComponent = __webpack_require__(36);
-	var ReactDefaultInjection = __webpack_require__(37);
-	var ReactInstanceHandles = __webpack_require__(38);
-	var ReactLegacyElement = __webpack_require__(39);
-	var ReactMount = __webpack_require__(40);
-	var ReactMultiChild = __webpack_require__(41);
-	var ReactPerf = __webpack_require__(42);
-	var ReactPropTypes = __webpack_require__(43);
-	var ReactServerRendering = __webpack_require__(44);
-	var ReactTextComponent = __webpack_require__(45);
+	var DOMPropertyOperations = __webpack_require__(36);
+	var EventPluginUtils = __webpack_require__(37);
+	var ReactChildren = __webpack_require__(38);
+	var ReactComponent = __webpack_require__(39);
+	var ReactCompositeComponent = __webpack_require__(40);
+	var ReactContext = __webpack_require__(41);
+	var ReactCurrentOwner = __webpack_require__(42);
+	var ReactElement = __webpack_require__(43);
+	var ReactElementValidator = __webpack_require__(44);
+	var ReactDOM = __webpack_require__(45);
+	var ReactDOMComponent = __webpack_require__(46);
+	var ReactDefaultInjection = __webpack_require__(47);
+	var ReactInstanceHandles = __webpack_require__(48);
+	var ReactLegacyElement = __webpack_require__(49);
+	var ReactMount = __webpack_require__(50);
+	var ReactMultiChild = __webpack_require__(51);
+	var ReactPerf = __webpack_require__(52);
+	var ReactPropTypes = __webpack_require__(53);
+	var ReactServerRendering = __webpack_require__(54);
+	var ReactTextComponent = __webpack_require__(55);
 
-	var assign = __webpack_require__(46);
-	var deprecated = __webpack_require__(47);
-	var onlyChild = __webpack_require__(48);
+	var assign = __webpack_require__(56);
+	var deprecated = __webpack_require__(57);
+	var onlyChild = __webpack_require__(58);
 
 	ReactDefaultInjection.inject();
 
@@ -1101,7 +1282,7 @@
 	}
 
 	if ("production" !== process.env.NODE_ENV) {
-	  var ExecutionEnvironment = __webpack_require__(49);
+	  var ExecutionEnvironment = __webpack_require__(59);
 	  if (ExecutionEnvironment.canUseDOM && window.top === window.self) {
 
 	    // If we're in Chrome, look for the devtools marker and provide a download
@@ -1147,14 +1328,14 @@
 
 	// Version exists only in the open-source version of React, not in Facebook's
 	// internal version.
-	React.version = '0.12.1';
+	React.version = '0.12.2';
 
 	module.exports = React;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(85)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(97)))
 
 /***/ },
-/* 19 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -1182,30 +1363,26 @@
 	 * 
 	 */
 	"use strict";
-	var old;
-	if (typeof Promise !== "undefined") old = Promise;
-	function noConflict(bluebird) {
-	    try { if (Promise === bluebird) Promise = old; }
-	    catch (e) {}
-	    return bluebird;
-	}
 	module.exports = function() {
-	var util = __webpack_require__(50);
-	var async = __webpack_require__(51);
-	var errors = __webpack_require__(52);
-
+	var makeSelfResolutionError = function () {
+	    return new TypeError("circular promise resolution chain\u000a\u000a    See http://goo.gl/LhFpo0\u000a");
+	};
+	var reflect = function() {
+	    return new Promise.PromiseInspection(this._target());
+	};
+	var util = __webpack_require__(61);
+	var async = __webpack_require__(62);
+	var errors = __webpack_require__(63);
 	var INTERNAL = function(){};
 	var APPLY = {};
 	var NEXT_FILTER = {e: null};
-
-	var cast = __webpack_require__(53)(Promise, INTERNAL);
-	var PromiseArray = __webpack_require__(54)(Promise, INTERNAL, cast);
-	var CapturedTrace = __webpack_require__(55)();
-	var CatchFilter = __webpack_require__(56)(NEXT_FILTER);
-	var PromiseResolver = __webpack_require__(57);
-
+	var tryConvertToPromise = __webpack_require__(64)(Promise, INTERNAL);
+	var PromiseArray =
+	    __webpack_require__(65)(Promise, INTERNAL, tryConvertToPromise);
+	var CapturedTrace = __webpack_require__(66)();
+	var CatchFilter = __webpack_require__(67)(NEXT_FILTER);
+	var PromiseResolver = __webpack_require__(68);
 	var isArray = util.isArray;
-
 	var errorObj = util.errorObj;
 	var tryCatch1 = util.tryCatch1;
 	var tryCatch2 = util.tryCatch2;
@@ -1217,59 +1394,60 @@
 	var OperationalError = errors.OperationalError;
 	var originatesFromRejection = errors.originatesFromRejection;
 	var markAsOriginatingFromRejection = errors.markAsOriginatingFromRejection;
-	var canAttach = errors.canAttach;
-	var thrower = util.thrower;
-	var apiRejection = __webpack_require__(58)(Promise);
-
-
-	var makeSelfResolutionError = function Promise$_makeSelfResolutionError() {
-	    return new TypeError("circular promise resolution chain");
-	};
-
+	var canAttachTrace = errors.canAttachTrace;
+	var apiRejection = __webpack_require__(69)(Promise);
+	var unhandledRejectionHandled;
+	var debugging = false || !!(
+	    typeof process !== "undefined" &&
+	    typeof process.execPath === "string" &&
+	    typeof process.env === "object" &&
+	    (process.env["BLUEBIRD_DEBUG"] ||
+	        process.env["NODE_ENV"] === "development")
+	);
 	function Promise(resolver) {
 	    if (typeof resolver !== "function") {
-	        throw new TypeError("the promise constructor requires a resolver function");
+	        throw new TypeError("the promise constructor requires a resolver function\u000a\u000a    See http://goo.gl/EC22Yn\u000a");
 	    }
 	    if (this.constructor !== Promise) {
-	        throw new TypeError("the promise constructor cannot be invoked directly");
+	        throw new TypeError("the promise constructor cannot be invoked directly\u000a\u000a    See http://goo.gl/KsIlge\u000a");
 	    }
 	    this._bitField = 0;
-	    this._fulfillmentHandler0 = void 0;
-	    this._rejectionHandler0 = void 0;
-	    this._promise0 = void 0;
-	    this._receiver0 = void 0;
-	    this._settledValue = void 0;
-	    this._boundTo = void 0;
+	    this._fulfillmentHandler0 = undefined;
+	    this._rejectionHandler0 = undefined;
+	    this._progressHandler0 = undefined;
+	    this._promise0 = undefined;
+	    this._receiver0 = undefined;
+	    this._settledValue = undefined;
+	    this._boundTo = undefined;
 	    if (resolver !== INTERNAL) this._resolveFromResolver(resolver);
 	}
 
-	function returnFirstElement(elements) {
-	    return elements[0];
-	}
-
-	Promise.prototype.bind = function Promise$bind(thisArg) {
-	    var maybePromise = cast(thisArg, void 0);
+	Promise.prototype.bind = function (thisArg) {
+	    var maybePromise = tryConvertToPromise(thisArg, this);
 	    var ret = new Promise(INTERNAL);
-	    if (maybePromise instanceof Promise) {
-	        var binder = maybePromise.then(function(thisArg) {
-	            ret._setBoundTo(thisArg);
-	        });
-	        var p = Promise.all([this, binder]).then(returnFirstElement);
-	        ret._follow(p);
-	    } else {
-	        ret._follow(this);
-	        ret._setBoundTo(thisArg);
-	    }
 	    ret._propagateFrom(this, 2 | 1);
+	    var target = this._target();
+	    if (maybePromise instanceof Promise) {
+	        target._then(INTERNAL, ret._reject, ret._progress, ret, null);
+	        maybePromise._then(function(thisArg) {
+	            if (ret._isPending()) {
+	                ret._setBoundTo(thisArg);
+	                ret._follow(target);
+	            }
+	        }, ret._reject, ret._progress, ret, null);
+	    } else {
+	        ret._setBoundTo(thisArg);
+	        ret._follow(target);
+	    }
+
 	    return ret;
 	};
 
-	Promise.prototype.toString = function Promise$toString() {
+	Promise.prototype.toString = function () {
 	    return "[object Promise]";
 	};
 
-	Promise.prototype.caught = Promise.prototype["catch"] =
-	function Promise$catch(fn) {
+	Promise.prototype.caught = Promise.prototype["catch"] = function (fn) {
 	    var len = arguments.length;
 	    if (len > 1) {
 	        var catchInstances = new Array(len - 1),
@@ -1279,13 +1457,9 @@
 	            if (typeof item === "function") {
 	                catchInstances[j++] = item;
 	            } else {
-	                var catchFilterTypeError =
-	                    new TypeError(
-	                        "A catch filter must be an error constructor "
-	                        + "or a filter function");
-
-	                this._attachExtraTrace(catchFilterTypeError);
-	                return Promise.reject(catchFilterTypeError);
+	                var error = new TypeError("Catch filter must inherit from Error or be a simple predicate function\u000a\u000a    See http://goo.gl/o84o68\u000a");
+	                this._attachExtraTrace(error);
+	                return Promise.reject(error);
 	            }
 	        }
 	        catchInstances.length = j;
@@ -1293,107 +1467,78 @@
 
 	        this._resetTrace();
 	        var catchFilter = new CatchFilter(catchInstances, fn, this);
-	        return this._then(void 0, catchFilter.doFilter, void 0,
-	            catchFilter, void 0);
+	        return this._then(undefined, catchFilter.doFilter, undefined,
+	            catchFilter, undefined);
 	    }
-	    return this._then(void 0, fn, void 0, void 0, void 0);
+	    return this._then(undefined, fn, undefined, undefined, undefined);
 	};
 
-	function reflect() {
-	    return new Promise.PromiseInspection(this);
-	}
-
-	Promise.prototype.reflect = function Promise$reflect() {
-	    return this._then(reflect, reflect, void 0, this, void 0);
+	Promise.prototype.reflect = function () {
+	    return this._then(reflect, reflect, undefined, this, undefined);
 	};
 
-	Promise.prototype.then =
-	function Promise$then(didFulfill, didReject, didProgress) {
+	Promise.prototype.then = function (didFulfill, didReject, didProgress) {
 	    return this._then(didFulfill, didReject, didProgress,
-	        void 0, void 0);
+	        undefined, undefined);
 	};
 
 
-	Promise.prototype.done =
-	function Promise$done(didFulfill, didReject, didProgress) {
+	Promise.prototype.done = function (didFulfill, didReject, didProgress) {
 	    var promise = this._then(didFulfill, didReject, didProgress,
-	        void 0, void 0);
+	        undefined, undefined);
 	    promise._setIsFinal();
 	};
 
-	Promise.prototype.spread = function Promise$spread(didFulfill, didReject) {
-	    return this._then(didFulfill, didReject, void 0,
-	        APPLY, void 0);
+	Promise.prototype.spread = function (didFulfill, didReject) {
+	    return this.all()._then(didFulfill, didReject, undefined, APPLY, undefined);
 	};
 
-	Promise.prototype.isCancellable = function Promise$isCancellable() {
+	Promise.prototype.isCancellable = function () {
 	    return !this.isResolved() &&
 	        this._cancellable();
 	};
 
-	Promise.prototype.toJSON = function Promise$toJSON() {
+	Promise.prototype.toJSON = function () {
 	    var ret = {
 	        isFulfilled: false,
 	        isRejected: false,
-	        fulfillmentValue: void 0,
-	        rejectionReason: void 0
+	        fulfillmentValue: undefined,
+	        rejectionReason: undefined
 	    };
 	    if (this.isFulfilled()) {
-	        ret.fulfillmentValue = this._settledValue;
+	        ret.fulfillmentValue = this.value();
 	        ret.isFulfilled = true;
 	    } else if (this.isRejected()) {
-	        ret.rejectionReason = this._settledValue;
+	        ret.rejectionReason = this.reason();
 	        ret.isRejected = true;
 	    }
 	    return ret;
 	};
 
-	Promise.prototype.all = function Promise$all() {
+	Promise.prototype.all = function () {
 	    return new PromiseArray(this).promise();
 	};
 
-
-	Promise.is = function Promise$Is(val) {
-	    return val instanceof Promise;
-	};
-
-	Promise.all = function Promise$All(promises) {
-	    return new PromiseArray(promises).promise();
-	};
-
-	Promise.prototype.error = function Promise$_error(fn) {
+	Promise.prototype.error = function (fn) {
 	    return this.caught(originatesFromRejection, fn);
 	};
 
-	Promise.prototype._resolveFromSyncValue =
-	function Promise$_resolveFromSyncValue(value) {
-	    if (value === errorObj) {
-	        this._cleanValues();
-	        this._setRejected();
-	        var reason = value.e;
-	        this._settledValue = reason;
-	        this._tryAttachExtraTrace(reason);
-	        this._ensurePossibleRejectionHandled();
-	    } else {
-	        var maybePromise = cast(value, void 0);
-	        if (maybePromise instanceof Promise) {
-	            this._follow(maybePromise);
-	        } else {
-	            this._cleanValues();
-	            this._setFulfilled();
-	            this._settledValue = value;
-	        }
-	    }
+	Promise.is = function (val) {
+	    return val instanceof Promise;
 	};
 
-	Promise.method = function Promise$_Method(fn) {
+	Promise.all = function (promises) {
+	    return new PromiseArray(promises).promise();
+	};
+
+	Promise.method = function (fn) {
 	    if (typeof fn !== "function") {
-	        throw new TypeError("fn must be a function");
+	        throw new TypeError("fn must be a function\u000a\u000a    See http://goo.gl/916lJJ\u000a");
 	    }
-	    return function Promise$_method() {
+	    return function () {
 	        var value;
 	        switch(arguments.length) {
-	        case 0: value = tryCatch1(fn, this, void 0); break;
+	        case 0: value = tryCatch1(fn, this, undefined); break;
 	        case 1: value = tryCatch1(fn, this, arguments[0]); break;
 	        case 2: value = tryCatch2(fn, this, arguments[0], arguments[1]); break;
 	        default:
@@ -1401,42 +1546,42 @@
 	            value = tryCatchApply(fn, args, this); break;
 	        }
 	        var ret = new Promise(INTERNAL);
-	        ret._setTrace(void 0);
+	        ret._setTrace(undefined);
 	        ret._resolveFromSyncValue(value);
 	        return ret;
 	    };
 	};
 
-	Promise.attempt = Promise["try"] = function Promise$_Try(fn, args, ctx) {
+	Promise.attempt = Promise["try"] = function (fn, args, ctx) {
 	    if (typeof fn !== "function") {
-	        return apiRejection("fn must be a function");
+	        return apiRejection("fn must be a function\u000a\u000a    See http://goo.gl/916lJJ\u000a");
 	    }
 	    var value = isArray(args)
 	        ? tryCatchApply(fn, args, ctx)
 	        : tryCatch1(fn, ctx, args);
 
 	    var ret = new Promise(INTERNAL);
-	    ret._setTrace(void 0);
+	    ret._setTrace(undefined);
 	    ret._resolveFromSyncValue(value);
 	    return ret;
 	};
 
-	Promise.defer = Promise.pending = function Promise$Defer() {
+	Promise.defer = Promise.pending = function () {
 	    var promise = new Promise(INTERNAL);
-	    promise._setTrace(void 0);
+	    promise._setTrace(undefined);
 	    return new PromiseResolver(promise);
 	};
 
-	Promise.bind = function Promise$Bind(thisArg) {
-	    var maybePromise = cast(thisArg, void 0);
+	Promise.bind = function (thisArg) {
+	    var maybePromise = tryConvertToPromise(thisArg, undefined);
 	    var ret = new Promise(INTERNAL);
-	    ret._setTrace(void 0);
+	    ret._setTrace(undefined);
 
 	    if (maybePromise instanceof Promise) {
-	        var p = maybePromise.then(function(thisArg) {
+	        maybePromise._then(function(thisArg) {
 	            ret._setBoundTo(thisArg);
-	        });
-	        ret._follow(p);
+	            ret._fulfill(undefined);
+	        }, ret._reject, ret._progress, ret, null);
 	    } else {
 	        ret._setBoundTo(thisArg);
 	        ret._setFulfilled();
@@ -1444,29 +1589,29 @@
 	    return ret;
 	};
 
-	Promise.cast = function Promise$_Cast(obj) {
-	    var ret = cast(obj, void 0);
+	Promise.cast = function (obj) {
+	    var ret = tryConvertToPromise(obj, undefined);
 	    if (!(ret instanceof Promise)) {
 	        var val = ret;
 	        ret = new Promise(INTERNAL);
-	        ret._setTrace(void 0);
+	        ret._setTrace(undefined);
 	        ret._setFulfilled();
-	        ret._cleanValues();
 	        ret._settledValue = val;
+	        ret._cleanValues();
 	    }
 	    return ret;
 	};
 
 	Promise.resolve = Promise.fulfilled = Promise.cast;
 
-	Promise.reject = Promise.rejected = function Promise$Reject(reason) {
+	Promise.reject = Promise.rejected = function (reason) {
 	    var ret = new Promise(INTERNAL);
-	    ret._setTrace(void 0);
+	    ret._setTrace(undefined);
 	    markAsOriginatingFromRejection(reason);
-	    ret._cleanValues();
 	    ret._setRejected();
 	    ret._settledValue = reason;
-	    if (!canAttach(reason)) {
+	    ret._cleanValues();
+	    if (!canAttachTrace(reason)) {
 	        var trace = new Error(reason + "");
 	        ret._setCarriedStackTrace(trace);
 	    }
@@ -1474,126 +1619,120 @@
 	    return ret;
 	};
 
-	Promise.onPossiblyUnhandledRejection =
-	function Promise$OnPossiblyUnhandledRejection(fn) {
+	Promise.onPossiblyUnhandledRejection = function (fn) {
 	        CapturedTrace.possiblyUnhandledRejection = typeof fn === "function"
-	                                                    ? fn : void 0;
+	                                                    ? fn : undefined;
 	};
 
-	var unhandledRejectionHandled;
-	Promise.onUnhandledRejectionHandled =
-	function Promise$onUnhandledRejectionHandled(fn) {
-	    unhandledRejectionHandled = typeof fn === "function" ? fn : void 0;
+	Promise.onUnhandledRejectionHandled = function (fn) {
+	    unhandledRejectionHandled = typeof fn === "function" ? fn : undefined;
 	};
 
-	var debugging = false || !!(
-	    typeof process !== "undefined" &&
-	    typeof process.execPath === "string" &&
-	    typeof process.env === "object" &&
-	    (process.env["BLUEBIRD_DEBUG"] ||
-	        process.env["NODE_ENV"] === "development")
-	);
-
-
-	Promise.longStackTraces = function Promise$LongStackTraces() {
+	Promise.longStackTraces = function () {
 	    if (async.haveItemsQueued() &&
 	        debugging === false
 	   ) {
-	        throw new Error("cannot enable long stack traces after promises have been created");
+	        throw new Error("cannot enable long stack traces after promises have been created\u000a\u000a    See http://goo.gl/DT1qyG\u000a");
 	    }
 	    debugging = CapturedTrace.isSupported();
 	};
 
-	Promise.hasLongStackTraces = function Promise$HasLongStackTraces() {
+	Promise.hasLongStackTraces = function () {
 	    return debugging && CapturedTrace.isSupported();
 	};
 
-	Promise.prototype._then =
-	function Promise$_then(
+	Promise.setScheduler = function(fn) {
+	    if (typeof fn !== "function") throw new TypeError("fn must be a function\u000a\u000a    See http://goo.gl/916lJJ\u000a");
+	    async._schedule = fn;
+	};
+
+	Promise.prototype._then = function (
 	    didFulfill,
 	    didReject,
 	    didProgress,
 	    receiver,
 	    internalData
 	) {
-	    var haveInternalData = internalData !== void 0;
+	    var haveInternalData = internalData !== undefined;
 	    var ret = haveInternalData ? internalData : new Promise(INTERNAL);
 
 	    if (!haveInternalData) {
-	        if (debugging) {
-	            var haveSameContext = this._peekContext() === this._traceParent;
-	            ret._traceParent = haveSameContext ? this._traceParent : this;
-	        }
 	        ret._propagateFrom(this, 7);
 	    }
 
+	    var target = this._target();
+	    if (target !== this && receiver === undefined) receiver = this._boundTo;
 	    var callbackIndex =
-	        this._addCallbacks(didFulfill, didReject, didProgress, ret, receiver);
+	        target._addCallbacks(didFulfill, didReject, didProgress, ret, receiver);
 
-	    if (this.isResolved()) {
-	        async.invoke(this._queueSettleAt, this, callbackIndex);
+	    if (target._isResolved() && !target._isSettlePromisesQueued()) {
+	        async.invoke(
+	            target._settlePromiseAtPostResolution, target, callbackIndex);
 	    }
 
 	    return ret;
 	};
 
-	Promise.prototype._length = function Promise$_length() {
+	Promise.prototype._settlePromiseAtPostResolution = function (index) {
+	    if (this._isRejectionUnhandled()) this._unsetRejectionIsUnhandled();
+	    this._setLength(0);
+	    this._settlePromiseAt(index);
+	};
+
+	Promise.prototype._length = function () {
 	    return this._bitField & 262143;
 	};
 
-	Promise.prototype._isFollowingOrFulfilledOrRejected =
-	function Promise$_isFollowingOrFulfilledOrRejected() {
+	Promise.prototype._isFollowingOrFulfilledOrRejected = function () {
 	    return (this._bitField & 939524096) > 0;
 	};
 
-	Promise.prototype._isFollowing = function Promise$_isFollowing() {
+	Promise.prototype._isFollowing = function () {
 	    return (this._bitField & 536870912) === 536870912;
 	};
 
-	Promise.prototype._setLength = function Promise$_setLength(len) {
+	Promise.prototype._setLength = function (len) {
 	    this._bitField = (this._bitField & -262144) |
 	        (len & 262143);
 	};
 
-	Promise.prototype._setFulfilled = function Promise$_setFulfilled() {
+	Promise.prototype._setFulfilled = function () {
 	    this._bitField = this._bitField | 268435456;
 	};
 
-	Promise.prototype._setRejected = function Promise$_setRejected() {
+	Promise.prototype._setRejected = function () {
 	    this._bitField = this._bitField | 134217728;
 	};
 
-	Promise.prototype._setFollowing = function Promise$_setFollowing() {
+	Promise.prototype._setFollowing = function () {
 	    this._bitField = this._bitField | 536870912;
 	};
 
-	Promise.prototype._setIsFinal = function Promise$_setIsFinal() {
+	Promise.prototype._setIsFinal = function () {
 	    this._bitField = this._bitField | 33554432;
 	};
 
-	Promise.prototype._isFinal = function Promise$_isFinal() {
+	Promise.prototype._isFinal = function () {
 	    return (this._bitField & 33554432) > 0;
 	};
 
-	Promise.prototype._cancellable = function Promise$_cancellable() {
+	Promise.prototype._cancellable = function () {
 	    return (this._bitField & 67108864) > 0;
 	};
 
-	Promise.prototype._setCancellable = function Promise$_setCancellable() {
+	Promise.prototype._setCancellable = function () {
 	    this._bitField = this._bitField | 67108864;
 	};
 
-	Promise.prototype._unsetCancellable = function Promise$_unsetCancellable() {
+	Promise.prototype._unsetCancellable = function () {
 	    this._bitField = this._bitField & (~67108864);
 	};
 
-	Promise.prototype._setRejectionIsUnhandled =
-	function Promise$_setRejectionIsUnhandled() {
+	Promise.prototype._setRejectionIsUnhandled = function () {
 	    this._bitField = this._bitField | 2097152;
 	};
 
-	Promise.prototype._unsetRejectionIsUnhandled =
-	function Promise$_unsetRejectionIsUnhandled() {
+	Promise.prototype._unsetRejectionIsUnhandled = function () {
 	    this._bitField = this._bitField & (~2097152);
 	    if (this._isUnhandledRejectionNotified()) {
 	        this._unsetUnhandledRejectionIsNotified();
@@ -1601,81 +1740,72 @@
 	    }
 	};
 
-	Promise.prototype._isRejectionUnhandled =
-	function Promise$_isRejectionUnhandled() {
+	Promise.prototype._isRejectionUnhandled = function () {
 	    return (this._bitField & 2097152) > 0;
 	};
 
-	Promise.prototype._setUnhandledRejectionIsNotified =
-	function Promise$_setUnhandledRejectionIsNotified() {
+	Promise.prototype._setUnhandledRejectionIsNotified = function () {
 	    this._bitField = this._bitField | 524288;
 	};
 
-	Promise.prototype._unsetUnhandledRejectionIsNotified =
-	function Promise$_unsetUnhandledRejectionIsNotified() {
+	Promise.prototype._unsetUnhandledRejectionIsNotified = function () {
 	    this._bitField = this._bitField & (~524288);
 	};
 
-	Promise.prototype._isUnhandledRejectionNotified =
-	function Promise$_isUnhandledRejectionNotified() {
+	Promise.prototype._isUnhandledRejectionNotified = function () {
 	    return (this._bitField & 524288) > 0;
 	};
 
-	Promise.prototype._setCarriedStackTrace =
-	function Promise$_setCarriedStackTrace(capturedTrace) {
+	Promise.prototype._setCarriedStackTrace = function (capturedTrace) {
 	    this._bitField = this._bitField | 1048576;
 	    this._fulfillmentHandler0 = capturedTrace;
 	};
 
-	Promise.prototype._unsetCarriedStackTrace =
-	function Promise$_unsetCarriedStackTrace() {
+	Promise.prototype._unsetCarriedStackTrace = function () {
 	    this._bitField = this._bitField & (~1048576);
-	    this._fulfillmentHandler0 = void 0;
+	    this._fulfillmentHandler0 = undefined;
 	};
 
-	Promise.prototype._isCarryingStackTrace =
-	function Promise$_isCarryingStackTrace() {
+	Promise.prototype._isCarryingStackTrace = function () {
 	    return (this._bitField & 1048576) > 0;
 	};
 
-	Promise.prototype._getCarriedStackTrace =
-	function Promise$_getCarriedStackTrace() {
+	Promise.prototype._getCarriedStackTrace = function () {
 	    return this._isCarryingStackTrace()
 	        ? this._fulfillmentHandler0
-	        : void 0;
+	        : undefined;
 	};
 
-	Promise.prototype._receiverAt = function Promise$_receiverAt(index) {
+	Promise.prototype._receiverAt = function (index) {
 	    var ret = index === 0
 	        ? this._receiver0
-	        : this[(index << 2) + index - 5 + 4];
-	    if (this._isBound() && ret === void 0) {
+	        : this[
+	            index * 5 - 5 + 4];
+	    if (this._isBound() && ret === undefined) {
 	        return this._boundTo;
 	    }
 	    return ret;
 	};
 
-	Promise.prototype._promiseAt = function Promise$_promiseAt(index) {
+	Promise.prototype._promiseAt = function (index) {
 	    return index === 0
 	        ? this._promise0
-	        : this[(index << 2) + index - 5 + 3];
+	        : this[index * 5 - 5 + 3];
 	};
 
-	Promise.prototype._fulfillmentHandlerAt =
-	function Promise$_fulfillmentHandlerAt(index) {
+	Promise.prototype._fulfillmentHandlerAt = function (index) {
 	    return index === 0
 	        ? this._fulfillmentHandler0
-	        : this[(index << 2) + index - 5 + 0];
+	        : this[index * 5 - 5 + 0];
 	};
 
-	Promise.prototype._rejectionHandlerAt =
-	function Promise$_rejectionHandlerAt(index) {
+	Promise.prototype._rejectionHandlerAt = function (index) {
 	    return index === 0
 	        ? this._rejectionHandler0
-	        : this[(index << 2) + index - 5 + 1];
+	        : this[index * 5 - 5 + 1];
 	};
 
-	Promise.prototype._addCallbacks = function Promise$_addCallbacks(
+	Promise.prototype._addCallbacks = function (
 	    fulfill,
 	    reject,
 	    progress,
@@ -1691,28 +1821,27 @@
 
 	    if (index === 0) {
 	        this._promise0 = promise;
-	        if (receiver !== void 0) this._receiver0 = receiver;
+	        if (receiver !== undefined) this._receiver0 = receiver;
 	        if (typeof fulfill === "function" && !this._isCarryingStackTrace())
 	            this._fulfillmentHandler0 = fulfill;
 	        if (typeof reject === "function") this._rejectionHandler0 = reject;
 	        if (typeof progress === "function") this._progressHandler0 = progress;
 	    } else {
-	        var base = (index << 2) + index - 5;
+	        var base = index * 5 - 5;
 	        this[base + 3] = promise;
 	        this[base + 4] = receiver;
-	        this[base + 0] = typeof fulfill === "function"
-	                                            ? fulfill : void 0;
-	        this[base + 1] = typeof reject === "function"
-	                                            ? reject : void 0;
-	        this[base + 2] = typeof progress === "function"
-	                                            ? progress : void 0;
+	        if (typeof fulfill === "function")
+	            this[base + 0] = fulfill;
+	        if (typeof reject === "function")
+	            this[base + 1] = reject;
+	        if (typeof progress === "function")
+	            this[base + 2] = progress;
 	    }
 	    this._setLength(index + 1);
 	    return index;
 	};
 
-	Promise.prototype._setProxyHandlers =
-	function Promise$_setProxyHandlers(receiver, promiseSlotValue) {
+	Promise.prototype._setProxyHandlers = function (receiver, promiseSlotValue) {
 	    var index = this._length();
 
 	    if (index >= 262143 - 5) {
@@ -1723,28 +1852,19 @@
 	        this._promise0 = promiseSlotValue;
 	        this._receiver0 = receiver;
 	    } else {
-	        var base = (index << 2) + index - 5;
+	        var base = index * 5 - 5;
 	        this[base + 3] = promiseSlotValue;
 	        this[base + 4] = receiver;
-	        this[base + 0] =
-	        this[base + 1] =
-	        this[base + 2] = void 0;
 	    }
 	    this._setLength(index + 1);
 	};
 
-	Promise.prototype._proxyPromiseArray =
-	function Promise$_proxyPromiseArray(promiseArray, index) {
+	Promise.prototype._proxyPromiseArray = function (promiseArray, index) {
 	    this._setProxyHandlers(promiseArray, index);
 	};
 
-	Promise.prototype._proxyPromise = function Promise$_proxyPromise(promise) {
-	    promise._setProxied();
-	    this._setProxyHandlers(promise, -15);
-	};
-
-	Promise.prototype._setBoundTo = function Promise$_setBoundTo(obj) {
-	    if (obj !== void 0) {
+	Promise.prototype._setBoundTo = function (obj) {
+	    if (obj !== undefined) {
 	        this._bitField = this._bitField | 8388608;
 	        this._boundTo = obj;
 	    } else {
@@ -1752,222 +1872,168 @@
 	    }
 	};
 
-	Promise.prototype._isBound = function Promise$_isBound() {
+	Promise.prototype._isBound = function () {
 	    return (this._bitField & 8388608) === 8388608;
 	};
 
-	Promise.prototype._resolveFromResolver =
-	function Promise$_resolveFromResolver(resolver) {
+	Promise.prototype._resolveFromResolver = function (resolver) {
 	    var promise = this;
-	    this._setTrace(void 0);
-	    this._pushContext();
+	    this._setTrace(undefined);
 
-	    function Promise$_resolver(val) {
+	    this._pushContext();
+	    var r = tryCatch2(resolver, undefined, function(val) {
 	        if (promise._tryFollow(val)) {
 	            return;
 	        }
 	        promise._fulfill(val);
-	    }
-	    function Promise$_rejecter(val) {
-	        var trace = canAttach(val) ? val : new Error(val + "");
+	    }, function (val) {
+	        var trace = canAttachTrace(val) ? val : new Error(val + "");
 	        promise._attachExtraTrace(trace);
 	        markAsOriginatingFromRejection(val);
-	        promise._reject(val, trace === val ? void 0 : trace);
-	    }
-	    var r = tryCatch2(resolver, void 0, Promise$_resolver, Promise$_rejecter);
+	        promise._reject(val, trace === val ? undefined : trace);
+	    });
 	    this._popContext();
 
-	    if (r !== void 0 && r === errorObj) {
+	    if (r !== undefined && r === errorObj) {
 	        var e = r.e;
-	        var trace = canAttach(e) ? e : new Error(e + "");
+	        var trace = canAttachTrace(e) ? e : new Error(e + "");
 	        promise._reject(e, trace);
 	    }
 	};
 
-	Promise.prototype._spreadSlowCase =
-	function Promise$_spreadSlowCase(targetFn, promise, values, boundTo) {
-	    var promiseForAll = new PromiseArray(values).promise();
-	    var promise2 = promiseForAll._then(function() {
-	        return targetFn.apply(boundTo, arguments);
-	    }, void 0, void 0, APPLY, void 0);
-	    promise._follow(promise2);
-	};
-
-	Promise.prototype._callSpread =
-	function Promise$_callSpread(handler, promise, value) {
-	    var boundTo = this._boundTo;
-	    if (isArray(value)) {
-	        for (var i = 0, len = value.length; i < len; ++i) {
-	            if (cast(value[i], void 0) instanceof Promise) {
-	                this._spreadSlowCase(handler, promise, value, boundTo);
-	                return;
-	            }
-	        }
-	    }
-	    promise._pushContext();
-	    return tryCatchApply(handler, value, boundTo);
-	};
-
-	Promise.prototype._callHandler =
-	function Promise$_callHandler(
+	Promise.prototype._callHandler = function (
 	    handler, receiver, promise, value) {
 	    var x;
-	    if (receiver === APPLY && !this.isRejected()) {
-	        x = this._callSpread(handler, promise, value);
+	    promise._pushContext();
+	    if (receiver === APPLY && !this._isRejected()) {
+	        x = tryCatchApply(handler, value, this._boundTo);
 	    } else {
-	        promise._pushContext();
 	        x = tryCatch1(handler, receiver, value);
 	    }
 	    promise._popContext();
 	    return x;
 	};
 
-	Promise.prototype._settlePromiseFromHandler =
-	function Promise$_settlePromiseFromHandler(
+	Promise.prototype._settlePromiseFromHandler = function (
 	    handler, receiver, value, promise
 	) {
-	    if (!(promise instanceof Promise)) {
-	        handler.call(receiver, value, promise);
-	        return;
-	    }
-	    if (promise.isResolved()) return;
+	    if (promise._isRejected()) return;
 	    var x = this._callHandler(handler, receiver, promise, value);
-	    if (promise._isFollowing()) return;
 
 	    if (x === errorObj || x === promise || x === NEXT_FILTER) {
 	        var err = x === promise
 	                    ? makeSelfResolutionError()
 	                    : x.e;
-	        var trace = canAttach(err) ? err : new Error(err + "");
+	        var trace = canAttachTrace(err) ? err : new Error(err + "");
 	        if (x !== NEXT_FILTER) promise._attachExtraTrace(trace);
 	        promise._rejectUnchecked(err, trace);
 	    } else {
-	        var castValue = cast(x, promise);
-	        if (castValue instanceof Promise) {
-	            if (castValue.isRejected() &&
-	                !castValue._isCarryingStackTrace() &&
-	                !canAttach(castValue._settledValue)) {
-	                var trace = new Error(castValue._settledValue + "");
+	        x = tryConvertToPromise(x, promise);
+	        if (x instanceof Promise) {
+	            x = x._target();
+	            if (x._isRejected() &&
+	                !x._isCarryingStackTrace() &&
+	                !canAttachTrace(x._reason())) {
+	                var trace = new Error(x._reason() + "");
 	                promise._attachExtraTrace(trace);
-	                castValue._setCarriedStackTrace(trace);
+	                x._setCarriedStackTrace(trace);
 	            }
-	            promise._follow(castValue);
-	            promise._propagateFrom(castValue, 1);
+	            promise._follow(x);
 	        } else {
 	            promise._fulfillUnchecked(x);
 	        }
 	    }
 	};
 
-	Promise.prototype._follow =
-	function Promise$_follow(promise) {
-	    this._setFollowing();
+	Promise.prototype._target = function() {
+	    var ret = this;
+	    while (ret._isFollowing()) ret = ret._followee();
+	    return ret;
+	};
 
-	    if (promise.isPending()) {
+	Promise.prototype._followee = function() {
+	    return this._rejectionHandler0;
+	};
+
+	Promise.prototype._setFollowee = function(promise) {
+	    this._rejectionHandler0 = promise;
+	};
+
+	Promise.prototype._follow = function (promise) {
+	    if (promise._isPending()) {
+	        var len = this._length();
+	        for (var i = 0; i < len; ++i) {
+	            promise._addCallbacks(
+	                this._fulfillmentHandlerAt(i),
+	                this._rejectionHandlerAt(i),
+	                this._progressHandlerAt(i),
+	                this._promiseAt(i),
+	                this._receiverAt(i)
+	            );
+	        }
+	        this._setFollowing();
+	        this._setLength(0);
+	        this._setFollowee(promise);
 	        this._propagateFrom(promise, 1);
-	        promise._proxyPromise(this);
-	    } else if (promise.isFulfilled()) {
-	        this._fulfillUnchecked(promise._settledValue);
+	    } else if (promise._isFulfilled()) {
+	        this._fulfillUnchecked(promise._value());
 	    } else {
-	        this._rejectUnchecked(promise._settledValue,
+	        this._rejectUnchecked(promise._reason(),
 	            promise._getCarriedStackTrace());
 	    }
-
 	    if (promise._isRejectionUnhandled()) promise._unsetRejectionIsUnhandled();
 
 	    if (debugging &&
-	        promise._traceParent == null) {
-	        promise._traceParent = this;
+	        !promise._trace.hasParent()) {
+	        promise._trace.setParent(this._trace);
 	    }
 	};
 
-	Promise.prototype._tryFollow =
-	function Promise$_tryFollow(value) {
+	Promise.prototype._tryFollow = function (value) {
 	    if (this._isFollowingOrFulfilledOrRejected() ||
 	        value === this) {
 	        return false;
 	    }
-	    var maybePromise = cast(value, void 0);
+	    var maybePromise = tryConvertToPromise(value, this);
 	    if (!(maybePromise instanceof Promise)) {
 	        return false;
 	    }
-	    this._follow(maybePromise);
+	    this._follow(maybePromise._target());
 	    return true;
 	};
 
-	Promise.prototype._resetTrace = function Promise$_resetTrace() {
+	Promise.prototype._resetTrace = function () {
 	    if (debugging) {
-	        this._trace = new CapturedTrace(this._peekContext() === void 0);
+	        this._trace = new CapturedTrace(this._peekContext());
 	    }
 	};
 
-	Promise.prototype._setTrace = function Promise$_setTrace(parent) {
+	Promise.prototype._setTrace = function (parent) {
 	    if (debugging) {
 	        var context = this._peekContext();
-	        this._traceParent = context;
-	        var isTopLevel = context === void 0;
-	        if (parent !== void 0 &&
-	            parent._traceParent === context) {
+	        if (parent !== undefined &&
+	            parent._trace.parent() === context) {
 	            this._trace = parent._trace;
 	        } else {
-	            this._trace = new CapturedTrace(isTopLevel);
+	            this._trace = new CapturedTrace(context);
 	        }
 	    }
 	    return this;
 	};
 
-	Promise.prototype._tryAttachExtraTrace =
-	function Promise$_tryAttachExtraTrace(error) {
-	    if (canAttach(error)) {
-	        this._attachExtraTrace(error);
+	Promise.prototype._attachExtraTrace = function (error) {
+	    if (debugging && canAttachTrace(error)) {
+	        this._trace.attachExtraTrace(error);
 	    }
 	};
 
-	Promise.prototype._attachExtraTrace =
-	function Promise$_attachExtraTrace(error) {
-	    if (debugging) {
-	        var promise = this;
-	        var stack = error.stack;
-	        stack = typeof stack === "string" ? stack.split("\n") : [];
-	        CapturedTrace.protectErrorMessageNewlines(stack);
-	        var headerLineCount = 1;
-	        var combinedTraces = 1;
-	        while(promise != null &&
-	            promise._trace != null) {
-	            stack = CapturedTrace.combine(
-	                stack,
-	                promise._trace.stack.split("\n")
-	            );
-	            promise = promise._traceParent;
-	            combinedTraces++;
-	        }
-
-	        var stackTraceLimit = Error.stackTraceLimit || 10;
-	        var max = (stackTraceLimit + headerLineCount) * combinedTraces;
-	        var len = stack.length;
-	        if (len > max) {
-	            stack.length = max;
-	        }
-
-	        if (len > 0)
-	            stack[0] = stack[0].split("\u0002\u0000\u0001").join("\n");
-
-	        if (stack.length <= headerLineCount) {
-	            error.stack = "(No stack trace)";
-	        } else {
-	            error.stack = stack.join("\n");
-	        }
-	    }
-	};
-
-	Promise.prototype._cleanValues = function Promise$_cleanValues() {
+	Promise.prototype._cleanValues = function () {
 	    if (this._cancellable()) {
-	        this._cancellationParent = void 0;
+	        this._cancellationParent = undefined;
 	    }
 	};
 
-	Promise.prototype._propagateFrom =
-	function Promise$_propagateFrom(parent, flags) {
+	Promise.prototype._propagateFrom = function (parent, flags) {
 	    if ((flags & 1) > 0 && parent._cancellable()) {
 	        this._setCancellable();
 	        this._cancellationParent = parent;
@@ -1980,198 +2046,169 @@
 	    }
 	};
 
-	Promise.prototype._fulfill = function Promise$_fulfill(value) {
+	Promise.prototype._fulfill = function (value) {
 	    if (this._isFollowingOrFulfilledOrRejected()) return;
 	    this._fulfillUnchecked(value);
 	};
 
-	Promise.prototype._reject =
-	function Promise$_reject(reason, carriedStackTrace) {
+	Promise.prototype._reject = function (reason, carriedStackTrace) {
 	    if (this._isFollowingOrFulfilledOrRejected()) return;
 	    this._rejectUnchecked(reason, carriedStackTrace);
 	};
 
-	Promise.prototype._settlePromiseAt = function Promise$_settlePromiseAt(index) {
-	    var handler = this.isFulfilled()
+	Promise.prototype._settlePromiseAt = function (index) {
+	    var handler = this._isFulfilled()
 	        ? this._fulfillmentHandlerAt(index)
 	        : this._rejectionHandlerAt(index);
 
+	    var carriedStackTrace =
+	        this._isCarryingStackTrace() ? this._getCarriedStackTrace() : undefined;
 	    var value = this._settledValue;
 	    var receiver = this._receiverAt(index);
 	    var promise = this._promiseAt(index);
+	    this._clearCallbackDataAtIndex(index);
 
 	    if (typeof handler === "function") {
-	        this._settlePromiseFromHandler(handler, receiver, value, promise);
-	    } else {
-	        var done = false;
-	        var isFulfilled = this.isFulfilled();
-	        if (receiver !== void 0) {
-	            if (receiver instanceof Promise &&
-	                receiver._isProxied()) {
-	                receiver._unsetProxied();
-
-	                if (isFulfilled) receiver._fulfillUnchecked(value);
-	                else receiver._rejectUnchecked(value,
-	                    this._getCarriedStackTrace());
-	                done = true;
-	            } else if (receiver instanceof PromiseArray) {
-	                if (isFulfilled) receiver._promiseFulfilled(value, promise);
-	                else receiver._promiseRejected(value, promise);
-	                done = true;
+	        if (!(promise instanceof Promise)) {
+	            handler.call(receiver, value, promise);
+	        } else {
+	            this._settlePromiseFromHandler(handler, receiver, value, promise);
+	        }
+	    } else if (receiver instanceof PromiseArray) {
+	        if (!receiver._isResolved()) {
+	            if (this._isFulfilled()) {
+	                receiver._promiseFulfilled(value, promise);
+	            }
+	            else {
+	                receiver._promiseRejected(value, promise);
 	            }
 	        }
+	    } else if (this._isFulfilled()) {
+	        promise._fulfill(value);
+	    } else {
+	        promise._reject(value, carriedStackTrace);
+	    }
+	};
 
-	        if (!done) {
-	            if (isFulfilled) promise._fulfill(value);
-	            else promise._reject(value, this._getCarriedStackTrace());
+	Promise.prototype._clearCallbackDataAtIndex = function(index) {
+	    if (index === 0) {
+	        if (!this._isCarryingStackTrace()) {
+	            this._fulfillmentHandler0 = undefined;
 	        }
+	        this._rejectionHandler0 =
+	        this._progressHandler0 =
+	        this._receiver0 =
+	        this._promise0 = undefined;
+	    } else {
+	        var base = index * 5 - 5;
+	        this[base + 3] =
+	        this[base + 4] =
+	        this[base + 0] =
+	        this[base + 1] =
+	        this[base + 2] = undefined;
 	    }
-
-	    if (index >= 4) {
-	        this._queueGC();
-	    }
 	};
 
-	Promise.prototype._isProxied = function Promise$_isProxied() {
-	    return (this._bitField & 4194304) === 4194304;
+	Promise.prototype._isSettlePromisesQueued = function () {
+	    return (this._bitField &
+	            -1073741824) === -1073741824;
 	};
 
-	Promise.prototype._setProxied = function Promise$_setProxied() {
-	    this._bitField = this._bitField | 4194304;
-	};
-
-	Promise.prototype._unsetProxied = function Promise$_unsetProxied() {
-	    this._bitField = this._bitField & (~4194304);
-	};
-
-	Promise.prototype._isGcQueued = function Promise$_isGcQueued() {
-	    return (this._bitField & -1073741824) === -1073741824;
-	};
-
-	Promise.prototype._setGcQueued = function Promise$_setGcQueued() {
+	Promise.prototype._setSettlePromisesQueued = function () {
 	    this._bitField = this._bitField | -1073741824;
 	};
 
-	Promise.prototype._unsetGcQueued = function Promise$_unsetGcQueued() {
+	Promise.prototype._unsetSettlePromisesQueued = function () {
 	    this._bitField = this._bitField & (~-1073741824);
 	};
 
-	Promise.prototype._queueGC = function Promise$_queueGC() {
-	    if (this._isGcQueued()) return;
-	    this._setGcQueued();
-	    async.invokeLater(this._gc, this, void 0);
-	};
-
-	Promise.prototype._gc = function Promise$gc() {
-	    var len = this._length() * 5 - 5;
-	    for (var i = 0; i < len; i++) {
-	        delete this[i];
+	Promise.prototype._queueSettlePromises = function() {
+	    if (!this._isSettlePromisesQueued()) {
+	        async.invoke(this._settlePromises, this, undefined);
+	        this._setSettlePromisesQueued();
 	    }
-	    this._clearFirstHandlerData();
-	    this._setLength(0);
-	    this._unsetGcQueued();
 	};
 
-	Promise.prototype._clearFirstHandlerData =
-	function Promise$_clearFirstHandlerData() {
-	    this._fulfillmentHandler0 = void 0;
-	    this._rejectionHandler0 = void 0;
-	    this._promise0 = void 0;
-	    this._receiver0 = void 0;
-	};
-
-	Promise.prototype._queueSettleAt = function Promise$_queueSettleAt(index) {
-	    if (this._isRejectionUnhandled()) this._unsetRejectionIsUnhandled();
-	    async.invoke(this._settlePromiseAt, this, index);
-	};
-
-	Promise.prototype._fulfillUnchecked =
-	function Promise$_fulfillUnchecked(value) {
-	    if (!this.isPending()) return;
+	Promise.prototype._fulfillUnchecked = function (value) {
 	    if (value === this) {
 	        var err = makeSelfResolutionError();
 	        this._attachExtraTrace(err);
-	        return this._rejectUnchecked(err, void 0);
+	        return this._rejectUnchecked(err, undefined);
 	    }
-	    this._cleanValues();
 	    this._setFulfilled();
 	    this._settledValue = value;
-	    var len = this._length();
+	    this._cleanValues();
 
-	    if (len > 0) {
-	        async.invoke(this._settlePromises, this, len);
+	    if (this._length() > 0) {
+	        this._queueSettlePromises();
 	    }
 	};
 
-	Promise.prototype._rejectUncheckedCheckError =
-	function Promise$_rejectUncheckedCheckError(reason) {
-	    var trace = canAttach(reason) ? reason : new Error(reason + "");
-	    this._rejectUnchecked(reason, trace === reason ? void 0 : trace);
+	Promise.prototype._rejectUncheckedCheckError = function (reason) {
+	    var trace = canAttachTrace(reason) ? reason : new Error(reason + "");
+	    this._rejectUnchecked(reason, trace === reason ? undefined : trace);
 	};
 
-	Promise.prototype._rejectUnchecked =
-	function Promise$_rejectUnchecked(reason, trace) {
-	    if (!this.isPending()) return;
+	Promise.prototype._rejectUnchecked = function (reason, trace) {
 	    if (reason === this) {
 	        var err = makeSelfResolutionError();
 	        this._attachExtraTrace(err);
 	        return this._rejectUnchecked(err);
 	    }
-	    this._cleanValues();
 	    this._setRejected();
 	    this._settledValue = reason;
+	    this._cleanValues();
 
 	    if (this._isFinal()) {
-	        async.invokeLater(thrower, void 0, trace === void 0 ? reason : trace);
+	        async.invokeLater(function(e) {
+	            if ("stack" in e) {
+	                async.invokeFirst(
+	                    CapturedTrace.unhandledRejection, undefined, e);
+	            }
+	            throw e;
+	        }, undefined, trace === undefined ? reason : trace);
 	        return;
 	    }
-	    var len = this._length();
 
-	    if (trace !== void 0) this._setCarriedStackTrace(trace);
+	    if (trace !== undefined) this._setCarriedStackTrace(trace);
 
-	    if (len > 0) {
-	        async.invoke(this._rejectPromises, this, null);
+	    if (this._length() > 0) {
+	        this._queueSettlePromises();
 	    } else {
 	        this._ensurePossibleRejectionHandled();
 	    }
 	};
 
-	Promise.prototype._rejectPromises = function Promise$_rejectPromises() {
-	    this._settlePromises();
-	    this._unsetCarriedStackTrace();
-	};
-
-	Promise.prototype._settlePromises = function Promise$_settlePromises() {
+	Promise.prototype._settlePromises = function () {
+	    this._unsetSettlePromisesQueued();
 	    var len = this._length();
+	    this._setLength(0);
 	    for (var i = 0; i < len; i++) {
 	        this._settlePromiseAt(i);
 	    }
 	};
 
-	Promise.prototype._ensurePossibleRejectionHandled =
-	function Promise$_ensurePossibleRejectionHandled() {
+	Promise.prototype._ensurePossibleRejectionHandled = function () {
 	    this._setRejectionIsUnhandled();
-	    if (CapturedTrace.possiblyUnhandledRejection !== void 0) {
-	        async.invokeLater(this._notifyUnhandledRejection, this, void 0);
+	    if (CapturedTrace.possiblyUnhandledRejection !== undefined) {
+	        async.invokeLater(this._notifyUnhandledRejection, this, undefined);
 	    }
 	};
 
-	Promise.prototype._notifyUnhandledRejectionIsHandled =
-	function Promise$_notifyUnhandledRejectionIsHandled() {
+	Promise.prototype._notifyUnhandledRejectionIsHandled = function () {
 	    if (typeof unhandledRejectionHandled === "function") {
-	        async.invokeLater(unhandledRejectionHandled, void 0, this);
+	        async.invokeLater(unhandledRejectionHandled, undefined, this);
 	    }
 	};
 
-	Promise.prototype._notifyUnhandledRejection =
-	function Promise$_notifyUnhandledRejection() {
+	Promise.prototype._notifyUnhandledRejection = function () {
 	    if (this._isRejectionUnhandled()) {
 	        var reason = this._settledValue;
 	        var trace = this._getCarriedStackTrace();
 
 	        this._setUnhandledRejectionIsNotified();
 
-	        if (trace !== void 0) {
+	        if (trace !== undefined) {
 	            this._unsetCarriedStackTrace();
 	            reason = trace;
 	        }
@@ -2182,32 +2219,44 @@
 	};
 
 	var contextStack = [];
-	Promise.prototype._peekContext = function Promise$_peekContext() {
+	Promise.prototype._peekContext = function () {
 	    var lastIndex = contextStack.length - 1;
 	    if (lastIndex >= 0) {
 	        return contextStack[lastIndex];
 	    }
-	    return void 0;
+	    return undefined;
 
 	};
 
-	Promise.prototype._pushContext = function Promise$_pushContext() {
+	Promise.prototype._pushContext = function () {
 	    if (!debugging) return;
-	    contextStack.push(this);
+	    contextStack.push(this._trace);
 	};
 
-	Promise.prototype._popContext = function Promise$_popContext() {
+	Promise.prototype._popContext = function () {
 	    if (!debugging) return;
 	    contextStack.pop();
 	};
 
-	Promise.noConflict = function Promise$NoConflict() {
-	    return noConflict(Promise);
-	};
-
-	Promise.setScheduler = function(fn) {
-	    if (typeof fn !== "function") throw new TypeError("fn must be a function");
-	    async._schedule = fn;
+	Promise.prototype._resolveFromSyncValue = function (value) {
+	    if (value === errorObj) {
+	        this._setRejected();
+	        var reason = value.e;
+	        this._settledValue = reason;
+	        this._cleanValues();
+	        this._attachExtraTrace(reason);
+	        this._ensurePossibleRejectionHandled();
+	    } else {
+	        var maybePromise = tryConvertToPromise(value, this);
+	        if (maybePromise instanceof Promise) {
+	            maybePromise = maybePromise._target();
+	            this._follow(maybePromise);
+	        } else {
+	            this._setFulfilled();
+	            this._settledValue = value;
+	            this._cleanValues();
+	        }
+	    }
 	};
 
 	if (!CapturedTrace.isSupported()) {
@@ -2216,10 +2265,10 @@
 	}
 
 	Promise._makeSelfResolutionError = makeSelfResolutionError;
-	__webpack_require__(59)(Promise, NEXT_FILTER, cast);
-	__webpack_require__(60)(Promise);
-	__webpack_require__(61)(Promise);
-	__webpack_require__(62)(Promise, PromiseArray, cast, INTERNAL);
+	__webpack_require__(70)(Promise, NEXT_FILTER, tryConvertToPromise);
+	__webpack_require__(71)(Promise);
+	__webpack_require__(72)(Promise);
+	__webpack_require__(73)(Promise, PromiseArray, tryConvertToPromise, INTERNAL);
 	Promise.RangeError = RangeError;
 	Promise.CancellationError = CancellationError;
 	Promise.TimeoutError = TimeoutError;
@@ -2231,37 +2280,38 @@
 	util.toFastProperties(Promise);
 	util.toFastProperties(Promise.prototype);
 	Promise.Promise = Promise;
-	__webpack_require__(63)(Promise,INTERNAL,cast);
-	__webpack_require__(64)(Promise,INTERNAL,cast);
-	__webpack_require__(65)(Promise);
-	__webpack_require__(66)(Promise,apiRejection,INTERNAL,cast);
-	__webpack_require__(67)(Promise,PromiseArray,apiRejection,cast,INTERNAL);
-	__webpack_require__(68)(Promise);
-	__webpack_require__(69)(Promise,INTERNAL);
-	__webpack_require__(70)(Promise,PromiseArray,cast);
-	__webpack_require__(71)(Promise,PromiseArray,apiRejection,cast,INTERNAL);
-	__webpack_require__(72)(Promise,PromiseArray);
-	__webpack_require__(73)(Promise,PromiseArray,apiRejection);
-	__webpack_require__(74)(Promise,PromiseArray);
-	__webpack_require__(75)(Promise,INTERNAL);
-	__webpack_require__(76)(Promise,INTERNAL);
-	__webpack_require__(77)(Promise,PromiseArray);
-	__webpack_require__(78)(Promise,INTERNAL);
-	__webpack_require__(79)(Promise,apiRejection,cast);
+	CapturedTrace.setBounds(async.firstLineError, util.lastLineError);
+	__webpack_require__(74)(Promise,INTERNAL,tryConvertToPromise);
+	__webpack_require__(75)(Promise,INTERNAL,tryConvertToPromise);
+	__webpack_require__(76)(Promise);
+	__webpack_require__(77)(Promise,apiRejection,INTERNAL,tryConvertToPromise);
+	__webpack_require__(78)(Promise,PromiseArray,apiRejection,tryConvertToPromise,INTERNAL);
+	__webpack_require__(79)(Promise);
+	__webpack_require__(80)(Promise,INTERNAL);
+	__webpack_require__(81)(Promise,PromiseArray,tryConvertToPromise);
+	__webpack_require__(82)(Promise,PromiseArray,apiRejection,tryConvertToPromise,INTERNAL);
+	__webpack_require__(83)(Promise,PromiseArray);
+	__webpack_require__(84)(Promise,PromiseArray,apiRejection);
+	__webpack_require__(85)(Promise,PromiseArray);
+	__webpack_require__(86)(Promise,INTERNAL);
+	__webpack_require__(87)(Promise,INTERNAL);
+	__webpack_require__(88)(Promise,PromiseArray);
+	__webpack_require__(89)(Promise,INTERNAL);
+	__webpack_require__(90)(Promise,apiRejection,tryConvertToPromise);
 
 	Promise.prototype = Promise.prototype;
 	return Promise;
 
 	};
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(85)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(97)))
 
 /***/ },
-/* 20 */
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var utils = __webpack_require__(22);
-	var LifeCycle = __webpack_require__(80);
+	var utils = __webpack_require__(30);
+	var LifeCycle = __webpack_require__(91);
 	var Portal = (function () {
 	    function Portal() {
 	        this._linkMap = {}; //TODO: valid struct
@@ -2454,12 +2504,12 @@
 
 
 /***/ },
-/* 21 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var utils = __webpack_require__(22);
-	var Aggregator = __webpack_require__(81);
-	var LifeCycle = __webpack_require__(80);
+	var utils = __webpack_require__(30);
+	var Aggregator = __webpack_require__(92);
+	var LifeCycle = __webpack_require__(91);
 	var subscribe = function (world) {
 	    return function (eventName, fn) {
 	        world.emitter.on(eventName, fn(world, world.props, world.state));
@@ -2574,12 +2624,12 @@
 
 
 /***/ },
-/* 22 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _react;
 	var _immutable;
-	var EventEmitter = __webpack_require__(148);
+	var EventEmitter = __webpack_require__(161);
 	if (EventEmitter.EventEmitter2)
 	    EventEmitter = EventEmitter.EventEmitter2;
 	// alias map
@@ -2637,10 +2687,10 @@
 
 
 /***/ },
-/* 23 */
+/* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var utils = __webpack_require__(22);
+	var utils = __webpack_require__(30);
 	function mixinFor(portal) {
 	    return {
 	        emit: function (eventName) {
@@ -2664,134 +2714,156 @@
 
 
 /***/ },
-/* 24 */
+/* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Entity, EventEmitter, uuid,
-	  __hasProp = {}.hasOwnProperty,
-	  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-	  __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
-
-	uuid = __webpack_require__(147);
-
-	EventEmitter = __webpack_require__(8).EventEmitter;
-
-	module.exports = Entity = (function(_super) {
-	  __extends(Entity, _super);
-
-	  Entity.type = 'entity';
-
-	  function Entity() {
-	    Entity.__super__.constructor.apply(this, arguments);
-	    this.id = uuid();
-	    this.x = 0;
-	    this.y = 0;
-	    this.rad = 0;
-	    this.life = 1;
-	    this.attackableTypes = null;
-	  }
-
-	  Entity.prototype.step = function() {};
-
-	  Entity.prototype.isAlive = function() {
-	    return this.life > 0;
-	  };
-
-	  Entity.prototype.isDead = function() {
-	    return !this.isAlive();
-	  };
-
-	  Entity.prototype.dispose = function() {};
-
-	  Entity.prototype.serialize = function() {
-	    return {
-	      x: this.x,
-	      y: this.y,
-	      rad: this.rad,
-	      type: this.constructor.type
+	/* WEBPACK VAR INJECTION */(function(global) {var __extends = this.__extends || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    __.prototype = b.prototype;
+	    d.prototype = new __();
+	};
+	var uuid = __webpack_require__(159);
+	var _ = __webpack_require__(160);
+	global.EventEmitter = __webpack_require__(10).EventEmitter;
+	var Entity = (function (_super) {
+	    __extends(Entity, _super);
+	    function Entity() {
+	        _super.call(this);
+	        this.id = uuid();
+	        this.x = 0;
+	        this.y = 0;
+	        this.rad = 0;
+	        this.life = 1;
+	        this.attackableTypes = [];
+	    }
+	    Entity.prototype.step = function () {
+	        // console.log 'update:', this.id
 	    };
-	  };
-
-	  Entity.prototype.isAttackable = function() {
-	    var _ref;
-	    return Boolean((_ref = this.attackableTypes) != null ? _ref.length : void 0);
-	  };
-
-	  Entity.prototype.canAttackTo = function(entity) {
-	    var _ref, _ref1, _ref2, _ref3;
-	    return ((_ref = entity !== this && (entity.suffer != null) && (_ref1 = entity.constructor.type, __indexOf.call(this.attackableTypes, _ref1) >= 0)) != null ? _ref : []) && entity.isAlive() && (this.x - 15 <= (_ref2 = entity.x) && _ref2 <= this.x + 15) && (this.y - 15 <= (_ref3 = entity.y) && _ref3 <= this.y + 15);
-	  };
-
-	  Entity.prototype.computeAttackPower = function() {
-	    return 1;
-	  };
-
-	  Entity.prototype.attack = function(entity) {
-	    var damage;
-	    damage = this.computeAttackPower();
-	    return entity.suffer(damage);
-	  };
-
-	  return Entity;
-
+	    Entity.prototype.isAlive = function () {
+	        return this.life > 0;
+	    };
+	    Entity.prototype.isDead = function () {
+	        return !this.isAlive();
+	    };
+	    Entity.prototype.dispose = function () {
+	    };
+	    Entity.prototype.serialize = function () {
+	        return {
+	            id: this.id,
+	            x: this.x,
+	            y: this.y,
+	            rad: this.rad,
+	            type: this.constructor.type
+	        };
+	    };
+	    Entity.prototype.isAttackable = function () {
+	        return this.attackableTypes && Boolean(this.attackableTypes.length);
+	    };
+	    Entity.prototype.canAttackTo = function (other) {
+	        return other !== this && other['suffer'] && _.include(this.attackableTypes, other.constructor.type) && other.isAlive() && this.x - 15 <= other.x && other.x <= this.x + 15 && this.y - 15 <= other.y && other.y <= this.y + 15;
+	    };
+	    Entity.prototype.computeAttackPower = function () {
+	        return 1;
+	    };
+	    Entity.prototype.attack = function (other) {
+	        // TODO 対象と自分のパラメータからダメージ量を算出
+	        var damage = this.computeAttackPower();
+	        other['suffer'](damage);
+	    };
+	    Entity.type = 'entity';
+	    return Entity;
 	})(EventEmitter);
-
+	module.exports = Entity;
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 25 */
+/* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var MouseButtons, getMainRect;
+	(function() {
+	  var MouseButtons, getMainRect;
 
-	getMainRect = (function() {
-	  var main, rect;
-	  main = document.querySelector('.main');
-	  rect = null;
-	  return function() {
-	    if (main == null) {
-	      main = document.querySelector('.main');
-	    }
-	    return rect != null ? rect : rect = main.getBoundingClientRect();
+	  getMainRect = (function() {
+	    var main, rect;
+	    main = document.querySelector('.main');
+	    rect = null;
+	    return function() {
+	      if (main == null) {
+	        main = document.querySelector('.main');
+	      }
+	      return rect != null ? rect : rect = main.getBoundingClientRect();
+	    };
+	  })();
+
+	  MouseButtons = {
+	    0: 'mouseLeft',
+	    2: 'mouseRight'
 	  };
-	})();
 
-	MouseButtons = {
-	  0: 'mouseLeft',
-	  2: 'mouseRight'
-	};
-
-	module.exports = {
-	  onMouseMove: function(e) {
-	    var rect, x, y;
-	    rect = getMainRect();
-	    x = e.clientX - rect.left;
-	    y = e.clientY - rect.top;
-	    if (typeof game !== "undefined" && game !== null) {
-	      game.emit('io:update-focus', {
-	        x: x,
-	        y: y
-	      });
+	  module.exports = {
+	    onMouseMove: function(e) {
+	      var rect, x, y;
+	      rect = getMainRect();
+	      x = e.clientX - rect.left;
+	      y = e.clientY - rect.top;
+	      if (typeof game !== "undefined" && game !== null) {
+	        game.emit('io:update-focus', {
+	          x: x,
+	          y: y
+	        });
+	      }
+	    },
+	    onMouseDown: function(e) {
+	      game.emit('io:update-key', MouseButtons[e.button], true);
+	      e.stopPropagation();
+	      e.preventDefault();
+	    },
+	    onMouseUp: function(e) {
+	      game.emit('io:update-key', MouseButtons[e.button], false);
+	      e.stopPropagation();
+	      e.preventDefault();
+	    },
+	    onContextMenu: function(e) {
+	      e.stopPropagation();
+	      e.preventDefault();
 	    }
-	  },
-	  onMouseDown: function(e) {
-	    game.emit('io:update-key', MouseButtons[e.button], true);
-	    e.stopPropagation();
-	    e.preventDefault();
-	  },
-	  onMouseUp: function(e) {
-	    game.emit('io:update-key', MouseButtons[e.button], false);
-	    e.stopPropagation();
-	    e.preventDefault();
-	  },
-	  onContextMenu: function(e) {
-	    e.stopPropagation();
-	    e.preventDefault();
-	  }
-	};
+	  };
+
+	}).call(this);
 
 
 /***/ },
-/* 26 */
+/* 34 */
+/***/ function(module, exports, __webpack_require__) {
+
+	(function() {
+	  module.exports = {
+	    onClickBack: function() {
+	      return this.emit('menu:close', {});
+	    }
+	  };
+
+	}).call(this);
+
+
+/***/ },
+/* 35 */
+/***/ function(module, exports, __webpack_require__) {
+
+	(function() {
+	  module.exports = {
+	    onClick: function() {
+	      return app.pushWorld('field', {});
+	    }
+	  };
+
+	}).call(this);
+
+
+/***/ },
+/* 36 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -2808,11 +2880,11 @@
 
 	"use strict";
 
-	var DOMProperty = __webpack_require__(86);
+	var DOMProperty = __webpack_require__(98);
 
-	var escapeTextForBrowser = __webpack_require__(87);
-	var memoizeStringOnly = __webpack_require__(88);
-	var warning = __webpack_require__(89);
+	var escapeTextForBrowser = __webpack_require__(99);
+	var memoizeStringOnly = __webpack_require__(100);
+	var warning = __webpack_require__(101);
 
 	function shouldIgnoreValue(name, value) {
 	  return value == null ||
@@ -2988,10 +3060,10 @@
 
 	module.exports = DOMPropertyOperations;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(85)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(97)))
 
 /***/ },
-/* 27 */
+/* 37 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -3007,9 +3079,9 @@
 
 	"use strict";
 
-	var EventConstants = __webpack_require__(90);
+	var EventConstants = __webpack_require__(102);
 
-	var invariant = __webpack_require__(91);
+	var invariant = __webpack_require__(103);
 
 	/**
 	 * Injected dependencies:
@@ -3212,10 +3284,10 @@
 
 	module.exports = EventPluginUtils;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(85)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(97)))
 
 /***/ },
-/* 28 */
+/* 38 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -3231,10 +3303,10 @@
 
 	"use strict";
 
-	var PooledClass = __webpack_require__(92);
+	var PooledClass = __webpack_require__(104);
 
-	var traverseAllChildren = __webpack_require__(93);
-	var warning = __webpack_require__(89);
+	var traverseAllChildren = __webpack_require__(105);
+	var warning = __webpack_require__(101);
 
 	var twoArgumentPooler = PooledClass.twoArgumentPooler;
 	var threeArgumentPooler = PooledClass.threeArgumentPooler;
@@ -3365,10 +3437,10 @@
 
 	module.exports = ReactChildren;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(85)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(97)))
 
 /***/ },
-/* 29 */
+/* 39 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -3384,13 +3456,13 @@
 
 	"use strict";
 
-	var ReactElement = __webpack_require__(33);
-	var ReactOwner = __webpack_require__(94);
-	var ReactUpdates = __webpack_require__(95);
+	var ReactElement = __webpack_require__(43);
+	var ReactOwner = __webpack_require__(106);
+	var ReactUpdates = __webpack_require__(107);
 
-	var assign = __webpack_require__(46);
-	var invariant = __webpack_require__(91);
-	var keyMirror = __webpack_require__(96);
+	var assign = __webpack_require__(56);
+	var invariant = __webpack_require__(103);
+	var keyMirror = __webpack_require__(108);
 
 	/**
 	 * Every React component is in one of these life cycles.
@@ -3811,10 +3883,10 @@
 
 	module.exports = ReactComponent;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(85)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(97)))
 
 /***/ },
-/* 30 */
+/* 40 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -3830,30 +3902,30 @@
 
 	"use strict";
 
-	var ReactComponent = __webpack_require__(29);
-	var ReactContext = __webpack_require__(31);
-	var ReactCurrentOwner = __webpack_require__(32);
-	var ReactElement = __webpack_require__(33);
-	var ReactElementValidator = __webpack_require__(34);
-	var ReactEmptyComponent = __webpack_require__(97);
-	var ReactErrorUtils = __webpack_require__(98);
-	var ReactLegacyElement = __webpack_require__(39);
-	var ReactOwner = __webpack_require__(94);
-	var ReactPerf = __webpack_require__(42);
-	var ReactPropTransferer = __webpack_require__(99);
-	var ReactPropTypeLocations = __webpack_require__(100);
-	var ReactPropTypeLocationNames = __webpack_require__(101);
-	var ReactUpdates = __webpack_require__(95);
+	var ReactComponent = __webpack_require__(39);
+	var ReactContext = __webpack_require__(41);
+	var ReactCurrentOwner = __webpack_require__(42);
+	var ReactElement = __webpack_require__(43);
+	var ReactElementValidator = __webpack_require__(44);
+	var ReactEmptyComponent = __webpack_require__(109);
+	var ReactErrorUtils = __webpack_require__(110);
+	var ReactLegacyElement = __webpack_require__(49);
+	var ReactOwner = __webpack_require__(106);
+	var ReactPerf = __webpack_require__(52);
+	var ReactPropTransferer = __webpack_require__(111);
+	var ReactPropTypeLocations = __webpack_require__(112);
+	var ReactPropTypeLocationNames = __webpack_require__(113);
+	var ReactUpdates = __webpack_require__(107);
 
-	var assign = __webpack_require__(46);
-	var instantiateReactComponent = __webpack_require__(102);
-	var invariant = __webpack_require__(91);
-	var keyMirror = __webpack_require__(96);
-	var keyOf = __webpack_require__(103);
-	var monitorCodeUse = __webpack_require__(104);
-	var mapObject = __webpack_require__(105);
-	var shouldUpdateReactComponent = __webpack_require__(106);
-	var warning = __webpack_require__(89);
+	var assign = __webpack_require__(56);
+	var instantiateReactComponent = __webpack_require__(114);
+	var invariant = __webpack_require__(103);
+	var keyMirror = __webpack_require__(108);
+	var keyOf = __webpack_require__(115);
+	var monitorCodeUse = __webpack_require__(116);
+	var mapObject = __webpack_require__(117);
+	var shouldUpdateReactComponent = __webpack_require__(118);
+	var warning = __webpack_require__(101);
 
 	var MIXINS_KEY = keyOf({mixins: null});
 
@@ -5254,10 +5326,10 @@
 
 	module.exports = ReactCompositeComponent;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(85)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(97)))
 
 /***/ },
-/* 31 */
+/* 41 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -5273,7 +5345,7 @@
 
 	"use strict";
 
-	var assign = __webpack_require__(46);
+	var assign = __webpack_require__(56);
 
 	/**
 	 * Keeps track of the current context.
@@ -5323,7 +5395,7 @@
 
 
 /***/ },
-/* 32 */
+/* 42 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -5361,7 +5433,7 @@
 
 
 /***/ },
-/* 33 */
+/* 43 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -5377,10 +5449,10 @@
 
 	"use strict";
 
-	var ReactContext = __webpack_require__(31);
-	var ReactCurrentOwner = __webpack_require__(32);
+	var ReactContext = __webpack_require__(41);
+	var ReactCurrentOwner = __webpack_require__(42);
 
-	var warning = __webpack_require__(89);
+	var warning = __webpack_require__(101);
 
 	var RESERVED_PROPS = {
 	  key: true,
@@ -5540,7 +5612,7 @@
 	  }
 
 	  // Resolve default props
-	  if (type.defaultProps) {
+	  if (type && type.defaultProps) {
 	    var defaultProps = type.defaultProps;
 	    for (propName in defaultProps) {
 	      if (typeof props[propName] === 'undefined') {
@@ -5607,13 +5679,13 @@
 
 	module.exports = ReactElement;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(85)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(97)))
 
 /***/ },
-/* 34 */
+/* 44 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/**
+	/* WEBPACK VAR INJECTION */(function(process) {/**
 	 * Copyright 2014, Facebook, Inc.
 	 * All rights reserved.
 	 *
@@ -5633,11 +5705,12 @@
 
 	"use strict";
 
-	var ReactElement = __webpack_require__(33);
-	var ReactPropTypeLocations = __webpack_require__(100);
-	var ReactCurrentOwner = __webpack_require__(32);
+	var ReactElement = __webpack_require__(43);
+	var ReactPropTypeLocations = __webpack_require__(112);
+	var ReactCurrentOwner = __webpack_require__(42);
 
-	var monitorCodeUse = __webpack_require__(104);
+	var monitorCodeUse = __webpack_require__(116);
+	var warning = __webpack_require__(101);
 
 	/**
 	 * Warn if there's no key explicitly set on dynamic arrays of children or
@@ -5835,6 +5908,15 @@
 	var ReactElementValidator = {
 
 	  createElement: function(type, props, children) {
+	    // We warn in this case but don't throw. We expect the element creation to
+	    // succeed and there will likely be errors in render.
+	    ("production" !== process.env.NODE_ENV ? warning(
+	      type != null,
+	      'React.createElement: type should not be null or undefined. It should ' +
+	        'be a string (for DOM elements) or a ReactClass (for composite ' +
+	        'components).'
+	    ) : null);
+
 	    var element = ReactElement.createElement.apply(this, arguments);
 
 	    // The result can be nullish if a mock or a custom function is used.
@@ -5847,22 +5929,24 @@
 	      validateChildKeys(arguments[i], type);
 	    }
 
-	    var name = type.displayName;
-	    if (type.propTypes) {
-	      checkPropTypes(
-	        name,
-	        type.propTypes,
-	        element.props,
-	        ReactPropTypeLocations.prop
-	      );
-	    }
-	    if (type.contextTypes) {
-	      checkPropTypes(
-	        name,
-	        type.contextTypes,
-	        element._context,
-	        ReactPropTypeLocations.context
-	      );
+	    if (type) {
+	      var name = type.displayName;
+	      if (type.propTypes) {
+	        checkPropTypes(
+	          name,
+	          type.propTypes,
+	          element.props,
+	          ReactPropTypeLocations.prop
+	        );
+	      }
+	      if (type.contextTypes) {
+	        checkPropTypes(
+	          name,
+	          type.contextTypes,
+	          element._context,
+	          ReactPropTypeLocations.context
+	        );
+	      }
 	    }
 	    return element;
 	  },
@@ -5879,10 +5963,11 @@
 	};
 
 	module.exports = ReactElementValidator;
-
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(97)))
 
 /***/ },
-/* 35 */
+/* 45 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -5899,11 +5984,11 @@
 
 	"use strict";
 
-	var ReactElement = __webpack_require__(33);
-	var ReactElementValidator = __webpack_require__(34);
-	var ReactLegacyElement = __webpack_require__(39);
+	var ReactElement = __webpack_require__(43);
+	var ReactElementValidator = __webpack_require__(44);
+	var ReactLegacyElement = __webpack_require__(49);
 
-	var mapObject = __webpack_require__(105);
+	var mapObject = __webpack_require__(117);
 
 	/**
 	 * Create a factory that creates HTML tag elements.
@@ -6065,10 +6150,10 @@
 
 	module.exports = ReactDOM;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(85)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(97)))
 
 /***/ },
-/* 36 */
+/* 46 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -6085,22 +6170,22 @@
 
 	"use strict";
 
-	var CSSPropertyOperations = __webpack_require__(107);
-	var DOMProperty = __webpack_require__(86);
-	var DOMPropertyOperations = __webpack_require__(26);
-	var ReactBrowserComponentMixin = __webpack_require__(108);
-	var ReactComponent = __webpack_require__(29);
-	var ReactBrowserEventEmitter = __webpack_require__(109);
-	var ReactMount = __webpack_require__(40);
-	var ReactMultiChild = __webpack_require__(41);
-	var ReactPerf = __webpack_require__(42);
+	var CSSPropertyOperations = __webpack_require__(119);
+	var DOMProperty = __webpack_require__(98);
+	var DOMPropertyOperations = __webpack_require__(36);
+	var ReactBrowserComponentMixin = __webpack_require__(120);
+	var ReactComponent = __webpack_require__(39);
+	var ReactBrowserEventEmitter = __webpack_require__(121);
+	var ReactMount = __webpack_require__(50);
+	var ReactMultiChild = __webpack_require__(51);
+	var ReactPerf = __webpack_require__(52);
 
-	var assign = __webpack_require__(46);
-	var escapeTextForBrowser = __webpack_require__(87);
-	var invariant = __webpack_require__(91);
-	var isEventSupported = __webpack_require__(110);
-	var keyOf = __webpack_require__(103);
-	var monitorCodeUse = __webpack_require__(104);
+	var assign = __webpack_require__(56);
+	var escapeTextForBrowser = __webpack_require__(99);
+	var invariant = __webpack_require__(103);
+	var isEventSupported = __webpack_require__(122);
+	var keyOf = __webpack_require__(115);
+	var monitorCodeUse = __webpack_require__(116);
 
 	var deleteListener = ReactBrowserEventEmitter.deleteListener;
 	var listenTo = ReactBrowserEventEmitter.listenTo;
@@ -6555,10 +6640,10 @@
 
 	module.exports = ReactDOMComponent;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(85)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(97)))
 
 /***/ },
-/* 37 */
+/* 47 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -6574,37 +6659,37 @@
 
 	"use strict";
 
-	var BeforeInputEventPlugin = __webpack_require__(111);
-	var ChangeEventPlugin = __webpack_require__(112);
-	var ClientReactRootIndex = __webpack_require__(113);
-	var CompositionEventPlugin = __webpack_require__(114);
-	var DefaultEventPluginOrder = __webpack_require__(115);
-	var EnterLeaveEventPlugin = __webpack_require__(116);
-	var ExecutionEnvironment = __webpack_require__(49);
-	var HTMLDOMPropertyConfig = __webpack_require__(117);
-	var MobileSafariClickEventPlugin = __webpack_require__(118);
-	var ReactBrowserComponentMixin = __webpack_require__(108);
+	var BeforeInputEventPlugin = __webpack_require__(123);
+	var ChangeEventPlugin = __webpack_require__(124);
+	var ClientReactRootIndex = __webpack_require__(125);
+	var CompositionEventPlugin = __webpack_require__(126);
+	var DefaultEventPluginOrder = __webpack_require__(127);
+	var EnterLeaveEventPlugin = __webpack_require__(128);
+	var ExecutionEnvironment = __webpack_require__(59);
+	var HTMLDOMPropertyConfig = __webpack_require__(129);
+	var MobileSafariClickEventPlugin = __webpack_require__(130);
+	var ReactBrowserComponentMixin = __webpack_require__(120);
 	var ReactComponentBrowserEnvironment =
-	  __webpack_require__(119);
-	var ReactDefaultBatchingStrategy = __webpack_require__(120);
-	var ReactDOMComponent = __webpack_require__(36);
-	var ReactDOMButton = __webpack_require__(121);
-	var ReactDOMForm = __webpack_require__(122);
-	var ReactDOMImg = __webpack_require__(123);
-	var ReactDOMInput = __webpack_require__(124);
-	var ReactDOMOption = __webpack_require__(125);
-	var ReactDOMSelect = __webpack_require__(126);
-	var ReactDOMTextarea = __webpack_require__(127);
-	var ReactEventListener = __webpack_require__(128);
-	var ReactInjection = __webpack_require__(129);
-	var ReactInstanceHandles = __webpack_require__(38);
-	var ReactMount = __webpack_require__(40);
-	var SelectEventPlugin = __webpack_require__(130);
-	var ServerReactRootIndex = __webpack_require__(131);
-	var SimpleEventPlugin = __webpack_require__(132);
-	var SVGDOMPropertyConfig = __webpack_require__(133);
+	  __webpack_require__(131);
+	var ReactDefaultBatchingStrategy = __webpack_require__(132);
+	var ReactDOMComponent = __webpack_require__(46);
+	var ReactDOMButton = __webpack_require__(133);
+	var ReactDOMForm = __webpack_require__(134);
+	var ReactDOMImg = __webpack_require__(135);
+	var ReactDOMInput = __webpack_require__(136);
+	var ReactDOMOption = __webpack_require__(137);
+	var ReactDOMSelect = __webpack_require__(138);
+	var ReactDOMTextarea = __webpack_require__(139);
+	var ReactEventListener = __webpack_require__(140);
+	var ReactInjection = __webpack_require__(141);
+	var ReactInstanceHandles = __webpack_require__(48);
+	var ReactMount = __webpack_require__(50);
+	var SelectEventPlugin = __webpack_require__(142);
+	var ServerReactRootIndex = __webpack_require__(143);
+	var SimpleEventPlugin = __webpack_require__(144);
+	var SVGDOMPropertyConfig = __webpack_require__(145);
 
-	var createFullPageComponent = __webpack_require__(134);
+	var createFullPageComponent = __webpack_require__(146);
 
 	function inject() {
 	  ReactInjection.EventEmitter.injectReactEventListener(
@@ -6677,7 +6762,7 @@
 	  if ("production" !== process.env.NODE_ENV) {
 	    var url = (ExecutionEnvironment.canUseDOM && window.location.href) || '';
 	    if ((/[?&]react_perf\b/).test(url)) {
-	      var ReactDefaultPerf = __webpack_require__(135);
+	      var ReactDefaultPerf = __webpack_require__(147);
 	      ReactDefaultPerf.start();
 	    }
 	  }
@@ -6687,10 +6772,10 @@
 	  inject: inject
 	};
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(85)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(97)))
 
 /***/ },
-/* 38 */
+/* 48 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -6707,9 +6792,9 @@
 
 	"use strict";
 
-	var ReactRootIndex = __webpack_require__(136);
+	var ReactRootIndex = __webpack_require__(148);
 
-	var invariant = __webpack_require__(91);
+	var invariant = __webpack_require__(103);
 
 	var SEPARATOR = '.';
 	var SEPARATOR_LENGTH = SEPARATOR.length;
@@ -7025,10 +7110,10 @@
 
 	module.exports = ReactInstanceHandles;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(85)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(97)))
 
 /***/ },
-/* 39 */
+/* 49 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -7044,11 +7129,11 @@
 
 	"use strict";
 
-	var ReactCurrentOwner = __webpack_require__(32);
+	var ReactCurrentOwner = __webpack_require__(42);
 
-	var invariant = __webpack_require__(91);
-	var monitorCodeUse = __webpack_require__(104);
-	var warning = __webpack_require__(89);
+	var invariant = __webpack_require__(103);
+	var monitorCodeUse = __webpack_require__(116);
+	var warning = __webpack_require__(101);
 
 	var legacyFactoryLogs = {};
 	function warnForLegacyFactoryCall() {
@@ -7275,10 +7360,10 @@
 
 	module.exports = ReactLegacyElementFactory;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(85)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(97)))
 
 /***/ },
-/* 40 */
+/* 50 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -7294,21 +7379,21 @@
 
 	"use strict";
 
-	var DOMProperty = __webpack_require__(86);
-	var ReactBrowserEventEmitter = __webpack_require__(109);
-	var ReactCurrentOwner = __webpack_require__(32);
-	var ReactElement = __webpack_require__(33);
-	var ReactLegacyElement = __webpack_require__(39);
-	var ReactInstanceHandles = __webpack_require__(38);
-	var ReactPerf = __webpack_require__(42);
+	var DOMProperty = __webpack_require__(98);
+	var ReactBrowserEventEmitter = __webpack_require__(121);
+	var ReactCurrentOwner = __webpack_require__(42);
+	var ReactElement = __webpack_require__(43);
+	var ReactLegacyElement = __webpack_require__(49);
+	var ReactInstanceHandles = __webpack_require__(48);
+	var ReactPerf = __webpack_require__(52);
 
-	var containsNode = __webpack_require__(137);
-	var deprecated = __webpack_require__(47);
-	var getReactRootElementInContainer = __webpack_require__(138);
-	var instantiateReactComponent = __webpack_require__(102);
-	var invariant = __webpack_require__(91);
-	var shouldUpdateReactComponent = __webpack_require__(106);
-	var warning = __webpack_require__(89);
+	var containsNode = __webpack_require__(149);
+	var deprecated = __webpack_require__(57);
+	var getReactRootElementInContainer = __webpack_require__(150);
+	var instantiateReactComponent = __webpack_require__(114);
+	var invariant = __webpack_require__(103);
+	var shouldUpdateReactComponent = __webpack_require__(118);
+	var warning = __webpack_require__(101);
 
 	var createElement = ReactLegacyElement.wrapCreateElement(
 	  ReactElement.createElement
@@ -7976,10 +8061,10 @@
 
 	module.exports = ReactMount;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(85)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(97)))
 
 /***/ },
-/* 41 */
+/* 51 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -7996,12 +8081,12 @@
 
 	"use strict";
 
-	var ReactComponent = __webpack_require__(29);
-	var ReactMultiChildUpdateTypes = __webpack_require__(139);
+	var ReactComponent = __webpack_require__(39);
+	var ReactMultiChildUpdateTypes = __webpack_require__(151);
 
-	var flattenChildren = __webpack_require__(140);
-	var instantiateReactComponent = __webpack_require__(102);
-	var shouldUpdateReactComponent = __webpack_require__(106);
+	var flattenChildren = __webpack_require__(152);
+	var instantiateReactComponent = __webpack_require__(114);
+	var shouldUpdateReactComponent = __webpack_require__(118);
 
 	/**
 	 * Updating children of a component may trigger recursive updates. The depth is
@@ -8411,7 +8496,7 @@
 
 
 /***/ },
-/* 42 */
+/* 52 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -8495,10 +8580,10 @@
 
 	module.exports = ReactPerf;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(85)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(97)))
 
 /***/ },
-/* 43 */
+/* 53 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -8514,11 +8599,11 @@
 
 	"use strict";
 
-	var ReactElement = __webpack_require__(33);
-	var ReactPropTypeLocationNames = __webpack_require__(101);
+	var ReactElement = __webpack_require__(43);
+	var ReactPropTypeLocationNames = __webpack_require__(113);
 
-	var deprecated = __webpack_require__(47);
-	var emptyFunction = __webpack_require__(141);
+	var deprecated = __webpack_require__(57);
+	var emptyFunction = __webpack_require__(153);
 
 	/**
 	 * Collection of methods that allow declaration and validation of props that are
@@ -8856,7 +8941,7 @@
 
 
 /***/ },
-/* 44 */
+/* 54 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -8872,14 +8957,14 @@
 	 */
 	"use strict";
 
-	var ReactElement = __webpack_require__(33);
-	var ReactInstanceHandles = __webpack_require__(38);
-	var ReactMarkupChecksum = __webpack_require__(142);
+	var ReactElement = __webpack_require__(43);
+	var ReactInstanceHandles = __webpack_require__(48);
+	var ReactMarkupChecksum = __webpack_require__(154);
 	var ReactServerRenderingTransaction =
-	  __webpack_require__(143);
+	  __webpack_require__(155);
 
-	var instantiateReactComponent = __webpack_require__(102);
-	var invariant = __webpack_require__(91);
+	var instantiateReactComponent = __webpack_require__(114);
+	var invariant = __webpack_require__(103);
 
 	/**
 	 * @param {ReactElement} element
@@ -8936,10 +9021,10 @@
 	  renderToStaticMarkup: renderToStaticMarkup
 	};
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(85)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(97)))
 
 /***/ },
-/* 45 */
+/* 55 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -8956,12 +9041,12 @@
 
 	"use strict";
 
-	var DOMPropertyOperations = __webpack_require__(26);
-	var ReactComponent = __webpack_require__(29);
-	var ReactElement = __webpack_require__(33);
+	var DOMPropertyOperations = __webpack_require__(36);
+	var ReactComponent = __webpack_require__(39);
+	var ReactElement = __webpack_require__(43);
 
-	var assign = __webpack_require__(46);
-	var escapeTextForBrowser = __webpack_require__(87);
+	var assign = __webpack_require__(56);
+	var escapeTextForBrowser = __webpack_require__(99);
 
 	/**
 	 * Text nodes violate a couple assumptions that React makes about components:
@@ -9049,7 +9134,7 @@
 
 
 /***/ },
-/* 46 */
+/* 56 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -9100,7 +9185,7 @@
 
 
 /***/ },
-/* 47 */
+/* 57 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -9114,8 +9199,8 @@
 	 * @providesModule deprecated
 	 */
 
-	var assign = __webpack_require__(46);
-	var warning = __webpack_require__(89);
+	var assign = __webpack_require__(56);
+	var warning = __webpack_require__(101);
 
 	/**
 	 * This will log a single deprecation notice per function and forward the call
@@ -9151,10 +9236,10 @@
 
 	module.exports = deprecated;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(85)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(97)))
 
 /***/ },
-/* 48 */
+/* 58 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -9169,9 +9254,9 @@
 	 */
 	"use strict";
 
-	var ReactElement = __webpack_require__(33);
+	var ReactElement = __webpack_require__(43);
 
-	var invariant = __webpack_require__(91);
+	var invariant = __webpack_require__(103);
 
 	/**
 	 * Returns the first child in a collection of children and verifies that there
@@ -9194,10 +9279,10 @@
 
 	module.exports = onlyChild;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(85)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(97)))
 
 /***/ },
-/* 49 */
+/* 59 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -9246,4185 +9331,7 @@
 
 
 /***/ },
-/* 50 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * The MIT License (MIT)
-	 * 
-	 * Copyright (c) 2014 Petka Antonov
-	 * 
-	 * Permission is hereby granted, free of charge, to any person obtaining a copy
-	 * of this software and associated documentation files (the "Software"), to deal
-	 * in the Software without restriction, including without limitation the rights
-	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	 * copies of the Software, and to permit persons to whom the Software is
-	 * furnished to do so, subject to the following conditions:</p>
-	 * 
-	 * The above copyright notice and this permission notice shall be included in
-	 * all copies or substantial portions of the Software.
-	 * 
-	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	 * THE SOFTWARE.
-	 * 
-	 */
-	"use strict";
-	var es5 = __webpack_require__(146);
-	var haveGetters = (function(){
-	    try {
-	        var o = {};
-	        es5.defineProperty(o, "f", {
-	            get: function () {
-	                return 3;
-	            }
-	        });
-	        return o.f === 3;
-	    }
-	    catch (e) {
-	        return false;
-	    }
-
-	})();
-	var canEvaluate = typeof navigator == "undefined";
-	var errorObj = {e: {}};
-	function tryCatch1(fn, receiver, arg) {
-	    try { return fn.call(receiver, arg); }
-	    catch (e) {
-	        errorObj.e = e;
-	        return errorObj;
-	    }
-	}
-
-	function tryCatch2(fn, receiver, arg, arg2) {
-	    try { return fn.call(receiver, arg, arg2); }
-	    catch (e) {
-	        errorObj.e = e;
-	        return errorObj;
-	    }
-	}
-
-	function tryCatch3(fn, receiver, arg, arg2, arg3) {
-	    try { return fn.call(receiver, arg, arg2, arg3); }
-	    catch (e) {
-	        errorObj.e = e;
-	        return errorObj;
-	    }
-	}
-
-	function tryCatch4(fn, receiver, arg, arg2, arg3, arg4) {
-	    try { return fn.call(receiver, arg, arg2, arg3, arg4); }
-	    catch (e) {
-	        errorObj.e = e;
-	        return errorObj;
-	    }
-	}
-
-	function tryCatchApply(fn, args, receiver) {
-	    try { return fn.apply(receiver, args); }
-	    catch (e) {
-	        errorObj.e = e;
-	        return errorObj;
-	    }
-	}
-
-	var inherits = function(Child, Parent) {
-	    var hasProp = {}.hasOwnProperty;
-
-	    function T() {
-	        this.constructor = Child;
-	        this.constructor$ = Parent;
-	        for (var propertyName in Parent.prototype) {
-	            if (hasProp.call(Parent.prototype, propertyName) &&
-	                propertyName.charAt(propertyName.length-1) !== "$"
-	           ) {
-	                this[propertyName + "$"] = Parent.prototype[propertyName];
-	            }
-	        }
-	    }
-	    T.prototype = Parent.prototype;
-	    Child.prototype = new T();
-	    return Child.prototype;
-	};
-
-	function asString(val) {
-	    return typeof val === "string" ? val : ("" + val);
-	}
-
-	function isPrimitive(val) {
-	    return val == null || val === true || val === false ||
-	        typeof val === "string" || typeof val === "number";
-
-	}
-
-	function isObject(value) {
-	    return !isPrimitive(value);
-	}
-
-	function maybeWrapAsError(maybeError) {
-	    if (!isPrimitive(maybeError)) return maybeError;
-
-	    return new Error(asString(maybeError));
-	}
-
-	function withAppended(target, appendee) {
-	    var len = target.length;
-	    var ret = new Array(len + 1);
-	    var i;
-	    for (i = 0; i < len; ++i) {
-	        ret[i] = target[i];
-	    }
-	    ret[i] = appendee;
-	    return ret;
-	}
-
-	function getDataPropertyOrDefault(obj, key, defaultValue) {
-	    if (es5.isES5) {
-	        var desc = Object.getOwnPropertyDescriptor(obj, key);
-	        if (desc != null) {
-	            return desc.get == null && desc.set == null
-	                    ? desc.value
-	                    : defaultValue;
-	        }
-	    } else {
-	        return {}.hasOwnProperty.call(obj, key) ? obj[key] : void 0;
-	    }
-	}
-
-	function notEnumerableProp(obj, name, value) {
-	    if (isPrimitive(obj)) return obj;
-	    var descriptor = {
-	        value: value,
-	        configurable: true,
-	        enumerable: false,
-	        writable: true
-	    };
-	    es5.defineProperty(obj, name, descriptor);
-	    return obj;
-	}
-
-
-	var wrapsPrimitiveReceiver = (function() {
-	    return this !== "string";
-	}).call("string");
-
-	function thrower(r) {
-	    throw r;
-	}
-
-	var inheritedDataKeys = (function() {
-	    if (es5.isES5) {
-	        return function(obj, opts) {
-	            var ret = [];
-	            var visitedKeys = Object.create(null);
-	            var getKeys = Object(opts).includeHidden
-	                ? Object.getOwnPropertyNames
-	                : Object.keys;
-	            while (obj != null) {
-	                var keys;
-	                try {
-	                    keys = getKeys(obj);
-	                } catch (e) {
-	                    return ret;
-	                }
-	                for (var i = 0; i < keys.length; ++i) {
-	                    var key = keys[i];
-	                    if (visitedKeys[key]) continue;
-	                    visitedKeys[key] = true;
-	                    var desc = Object.getOwnPropertyDescriptor(obj, key);
-	                    if (desc != null && desc.get == null && desc.set == null) {
-	                        ret.push(key);
-	                    }
-	                }
-	                obj = es5.getPrototypeOf(obj);
-	            }
-	            return ret;
-	        };
-	    } else {
-	        return function(obj) {
-	            var ret = [];
-	            /*jshint forin:false */
-	            for (var key in obj) {
-	                ret.push(key);
-	            }
-	            return ret;
-	        };
-	    }
-
-	})();
-
-	function isClass(fn) {
-	    try {
-	        if (typeof fn === "function") {
-	            var keys = es5.keys(fn.prototype);
-	            return keys.length > 0 &&
-	                   !(keys.length === 1 && keys[0] === "constructor");
-	        }
-	        return false;
-	    } catch (e) {
-	        return false;
-	    }
-	}
-
-	function toFastProperties(obj) {
-	    /*jshint -W027*/
-	    function f() {}
-	    f.prototype = obj;
-	    return f;
-	    eval(obj);
-	}
-
-	var rident = /^[a-z$_][a-z$_0-9]*$/i;
-	function isIdentifier(str) {
-	    return rident.test(str);
-	}
-
-	function filledRange(count, prefix, suffix) {
-	    var ret = new Array(count);
-	    for(var i = 0; i < count; ++i) {
-	        ret[i] = prefix + i + suffix;
-	    }
-	    return ret;
-	}
-
-	var ret = {
-	    isClass: isClass,
-	    isIdentifier: isIdentifier,
-	    inheritedDataKeys: inheritedDataKeys,
-	    getDataPropertyOrDefault: getDataPropertyOrDefault,
-	    thrower: thrower,
-	    isArray: es5.isArray,
-	    haveGetters: haveGetters,
-	    notEnumerableProp: notEnumerableProp,
-	    isPrimitive: isPrimitive,
-	    isObject: isObject,
-	    canEvaluate: canEvaluate,
-	    errorObj: errorObj,
-	    tryCatch1: tryCatch1,
-	    tryCatch2: tryCatch2,
-	    tryCatch3: tryCatch3,
-	    tryCatch4: tryCatch4,
-	    tryCatchApply: tryCatchApply,
-	    inherits: inherits,
-	    withAppended: withAppended,
-	    asString: asString,
-	    maybeWrapAsError: maybeWrapAsError,
-	    wrapsPrimitiveReceiver: wrapsPrimitiveReceiver,
-	    toFastProperties: toFastProperties,
-	    filledRange: filledRange
-	};
-
-	module.exports = ret;
-
-
-/***/ },
-/* 51 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(process) {/**
-	 * The MIT License (MIT)
-	 * 
-	 * Copyright (c) 2014 Petka Antonov
-	 * 
-	 * Permission is hereby granted, free of charge, to any person obtaining a copy
-	 * of this software and associated documentation files (the "Software"), to deal
-	 * in the Software without restriction, including without limitation the rights
-	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	 * copies of the Software, and to permit persons to whom the Software is
-	 * furnished to do so, subject to the following conditions:</p>
-	 * 
-	 * The above copyright notice and this permission notice shall be included in
-	 * all copies or substantial portions of the Software.
-	 * 
-	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	 * THE SOFTWARE.
-	 * 
-	 */
-	"use strict";
-	var schedule = __webpack_require__(144);
-	var Queue = __webpack_require__(145);
-	var errorObj = __webpack_require__(50).errorObj;
-	var tryCatch1 = __webpack_require__(50).tryCatch1;
-	var _process = typeof process !== "undefined" ? process : void 0;
-
-	function Async() {
-	    this._isTickUsed = false;
-	    this._schedule = schedule;
-	    this._length = 0;
-	    this._lateBuffer = new Queue(16);
-	    this._functionBuffer = new Queue(65536);
-	    var self = this;
-	    this.consumeFunctionBuffer = function Async$consumeFunctionBuffer() {
-	        self._consumeFunctionBuffer();
-	    };
-	}
-
-	Async.prototype.haveItemsQueued = function Async$haveItemsQueued() {
-	    return this._length > 0;
-	};
-
-	Async.prototype.invokeLater = function Async$invokeLater(fn, receiver, arg) {
-	    if (_process !== void 0 &&
-	        _process.domain != null &&
-	        !fn.domain) {
-	        fn = _process.domain.bind(fn);
-	    }
-	    this._lateBuffer.push(fn, receiver, arg);
-	    this._queueTick();
-	};
-
-	Async.prototype.invoke = function Async$invoke(fn, receiver, arg) {
-	    if (_process !== void 0 &&
-	        _process.domain != null &&
-	        !fn.domain) {
-	        fn = _process.domain.bind(fn);
-	    }
-	    var functionBuffer = this._functionBuffer;
-	    functionBuffer.push(fn, receiver, arg);
-	    this._length = functionBuffer.length();
-	    this._queueTick();
-	};
-
-	Async.prototype._consumeFunctionBuffer =
-	function Async$_consumeFunctionBuffer() {
-	    var functionBuffer = this._functionBuffer;
-	    while (functionBuffer.length() > 0) {
-	        var fn = functionBuffer.shift();
-	        var receiver = functionBuffer.shift();
-	        var arg = functionBuffer.shift();
-	        fn.call(receiver, arg);
-	    }
-	    this._reset();
-	    this._consumeLateBuffer();
-	};
-
-	Async.prototype._consumeLateBuffer = function Async$_consumeLateBuffer() {
-	    var buffer = this._lateBuffer;
-	    while(buffer.length() > 0) {
-	        var fn = buffer.shift();
-	        var receiver = buffer.shift();
-	        var arg = buffer.shift();
-	        var res = tryCatch1(fn, receiver, arg);
-	        if (res === errorObj) {
-	            this._queueTick();
-	            if (fn.domain != null) {
-	                fn.domain.emit("error", res.e);
-	            } else {
-	                throw res.e;
-	            }
-	        }
-	    }
-	};
-
-	Async.prototype._queueTick = function Async$_queue() {
-	    if (!this._isTickUsed) {
-	        this._schedule(this.consumeFunctionBuffer);
-	        this._isTickUsed = true;
-	    }
-	};
-
-	Async.prototype._reset = function Async$_reset() {
-	    this._isTickUsed = false;
-	    this._length = 0;
-	};
-
-	module.exports = new Async();
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(85)))
-
-/***/ },
-/* 52 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * The MIT License (MIT)
-	 * 
-	 * Copyright (c) 2014 Petka Antonov
-	 * 
-	 * Permission is hereby granted, free of charge, to any person obtaining a copy
-	 * of this software and associated documentation files (the "Software"), to deal
-	 * in the Software without restriction, including without limitation the rights
-	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	 * copies of the Software, and to permit persons to whom the Software is
-	 * furnished to do so, subject to the following conditions:</p>
-	 * 
-	 * The above copyright notice and this permission notice shall be included in
-	 * all copies or substantial portions of the Software.
-	 * 
-	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	 * THE SOFTWARE.
-	 * 
-	 */
-	"use strict";
-	var Objectfreeze = __webpack_require__(146).freeze;
-	var util = __webpack_require__(50);
-	var inherits = util.inherits;
-	var notEnumerableProp = util.notEnumerableProp;
-
-	function markAsOriginatingFromRejection(e) {
-	    try {
-	        notEnumerableProp(e, "isOperational", true);
-	    }
-	    catch(ignore) {}
-	}
-
-	function originatesFromRejection(e) {
-	    if (e == null) return false;
-	    return ((e instanceof OperationalError) ||
-	        e["isOperational"] === true);
-	}
-
-	function isError(obj) {
-	    return obj instanceof Error;
-	}
-
-	function canAttach(obj) {
-	    return isError(obj);
-	}
-
-	function subError(nameProperty, defaultMessage) {
-	    function SubError(message) {
-	        if (!(this instanceof SubError)) return new SubError(message);
-	        this.message = typeof message === "string" ? message : defaultMessage;
-	        this.name = nameProperty;
-	        if (Error.captureStackTrace) {
-	            Error.captureStackTrace(this, this.constructor);
-	        }
-	    }
-	    inherits(SubError, Error);
-	    return SubError;
-	}
-
-	var _TypeError, _RangeError;
-	var CancellationError = subError("CancellationError", "cancellation error");
-	var TimeoutError = subError("TimeoutError", "timeout error");
-	var AggregateError = subError("AggregateError", "aggregate error");
-	try {
-	    _TypeError = TypeError;
-	    _RangeError = RangeError;
-	} catch(e) {
-	    _TypeError = subError("TypeError", "type error");
-	    _RangeError = subError("RangeError", "range error");
-	}
-
-	var methods = ("join pop push shift unshift slice filter forEach some " +
-	    "every map indexOf lastIndexOf reduce reduceRight sort reverse").split(" ");
-
-	for (var i = 0; i < methods.length; ++i) {
-	    if (typeof Array.prototype[methods[i]] === "function") {
-	        AggregateError.prototype[methods[i]] = Array.prototype[methods[i]];
-	    }
-	}
-
-	AggregateError.prototype.length = 0;
-	AggregateError.prototype["isOperational"] = true;
-	var level = 0;
-	AggregateError.prototype.toString = function() {
-	    var indent = Array(level * 4 + 1).join(" ");
-	    var ret = "\n" + indent + "AggregateError of:" + "\n";
-	    level++;
-	    indent = Array(level * 4 + 1).join(" ");
-	    for (var i = 0; i < this.length; ++i) {
-	        var str = this[i] === this ? "[Circular AggregateError]" : this[i] + "";
-	        var lines = str.split("\n");
-	        for (var j = 0; j < lines.length; ++j) {
-	            lines[j] = indent + lines[j];
-	        }
-	        str = lines.join("\n");
-	        ret += str + "\n";
-	    }
-	    level--;
-	    return ret;
-	};
-
-	function OperationalError(message) {
-	    this.name = "OperationalError";
-	    this.message = message;
-	    this.cause = message;
-	    this["isOperational"] = true;
-
-	    if (message instanceof Error) {
-	        this.message = message.message;
-	        this.stack = message.stack;
-	    } else if (Error.captureStackTrace) {
-	        Error.captureStackTrace(this, this.constructor);
-	    }
-
-	}
-	inherits(OperationalError, Error);
-
-	var key = "__BluebirdErrorTypes__";
-	var errorTypes = Error[key];
-	if (!errorTypes) {
-	    errorTypes = Objectfreeze({
-	        CancellationError: CancellationError,
-	        TimeoutError: TimeoutError,
-	        OperationalError: OperationalError,
-	        RejectionError: OperationalError,
-	        AggregateError: AggregateError
-	    });
-	    notEnumerableProp(Error, key, errorTypes);
-	}
-
-	module.exports = {
-	    Error: Error,
-	    TypeError: _TypeError,
-	    RangeError: _RangeError,
-	    CancellationError: errorTypes.CancellationError,
-	    OperationalError: errorTypes.OperationalError,
-	    TimeoutError: errorTypes.TimeoutError,
-	    AggregateError: errorTypes.AggregateError,
-	    originatesFromRejection: originatesFromRejection,
-	    markAsOriginatingFromRejection: markAsOriginatingFromRejection,
-	    canAttach: canAttach
-	};
-
-
-/***/ },
-/* 53 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * The MIT License (MIT)
-	 * 
-	 * Copyright (c) 2014 Petka Antonov
-	 * 
-	 * Permission is hereby granted, free of charge, to any person obtaining a copy
-	 * of this software and associated documentation files (the "Software"), to deal
-	 * in the Software without restriction, including without limitation the rights
-	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	 * copies of the Software, and to permit persons to whom the Software is
-	 * furnished to do so, subject to the following conditions:</p>
-	 * 
-	 * The above copyright notice and this permission notice shall be included in
-	 * all copies or substantial portions of the Software.
-	 * 
-	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	 * THE SOFTWARE.
-	 * 
-	 */
-	"use strict";
-	module.exports = function(Promise, INTERNAL) {
-	var util = __webpack_require__(50);
-	var canAttach = __webpack_require__(52).canAttach;
-	var errorObj = util.errorObj;
-	var isObject = util.isObject;
-
-	function getThen(obj) {
-	    try {
-	        return obj.then;
-	    }
-	    catch(e) {
-	        errorObj.e = e;
-	        return errorObj;
-	    }
-	}
-
-	function Promise$_Cast(obj, originalPromise) {
-	    if (isObject(obj)) {
-	        if (obj instanceof Promise) {
-	            return obj;
-	        }
-	        else if (isAnyBluebirdPromise(obj)) {
-	            var ret = new Promise(INTERNAL);
-	            ret._setTrace(void 0);
-	            obj._then(
-	                ret._fulfillUnchecked,
-	                ret._rejectUncheckedCheckError,
-	                ret._progressUnchecked,
-	                ret,
-	                null
-	            );
-	            ret._setFollowing();
-	            return ret;
-	        }
-	        var then = getThen(obj);
-	        if (then === errorObj) {
-	            if (originalPromise !== void 0 && canAttach(then.e)) {
-	                originalPromise._attachExtraTrace(then.e);
-	            }
-	            return Promise.reject(then.e);
-	        } else if (typeof then === "function") {
-	            return Promise$_doThenable(obj, then, originalPromise);
-	        }
-	    }
-	    return obj;
-	}
-
-	var hasProp = {}.hasOwnProperty;
-	function isAnyBluebirdPromise(obj) {
-	    return hasProp.call(obj, "_promise0");
-	}
-
-	function Promise$_doThenable(x, then, originalPromise) {
-	    var resolver = Promise.defer();
-	    var called = false;
-	    try {
-	        then.call(
-	            x,
-	            Promise$_resolveFromThenable,
-	            Promise$_rejectFromThenable,
-	            Promise$_progressFromThenable
-	        );
-	    } catch(e) {
-	        if (!called) {
-	            called = true;
-	            var trace = canAttach(e) ? e : new Error(e + "");
-	            if (originalPromise !== void 0) {
-	                originalPromise._attachExtraTrace(trace);
-	            }
-	            resolver.promise._reject(e, trace);
-	        }
-	    }
-	    return resolver.promise;
-
-	    function Promise$_resolveFromThenable(y) {
-	        if (called) return;
-	        called = true;
-
-	        if (x === y) {
-	            var e = Promise._makeSelfResolutionError();
-	            if (originalPromise !== void 0) {
-	                originalPromise._attachExtraTrace(e);
-	            }
-	            resolver.promise._reject(e, void 0);
-	            return;
-	        }
-	        resolver.resolve(y);
-	    }
-
-	    function Promise$_rejectFromThenable(r) {
-	        if (called) return;
-	        called = true;
-	        var trace = canAttach(r) ? r : new Error(r + "");
-	        if (originalPromise !== void 0) {
-	            originalPromise._attachExtraTrace(trace);
-	        }
-	        resolver.promise._reject(r, trace);
-	    }
-
-	    function Promise$_progressFromThenable(v) {
-	        if (called) return;
-	        var promise = resolver.promise;
-	        if (typeof promise._progress === "function") {
-	            promise._progress(v);
-	        }
-	    }
-	}
-
-	return Promise$_Cast;
-	};
-
-
-/***/ },
-/* 54 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * The MIT License (MIT)
-	 * 
-	 * Copyright (c) 2014 Petka Antonov
-	 * 
-	 * Permission is hereby granted, free of charge, to any person obtaining a copy
-	 * of this software and associated documentation files (the "Software"), to deal
-	 * in the Software without restriction, including without limitation the rights
-	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	 * copies of the Software, and to permit persons to whom the Software is
-	 * furnished to do so, subject to the following conditions:</p>
-	 * 
-	 * The above copyright notice and this permission notice shall be included in
-	 * all copies or substantial portions of the Software.
-	 * 
-	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	 * THE SOFTWARE.
-	 * 
-	 */
-	"use strict";
-	module.exports = function(Promise, INTERNAL, cast) {
-	var canAttach = __webpack_require__(52).canAttach;
-	var util = __webpack_require__(50);
-	var isArray = util.isArray;
-
-	function toResolutionValue(val) {
-	    switch(val) {
-	    case -1: return void 0;
-	    case -2: return [];
-	    case -3: return {};
-	    }
-	}
-
-	function PromiseArray(values) {
-	    var promise = this._promise = new Promise(INTERNAL);
-	    var parent = void 0;
-	    if (values instanceof Promise) {
-	        parent = values;
-	        promise._propagateFrom(parent, 1 | 4);
-	    }
-	    promise._setTrace(parent);
-	    this._values = values;
-	    this._length = 0;
-	    this._totalResolved = 0;
-	    this._init(void 0, -2);
-	}
-	PromiseArray.prototype.length = function PromiseArray$length() {
-	    return this._length;
-	};
-
-	PromiseArray.prototype.promise = function PromiseArray$promise() {
-	    return this._promise;
-	};
-
-	PromiseArray.prototype._init =
-	function PromiseArray$_init(_, resolveValueIfEmpty) {
-	    var values = cast(this._values, void 0);
-	    if (values instanceof Promise) {
-	        this._values = values;
-	        values._setBoundTo(this._promise._boundTo);
-	        if (values.isFulfilled()) {
-	            values = values._settledValue;
-	            if (!isArray(values)) {
-	                var err = new Promise.TypeError("expecting an array, a promise or a thenable");
-	                this.__hardReject__(err);
-	                return;
-	            }
-	        } else if (values.isPending()) {
-	            values._then(
-	                PromiseArray$_init,
-	                this._reject,
-	                void 0,
-	                this,
-	                resolveValueIfEmpty
-	           );
-	            return;
-	        } else {
-	            values._unsetRejectionIsUnhandled();
-	            this._reject(values._settledValue);
-	            return;
-	        }
-	    } else if (!isArray(values)) {
-	        var err = new Promise.TypeError("expecting an array, a promise or a thenable");
-	        this.__hardReject__(err);
-	        return;
-	    }
-
-	    if (values.length === 0) {
-	        if (resolveValueIfEmpty === -5) {
-	            this._resolveEmptyArray();
-	        }
-	        else {
-	            this._resolve(toResolutionValue(resolveValueIfEmpty));
-	        }
-	        return;
-	    }
-	    var len = this.getActualLength(values.length);
-	    var newLen = len;
-	    var newValues = this.shouldCopyValues() ? new Array(len) : this._values;
-	    var isDirectScanNeeded = false;
-	    for (var i = 0; i < len; ++i) {
-	        var maybePromise = cast(values[i], void 0);
-	        if (maybePromise instanceof Promise) {
-	            if (maybePromise.isPending()) {
-	                maybePromise._proxyPromiseArray(this, i);
-	            } else {
-	                maybePromise._unsetRejectionIsUnhandled();
-	                isDirectScanNeeded = true;
-	            }
-	        } else {
-	            isDirectScanNeeded = true;
-	        }
-	        newValues[i] = maybePromise;
-	    }
-	    this._values = newValues;
-	    this._length = newLen;
-	    if (isDirectScanNeeded) {
-	        this._scanDirectValues(len);
-	    }
-	};
-
-	PromiseArray.prototype._settlePromiseAt =
-	function PromiseArray$_settlePromiseAt(index) {
-	    var value = this._values[index];
-	    if (!(value instanceof Promise)) {
-	        this._promiseFulfilled(value, index);
-	    } else if (value.isFulfilled()) {
-	        this._promiseFulfilled(value._settledValue, index);
-	    } else if (value.isRejected()) {
-	        this._promiseRejected(value._settledValue, index);
-	    }
-	};
-
-	PromiseArray.prototype._scanDirectValues =
-	function PromiseArray$_scanDirectValues(len) {
-	    for (var i = 0; i < len; ++i) {
-	        if (this._isResolved()) {
-	            break;
-	        }
-	        this._settlePromiseAt(i);
-	    }
-	};
-
-	PromiseArray.prototype._isResolved = function PromiseArray$_isResolved() {
-	    return this._values === null;
-	};
-
-	PromiseArray.prototype._resolve = function PromiseArray$_resolve(value) {
-	    this._values = null;
-	    this._promise._fulfill(value);
-	};
-
-	PromiseArray.prototype.__hardReject__ =
-	PromiseArray.prototype._reject = function PromiseArray$_reject(reason) {
-	    this._values = null;
-	    var trace = canAttach(reason) ? reason : new Error(reason + "");
-	    this._promise._attachExtraTrace(trace);
-	    this._promise._reject(reason, trace);
-	};
-
-	PromiseArray.prototype._promiseProgressed =
-	function PromiseArray$_promiseProgressed(progressValue, index) {
-	    if (this._isResolved()) return;
-	    this._promise._progress({
-	        index: index,
-	        value: progressValue
-	    });
-	};
-
-
-	PromiseArray.prototype._promiseFulfilled =
-	function PromiseArray$_promiseFulfilled(value, index) {
-	    if (this._isResolved()) return;
-	    this._values[index] = value;
-	    var totalResolved = ++this._totalResolved;
-	    if (totalResolved >= this._length) {
-	        this._resolve(this._values);
-	    }
-	};
-
-	PromiseArray.prototype._promiseRejected =
-	function PromiseArray$_promiseRejected(reason, index) {
-	    if (this._isResolved()) return;
-	    this._totalResolved++;
-	    this._reject(reason);
-	};
-
-	PromiseArray.prototype.shouldCopyValues =
-	function PromiseArray$_shouldCopyValues() {
-	    return true;
-	};
-
-	PromiseArray.prototype.getActualLength =
-	function PromiseArray$getActualLength(len) {
-	    return len;
-	};
-
-	return PromiseArray;
-	};
-
-
-/***/ },
-/* 55 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * The MIT License (MIT)
-	 * 
-	 * Copyright (c) 2014 Petka Antonov
-	 * 
-	 * Permission is hereby granted, free of charge, to any person obtaining a copy
-	 * of this software and associated documentation files (the "Software"), to deal
-	 * in the Software without restriction, including without limitation the rights
-	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	 * copies of the Software, and to permit persons to whom the Software is
-	 * furnished to do so, subject to the following conditions:</p>
-	 * 
-	 * The above copyright notice and this permission notice shall be included in
-	 * all copies or substantial portions of the Software.
-	 * 
-	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	 * THE SOFTWARE.
-	 * 
-	 */
-	"use strict";
-	module.exports = function() {
-	var inherits = __webpack_require__(50).inherits;
-	var defineProperty = __webpack_require__(146).defineProperty;
-
-	var rignore = new RegExp(
-	    "\\b(?:[a-zA-Z0-9.]+\\$_\\w+|" +
-	    "tryCatch(?:1|2|3|4|Apply)|new \\w*PromiseArray|" +
-	    "\\w*PromiseArray\\.\\w*PromiseArray|" +
-	    "setTimeout|CatchFilter\\$_\\w+|makeNodePromisified|processImmediate|" +
-	    "process._tickCallback|nextTick|Async\\$\\w+)\\b"
-	);
-
-	var rtraceline = null;
-	var formatStack = null;
-
-	function formatNonError(obj) {
-	    var str;
-	    if (typeof obj === "function") {
-	        str = "[function " +
-	            (obj.name || "anonymous") +
-	            "]";
-	    } else {
-	        str = obj.toString();
-	        var ruselessToString = /\[object [a-zA-Z0-9$_]+\]/;
-	        if (ruselessToString.test(str)) {
-	            try {
-	                var newStr = JSON.stringify(obj);
-	                str = newStr;
-	            }
-	            catch(e) {
-
-	            }
-	        }
-	        if (str.length === 0) {
-	            str = "(empty array)";
-	        }
-	    }
-	    return ("(<" + snip(str) + ">, no stack trace)");
-	}
-
-	function snip(str) {
-	    var maxChars = 41;
-	    if (str.length < maxChars) {
-	        return str;
-	    }
-	    return str.substr(0, maxChars - 3) + "...";
-	}
-
-	function CapturedTrace(ignoreUntil, isTopLevel) {
-	    this.captureStackTrace(CapturedTrace, isTopLevel);
-
-	}
-	inherits(CapturedTrace, Error);
-
-	CapturedTrace.prototype.captureStackTrace =
-	function CapturedTrace$captureStackTrace(ignoreUntil, isTopLevel) {
-	    captureStackTrace(this, ignoreUntil, isTopLevel);
-	};
-
-	CapturedTrace.possiblyUnhandledRejection =
-	function CapturedTrace$PossiblyUnhandledRejection(reason) {
-	    if (typeof console === "object") {
-	        var message;
-	        if (typeof reason === "object" || typeof reason === "function") {
-	            var stack = reason.stack;
-	            message = "Possibly unhandled " + formatStack(stack, reason);
-	        } else {
-	            message = "Possibly unhandled " + String(reason);
-	        }
-	        if (typeof console.error === "function" ||
-	            typeof console.error === "object") {
-	            console.error(message);
-	        } else if (typeof console.log === "function" ||
-	            typeof console.log === "object") {
-	            console.log(message);
-	        }
-	    }
-	};
-
-	CapturedTrace.combine = function CapturedTrace$Combine(current, prev) {
-	    var currentLastIndex = current.length - 1;
-	    var currentLastLine = current[currentLastIndex];
-	    var commonRootMeetPoint = -1;
-	    for (var i = prev.length - 1; i >= 0; --i) {
-	        if (prev[i] === currentLastLine) {
-	            commonRootMeetPoint = i;
-	            break;
-	        }
-	    }
-
-	    for (var i = commonRootMeetPoint; i >= 0; --i) {
-	        var line = prev[i];
-	        if (current[currentLastIndex] === line) {
-	            current.pop();
-	            currentLastIndex--;
-	        } else {
-	            break;
-	        }
-	    }
-
-	    current.push("From previous event:");
-	    var lines = current.concat(prev);
-
-	    var ret = [];
-
-	    for (var i = 0, len = lines.length; i < len; ++i) {
-
-	        if (((rignore.test(lines[i]) && rtraceline.test(lines[i])) ||
-	            (i > 0 && !rtraceline.test(lines[i])) &&
-	            lines[i] !== "From previous event:")
-	       ) {
-	            continue;
-	        }
-	        ret.push(lines[i]);
-	    }
-	    return ret;
-	};
-
-	CapturedTrace.protectErrorMessageNewlines = function(stack) {
-	    for (var i = 0; i < stack.length; ++i) {
-	        if (rtraceline.test(stack[i])) {
-	            break;
-	        }
-	    }
-
-	    if (i <= 1) return;
-
-	    var errorMessageLines = [];
-	    for (var j = 0; j < i; ++j) {
-	        errorMessageLines.push(stack.shift());
-	    }
-	    stack.unshift(errorMessageLines.join("\u0002\u0000\u0001"));
-	};
-
-	CapturedTrace.isSupported = function CapturedTrace$IsSupported() {
-	    return typeof captureStackTrace === "function";
-	};
-
-	var captureStackTrace = (function stackDetection() {
-	    if (typeof Error.stackTraceLimit === "number" &&
-	        typeof Error.captureStackTrace === "function") {
-	        rtraceline = /^\s*at\s*/;
-	        formatStack = function(stack, error) {
-	            if (typeof stack === "string") return stack;
-
-	            if (error.name !== void 0 &&
-	                error.message !== void 0) {
-	                return error.name + ". " + error.message;
-	            }
-	            return formatNonError(error);
-
-
-	        };
-	        var captureStackTrace = Error.captureStackTrace;
-	        return function CapturedTrace$_captureStackTrace(
-	            receiver, ignoreUntil) {
-	            captureStackTrace(receiver, ignoreUntil);
-	        };
-	    }
-	    var err = new Error();
-
-	    if (typeof err.stack === "string" &&
-	        typeof "".startsWith === "function" &&
-	        (err.stack.startsWith("stackDetection@")) &&
-	        stackDetection.name === "stackDetection") {
-
-	        defineProperty(Error, "stackTraceLimit", {
-	            writable: true,
-	            enumerable: false,
-	            configurable: false,
-	            value: 25
-	        });
-	        rtraceline = /@/;
-	        var rline = /[@\n]/;
-
-	        formatStack = function(stack, error) {
-	            if (typeof stack === "string") {
-	                return (error.name + ". " + error.message + "\n" + stack);
-	            }
-
-	            if (error.name !== void 0 &&
-	                error.message !== void 0) {
-	                return error.name + ". " + error.message;
-	            }
-	            return formatNonError(error);
-	        };
-
-	        return function captureStackTrace(o) {
-	            var stack = new Error().stack;
-	            var split = stack.split(rline);
-	            var len = split.length;
-	            var ret = "";
-	            for (var i = 0; i < len; i += 2) {
-	                ret += split[i];
-	                ret += "@";
-	                ret += split[i + 1];
-	                ret += "\n";
-	            }
-	            o.stack = ret;
-	        };
-	    } else {
-	        formatStack = function(stack, error) {
-	            if (typeof stack === "string") return stack;
-
-	            if ((typeof error === "object" ||
-	                typeof error === "function") &&
-	                error.name !== void 0 &&
-	                error.message !== void 0) {
-	                return error.name + ". " + error.message;
-	            }
-	            return formatNonError(error);
-	        };
-
-	        return null;
-	    }
-	})();
-
-	return CapturedTrace;
-	};
-
-
-/***/ },
-/* 56 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * The MIT License (MIT)
-	 * 
-	 * Copyright (c) 2014 Petka Antonov
-	 * 
-	 * Permission is hereby granted, free of charge, to any person obtaining a copy
-	 * of this software and associated documentation files (the "Software"), to deal
-	 * in the Software without restriction, including without limitation the rights
-	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	 * copies of the Software, and to permit persons to whom the Software is
-	 * furnished to do so, subject to the following conditions:</p>
-	 * 
-	 * The above copyright notice and this permission notice shall be included in
-	 * all copies or substantial portions of the Software.
-	 * 
-	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	 * THE SOFTWARE.
-	 * 
-	 */
-	"use strict";
-	module.exports = function(NEXT_FILTER) {
-	var util = __webpack_require__(50);
-	var errors = __webpack_require__(52);
-	var tryCatch1 = util.tryCatch1;
-	var errorObj = util.errorObj;
-	var keys = __webpack_require__(146).keys;
-	var TypeError = errors.TypeError;
-
-	function CatchFilter(instances, callback, promise) {
-	    this._instances = instances;
-	    this._callback = callback;
-	    this._promise = promise;
-	}
-
-	function CatchFilter$_safePredicate(predicate, e) {
-	    var safeObject = {};
-	    var retfilter = tryCatch1(predicate, safeObject, e);
-
-	    if (retfilter === errorObj) return retfilter;
-
-	    var safeKeys = keys(safeObject);
-	    if (safeKeys.length) {
-	        errorObj.e = new TypeError(
-	            "Catch filter must inherit from Error "
-	          + "or be a simple predicate function");
-	        return errorObj;
-	    }
-	    return retfilter;
-	}
-
-	CatchFilter.prototype.doFilter = function CatchFilter$_doFilter(e) {
-	    var cb = this._callback;
-	    var promise = this._promise;
-	    var boundTo = promise._boundTo;
-	    for (var i = 0, len = this._instances.length; i < len; ++i) {
-	        var item = this._instances[i];
-	        var itemIsErrorType = item === Error ||
-	            (item != null && item.prototype instanceof Error);
-
-	        if (itemIsErrorType && e instanceof item) {
-	            var ret = tryCatch1(cb, boundTo, e);
-	            if (ret === errorObj) {
-	                NEXT_FILTER.e = ret.e;
-	                return NEXT_FILTER;
-	            }
-	            return ret;
-	        } else if (typeof item === "function" && !itemIsErrorType) {
-	            var shouldHandle = CatchFilter$_safePredicate(item, e);
-	            if (shouldHandle === errorObj) {
-	                var trace = errors.canAttach(errorObj.e)
-	                    ? errorObj.e
-	                    : new Error(errorObj.e + "");
-	                this._promise._attachExtraTrace(trace);
-	                e = errorObj.e;
-	                break;
-	            } else if (shouldHandle) {
-	                var ret = tryCatch1(cb, boundTo, e);
-	                if (ret === errorObj) {
-	                    NEXT_FILTER.e = ret.e;
-	                    return NEXT_FILTER;
-	                }
-	                return ret;
-	            }
-	        }
-	    }
-	    NEXT_FILTER.e = e;
-	    return NEXT_FILTER;
-	};
-
-	return CatchFilter;
-	};
-
-
-/***/ },
-/* 57 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * The MIT License (MIT)
-	 * 
-	 * Copyright (c) 2014 Petka Antonov
-	 * 
-	 * Permission is hereby granted, free of charge, to any person obtaining a copy
-	 * of this software and associated documentation files (the "Software"), to deal
-	 * in the Software without restriction, including without limitation the rights
-	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	 * copies of the Software, and to permit persons to whom the Software is
-	 * furnished to do so, subject to the following conditions:</p>
-	 * 
-	 * The above copyright notice and this permission notice shall be included in
-	 * all copies or substantial portions of the Software.
-	 * 
-	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	 * THE SOFTWARE.
-	 * 
-	 */
-	"use strict";
-	var util = __webpack_require__(50);
-	var maybeWrapAsError = util.maybeWrapAsError;
-	var errors = __webpack_require__(52);
-	var TimeoutError = errors.TimeoutError;
-	var OperationalError = errors.OperationalError;
-	var async = __webpack_require__(51);
-	var haveGetters = util.haveGetters;
-	var es5 = __webpack_require__(146);
-
-	function isUntypedError(obj) {
-	    return obj instanceof Error &&
-	        es5.getPrototypeOf(obj) === Error.prototype;
-	}
-
-	function wrapAsOperationalError(obj) {
-	    var ret;
-	    if (isUntypedError(obj)) {
-	        ret = new OperationalError(obj);
-	    } else {
-	        ret = obj;
-	    }
-	    errors.markAsOriginatingFromRejection(ret);
-	    return ret;
-	}
-
-	function nodebackForPromise(promise) {
-	    function PromiseResolver$_callback(err, value) {
-	        if (promise === null) return;
-
-	        if (err) {
-	            var wrapped = wrapAsOperationalError(maybeWrapAsError(err));
-	            promise._attachExtraTrace(wrapped);
-	            promise._reject(wrapped);
-	        } else if (arguments.length > 2) {
-	            var $_len = arguments.length;var args = new Array($_len - 1); for(var $_i = 1; $_i < $_len; ++$_i) {args[$_i - 1] = arguments[$_i];}
-	            promise._fulfill(args);
-	        } else {
-	            promise._fulfill(value);
-	        }
-
-	        promise = null;
-	    }
-	    return PromiseResolver$_callback;
-	}
-
-
-	var PromiseResolver;
-	if (!haveGetters) {
-	    PromiseResolver = function PromiseResolver(promise) {
-	        this.promise = promise;
-	        this.asCallback = nodebackForPromise(promise);
-	        this.callback = this.asCallback;
-	    };
-	}
-	else {
-	    PromiseResolver = function PromiseResolver(promise) {
-	        this.promise = promise;
-	    };
-	}
-	if (haveGetters) {
-	    var prop = {
-	        get: function() {
-	            return nodebackForPromise(this.promise);
-	        }
-	    };
-	    es5.defineProperty(PromiseResolver.prototype, "asCallback", prop);
-	    es5.defineProperty(PromiseResolver.prototype, "callback", prop);
-	}
-
-	PromiseResolver._nodebackForPromise = nodebackForPromise;
-
-	PromiseResolver.prototype.toString = function PromiseResolver$toString() {
-	    return "[object PromiseResolver]";
-	};
-
-	PromiseResolver.prototype.resolve =
-	PromiseResolver.prototype.fulfill = function PromiseResolver$resolve(value) {
-	    if (!(this instanceof PromiseResolver)) {
-	        throw new TypeError("Illegal invocation, resolver resolve/reject must be called within a resolver context. Consider using the promise constructor instead.");
-	    }
-
-	    var promise = this.promise;
-	    if (promise._tryFollow(value)) {
-	        return;
-	    }
-	    async.invoke(promise._fulfill, promise, value);
-	};
-
-	PromiseResolver.prototype.reject = function PromiseResolver$reject(reason) {
-	    if (!(this instanceof PromiseResolver)) {
-	        throw new TypeError("Illegal invocation, resolver resolve/reject must be called within a resolver context. Consider using the promise constructor instead.");
-	    }
-
-	    var promise = this.promise;
-	    errors.markAsOriginatingFromRejection(reason);
-	    var trace = errors.canAttach(reason) ? reason : new Error(reason + "");
-	    promise._attachExtraTrace(trace);
-	    async.invoke(promise._reject, promise, reason);
-	    if (trace !== reason) {
-	        async.invoke(this._setCarriedStackTrace, this, trace);
-	    }
-	};
-
-	PromiseResolver.prototype.progress =
-	function PromiseResolver$progress(value) {
-	    if (!(this instanceof PromiseResolver)) {
-	        throw new TypeError("Illegal invocation, resolver resolve/reject must be called within a resolver context. Consider using the promise constructor instead.");
-	    }
-	    async.invoke(this.promise._progress, this.promise, value);
-	};
-
-	PromiseResolver.prototype.cancel = function PromiseResolver$cancel() {
-	    async.invoke(this.promise.cancel, this.promise, void 0);
-	};
-
-	PromiseResolver.prototype.timeout = function PromiseResolver$timeout() {
-	    this.reject(new TimeoutError("timeout"));
-	};
-
-	PromiseResolver.prototype.isResolved = function PromiseResolver$isResolved() {
-	    return this.promise.isResolved();
-	};
-
-	PromiseResolver.prototype.toJSON = function PromiseResolver$toJSON() {
-	    return this.promise.toJSON();
-	};
-
-	PromiseResolver.prototype._setCarriedStackTrace =
-	function PromiseResolver$_setCarriedStackTrace(trace) {
-	    if (this.promise.isRejected()) {
-	        this.promise._setCarriedStackTrace(trace);
-	    }
-	};
-
-	module.exports = PromiseResolver;
-
-
-/***/ },
-/* 58 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * The MIT License (MIT)
-	 * 
-	 * Copyright (c) 2014 Petka Antonov
-	 * 
-	 * Permission is hereby granted, free of charge, to any person obtaining a copy
-	 * of this software and associated documentation files (the "Software"), to deal
-	 * in the Software without restriction, including without limitation the rights
-	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	 * copies of the Software, and to permit persons to whom the Software is
-	 * furnished to do so, subject to the following conditions:</p>
-	 * 
-	 * The above copyright notice and this permission notice shall be included in
-	 * all copies or substantial portions of the Software.
-	 * 
-	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	 * THE SOFTWARE.
-	 * 
-	 */
-	"use strict";
-	module.exports = function(Promise) {
-	var TypeError = __webpack_require__(52).TypeError;
-
-	function apiRejection(msg) {
-	    var error = new TypeError(msg);
-	    var ret = Promise.rejected(error);
-	    var parent = ret._peekContext();
-	    if (parent != null) {
-	        parent._attachExtraTrace(error);
-	    }
-	    return ret;
-	}
-
-	return apiRejection;
-	};
-
-
-/***/ },
-/* 59 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * The MIT License (MIT)
-	 * 
-	 * Copyright (c) 2014 Petka Antonov
-	 * 
-	 * Permission is hereby granted, free of charge, to any person obtaining a copy
-	 * of this software and associated documentation files (the "Software"), to deal
-	 * in the Software without restriction, including without limitation the rights
-	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	 * copies of the Software, and to permit persons to whom the Software is
-	 * furnished to do so, subject to the following conditions:</p>
-	 * 
-	 * The above copyright notice and this permission notice shall be included in
-	 * all copies or substantial portions of the Software.
-	 * 
-	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	 * THE SOFTWARE.
-	 * 
-	 */
-	"use strict";
-	module.exports = function(Promise, NEXT_FILTER, cast) {
-	var util = __webpack_require__(50);
-	var wrapsPrimitiveReceiver = util.wrapsPrimitiveReceiver;
-	var isPrimitive = util.isPrimitive;
-	var thrower = util.thrower;
-
-	function returnThis() {
-	    return this;
-	}
-	function throwThis() {
-	    throw this;
-	}
-	function return$(r) {
-	    return function Promise$_returner() {
-	        return r;
-	    };
-	}
-	function throw$(r) {
-	    return function Promise$_thrower() {
-	        throw r;
-	    };
-	}
-	function promisedFinally(ret, reasonOrValue, isFulfilled) {
-	    var then;
-	    if (wrapsPrimitiveReceiver && isPrimitive(reasonOrValue)) {
-	        then = isFulfilled ? return$(reasonOrValue) : throw$(reasonOrValue);
-	    } else {
-	        then = isFulfilled ? returnThis : throwThis;
-	    }
-	    return ret._then(then, thrower, void 0, reasonOrValue, void 0);
-	}
-
-	function finallyHandler(reasonOrValue) {
-	    var promise = this.promise;
-	    var handler = this.handler;
-
-	    var ret = promise._isBound()
-	                    ? handler.call(promise._boundTo)
-	                    : handler();
-
-	    if (ret !== void 0) {
-	        var maybePromise = cast(ret, void 0);
-	        if (maybePromise instanceof Promise) {
-	            return promisedFinally(maybePromise, reasonOrValue,
-	                                    promise.isFulfilled());
-	        }
-	    }
-
-	    if (promise.isRejected()) {
-	        NEXT_FILTER.e = reasonOrValue;
-	        return NEXT_FILTER;
-	    } else {
-	        return reasonOrValue;
-	    }
-	}
-
-	function tapHandler(value) {
-	    var promise = this.promise;
-	    var handler = this.handler;
-
-	    var ret = promise._isBound()
-	                    ? handler.call(promise._boundTo, value)
-	                    : handler(value);
-
-	    if (ret !== void 0) {
-	        var maybePromise = cast(ret, void 0);
-	        if (maybePromise instanceof Promise) {
-	            return promisedFinally(maybePromise, value, true);
-	        }
-	    }
-	    return value;
-	}
-
-	Promise.prototype._passThroughHandler =
-	function Promise$_passThroughHandler(handler, isFinally) {
-	    if (typeof handler !== "function") return this.then();
-
-	    var promiseAndHandler = {
-	        promise: this,
-	        handler: handler
-	    };
-
-	    return this._then(
-	            isFinally ? finallyHandler : tapHandler,
-	            isFinally ? finallyHandler : void 0, void 0,
-	            promiseAndHandler, void 0);
-	};
-
-	Promise.prototype.lastly =
-	Promise.prototype["finally"] = function Promise$finally(handler) {
-	    return this._passThroughHandler(handler, true);
-	};
-
-	Promise.prototype.tap = function Promise$tap(handler) {
-	    return this._passThroughHandler(handler, false);
-	};
-	};
-
-
-/***/ },
 /* 60 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * The MIT License (MIT)
-	 * 
-	 * Copyright (c) 2014 Petka Antonov
-	 * 
-	 * Permission is hereby granted, free of charge, to any person obtaining a copy
-	 * of this software and associated documentation files (the "Software"), to deal
-	 * in the Software without restriction, including without limitation the rights
-	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	 * copies of the Software, and to permit persons to whom the Software is
-	 * furnished to do so, subject to the following conditions:</p>
-	 * 
-	 * The above copyright notice and this permission notice shall be included in
-	 * all copies or substantial portions of the Software.
-	 * 
-	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	 * THE SOFTWARE.
-	 * 
-	 */
-	"use strict";
-	var util = __webpack_require__(50);
-	var isPrimitive = util.isPrimitive;
-	var wrapsPrimitiveReceiver = util.wrapsPrimitiveReceiver;
-
-	module.exports = function(Promise) {
-	var returner = function Promise$_returner() {
-	    return this;
-	};
-	var thrower = function Promise$_thrower() {
-	    throw this;
-	};
-
-	var wrapper = function Promise$_wrapper(value, action) {
-	    if (action === 1) {
-	        return function Promise$_thrower() {
-	            throw value;
-	        };
-	    } else if (action === 2) {
-	        return function Promise$_returner() {
-	            return value;
-	        };
-	    }
-	};
-
-
-	Promise.prototype["return"] =
-	Promise.prototype.thenReturn =
-	function Promise$thenReturn(value) {
-	    if (wrapsPrimitiveReceiver && isPrimitive(value)) {
-	        return this._then(
-	            wrapper(value, 2),
-	            void 0,
-	            void 0,
-	            void 0,
-	            void 0
-	       );
-	    }
-	    return this._then(returner, void 0, void 0, value, void 0);
-	};
-
-	Promise.prototype["throw"] =
-	Promise.prototype.thenThrow =
-	function Promise$thenThrow(reason) {
-	    if (wrapsPrimitiveReceiver && isPrimitive(reason)) {
-	        return this._then(
-	            wrapper(reason, 1),
-	            void 0,
-	            void 0,
-	            void 0,
-	            void 0
-	       );
-	    }
-	    return this._then(thrower, void 0, void 0, reason, void 0);
-	};
-	};
-
-
-/***/ },
-/* 61 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * The MIT License (MIT)
-	 * 
-	 * Copyright (c) 2014 Petka Antonov
-	 * 
-	 * Permission is hereby granted, free of charge, to any person obtaining a copy
-	 * of this software and associated documentation files (the "Software"), to deal
-	 * in the Software without restriction, including without limitation the rights
-	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	 * copies of the Software, and to permit persons to whom the Software is
-	 * furnished to do so, subject to the following conditions:</p>
-	 * 
-	 * The above copyright notice and this permission notice shall be included in
-	 * all copies or substantial portions of the Software.
-	 * 
-	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	 * THE SOFTWARE.
-	 * 
-	 */
-	"use strict";
-	module.exports = function(Promise) {
-	function PromiseInspection(promise) {
-	    if (promise !== void 0) {
-	        this._bitField = promise._bitField;
-	        this._settledValue = promise.isResolved()
-	            ? promise._settledValue
-	            : void 0;
-	    }
-	    else {
-	        this._bitField = 0;
-	        this._settledValue = void 0;
-	    }
-	}
-
-	PromiseInspection.prototype.isFulfilled =
-	Promise.prototype.isFulfilled = function Promise$isFulfilled() {
-	    return (this._bitField & 268435456) > 0;
-	};
-
-	PromiseInspection.prototype.isRejected =
-	Promise.prototype.isRejected = function Promise$isRejected() {
-	    return (this._bitField & 134217728) > 0;
-	};
-
-	PromiseInspection.prototype.isPending =
-	Promise.prototype.isPending = function Promise$isPending() {
-	    return (this._bitField & 402653184) === 0;
-	};
-
-	PromiseInspection.prototype.value =
-	Promise.prototype.value = function Promise$value() {
-	    if (!this.isFulfilled()) {
-	        throw new TypeError("cannot get fulfillment value of a non-fulfilled promise");
-	    }
-	    return this._settledValue;
-	};
-
-	PromiseInspection.prototype.error =
-	PromiseInspection.prototype.reason =
-	Promise.prototype.reason = function Promise$reason() {
-	    if (!this.isRejected()) {
-	        throw new TypeError("cannot get rejection reason of a non-rejected promise");
-	    }
-	    return this._settledValue;
-	};
-
-	PromiseInspection.prototype.isResolved =
-	Promise.prototype.isResolved = function Promise$isResolved() {
-	    return (this._bitField & 402653184) > 0;
-	};
-
-	Promise.PromiseInspection = PromiseInspection;
-	};
-
-
-/***/ },
-/* 62 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * The MIT License (MIT)
-	 * 
-	 * Copyright (c) 2014 Petka Antonov
-	 * 
-	 * Permission is hereby granted, free of charge, to any person obtaining a copy
-	 * of this software and associated documentation files (the "Software"), to deal
-	 * in the Software without restriction, including without limitation the rights
-	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	 * copies of the Software, and to permit persons to whom the Software is
-	 * furnished to do so, subject to the following conditions:</p>
-	 * 
-	 * The above copyright notice and this permission notice shall be included in
-	 * all copies or substantial portions of the Software.
-	 * 
-	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	 * THE SOFTWARE.
-	 * 
-	 */
-	"use strict";
-	module.exports =
-	function(Promise, PromiseArray, cast, INTERNAL) {
-	var util = __webpack_require__(50);
-	var canEvaluate = util.canEvaluate;
-	var tryCatch1 = util.tryCatch1;
-	var errorObj = util.errorObj;
-
-
-	if (canEvaluate) {
-	    var thenCallback = function(i) {
-	        return new Function("value", "holder", "                             \n\
-	            'use strict';                                                    \n\
-	            holder.pIndex = value;                                           \n\
-	            holder.checkFulfillment(this);                                   \n\
-	            ".replace(/Index/g, i));
-	    };
-
-	    var caller = function(count) {
-	        var values = [];
-	        for (var i = 1; i <= count; ++i) values.push("holder.p" + i);
-	        return new Function("holder", "                                      \n\
-	            'use strict';                                                    \n\
-	            var callback = holder.fn;                                        \n\
-	            return callback(values);                                         \n\
-	            ".replace(/values/g, values.join(", ")));
-	    };
-	    var thenCallbacks = [];
-	    var callers = [void 0];
-	    for (var i = 1; i <= 5; ++i) {
-	        thenCallbacks.push(thenCallback(i));
-	        callers.push(caller(i));
-	    }
-
-	    var Holder = function(total, fn) {
-	        this.p1 = this.p2 = this.p3 = this.p4 = this.p5 = null;
-	        this.fn = fn;
-	        this.total = total;
-	        this.now = 0;
-	    };
-
-	    Holder.prototype.callers = callers;
-	    Holder.prototype.checkFulfillment = function(promise) {
-	        var now = this.now;
-	        now++;
-	        var total = this.total;
-	        if (now >= total) {
-	            var handler = this.callers[total];
-	            var ret = tryCatch1(handler, void 0, this);
-	            if (ret === errorObj) {
-	                promise._rejectUnchecked(ret.e);
-	            } else if (!promise._tryFollow(ret)) {
-	                promise._fulfillUnchecked(ret);
-	            }
-	        } else {
-	            this.now = now;
-	        }
-	    };
-	}
-
-	function reject(reason) {
-	    this._reject(reason);
-	}
-
-	Promise.join = function Promise$Join() {
-	    var last = arguments.length - 1;
-	    var fn;
-	    if (last > 0 && typeof arguments[last] === "function") {
-	        fn = arguments[last];
-	        if (last < 6 && canEvaluate) {
-	            var ret = new Promise(INTERNAL);
-	            ret._setTrace(void 0);
-	            var holder = new Holder(last, fn);
-	            var callbacks = thenCallbacks;
-	            for (var i = 0; i < last; ++i) {
-	                var maybePromise = cast(arguments[i], void 0);
-	                if (maybePromise instanceof Promise) {
-	                    if (maybePromise.isPending()) {
-	                        maybePromise._then(callbacks[i], reject,
-	                                           void 0, ret, holder);
-	                    } else if (maybePromise.isFulfilled()) {
-	                        callbacks[i].call(ret,
-	                                          maybePromise._settledValue, holder);
-	                    } else {
-	                        ret._reject(maybePromise._settledValue);
-	                        maybePromise._unsetRejectionIsUnhandled();
-	                    }
-	                } else {
-	                    callbacks[i].call(ret, maybePromise, holder);
-	                }
-	            }
-	            return ret;
-	        }
-	    }
-	    var $_len = arguments.length;var args = new Array($_len); for(var $_i = 0; $_i < $_len; ++$_i) {args[$_i] = arguments[$_i];}
-	    var ret = new PromiseArray(args).promise();
-	    return fn !== void 0 ? ret.spread(fn) : ret;
-	};
-
-	};
-
-
-/***/ },
-/* 63 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * The MIT License (MIT)
-	 * 
-	 * Copyright (c) 2014 Petka Antonov
-	 * 
-	 * Permission is hereby granted, free of charge, to any person obtaining a copy
-	 * of this software and associated documentation files (the "Software"), to deal
-	 * in the Software without restriction, including without limitation the rights
-	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	 * copies of the Software, and to permit persons to whom the Software is
-	 * furnished to do so, subject to the following conditions:</p>
-	 * 
-	 * The above copyright notice and this permission notice shall be included in
-	 * all copies or substantial portions of the Software.
-	 * 
-	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	 * THE SOFTWARE.
-	 * 
-	 */
-	"use strict";
-	var _setTimeout = function(fn, ms) {
-	    var len = arguments.length;
-	    var arg0 = arguments[2];
-	    var arg1 = arguments[3];
-	    var arg2 = len >= 5 ? arguments[4] : void 0;
-	    return setTimeout(function() {
-	        fn(arg0, arg1, arg2);
-	    }, ms|0);
-	};
-
-	module.exports = function(Promise, INTERNAL, cast) {
-	var util = __webpack_require__(50);
-	var errors = __webpack_require__(52);
-	var apiRejection = __webpack_require__(58)(Promise);
-	var TimeoutError = Promise.TimeoutError;
-
-	var afterTimeout = function Promise$_afterTimeout(promise, message, ms) {
-	    if (!promise.isPending()) return;
-	    if (typeof message !== "string") {
-	        message = "operation timed out after" + " " + ms + " ms"
-	    }
-	    var err = new TimeoutError(message);
-	    errors.markAsOriginatingFromRejection(err);
-	    promise._attachExtraTrace(err);
-	    promise._cancel(err);
-	};
-
-	var afterDelay = function Promise$_afterDelay(value, promise) {
-	    promise._fulfill(value);
-	};
-
-	var delay = Promise.delay = function Promise$Delay(value, ms) {
-	    if (ms === void 0) {
-	        ms = value;
-	        value = void 0;
-	    }
-	    ms = +ms;
-	    var maybePromise = cast(value, void 0);
-	    var promise = new Promise(INTERNAL);
-
-	    if (maybePromise instanceof Promise) {
-	        promise._propagateFrom(maybePromise, 7);
-	        promise._follow(maybePromise);
-	        return promise.then(function(value) {
-	            return Promise.delay(value, ms);
-	        });
-	    } else {
-	        promise._setTrace(void 0);
-	        _setTimeout(afterDelay, ms, value, promise);
-	    }
-	    return promise;
-	};
-
-	Promise.prototype.delay = function Promise$delay(ms) {
-	    return delay(this, ms);
-	};
-
-	function successClear(value) {
-	    var handle = this;
-	    if (handle instanceof Number) handle = +handle;
-	    clearTimeout(handle);
-	    return value;
-	}
-
-	function failureClear(reason) {
-	    var handle = this;
-	    if (handle instanceof Number) handle = +handle;
-	    clearTimeout(handle);
-	    throw reason;
-	}
-
-	Promise.prototype.timeout = function Promise$timeout(ms, message) {
-	    ms = +ms;
-
-	    var ret = new Promise(INTERNAL);
-	    ret._propagateFrom(this, 7);
-	    ret._follow(this);
-	    var handle = _setTimeout(afterTimeout, ms, ret, message, ms);
-	    return ret.cancellable()
-	              ._then(successClear, failureClear, void 0, handle, void 0);
-	};
-
-	};
-
-
-/***/ },
-/* 64 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * The MIT License (MIT)
-	 * 
-	 * Copyright (c) 2014 Petka Antonov
-	 * 
-	 * Permission is hereby granted, free of charge, to any person obtaining a copy
-	 * of this software and associated documentation files (the "Software"), to deal
-	 * in the Software without restriction, including without limitation the rights
-	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	 * copies of the Software, and to permit persons to whom the Software is
-	 * furnished to do so, subject to the following conditions:</p>
-	 * 
-	 * The above copyright notice and this permission notice shall be included in
-	 * all copies or substantial portions of the Software.
-	 * 
-	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	 * THE SOFTWARE.
-	 * 
-	 */
-	"use strict";
-	module.exports = function(Promise, INTERNAL, cast) {
-	var apiRejection = __webpack_require__(58)(Promise);
-	var isArray = __webpack_require__(50).isArray;
-
-	var raceLater = function Promise$_raceLater(promise) {
-	    return promise.then(function(array) {
-	        return Promise$_Race(array, promise);
-	    });
-	};
-
-	var hasOwn = {}.hasOwnProperty;
-	function Promise$_Race(promises, parent) {
-	    var maybePromise = cast(promises, void 0);
-
-	    if (maybePromise instanceof Promise) {
-	        return raceLater(maybePromise);
-	    } else if (!isArray(promises)) {
-	        return apiRejection("expecting an array, a promise or a thenable");
-	    }
-
-	    var ret = new Promise(INTERNAL);
-	    if (parent !== void 0) {
-	        ret._propagateFrom(parent, 7);
-	    } else {
-	        ret._setTrace(void 0);
-	    }
-	    var fulfill = ret._fulfill;
-	    var reject = ret._reject;
-	    for (var i = 0, len = promises.length; i < len; ++i) {
-	        var val = promises[i];
-
-	        if (val === void 0 && !(hasOwn.call(promises, i))) {
-	            continue;
-	        }
-
-	        Promise.cast(val)._then(fulfill, reject, void 0, ret, null);
-	    }
-	    return ret;
-	}
-
-	Promise.race = function Promise$Race(promises) {
-	    return Promise$_Race(promises, void 0);
-	};
-
-	Promise.prototype.race = function Promise$race() {
-	    return Promise$_Race(this, void 0);
-	};
-
-	};
-
-
-/***/ },
-/* 65 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * The MIT License (MIT)
-	 * 
-	 * Copyright (c) 2014 Petka Antonov
-	 * 
-	 * Permission is hereby granted, free of charge, to any person obtaining a copy
-	 * of this software and associated documentation files (the "Software"), to deal
-	 * in the Software without restriction, including without limitation the rights
-	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	 * copies of the Software, and to permit persons to whom the Software is
-	 * furnished to do so, subject to the following conditions:</p>
-	 * 
-	 * The above copyright notice and this permission notice shall be included in
-	 * all copies or substantial portions of the Software.
-	 * 
-	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	 * THE SOFTWARE.
-	 * 
-	 */
-	"use strict";
-	var cr = Object.create;
-	if (cr) {
-	    var callerCache = cr(null);
-	    var getterCache = cr(null);
-	    callerCache[" size"] = getterCache[" size"] = 0;
-	}
-
-	module.exports = function(Promise) {
-	var util = __webpack_require__(50);
-	var canEvaluate = util.canEvaluate;
-	var isIdentifier = util.isIdentifier;
-
-	function makeMethodCaller (methodName) {
-	    return new Function("obj", "                                             \n\
-	        'use strict'                                                         \n\
-	        var len = this.length;                                               \n\
-	        switch(len) {                                                        \n\
-	            case 1: return obj.methodName(this[0]);                          \n\
-	            case 2: return obj.methodName(this[0], this[1]);                 \n\
-	            case 3: return obj.methodName(this[0], this[1], this[2]);        \n\
-	            case 0: return obj.methodName();                                 \n\
-	            default: return obj.methodName.apply(obj, this);                 \n\
-	        }                                                                    \n\
-	        ".replace(/methodName/g, methodName));
-	}
-
-	function makeGetter (propertyName) {
-	    return new Function("obj", "                                             \n\
-	        'use strict';                                                        \n\
-	        return obj.propertyName;                                             \n\
-	        ".replace("propertyName", propertyName));
-	}
-
-	function getCompiled(name, compiler, cache) {
-	    var ret = cache[name];
-	    if (typeof ret !== "function") {
-	        if (!isIdentifier(name)) {
-	            return null;
-	        }
-	        ret = compiler(name);
-	        cache[name] = ret;
-	        cache[" size"]++;
-	        if (cache[" size"] > 512) {
-	            var keys = Object.keys(cache);
-	            for (var i = 0; i < 256; ++i) delete cache[keys[i]];
-	            cache[" size"] = keys.length - 256;
-	        }
-	    }
-	    return ret;
-	}
-
-	function getMethodCaller(name) {
-	    return getCompiled(name, makeMethodCaller, callerCache);
-	}
-
-	function getGetter(name) {
-	    return getCompiled(name, makeGetter, getterCache);
-	}
-
-	function caller(obj) {
-	    return obj[this.pop()].apply(obj, this);
-	}
-	Promise.prototype.call = function Promise$call(methodName) {
-	    var $_len = arguments.length;var args = new Array($_len - 1); for(var $_i = 1; $_i < $_len; ++$_i) {args[$_i - 1] = arguments[$_i];}
-	    if (canEvaluate) {
-	        var maybeCaller = getMethodCaller(methodName);
-	        if (maybeCaller !== null) {
-	            return this._then(maybeCaller, void 0, void 0, args, void 0);
-	        }
-	    }
-	    args.push(methodName);
-	    return this._then(caller, void 0, void 0, args, void 0);
-	};
-
-	function namedGetter(obj) {
-	    return obj[this];
-	}
-	function indexedGetter(obj) {
-	    return obj[this];
-	}
-	Promise.prototype.get = function Promise$get(propertyName) {
-	    var isIndex = (typeof propertyName === "number");
-	    var getter;
-	    if (!isIndex) {
-	        if (canEvaluate) {
-	            var maybeGetter = getGetter(propertyName);
-	            getter = maybeGetter !== null ? maybeGetter : namedGetter;
-	        } else {
-	            getter = namedGetter;
-	        }
-	    } else {
-	        getter = indexedGetter;
-	    }
-	    return this._then(getter, void 0, void 0, propertyName, void 0);
-	};
-	};
-
-
-/***/ },
-/* 66 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * The MIT License (MIT)
-	 * 
-	 * Copyright (c) 2014 Petka Antonov
-	 * 
-	 * Permission is hereby granted, free of charge, to any person obtaining a copy
-	 * of this software and associated documentation files (the "Software"), to deal
-	 * in the Software without restriction, including without limitation the rights
-	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	 * copies of the Software, and to permit persons to whom the Software is
-	 * furnished to do so, subject to the following conditions:</p>
-	 * 
-	 * The above copyright notice and this permission notice shall be included in
-	 * all copies or substantial portions of the Software.
-	 * 
-	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	 * THE SOFTWARE.
-	 * 
-	 */
-	"use strict";
-	module.exports = function(Promise, apiRejection, INTERNAL, cast) {
-	var errors = __webpack_require__(52);
-	var TypeError = errors.TypeError;
-	var deprecated = __webpack_require__(50).deprecated;
-	var util = __webpack_require__(50);
-	var errorObj = util.errorObj;
-	var tryCatch1 = util.tryCatch1;
-	var yieldHandlers = [];
-
-	function promiseFromYieldHandler(value, yieldHandlers) {
-	    var _errorObj = errorObj;
-	    var _Promise = Promise;
-	    var len = yieldHandlers.length;
-	    for (var i = 0; i < len; ++i) {
-	        var result = tryCatch1(yieldHandlers[i], void 0, value);
-	        if (result === _errorObj) {
-	            return _Promise.reject(_errorObj.e);
-	        }
-	        var maybePromise = cast(result, promiseFromYieldHandler);
-	        if (maybePromise instanceof _Promise) return maybePromise;
-	    }
-	    return null;
-	}
-
-	function PromiseSpawn(generatorFunction, receiver, yieldHandler) {
-	    var promise = this._promise = new Promise(INTERNAL);
-	    promise._setTrace(void 0);
-	    this._generatorFunction = generatorFunction;
-	    this._receiver = receiver;
-	    this._generator = void 0;
-	    this._yieldHandlers = typeof yieldHandler === "function"
-	        ? [yieldHandler].concat(yieldHandlers)
-	        : yieldHandlers;
-	}
-
-	PromiseSpawn.prototype.promise = function PromiseSpawn$promise() {
-	    return this._promise;
-	};
-
-	PromiseSpawn.prototype._run = function PromiseSpawn$_run() {
-	    this._generator = this._generatorFunction.call(this._receiver);
-	    this._receiver =
-	        this._generatorFunction = void 0;
-	    this._next(void 0);
-	};
-
-	PromiseSpawn.prototype._continue = function PromiseSpawn$_continue(result) {
-	    if (result === errorObj) {
-	        this._generator = void 0;
-	        var trace = errors.canAttach(result.e)
-	            ? result.e : new Error(result.e + "");
-	        this._promise._attachExtraTrace(trace);
-	        this._promise._reject(result.e, trace);
-	        return;
-	    }
-
-	    var value = result.value;
-	    if (result.done === true) {
-	        this._generator = void 0;
-	        if (!this._promise._tryFollow(value)) {
-	            this._promise._fulfill(value);
-	        }
-	    } else {
-	        var maybePromise = cast(value, void 0);
-	        if (!(maybePromise instanceof Promise)) {
-	            maybePromise =
-	                promiseFromYieldHandler(maybePromise, this._yieldHandlers);
-	            if (maybePromise === null) {
-	                this._throw(new TypeError("A value was yielded that could not be treated as a promise"));
-	                return;
-	            }
-	        }
-	        maybePromise._then(
-	            this._next,
-	            this._throw,
-	            void 0,
-	            this,
-	            null
-	       );
-	    }
-	};
-
-	PromiseSpawn.prototype._throw = function PromiseSpawn$_throw(reason) {
-	    if (errors.canAttach(reason))
-	        this._promise._attachExtraTrace(reason);
-	    this._continue(
-	        tryCatch1(this._generator["throw"], this._generator, reason)
-	   );
-	};
-
-	PromiseSpawn.prototype._next = function PromiseSpawn$_next(value) {
-	    this._continue(
-	        tryCatch1(this._generator.next, this._generator, value)
-	   );
-	};
-
-	Promise.coroutine =
-	function Promise$Coroutine(generatorFunction, options) {
-	    if (typeof generatorFunction !== "function") {
-	        throw new TypeError("generatorFunction must be a function");
-	    }
-	    var yieldHandler = Object(options).yieldHandler;
-	    var PromiseSpawn$ = PromiseSpawn;
-	    return function () {
-	        var generator = generatorFunction.apply(this, arguments);
-	        var spawn = new PromiseSpawn$(void 0, void 0, yieldHandler);
-	        spawn._generator = generator;
-	        spawn._next(void 0);
-	        return spawn.promise();
-	    };
-	};
-
-	Promise.coroutine.addYieldHandler = function(fn) {
-	    if (typeof fn !== "function") throw new TypeError("fn must be a function");
-	    yieldHandlers.push(fn);
-	};
-
-	Promise.spawn = function Promise$Spawn(generatorFunction) {
-	    deprecated("Promise.spawn is deprecated. Use Promise.coroutine instead.");
-	    if (typeof generatorFunction !== "function") {
-	        return apiRejection("generatorFunction must be a function");
-	    }
-	    var spawn = new PromiseSpawn(generatorFunction, this);
-	    var ret = spawn.promise();
-	    spawn._run(Promise.spawn);
-	    return ret;
-	};
-	};
-
-
-/***/ },
-/* 67 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * The MIT License (MIT)
-	 * 
-	 * Copyright (c) 2014 Petka Antonov
-	 * 
-	 * Permission is hereby granted, free of charge, to any person obtaining a copy
-	 * of this software and associated documentation files (the "Software"), to deal
-	 * in the Software without restriction, including without limitation the rights
-	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	 * copies of the Software, and to permit persons to whom the Software is
-	 * furnished to do so, subject to the following conditions:</p>
-	 * 
-	 * The above copyright notice and this permission notice shall be included in
-	 * all copies or substantial portions of the Software.
-	 * 
-	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	 * THE SOFTWARE.
-	 * 
-	 */
-	"use strict";
-	module.exports = function(Promise, PromiseArray, apiRejection, cast, INTERNAL) {
-	var util = __webpack_require__(50);
-	var tryCatch3 = util.tryCatch3;
-	var errorObj = util.errorObj;
-	var PENDING = {};
-	var EMPTY_ARRAY = [];
-
-	function MappingPromiseArray(promises, fn, limit, _filter) {
-	    this.constructor$(promises);
-	    this._callback = fn;
-	    this._preservedValues = _filter === INTERNAL
-	        ? new Array(this.length())
-	        : null;
-	    this._limit = limit;
-	    this._inFlight = 0;
-	    this._queue = limit >= 1 ? [] : EMPTY_ARRAY;
-	    this._init$(void 0, -2);
-	}
-	util.inherits(MappingPromiseArray, PromiseArray);
-
-	MappingPromiseArray.prototype._init = function MappingPromiseArray$_init() {};
-
-	MappingPromiseArray.prototype._promiseFulfilled =
-	function MappingPromiseArray$_promiseFulfilled(value, index) {
-	    var values = this._values;
-	    if (values === null) return;
-
-	    var length = this.length();
-	    var preservedValues = this._preservedValues;
-	    var limit = this._limit;
-	    if (values[index] === PENDING) {
-	        values[index] = value;
-	        if (limit >= 1) {
-	            this._inFlight--;
-	            this._drainQueue();
-	            if (this._isResolved()) return;
-	        }
-	    } else {
-	        if (limit >= 1 && this._inFlight >= limit) {
-	            values[index] = value;
-	            this._queue.push(index);
-	            return;
-	        }
-	        if (preservedValues !== null) preservedValues[index] = value;
-
-	        var callback = this._callback;
-	        var receiver = this._promise._boundTo;
-	        var ret = tryCatch3(callback, receiver, value, index, length);
-	        if (ret === errorObj) return this._reject(ret.e);
-
-	        var maybePromise = cast(ret, void 0);
-	        if (maybePromise instanceof Promise) {
-	            if (maybePromise.isPending()) {
-	                if (limit >= 1) this._inFlight++;
-	                values[index] = PENDING;
-	                return maybePromise._proxyPromiseArray(this, index);
-	            } else if (maybePromise.isFulfilled()) {
-	                ret = maybePromise.value();
-	            } else {
-	                maybePromise._unsetRejectionIsUnhandled();
-	                return this._reject(maybePromise.reason());
-	            }
-	        }
-	        values[index] = ret;
-	    }
-	    var totalResolved = ++this._totalResolved;
-	    if (totalResolved >= length) {
-	        if (preservedValues !== null) {
-	            this._filter(values, preservedValues);
-	        } else {
-	            this._resolve(values);
-	        }
-
-	    }
-	};
-
-	MappingPromiseArray.prototype._drainQueue =
-	function MappingPromiseArray$_drainQueue() {
-	    var queue = this._queue;
-	    var limit = this._limit;
-	    var values = this._values;
-	    while (queue.length > 0 && this._inFlight < limit) {
-	        var index = queue.pop();
-	        this._promiseFulfilled(values[index], index);
-	    }
-	};
-
-	MappingPromiseArray.prototype._filter =
-	function MappingPromiseArray$_filter(booleans, values) {
-	    var len = values.length;
-	    var ret = new Array(len);
-	    var j = 0;
-	    for (var i = 0; i < len; ++i) {
-	        if (booleans[i]) ret[j++] = values[i];
-	    }
-	    ret.length = j;
-	    this._resolve(ret);
-	};
-
-	MappingPromiseArray.prototype.preservedValues =
-	function MappingPromiseArray$preserveValues() {
-	    return this._preservedValues;
-	};
-
-	function map(promises, fn, options, _filter) {
-	    var limit = typeof options === "object" && options !== null
-	        ? options.concurrency
-	        : 0;
-	    limit = typeof limit === "number" &&
-	        isFinite(limit) && limit >= 1 ? limit : 0;
-	    return new MappingPromiseArray(promises, fn, limit, _filter);
-	}
-
-	Promise.prototype.map = function Promise$map(fn, options) {
-	    if (typeof fn !== "function") return apiRejection("fn must be a function");
-
-	    return map(this, fn, options, null).promise();
-	};
-
-	Promise.map = function Promise$Map(promises, fn, options, _filter) {
-	    if (typeof fn !== "function") return apiRejection("fn must be a function");
-	    return map(promises, fn, options, _filter).promise();
-	};
-
-
-	};
-
-
-/***/ },
-/* 68 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * The MIT License (MIT)
-	 * 
-	 * Copyright (c) 2014 Petka Antonov
-	 * 
-	 * Permission is hereby granted, free of charge, to any person obtaining a copy
-	 * of this software and associated documentation files (the "Software"), to deal
-	 * in the Software without restriction, including without limitation the rights
-	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	 * copies of the Software, and to permit persons to whom the Software is
-	 * furnished to do so, subject to the following conditions:</p>
-	 * 
-	 * The above copyright notice and this permission notice shall be included in
-	 * all copies or substantial portions of the Software.
-	 * 
-	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	 * THE SOFTWARE.
-	 * 
-	 */
-	"use strict";
-	module.exports = function(Promise) {
-	var util = __webpack_require__(50);
-	var async = __webpack_require__(51);
-	var tryCatch2 = util.tryCatch2;
-	var tryCatch1 = util.tryCatch1;
-	var errorObj = util.errorObj;
-
-	function thrower(r) {
-	    throw r;
-	}
-
-	function Promise$_spreadAdapter(val, receiver) {
-	    if (!util.isArray(val)) return Promise$_successAdapter(val, receiver);
-	    var ret = util.tryCatchApply(this, [null].concat(val), receiver);
-	    if (ret === errorObj) {
-	        async.invokeLater(thrower, void 0, ret.e);
-	    }
-	}
-
-	function Promise$_successAdapter(val, receiver) {
-	    var nodeback = this;
-	    var ret = val === void 0
-	        ? tryCatch1(nodeback, receiver, null)
-	        : tryCatch2(nodeback, receiver, null, val);
-	    if (ret === errorObj) {
-	        async.invokeLater(thrower, void 0, ret.e);
-	    }
-	}
-	function Promise$_errorAdapter(reason, receiver) {
-	    var nodeback = this;
-	    var ret = tryCatch1(nodeback, receiver, reason);
-	    if (ret === errorObj) {
-	        async.invokeLater(thrower, void 0, ret.e);
-	    }
-	}
-
-	Promise.prototype.nodeify = function Promise$nodeify(nodeback, options) {
-	    if (typeof nodeback == "function") {
-	        var adapter = Promise$_successAdapter;
-	        if (options !== void 0 && Object(options).spread) {
-	            adapter = Promise$_spreadAdapter;
-	        }
-	        this._then(
-	            adapter,
-	            Promise$_errorAdapter,
-	            void 0,
-	            nodeback,
-	            this._boundTo
-	        );
-	    }
-	    return this;
-	};
-	};
-
-
-/***/ },
-/* 69 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * The MIT License (MIT)
-	 * 
-	 * Copyright (c) 2014 Petka Antonov
-	 * 
-	 * Permission is hereby granted, free of charge, to any person obtaining a copy
-	 * of this software and associated documentation files (the "Software"), to deal
-	 * in the Software without restriction, including without limitation the rights
-	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	 * copies of the Software, and to permit persons to whom the Software is
-	 * furnished to do so, subject to the following conditions:</p>
-	 * 
-	 * The above copyright notice and this permission notice shall be included in
-	 * all copies or substantial portions of the Software.
-	 * 
-	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	 * THE SOFTWARE.
-	 * 
-	 */
-	"use strict";
-	module.exports = function(Promise, INTERNAL) {
-	var THIS = {};
-	var util = __webpack_require__(50);
-	var nodebackForPromise = __webpack_require__(57)
-	    ._nodebackForPromise;
-	var withAppended = util.withAppended;
-	var maybeWrapAsError = util.maybeWrapAsError;
-	var canEvaluate = util.canEvaluate;
-	var TypeError = __webpack_require__(52).TypeError;
-	var defaultSuffix = "Async";
-	var defaultFilter = function(name, func) {
-	    return util.isIdentifier(name) &&
-	        name.charAt(0) !== "_" &&
-	        !util.isClass(func);
-	};
-	var defaultPromisified = {__isPromisified__: true};
-
-
-	function escapeIdentRegex(str) {
-	    return str.replace(/([$])/, "\\$");
-	}
-
-	function isPromisified(fn) {
-	    try {
-	        return fn.__isPromisified__ === true;
-	    }
-	    catch (e) {
-	        return false;
-	    }
-	}
-
-	function hasPromisified(obj, key, suffix) {
-	    var val = util.getDataPropertyOrDefault(obj, key + suffix,
-	                                            defaultPromisified);
-	    return val ? isPromisified(val) : false;
-	}
-	function checkValid(ret, suffix, suffixRegexp) {
-	    for (var i = 0; i < ret.length; i += 2) {
-	        var key = ret[i];
-	        if (suffixRegexp.test(key)) {
-	            var keyWithoutAsyncSuffix = key.replace(suffixRegexp, "");
-	            for (var j = 0; j < ret.length; j += 2) {
-	                if (ret[j] === keyWithoutAsyncSuffix) {
-	                    throw new TypeError("Cannot promisify an API " +
-	                        "that has normal methods with '"+suffix+"'-suffix");
-	                }
-	            }
-	        }
-	    }
-	}
-
-	function promisifiableMethods(obj, suffix, suffixRegexp, filter) {
-	    var keys = util.inheritedDataKeys(obj);
-	    var ret = [];
-	    for (var i = 0; i < keys.length; ++i) {
-	        var key = keys[i];
-	        var value = obj[key];
-	        if (typeof value === "function" &&
-	            !isPromisified(value) &&
-	            !hasPromisified(obj, key, suffix) &&
-	            filter(key, value, obj)) {
-	            ret.push(key, value);
-	        }
-	    }
-	    checkValid(ret, suffix, suffixRegexp);
-	    return ret;
-	}
-
-	function switchCaseArgumentOrder(likelyArgumentCount) {
-	    var ret = [likelyArgumentCount];
-	    var min = Math.max(0, likelyArgumentCount - 1 - 5);
-	    for(var i = likelyArgumentCount - 1; i >= min; --i) {
-	        if (i === likelyArgumentCount) continue;
-	        ret.push(i);
-	    }
-	    for(var i = likelyArgumentCount + 1; i <= 5; ++i) {
-	        ret.push(i);
-	    }
-	    return ret;
-	}
-
-	function argumentSequence(argumentCount) {
-	    return util.filledRange(argumentCount, "arguments[", "]");
-	}
-
-	function parameterDeclaration(parameterCount) {
-	    return util.filledRange(parameterCount, "_arg", "");
-	}
-
-	function parameterCount(fn) {
-	    if (typeof fn.length === "number") {
-	        return Math.max(Math.min(fn.length, 1023 + 1), 0);
-	    }
-	    return 0;
-	}
-
-	function generatePropertyAccess(key) {
-	    if (util.isIdentifier(key)) {
-	        return "." + key;
-	    }
-	    else return "['" + key.replace(/(['\\])/g, "\\$1") + "']";
-	}
-
-	function makeNodePromisifiedEval(callback, receiver, originalName, fn, suffix) {
-	    var newParameterCount = Math.max(0, parameterCount(fn) - 1);
-	    var argumentOrder = switchCaseArgumentOrder(newParameterCount);
-	    var callbackName =
-	        (typeof originalName === "string" && util.isIdentifier(originalName)
-	            ? originalName + suffix
-	            : "promisified");
-
-	    function generateCallForArgumentCount(count) {
-	        var args = argumentSequence(count).join(", ");
-	        var comma = count > 0 ? ", " : "";
-	        var ret;
-	        if (typeof callback === "string") {
-	            ret = "                                                          \n\
-	                this.method({{args}}, fn);                                   \n\
-	                break;                                                       \n\
-	            ".replace(".method", generatePropertyAccess(callback));
-	        } else if (receiver === THIS) {
-	            ret =  "                                                         \n\
-	                callback.call(this, {{args}}, fn);                           \n\
-	                break;                                                       \n\
-	            ";
-	        } else if (receiver !== void 0) {
-	            ret =  "                                                         \n\
-	                callback.call(receiver, {{args}}, fn);                       \n\
-	                break;                                                       \n\
-	            ";
-	        } else {
-	            ret =  "                                                         \n\
-	                callback({{args}}, fn);                                      \n\
-	                break;                                                       \n\
-	            ";
-	        }
-	        return ret.replace("{{args}}", args).replace(", ", comma);
-	    }
-
-	    function generateArgumentSwitchCase() {
-	        var ret = "";
-	        for(var i = 0; i < argumentOrder.length; ++i) {
-	            ret += "case " + argumentOrder[i] +":" +
-	                generateCallForArgumentCount(argumentOrder[i]);
-	        }
-	        var codeForCall;
-	        if (typeof callback === "string") {
-	            codeForCall = "                                                  \n\
-	                this.property.apply(this, args);                             \n\
-	            "
-	                .replace(".property", generatePropertyAccess(callback));
-	        } else if (receiver === THIS) {
-	            codeForCall = "                                                  \n\
-	                callback.apply(this, args);                                  \n\
-	            ";
-	        } else {
-	            codeForCall = "                                                  \n\
-	                callback.apply(receiver, args);                              \n\
-	            ";
-	        }
-
-	        ret += "                                                             \n\
-	        default:                                                             \n\
-	            var args = new Array(len + 1);                                   \n\
-	            var i = 0;                                                       \n\
-	            for (var i = 0; i < len; ++i) {                                  \n\
-	               args[i] = arguments[i];                                       \n\
-	            }                                                                \n\
-	            args[i] = fn;                                                    \n\
-	            [CodeForCall]                                                    \n\
-	            break;                                                           \n\
-	        ".replace("[CodeForCall]", codeForCall);
-	        return ret;
-	    }
-
-	    return new Function("Promise",
-	                        "callback",
-	                        "receiver",
-	                        "withAppended",
-	                        "maybeWrapAsError",
-	                        "nodebackForPromise",
-	                        "INTERNAL","                                         \n\
-	        var ret = function FunctionName(Parameters) {                        \n\
-	            'use strict';                                                    \n\
-	            var len = arguments.length;                                      \n\
-	            var promise = new Promise(INTERNAL);                             \n\
-	            promise._setTrace(void 0);                                       \n\
-	            var fn = nodebackForPromise(promise);                            \n\
-	            try {                                                            \n\
-	                switch(len) {                                                \n\
-	                    [CodeForSwitchCase]                                      \n\
-	                }                                                            \n\
-	            } catch (e) {                                                    \n\
-	                var wrapped = maybeWrapAsError(e);                           \n\
-	                promise._attachExtraTrace(wrapped);                          \n\
-	                promise._reject(wrapped);                                    \n\
-	            }                                                                \n\
-	            return promise;                                                  \n\
-	        };                                                                   \n\
-	        ret.__isPromisified__ = true;                                        \n\
-	        return ret;                                                          \n\
-	        "
-	        .replace("FunctionName", callbackName)
-	        .replace("Parameters", parameterDeclaration(newParameterCount))
-	        .replace("[CodeForSwitchCase]", generateArgumentSwitchCase()))(
-	            Promise,
-	            callback,
-	            receiver,
-	            withAppended,
-	            maybeWrapAsError,
-	            nodebackForPromise,
-	            INTERNAL
-	        );
-	}
-
-	function makeNodePromisifiedClosure(callback, receiver) {
-	    function promisified() {
-	        var _receiver = receiver;
-	        if (receiver === THIS) _receiver = this;
-	        if (typeof callback === "string") {
-	            callback = _receiver[callback];
-	        }
-	        var promise = new Promise(INTERNAL);
-	        promise._setTrace(void 0);
-	        var fn = nodebackForPromise(promise);
-	        try {
-	            callback.apply(_receiver, withAppended(arguments, fn));
-	        } catch(e) {
-	            var wrapped = maybeWrapAsError(e);
-	            promise._attachExtraTrace(wrapped);
-	            promise._reject(wrapped);
-	        }
-	        return promise;
-	    }
-	    promisified.__isPromisified__ = true;
-	    return promisified;
-	}
-
-	var makeNodePromisified = canEvaluate
-	    ? makeNodePromisifiedEval
-	    : makeNodePromisifiedClosure;
-
-	function promisifyAll(obj, suffix, filter, promisifier) {
-	    var suffixRegexp = new RegExp(escapeIdentRegex(suffix) + "$");
-	    var methods =
-	        promisifiableMethods(obj, suffix, suffixRegexp, filter);
-
-	    for (var i = 0, len = methods.length; i < len; i+= 2) {
-	        var key = methods[i];
-	        var fn = methods[i+1];
-	        var promisifiedKey = key + suffix;
-	        obj[promisifiedKey] = promisifier === makeNodePromisified
-	                ? makeNodePromisified(key, THIS, key, fn, suffix)
-	                : promisifier(fn);
-	    }
-	    util.toFastProperties(obj);
-	    return obj;
-	}
-
-	function promisify(callback, receiver) {
-	    return makeNodePromisified(callback, receiver, void 0, callback);
-	}
-
-	Promise.promisify = function Promise$Promisify(fn, receiver) {
-	    if (typeof fn !== "function") {
-	        throw new TypeError("fn must be a function");
-	    }
-	    if (isPromisified(fn)) {
-	        return fn;
-	    }
-	    return promisify(fn, arguments.length < 2 ? THIS : receiver);
-	};
-
-	Promise.promisifyAll = function Promise$PromisifyAll(target, options) {
-	    if (typeof target !== "function" && typeof target !== "object") {
-	        throw new TypeError("the target of promisifyAll must be an object or a function");
-	    }
-	    options = Object(options);
-	    var suffix = options.suffix;
-	    if (typeof suffix !== "string") suffix = defaultSuffix;
-	    var filter = options.filter;
-	    if (typeof filter !== "function") filter = defaultFilter;
-	    var promisifier = options.promisifier;
-	    if (typeof promisifier !== "function") promisifier = makeNodePromisified;
-
-	    if (!util.isIdentifier(suffix)) {
-	        throw new RangeError("suffix must be a valid identifier");
-	    }
-
-	    var keys = util.inheritedDataKeys(target, {includeHidden: true});
-	    for (var i = 0; i < keys.length; ++i) {
-	        var value = target[keys[i]];
-	        if (keys[i] !== "constructor" &&
-	            util.isClass(value)) {
-	            promisifyAll(value.prototype, suffix, filter, promisifier);
-	            promisifyAll(value, suffix, filter, promisifier);
-	        }
-	    }
-
-	    return promisifyAll(target, suffix, filter, promisifier);
-	};
-	};
-
-
-
-/***/ },
-/* 70 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * The MIT License (MIT)
-	 * 
-	 * Copyright (c) 2014 Petka Antonov
-	 * 
-	 * Permission is hereby granted, free of charge, to any person obtaining a copy
-	 * of this software and associated documentation files (the "Software"), to deal
-	 * in the Software without restriction, including without limitation the rights
-	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	 * copies of the Software, and to permit persons to whom the Software is
-	 * furnished to do so, subject to the following conditions:</p>
-	 * 
-	 * The above copyright notice and this permission notice shall be included in
-	 * all copies or substantial portions of the Software.
-	 * 
-	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	 * THE SOFTWARE.
-	 * 
-	 */
-	"use strict";
-	module.exports = function(Promise, PromiseArray, cast) {
-	var util = __webpack_require__(50);
-	var apiRejection = __webpack_require__(58)(Promise);
-	var isObject = util.isObject;
-	var es5 = __webpack_require__(146);
-
-	function PropertiesPromiseArray(obj) {
-	    var keys = es5.keys(obj);
-	    var len = keys.length;
-	    var values = new Array(len * 2);
-	    for (var i = 0; i < len; ++i) {
-	        var key = keys[i];
-	        values[i] = obj[key];
-	        values[i + len] = key;
-	    }
-	    this.constructor$(values);
-	}
-	util.inherits(PropertiesPromiseArray, PromiseArray);
-
-	PropertiesPromiseArray.prototype._init =
-	function PropertiesPromiseArray$_init() {
-	    this._init$(void 0, -3) ;
-	};
-
-	PropertiesPromiseArray.prototype._promiseFulfilled =
-	function PropertiesPromiseArray$_promiseFulfilled(value, index) {
-	    if (this._isResolved()) return;
-	    this._values[index] = value;
-	    var totalResolved = ++this._totalResolved;
-	    if (totalResolved >= this._length) {
-	        var val = {};
-	        var keyOffset = this.length();
-	        for (var i = 0, len = this.length(); i < len; ++i) {
-	            val[this._values[i + keyOffset]] = this._values[i];
-	        }
-	        this._resolve(val);
-	    }
-	};
-
-	PropertiesPromiseArray.prototype._promiseProgressed =
-	function PropertiesPromiseArray$_promiseProgressed(value, index) {
-	    if (this._isResolved()) return;
-
-	    this._promise._progress({
-	        key: this._values[index + this.length()],
-	        value: value
-	    });
-	};
-
-	PropertiesPromiseArray.prototype.shouldCopyValues =
-	function PropertiesPromiseArray$_shouldCopyValues() {
-	    return false;
-	};
-
-	PropertiesPromiseArray.prototype.getActualLength =
-	function PropertiesPromiseArray$getActualLength(len) {
-	    return len >> 1;
-	};
-
-	function Promise$_Props(promises) {
-	    var ret;
-	    var castValue = cast(promises, void 0);
-
-	    if (!isObject(castValue)) {
-	        return apiRejection("cannot await properties of a non-object");
-	    } else if (castValue instanceof Promise) {
-	        ret = castValue._then(Promise.props, void 0, void 0, void 0, void 0);
-	    } else {
-	        ret = new PropertiesPromiseArray(castValue).promise();
-	    }
-
-	    if (castValue instanceof Promise) {
-	        ret._propagateFrom(castValue, 4);
-	    }
-	    return ret;
-	}
-
-	Promise.prototype.props = function Promise$props() {
-	    return Promise$_Props(this);
-	};
-
-	Promise.props = function Promise$Props(promises) {
-	    return Promise$_Props(promises);
-	};
-	};
-
-
-/***/ },
-/* 71 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * The MIT License (MIT)
-	 * 
-	 * Copyright (c) 2014 Petka Antonov
-	 * 
-	 * Permission is hereby granted, free of charge, to any person obtaining a copy
-	 * of this software and associated documentation files (the "Software"), to deal
-	 * in the Software without restriction, including without limitation the rights
-	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	 * copies of the Software, and to permit persons to whom the Software is
-	 * furnished to do so, subject to the following conditions:</p>
-	 * 
-	 * The above copyright notice and this permission notice shall be included in
-	 * all copies or substantial portions of the Software.
-	 * 
-	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	 * THE SOFTWARE.
-	 * 
-	 */
-	"use strict";
-	module.exports = function(Promise, PromiseArray, apiRejection, cast, INTERNAL) {
-	var util = __webpack_require__(50);
-	var tryCatch4 = util.tryCatch4;
-	var tryCatch3 = util.tryCatch3;
-	var errorObj = util.errorObj;
-	function ReductionPromiseArray(promises, fn, accum, _each) {
-	    this.constructor$(promises);
-	    this._preservedValues = _each === INTERNAL ? [] : null;
-	    this._zerothIsAccum = (accum === void 0);
-	    this._gotAccum = false;
-	    this._reducingIndex = (this._zerothIsAccum ? 1 : 0);
-	    this._valuesPhase = undefined;
-
-	    var maybePromise = cast(accum, void 0);
-	    var rejected = false;
-	    var isPromise = maybePromise instanceof Promise;
-	    if (isPromise) {
-	        if (maybePromise.isPending()) {
-	            maybePromise._proxyPromiseArray(this, -1);
-	        } else if (maybePromise.isFulfilled()) {
-	            accum = maybePromise.value();
-	            this._gotAccum = true;
-	        } else {
-	            maybePromise._unsetRejectionIsUnhandled();
-	            this._reject(maybePromise.reason());
-	            rejected = true;
-	        }
-	    }
-	    if (!(isPromise || this._zerothIsAccum)) this._gotAccum = true;
-	    this._callback = fn;
-	    this._accum = accum;
-	    if (!rejected) this._init$(void 0, -5);
-	}
-	util.inherits(ReductionPromiseArray, PromiseArray);
-
-	ReductionPromiseArray.prototype._init =
-	function ReductionPromiseArray$_init() {};
-
-	ReductionPromiseArray.prototype._resolveEmptyArray =
-	function ReductionPromiseArray$_resolveEmptyArray() {
-	    if (this._gotAccum || this._zerothIsAccum) {
-	        this._resolve(this._preservedValues !== null
-	                        ? [] : this._accum);
-	    }
-	};
-
-	ReductionPromiseArray.prototype._promiseFulfilled =
-	function ReductionPromiseArray$_promiseFulfilled(value, index) {
-	    var values = this._values;
-	    if (values === null) return;
-	    var length = this.length();
-	    var preservedValues = this._preservedValues;
-	    var isEach = preservedValues !== null;
-	    var gotAccum = this._gotAccum;
-	    var valuesPhase = this._valuesPhase;
-	    var valuesPhaseIndex;
-	    if (!valuesPhase) {
-	        valuesPhase = this._valuesPhase = Array(length);
-	        for (valuesPhaseIndex=0; valuesPhaseIndex<length; ++valuesPhaseIndex) {
-	            valuesPhase[valuesPhaseIndex] = 0;
-	        }
-	    }
-	    valuesPhaseIndex = valuesPhase[index];
-
-	    if (index === 0 && this._zerothIsAccum) {
-	        if (!gotAccum) {
-	            this._accum = value;
-	            this._gotAccum = gotAccum = true;
-	        }
-	        valuesPhase[index] = ((valuesPhaseIndex === 0)
-	            ? 1 : 2);
-	    } else if (index === -1) {
-	        if (!gotAccum) {
-	            this._accum = value;
-	            this._gotAccum = gotAccum = true;
-	        }
-	    } else {
-	        if (valuesPhaseIndex === 0) {
-	            valuesPhase[index] = 1;
-	        }
-	        else {
-	            valuesPhase[index] = 2;
-	            if (gotAccum) {
-	                this._accum = value;
-	            }
-	        }
-	    }
-	    if (!gotAccum) return;
-
-	    var callback = this._callback;
-	    var receiver = this._promise._boundTo;
-	    var ret;
-
-	    for (var i = this._reducingIndex; i < length; ++i) {
-	        valuesPhaseIndex = valuesPhase[i];
-	        if (valuesPhaseIndex === 2) {
-	            this._reducingIndex = i + 1;
-	            continue;
-	        }
-	        if (valuesPhaseIndex !== 1) return;
-
-	        value = values[i];
-	        if (value instanceof Promise) {
-	            if (value.isFulfilled()) {
-	                value = value._settledValue;
-	            } else if (value.isPending()) {
-	                return;
-	            } else {
-	                value._unsetRejectionIsUnhandled();
-	                return this._reject(value.reason());
-	            }
-	        }
-
-	        if (isEach) {
-	            preservedValues.push(value);
-	            ret = tryCatch3(callback, receiver, value, i, length);
-	        }
-	        else {
-	            ret = tryCatch4(callback, receiver, this._accum, value, i, length);
-	        }
-
-	        if (ret === errorObj) return this._reject(ret.e);
-
-	        var maybePromise = cast(ret, void 0);
-	        if (maybePromise instanceof Promise) {
-	            if (maybePromise.isPending()) {
-	                valuesPhase[i] = 4;
-	                return maybePromise._proxyPromiseArray(this, i);
-	            } else if (maybePromise.isFulfilled()) {
-	                ret = maybePromise.value();
-	            } else {
-	                maybePromise._unsetRejectionIsUnhandled();
-	                return this._reject(maybePromise.reason());
-	            }
-	        }
-
-	        this._reducingIndex = i + 1;
-	        this._accum = ret;
-	    }
-
-	    if (this._reducingIndex < length) return;
-	    this._resolve(isEach ? preservedValues : this._accum);
-	};
-
-	function reduce(promises, fn, initialValue, _each) {
-	    if (typeof fn !== "function") return apiRejection("fn must be a function");
-	    var array = new ReductionPromiseArray(promises, fn, initialValue, _each);
-	    return array.promise();
-	}
-
-	Promise.prototype.reduce = function Promise$reduce(fn, initialValue) {
-	    return reduce(this, fn, initialValue, null);
-	};
-
-	Promise.reduce = function Promise$Reduce(promises, fn, initialValue, _each) {
-	    return reduce(promises, fn, initialValue, _each);
-	};
-	};
-
-
-/***/ },
-/* 72 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * The MIT License (MIT)
-	 * 
-	 * Copyright (c) 2014 Petka Antonov
-	 * 
-	 * Permission is hereby granted, free of charge, to any person obtaining a copy
-	 * of this software and associated documentation files (the "Software"), to deal
-	 * in the Software without restriction, including without limitation the rights
-	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	 * copies of the Software, and to permit persons to whom the Software is
-	 * furnished to do so, subject to the following conditions:</p>
-	 * 
-	 * The above copyright notice and this permission notice shall be included in
-	 * all copies or substantial portions of the Software.
-	 * 
-	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	 * THE SOFTWARE.
-	 * 
-	 */
-	"use strict";
-	module.exports =
-	    function(Promise, PromiseArray) {
-	var PromiseInspection = Promise.PromiseInspection;
-	var util = __webpack_require__(50);
-
-	function SettledPromiseArray(values) {
-	    this.constructor$(values);
-	}
-	util.inherits(SettledPromiseArray, PromiseArray);
-
-	SettledPromiseArray.prototype._promiseResolved =
-	function SettledPromiseArray$_promiseResolved(index, inspection) {
-	    this._values[index] = inspection;
-	    var totalResolved = ++this._totalResolved;
-	    if (totalResolved >= this._length) {
-	        this._resolve(this._values);
-	    }
-	};
-
-	SettledPromiseArray.prototype._promiseFulfilled =
-	function SettledPromiseArray$_promiseFulfilled(value, index) {
-	    if (this._isResolved()) return;
-	    var ret = new PromiseInspection();
-	    ret._bitField = 268435456;
-	    ret._settledValue = value;
-	    this._promiseResolved(index, ret);
-	};
-	SettledPromiseArray.prototype._promiseRejected =
-	function SettledPromiseArray$_promiseRejected(reason, index) {
-	    if (this._isResolved()) return;
-	    var ret = new PromiseInspection();
-	    ret._bitField = 134217728;
-	    ret._settledValue = reason;
-	    this._promiseResolved(index, ret);
-	};
-
-	Promise.settle = function Promise$Settle(promises) {
-	    return new SettledPromiseArray(promises).promise();
-	};
-
-	Promise.prototype.settle = function Promise$settle() {
-	    return new SettledPromiseArray(this).promise();
-	};
-	};
-
-
-/***/ },
-/* 73 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * The MIT License (MIT)
-	 * 
-	 * Copyright (c) 2014 Petka Antonov
-	 * 
-	 * Permission is hereby granted, free of charge, to any person obtaining a copy
-	 * of this software and associated documentation files (the "Software"), to deal
-	 * in the Software without restriction, including without limitation the rights
-	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	 * copies of the Software, and to permit persons to whom the Software is
-	 * furnished to do so, subject to the following conditions:</p>
-	 * 
-	 * The above copyright notice and this permission notice shall be included in
-	 * all copies or substantial portions of the Software.
-	 * 
-	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	 * THE SOFTWARE.
-	 * 
-	 */
-	"use strict";
-	module.exports =
-	function(Promise, PromiseArray, apiRejection) {
-	var util = __webpack_require__(50);
-	var RangeError = __webpack_require__(52).RangeError;
-	var AggregateError = __webpack_require__(52).AggregateError;
-	var isArray = util.isArray;
-
-
-	function SomePromiseArray(values) {
-	    this.constructor$(values);
-	    this._howMany = 0;
-	    this._unwrap = false;
-	    this._initialized = false;
-	}
-	util.inherits(SomePromiseArray, PromiseArray);
-
-	SomePromiseArray.prototype._init = function SomePromiseArray$_init() {
-	    if (!this._initialized) {
-	        return;
-	    }
-	    if (this._howMany === 0) {
-	        this._resolve([]);
-	        return;
-	    }
-	    this._init$(void 0, -5);
-	    var isArrayResolved = isArray(this._values);
-	    if (!this._isResolved() &&
-	        isArrayResolved &&
-	        this._howMany > this._canPossiblyFulfill()) {
-	        this._reject(this._getRangeError(this.length()));
-	    }
-	};
-
-	SomePromiseArray.prototype.init = function SomePromiseArray$init() {
-	    this._initialized = true;
-	    this._init();
-	};
-
-	SomePromiseArray.prototype.setUnwrap = function SomePromiseArray$setUnwrap() {
-	    this._unwrap = true;
-	};
-
-	SomePromiseArray.prototype.howMany = function SomePromiseArray$howMany() {
-	    return this._howMany;
-	};
-
-	SomePromiseArray.prototype.setHowMany =
-	function SomePromiseArray$setHowMany(count) {
-	    if (this._isResolved()) return;
-	    this._howMany = count;
-	};
-
-	SomePromiseArray.prototype._promiseFulfilled =
-	function SomePromiseArray$_promiseFulfilled(value) {
-	    if (this._isResolved()) return;
-	    this._addFulfilled(value);
-	    if (this._fulfilled() === this.howMany()) {
-	        this._values.length = this.howMany();
-	        if (this.howMany() === 1 && this._unwrap) {
-	            this._resolve(this._values[0]);
-	        } else {
-	            this._resolve(this._values);
-	        }
-	    }
-
-	};
-	SomePromiseArray.prototype._promiseRejected =
-	function SomePromiseArray$_promiseRejected(reason) {
-	    if (this._isResolved()) return;
-	    this._addRejected(reason);
-	    if (this.howMany() > this._canPossiblyFulfill()) {
-	        var e = new AggregateError();
-	        for (var i = this.length(); i < this._values.length; ++i) {
-	            e.push(this._values[i]);
-	        }
-	        this._reject(e);
-	    }
-	};
-
-	SomePromiseArray.prototype._fulfilled = function SomePromiseArray$_fulfilled() {
-	    return this._totalResolved;
-	};
-
-	SomePromiseArray.prototype._rejected = function SomePromiseArray$_rejected() {
-	    return this._values.length - this.length();
-	};
-
-	SomePromiseArray.prototype._addRejected =
-	function SomePromiseArray$_addRejected(reason) {
-	    this._values.push(reason);
-	};
-
-	SomePromiseArray.prototype._addFulfilled =
-	function SomePromiseArray$_addFulfilled(value) {
-	    this._values[this._totalResolved++] = value;
-	};
-
-	SomePromiseArray.prototype._canPossiblyFulfill =
-	function SomePromiseArray$_canPossiblyFulfill() {
-	    return this.length() - this._rejected();
-	};
-
-	SomePromiseArray.prototype._getRangeError =
-	function SomePromiseArray$_getRangeError(count) {
-	    var message = "Input array must contain at least " +
-	            this._howMany + " items but contains only " + count + " items";
-	    return new RangeError(message);
-	};
-
-	SomePromiseArray.prototype._resolveEmptyArray =
-	function SomePromiseArray$_resolveEmptyArray() {
-	    this._reject(this._getRangeError(0));
-	};
-
-	function Promise$_Some(promises, howMany) {
-	    if ((howMany | 0) !== howMany || howMany < 0) {
-	        return apiRejection("expecting a positive integer");
-	    }
-	    var ret = new SomePromiseArray(promises);
-	    var promise = ret.promise();
-	    if (promise.isRejected()) {
-	        return promise;
-	    }
-	    ret.setHowMany(howMany);
-	    ret.init();
-	    return promise;
-	}
-
-	Promise.some = function Promise$Some(promises, howMany) {
-	    return Promise$_Some(promises, howMany);
-	};
-
-	Promise.prototype.some = function Promise$some(howMany) {
-	    return Promise$_Some(this, howMany);
-	};
-
-	Promise._SomePromiseArray = SomePromiseArray;
-	};
-
-
-/***/ },
-/* 74 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * The MIT License (MIT)
-	 * 
-	 * Copyright (c) 2014 Petka Antonov
-	 * 
-	 * Permission is hereby granted, free of charge, to any person obtaining a copy
-	 * of this software and associated documentation files (the "Software"), to deal
-	 * in the Software without restriction, including without limitation the rights
-	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	 * copies of the Software, and to permit persons to whom the Software is
-	 * furnished to do so, subject to the following conditions:</p>
-	 * 
-	 * The above copyright notice and this permission notice shall be included in
-	 * all copies or substantial portions of the Software.
-	 * 
-	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	 * THE SOFTWARE.
-	 * 
-	 */
-	"use strict";
-	module.exports = function(Promise, PromiseArray) {
-	var util = __webpack_require__(50);
-	var async = __webpack_require__(51);
-	var errors = __webpack_require__(52);
-	var tryCatch1 = util.tryCatch1;
-	var errorObj = util.errorObj;
-
-	Promise.prototype.progressed = function Promise$progressed(handler) {
-	    return this._then(void 0, void 0, handler, void 0, void 0);
-	};
-
-	Promise.prototype._progress = function Promise$_progress(progressValue) {
-	    if (this._isFollowingOrFulfilledOrRejected()) return;
-	    this._progressUnchecked(progressValue);
-
-	};
-
-	Promise.prototype._clearFirstHandlerData$Base =
-	Promise.prototype._clearFirstHandlerData;
-	Promise.prototype._clearFirstHandlerData =
-	function Promise$_clearFirstHandlerData() {
-	    this._clearFirstHandlerData$Base();
-	    this._progressHandler0 = void 0;
-	};
-
-	Promise.prototype._progressHandlerAt =
-	function Promise$_progressHandlerAt(index) {
-	    return index === 0
-	        ? this._progressHandler0
-	        : this[(index << 2) + index - 5 + 2];
-	};
-
-	Promise.prototype._doProgressWith =
-	function Promise$_doProgressWith(progression) {
-	    var progressValue = progression.value;
-	    var handler = progression.handler;
-	    var promise = progression.promise;
-	    var receiver = progression.receiver;
-
-	    var ret = tryCatch1(handler, receiver, progressValue);
-	    if (ret === errorObj) {
-	        if (ret.e != null &&
-	            ret.e.name !== "StopProgressPropagation") {
-	            var trace = errors.canAttach(ret.e)
-	                ? ret.e : new Error(ret.e + "");
-	            promise._attachExtraTrace(trace);
-	            promise._progress(ret.e);
-	        }
-	    } else if (ret instanceof Promise) {
-	        ret._then(promise._progress, null, null, promise, void 0);
-	    } else {
-	        promise._progress(ret);
-	    }
-	};
-
-
-	Promise.prototype._progressUnchecked =
-	function Promise$_progressUnchecked(progressValue) {
-	    if (!this.isPending()) return;
-	    var len = this._length();
-	    var progress = this._progress;
-	    for (var i = 0; i < len; i++) {
-	        var handler = this._progressHandlerAt(i);
-	        var promise = this._promiseAt(i);
-	        if (!(promise instanceof Promise)) {
-	            var receiver = this._receiverAt(i);
-	            if (typeof handler === "function") {
-	                handler.call(receiver, progressValue, promise);
-	            } else if (receiver instanceof Promise && receiver._isProxied()) {
-	                receiver._progressUnchecked(progressValue);
-	            } else if (receiver instanceof PromiseArray) {
-	                receiver._promiseProgressed(progressValue, promise);
-	            }
-	            continue;
-	        }
-
-	        if (typeof handler === "function") {
-	            async.invoke(this._doProgressWith, this, {
-	                handler: handler,
-	                promise: promise,
-	                receiver: this._receiverAt(i),
-	                value: progressValue
-	            });
-	        } else {
-	            async.invoke(progress, promise, progressValue);
-	        }
-	    }
-	};
-	};
-
-
-/***/ },
-/* 75 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * The MIT License (MIT)
-	 * 
-	 * Copyright (c) 2014 Petka Antonov
-	 * 
-	 * Permission is hereby granted, free of charge, to any person obtaining a copy
-	 * of this software and associated documentation files (the "Software"), to deal
-	 * in the Software without restriction, including without limitation the rights
-	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	 * copies of the Software, and to permit persons to whom the Software is
-	 * furnished to do so, subject to the following conditions:</p>
-	 * 
-	 * The above copyright notice and this permission notice shall be included in
-	 * all copies or substantial portions of the Software.
-	 * 
-	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	 * THE SOFTWARE.
-	 * 
-	 */
-	"use strict";
-	module.exports = function(Promise, INTERNAL) {
-	var errors = __webpack_require__(52);
-	var canAttach = errors.canAttach;
-	var async = __webpack_require__(51);
-	var CancellationError = errors.CancellationError;
-
-	Promise.prototype._cancel = function Promise$_cancel(reason) {
-	    if (!this.isCancellable()) return this;
-	    var parent;
-	    var promiseToReject = this;
-	    while ((parent = promiseToReject._cancellationParent) !== void 0 &&
-	        parent.isCancellable()) {
-	        promiseToReject = parent;
-	    }
-	    this._unsetCancellable();
-	    promiseToReject._attachExtraTrace(reason);
-	    promiseToReject._rejectUnchecked(reason);
-	};
-
-	Promise.prototype.cancel = function Promise$cancel(reason) {
-	    if (!this.isCancellable()) return this;
-	    reason = reason !== void 0
-	        ? (canAttach(reason) ? reason : new Error(reason + ""))
-	        : new CancellationError();
-	    async.invokeLater(this._cancel, this, reason);
-	    return this;
-	};
-
-	Promise.prototype.cancellable = function Promise$cancellable() {
-	    if (this._cancellable()) return this;
-	    this._setCancellable();
-	    this._cancellationParent = void 0;
-	    return this;
-	};
-
-	Promise.prototype.uncancellable = function Promise$uncancellable() {
-	    var ret = new Promise(INTERNAL);
-	    ret._propagateFrom(this, 2 | 4);
-	    ret._follow(this);
-	    ret._unsetCancellable();
-	    return ret;
-	};
-
-	Promise.prototype.fork =
-	function Promise$fork(didFulfill, didReject, didProgress) {
-	    var ret = this._then(didFulfill, didReject, didProgress,
-	                         void 0, void 0);
-
-	    ret._setCancellable();
-	    ret._cancellationParent = void 0;
-	    return ret;
-	};
-	};
-
-
-/***/ },
-/* 76 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * The MIT License (MIT)
-	 * 
-	 * Copyright (c) 2014 Petka Antonov
-	 * 
-	 * Permission is hereby granted, free of charge, to any person obtaining a copy
-	 * of this software and associated documentation files (the "Software"), to deal
-	 * in the Software without restriction, including without limitation the rights
-	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	 * copies of the Software, and to permit persons to whom the Software is
-	 * furnished to do so, subject to the following conditions:</p>
-	 * 
-	 * The above copyright notice and this permission notice shall be included in
-	 * all copies or substantial portions of the Software.
-	 * 
-	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	 * THE SOFTWARE.
-	 * 
-	 */
-	"use strict";
-	module.exports = function(Promise, INTERNAL) {
-	var PromiseMap = Promise.map;
-
-	Promise.prototype.filter = function Promise$filter(fn, options) {
-	    return PromiseMap(this, fn, options, INTERNAL);
-	};
-
-	Promise.filter = function Promise$Filter(promises, fn, options) {
-	    return PromiseMap(promises, fn, options, INTERNAL);
-	};
-	};
-
-
-/***/ },
-/* 77 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * The MIT License (MIT)
-	 * 
-	 * Copyright (c) 2014 Petka Antonov
-	 * 
-	 * Permission is hereby granted, free of charge, to any person obtaining a copy
-	 * of this software and associated documentation files (the "Software"), to deal
-	 * in the Software without restriction, including without limitation the rights
-	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	 * copies of the Software, and to permit persons to whom the Software is
-	 * furnished to do so, subject to the following conditions:</p>
-	 * 
-	 * The above copyright notice and this permission notice shall be included in
-	 * all copies or substantial portions of the Software.
-	 * 
-	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	 * THE SOFTWARE.
-	 * 
-	 */
-	"use strict";
-	module.exports = function(Promise) {
-	var SomePromiseArray = Promise._SomePromiseArray;
-	function Promise$_Any(promises) {
-	    var ret = new SomePromiseArray(promises);
-	    var promise = ret.promise();
-	    if (promise.isRejected()) {
-	        return promise;
-	    }
-	    ret.setHowMany(1);
-	    ret.setUnwrap();
-	    ret.init();
-	    return promise;
-	}
-
-	Promise.any = function Promise$Any(promises) {
-	    return Promise$_Any(promises);
-	};
-
-	Promise.prototype.any = function Promise$any() {
-	    return Promise$_Any(this);
-	};
-
-	};
-
-
-/***/ },
-/* 78 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * The MIT License (MIT)
-	 * 
-	 * Copyright (c) 2014 Petka Antonov
-	 * 
-	 * Permission is hereby granted, free of charge, to any person obtaining a copy
-	 * of this software and associated documentation files (the "Software"), to deal
-	 * in the Software without restriction, including without limitation the rights
-	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	 * copies of the Software, and to permit persons to whom the Software is
-	 * furnished to do so, subject to the following conditions:</p>
-	 * 
-	 * The above copyright notice and this permission notice shall be included in
-	 * all copies or substantial portions of the Software.
-	 * 
-	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	 * THE SOFTWARE.
-	 * 
-	 */
-	"use strict";
-	module.exports = function(Promise, INTERNAL) {
-	var PromiseReduce = Promise.reduce;
-
-	Promise.prototype.each = function Promise$each(fn) {
-	    return PromiseReduce(this, fn, null, INTERNAL);
-	};
-
-	Promise.each = function Promise$Each(promises, fn) {
-	    return PromiseReduce(promises, fn, null, INTERNAL);
-	};
-	};
-
-
-/***/ },
-/* 79 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * The MIT License (MIT)
-	 * 
-	 * Copyright (c) 2014 Petka Antonov
-	 * 
-	 * Permission is hereby granted, free of charge, to any person obtaining a copy
-	 * of this software and associated documentation files (the "Software"), to deal
-	 * in the Software without restriction, including without limitation the rights
-	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	 * copies of the Software, and to permit persons to whom the Software is
-	 * furnished to do so, subject to the following conditions:</p>
-	 * 
-	 * The above copyright notice and this permission notice shall be included in
-	 * all copies or substantial portions of the Software.
-	 * 
-	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	 * THE SOFTWARE.
-	 * 
-	 */
-	"use strict";
-	module.exports = function (Promise, apiRejection, cast) {
-	    var TypeError = __webpack_require__(52).TypeError;
-	    var inherits = __webpack_require__(50).inherits;
-	    var PromiseInspection = Promise.PromiseInspection;
-
-	    function inspectionMapper(inspections) {
-	        var len = inspections.length;
-	        for (var i = 0; i < len; ++i) {
-	            var inspection = inspections[i];
-	            if (inspection.isRejected()) {
-	                return Promise.reject(inspection.error());
-	            }
-	            inspections[i] = inspection.value();
-	        }
-	        return inspections;
-	    }
-
-	    function thrower(e) {
-	        setTimeout(function(){throw e;}, 0);
-	    }
-
-	    function castPreservingDisposable(thenable) {
-	        var maybePromise = cast(thenable, void 0);
-	        if (maybePromise !== thenable &&
-	            typeof thenable._isDisposable === "function" &&
-	            typeof thenable._getDisposer === "function" &&
-	            thenable._isDisposable()) {
-	            maybePromise._setDisposable(thenable._getDisposer());
-	        }
-	        return maybePromise;
-	    }
-	    function dispose(resources, inspection) {
-	        var i = 0;
-	        var len = resources.length;
-	        var ret = Promise.defer();
-	        function iterator() {
-	            if (i >= len) return ret.resolve();
-	            var maybePromise = castPreservingDisposable(resources[i++]);
-	            if (maybePromise instanceof Promise &&
-	                maybePromise._isDisposable()) {
-	                try {
-	                    maybePromise = cast(maybePromise._getDisposer()
-	                                        .tryDispose(inspection), void 0);
-	                } catch (e) {
-	                    return thrower(e);
-	                }
-	                if (maybePromise instanceof Promise) {
-	                    return maybePromise._then(iterator, thrower,
-	                                              null, null, null);
-	                }
-	            }
-	            iterator();
-	        }
-	        iterator();
-	        return ret.promise;
-	    }
-
-	    function disposerSuccess(value) {
-	        var inspection = new PromiseInspection();
-	        inspection._settledValue = value;
-	        inspection._bitField = 268435456;
-	        return dispose(this, inspection).thenReturn(value);
-	    }
-
-	    function disposerFail(reason) {
-	        var inspection = new PromiseInspection();
-	        inspection._settledValue = reason;
-	        inspection._bitField = 134217728;
-	        return dispose(this, inspection).thenThrow(reason);
-	    }
-
-	    function Disposer(data, promise) {
-	        this._data = data;
-	        this._promise = promise;
-	    }
-
-	    Disposer.prototype.data = function Disposer$data() {
-	        return this._data;
-	    };
-
-	    Disposer.prototype.promise = function Disposer$promise() {
-	        return this._promise;
-	    };
-
-	    Disposer.prototype.resource = function Disposer$resource() {
-	        if (this.promise().isFulfilled()) {
-	            return this.promise().value();
-	        }
-	        return null;
-	    };
-
-	    Disposer.prototype.tryDispose = function(inspection) {
-	        var resource = this.resource();
-	        var ret = resource !== null
-	            ? this.doDispose(resource, inspection) : null;
-	        this._promise._unsetDisposable();
-	        this._data = this._promise = null;
-	        return ret;
-	    };
-
-	    Disposer.isDisposer = function Disposer$isDisposer(d) {
-	        return (d != null &&
-	                typeof d.resource === "function" &&
-	                typeof d.tryDispose === "function");
-	    };
-
-	    function FunctionDisposer(fn, promise) {
-	        this.constructor$(fn, promise);
-	    }
-	    inherits(FunctionDisposer, Disposer);
-
-	    FunctionDisposer.prototype.doDispose = function (resource, inspection) {
-	        var fn = this.data();
-	        return fn.call(resource, resource, inspection);
-	    };
-
-	    Promise.using = function Promise$using() {
-	        var len = arguments.length;
-	        if (len < 2) return apiRejection(
-	                        "you must pass at least 2 arguments to Promise.using");
-	        var fn = arguments[len - 1];
-	        if (typeof fn !== "function") return apiRejection("fn must be a function");
-	        len--;
-	        var resources = new Array(len);
-	        for (var i = 0; i < len; ++i) {
-	            var resource = arguments[i];
-	            if (Disposer.isDisposer(resource)) {
-	                var disposer = resource;
-	                resource = resource.promise();
-	                resource._setDisposable(disposer);
-	            }
-	            resources[i] = resource;
-	        }
-
-	        return Promise.settle(resources)
-	            .then(inspectionMapper)
-	            .spread(fn)
-	            ._then(disposerSuccess, disposerFail, void 0, resources, void 0);
-	    };
-
-	    Promise.prototype._setDisposable =
-	    function Promise$_setDisposable(disposer) {
-	        this._bitField = this._bitField | 262144;
-	        this._disposer = disposer;
-	    };
-
-	    Promise.prototype._isDisposable = function Promise$_isDisposable() {
-	        return (this._bitField & 262144) > 0;
-	    };
-
-	    Promise.prototype._getDisposer = function Promise$_getDisposer() {
-	        return this._disposer;
-	    };
-
-	    Promise.prototype._unsetDisposable = function Promise$_unsetDisposable() {
-	        this._bitField = this._bitField & (~262144);
-	        this._disposer = void 0;
-	    };
-
-	    Promise.prototype.disposer = function Promise$disposer(fn) {
-	        if (typeof fn === "function") {
-	            return new FunctionDisposer(fn, this);
-	        }
-	        throw new TypeError();
-	    };
-
-	};
-
-
-/***/ },
-/* 80 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var LifeCycle = {
-	    CREATED: 'lifecycle:created',
-	    UPDATED: 'lifecycle:updated',
-	    MOUNTED: 'lifecycle:mounted',
-	    UNMOUNTED: 'lifecycle:unmounted',
-	    PAUSED: 'lifecycle:paused',
-	    RESUMED: 'lifecycle:resumed',
-	    DISPOSED: 'lifecycle:disposed'
-	};
-	module.exports = LifeCycle;
-
-
-/***/ },
-/* 81 */
-/***/ function(module, exports, __webpack_require__) {
-
-	// This class is real Aggregator instance
-	// but user was given IAggregator
-	var Aggregator = (function () {
-	    function Aggregator(aggregator) {
-	        if (!aggregator.aggregate && aggregator instanceof Function)
-	            this.aggregator = new aggregator();
-	        else
-	            this.aggregator = aggregator;
-	        if (!this.aggregator.aggregate)
-	            throw 'aggregate does not defined';
-	    }
-	    Aggregator.prototype.callInitState = function (props) {
-	        if (this.aggregator.initState instanceof Function)
-	            return this.aggregator.initState(props);
-	    };
-	    Aggregator.prototype.callAggregate = function (props, state) {
-	        return this.aggregator.aggregate(props, state);
-	    };
-	    Aggregator.prototype.buildTemplateProps = function (props, forceState) {
-	        var _this = this;
-	        return new Promise(function (done) {
-	            var state = forceState ? forceState : _this.callInitState(props);
-	            Promise.resolve(state).then(function (nextState) {
-	                var templateProps = _this.callAggregate(props, nextState);
-	                Promise.resolve(templateProps).then(function (nextTemplateProps) {
-	                    done({ props: props, state: nextState, templateProps: nextTemplateProps });
-	                });
-	            });
-	        });
-	    };
-	    return Aggregator;
-	})();
-	module.exports = Aggregator;
-
-
-/***/ },
-/* 82 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var hasOwn = Object.prototype.hasOwnProperty;
-	var toString = Object.prototype.toString;
-	var undefined;
-
-	var isPlainObject = function isPlainObject(obj) {
-		'use strict';
-		if (!obj || toString.call(obj) !== '[object Object]') {
-			return false;
-		}
-
-		var has_own_constructor = hasOwn.call(obj, 'constructor');
-		var has_is_property_of_method = obj.constructor && obj.constructor.prototype && hasOwn.call(obj.constructor.prototype, 'isPrototypeOf');
-		// Not own constructor property must be Object
-		if (obj.constructor && !has_own_constructor && !has_is_property_of_method) {
-			return false;
-		}
-
-		// Own properties are enumerated firstly, so to speed up,
-		// if last one is own, then all properties are own.
-		var key;
-		for (key in obj) {}
-
-		return key === undefined || hasOwn.call(obj, key);
-	};
-
-	module.exports = function extend() {
-		'use strict';
-		var options, name, src, copy, copyIsArray, clone,
-			target = arguments[0],
-			i = 1,
-			length = arguments.length,
-			deep = false;
-
-		// Handle a deep copy situation
-		if (typeof target === 'boolean') {
-			deep = target;
-			target = arguments[1] || {};
-			// skip the boolean and the target
-			i = 2;
-		} else if ((typeof target !== 'object' && typeof target !== 'function') || target == null) {
-			target = {};
-		}
-
-		for (; i < length; ++i) {
-			options = arguments[i];
-			// Only deal with non-null/undefined values
-			if (options != null) {
-				// Extend the base object
-				for (name in options) {
-					src = target[name];
-					copy = options[name];
-
-					// Prevent never-ending loop
-					if (target === copy) {
-						continue;
-					}
-
-					// Recurse if we're merging plain objects or arrays
-					if (deep && copy && (isPlainObject(copy) || (copyIsArray = Array.isArray(copy)))) {
-						if (copyIsArray) {
-							copyIsArray = false;
-							clone = src && Array.isArray(src) ? src : [];
-						} else {
-							clone = src && isPlainObject(src) ? src : {};
-						}
-
-						// Never move original objects, clone them
-						target[name] = extend(deep, clone, copy);
-
-					// Don't bring in undefined values
-					} else if (copy !== undefined) {
-						target[name] = copy;
-					}
-				}
-			}
-		}
-
-		// Return the modified object
-		return target;
-	};
-
-
-
-/***/ },
-/* 83 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(Buffer) {'use strict';
@@ -13572,13 +9479,4262 @@
 	  return new c();
 	};
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(194).Buffer))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(162).Buffer))
+
+/***/ },
+/* 61 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * The MIT License (MIT)
+	 * 
+	 * Copyright (c) 2014 Petka Antonov
+	 * 
+	 * Permission is hereby granted, free of charge, to any person obtaining a copy
+	 * of this software and associated documentation files (the "Software"), to deal
+	 * in the Software without restriction, including without limitation the rights
+	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	 * copies of the Software, and to permit persons to whom the Software is
+	 * furnished to do so, subject to the following conditions:</p>
+	 * 
+	 * The above copyright notice and this permission notice shall be included in
+	 * all copies or substantial portions of the Software.
+	 * 
+	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	 * THE SOFTWARE.
+	 * 
+	 */
+	"use strict";
+	var es5 = __webpack_require__(156);
+	var haveGetters = (function(){
+	    try {
+	        var o = {};
+	        es5.defineProperty(o, "f", {
+	            get: function () {
+	                return 3;
+	            }
+	        });
+	        return o.f === 3;
+	    }
+	    catch (e) {
+	        return false;
+	    }
+
+	})();
+	var canEvaluate = typeof navigator == "undefined";
+	var errorObj = {e: {}};
+	function tryCatch1(fn, receiver, arg) {
+	    try { return fn.call(receiver, arg); }
+	    catch (e) {
+	        errorObj.e = e;
+	        return errorObj;
+	    }
+	}
+
+	function tryCatch2(fn, receiver, arg, arg2) {
+	    try { return fn.call(receiver, arg, arg2); }
+	    catch (e) {
+	        errorObj.e = e;
+	        return errorObj;
+	    }
+	}
+
+	function tryCatch3(fn, receiver, arg, arg2, arg3) {
+	    try { return fn.call(receiver, arg, arg2, arg3); }
+	    catch (e) {
+	        errorObj.e = e;
+	        return errorObj;
+	    }
+	}
+
+	function tryCatch4(fn, receiver, arg, arg2, arg3, arg4) {
+	    try { return fn.call(receiver, arg, arg2, arg3, arg4); }
+	    catch (e) {
+	        errorObj.e = e;
+	        return errorObj;
+	    }
+	}
+
+	function tryCatchApply(fn, args, receiver) {
+	    try { return fn.apply(receiver, args); }
+	    catch (e) {
+	        errorObj.e = e;
+	        return errorObj;
+	    }
+	}
+
+	var inherits = function(Child, Parent) {
+	    var hasProp = {}.hasOwnProperty;
+
+	    function T() {
+	        this.constructor = Child;
+	        this.constructor$ = Parent;
+	        for (var propertyName in Parent.prototype) {
+	            if (hasProp.call(Parent.prototype, propertyName) &&
+	                propertyName.charAt(propertyName.length-1) !== "$"
+	           ) {
+	                this[propertyName + "$"] = Parent.prototype[propertyName];
+	            }
+	        }
+	    }
+	    T.prototype = Parent.prototype;
+	    Child.prototype = new T();
+	    return Child.prototype;
+	};
+
+	function asString(val) {
+	    return typeof val === "string" ? val : ("" + val);
+	}
+
+	function isPrimitive(val) {
+	    return val == null || val === true || val === false ||
+	        typeof val === "string" || typeof val === "number";
+
+	}
+
+	function isObject(value) {
+	    return !isPrimitive(value);
+	}
+
+	function maybeWrapAsError(maybeError) {
+	    if (!isPrimitive(maybeError)) return maybeError;
+
+	    return new Error(asString(maybeError));
+	}
+
+	function withAppended(target, appendee) {
+	    var len = target.length;
+	    var ret = new Array(len + 1);
+	    var i;
+	    for (i = 0; i < len; ++i) {
+	        ret[i] = target[i];
+	    }
+	    ret[i] = appendee;
+	    return ret;
+	}
+
+	function getDataPropertyOrDefault(obj, key, defaultValue) {
+	    if (es5.isES5) {
+	        var desc = Object.getOwnPropertyDescriptor(obj, key);
+	        if (desc != null) {
+	            return desc.get == null && desc.set == null
+	                    ? desc.value
+	                    : defaultValue;
+	        }
+	    } else {
+	        return {}.hasOwnProperty.call(obj, key) ? obj[key] : undefined;
+	    }
+	}
+
+	function notEnumerableProp(obj, name, value) {
+	    if (isPrimitive(obj)) return obj;
+	    var descriptor = {
+	        value: value,
+	        configurable: true,
+	        enumerable: false,
+	        writable: true
+	    };
+	    es5.defineProperty(obj, name, descriptor);
+	    return obj;
+	}
+
+
+	var wrapsPrimitiveReceiver = (function() {
+	    return this !== "string";
+	}).call("string");
+
+	function thrower(r) {
+	    throw r;
+	}
+
+	var inheritedDataKeys = (function() {
+	    if (es5.isES5) {
+	        return function(obj, opts) {
+	            var ret = [];
+	            var visitedKeys = Object.create(null);
+	            var getKeys = Object(opts).includeHidden
+	                ? Object.getOwnPropertyNames
+	                : Object.keys;
+	            while (obj != null) {
+	                var keys;
+	                try {
+	                    keys = getKeys(obj);
+	                } catch (e) {
+	                    return ret;
+	                }
+	                for (var i = 0; i < keys.length; ++i) {
+	                    var key = keys[i];
+	                    if (visitedKeys[key]) continue;
+	                    visitedKeys[key] = true;
+	                    var desc = Object.getOwnPropertyDescriptor(obj, key);
+	                    if (desc != null && desc.get == null && desc.set == null) {
+	                        ret.push(key);
+	                    }
+	                }
+	                obj = es5.getPrototypeOf(obj);
+	            }
+	            return ret;
+	        };
+	    } else {
+	        return function(obj) {
+	            var ret = [];
+	            /*jshint forin:false */
+	            for (var key in obj) {
+	                ret.push(key);
+	            }
+	            return ret;
+	        };
+	    }
+
+	})();
+
+	function isClass(fn) {
+	    try {
+	        if (typeof fn === "function") {
+	            var keys = es5.keys(fn.prototype);
+	            return keys.length > 0 &&
+	                   !(keys.length === 1 && keys[0] === "constructor");
+	        }
+	        return false;
+	    } catch (e) {
+	        return false;
+	    }
+	}
+
+	function toFastProperties(obj) {
+	    /*jshint -W027*/
+	    function f() {}
+	    f.prototype = obj;
+	    return f;
+	    eval(obj);
+	}
+
+	var rident = /^[a-z$_][a-z$_0-9]*$/i;
+	function isIdentifier(str) {
+	    return rident.test(str);
+	}
+
+	function filledRange(count, prefix, suffix) {
+	    var ret = new Array(count);
+	    for(var i = 0; i < count; ++i) {
+	        ret[i] = prefix + i + suffix;
+	    }
+	    return ret;
+	}
+
+	var ret = {
+	    isClass: isClass,
+	    isIdentifier: isIdentifier,
+	    inheritedDataKeys: inheritedDataKeys,
+	    getDataPropertyOrDefault: getDataPropertyOrDefault,
+	    thrower: thrower,
+	    isArray: es5.isArray,
+	    haveGetters: haveGetters,
+	    notEnumerableProp: notEnumerableProp,
+	    isPrimitive: isPrimitive,
+	    isObject: isObject,
+	    canEvaluate: canEvaluate,
+	    errorObj: errorObj,
+	    tryCatch1: tryCatch1,
+	    tryCatch2: tryCatch2,
+	    tryCatch3: tryCatch3,
+	    tryCatch4: tryCatch4,
+	    tryCatchApply: tryCatchApply,
+	    inherits: inherits,
+	    withAppended: withAppended,
+	    asString: asString,
+	    maybeWrapAsError: maybeWrapAsError,
+	    wrapsPrimitiveReceiver: wrapsPrimitiveReceiver,
+	    toFastProperties: toFastProperties,
+	    filledRange: filledRange,
+	    lastLineError: new Error()
+	};
+
+	module.exports = ret;
+
+
+/***/ },
+/* 62 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {/**
+	 * The MIT License (MIT)
+	 * 
+	 * Copyright (c) 2014 Petka Antonov
+	 * 
+	 * Permission is hereby granted, free of charge, to any person obtaining a copy
+	 * of this software and associated documentation files (the "Software"), to deal
+	 * in the Software without restriction, including without limitation the rights
+	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	 * copies of the Software, and to permit persons to whom the Software is
+	 * furnished to do so, subject to the following conditions:</p>
+	 * 
+	 * The above copyright notice and this permission notice shall be included in
+	 * all copies or substantial portions of the Software.
+	 * 
+	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	 * THE SOFTWARE.
+	 * 
+	 */
+	"use strict";
+	var firstLineError = new Error();
+	var schedule = __webpack_require__(157);
+	var Queue = __webpack_require__(158);
+	var errorObj = __webpack_require__(61).errorObj;
+	var tryCatch1 = __webpack_require__(61).tryCatch1;
+	var _process = typeof process !== "undefined" ? process : undefined;
+
+	function Async() {
+	    this._isTickUsed = false;
+	    this._schedule = schedule;
+	    this._lateBuffer = new Queue(16);
+	    this._functionBuffer = new Queue(65536);
+	    var self = this;
+	    this.consumeFunctionBuffer = function () {
+	        self._consumeFunctionBuffer();
+	    };
+	}
+
+	Async.prototype.haveItemsQueued = function () {
+	    return this._functionBuffer.length() > 0;
+	};
+
+	Async.prototype._withDomain = function(fn) {
+	    if (_process !== undefined &&
+	        _process.domain != null &&
+	        !fn.domain) {
+	        fn = _process.domain.bind(fn);
+	    }
+	    return fn;
+	};
+
+	Async.prototype.invokeLater = function (fn, receiver, arg) {
+	    fn = this._withDomain(fn);
+	    this._lateBuffer.push(fn, receiver, arg);
+	    this._queueTick();
+	};
+
+	Async.prototype.invokeFirst = function (fn, receiver, arg) {
+	    fn = this._withDomain(fn);
+	    this._functionBuffer.unshift(fn, receiver, arg);
+	    this._queueTick();
+	};
+
+	Async.prototype.invoke = function (fn, receiver, arg) {
+	    fn = this._withDomain(fn);
+	    this._functionBuffer.push(fn, receiver, arg);
+	    this._queueTick();
+	};
+
+	Async.prototype._consumeFunctionBuffer = function () {
+	    var functionBuffer = this._functionBuffer;
+	    while (functionBuffer.length() > 0) {
+	        var fn = functionBuffer.shift();
+	        var receiver = functionBuffer.shift();
+	        var arg = functionBuffer.shift();
+	        fn.call(receiver, arg);
+	    }
+	    this._reset();
+	    this._consumeLateBuffer();
+	};
+
+	Async.prototype._consumeLateBuffer = function () {
+	    var buffer = this._lateBuffer;
+	    while(buffer.length() > 0) {
+	        var fn = buffer.shift();
+	        var receiver = buffer.shift();
+	        var arg = buffer.shift();
+	        var res = tryCatch1(fn, receiver, arg);
+	        if (res === errorObj) {
+	            this._queueTick();
+	            if (fn.domain != null) {
+	                fn.domain.emit("error", res.e);
+	            } else {
+	                throw res.e;
+	            }
+	        }
+	    }
+	};
+
+	Async.prototype._queueTick = function () {
+	    if (!this._isTickUsed) {
+	        this._isTickUsed = true;
+	        this._schedule(this.consumeFunctionBuffer);
+	    }
+	};
+
+	Async.prototype._reset = function () {
+	    this._isTickUsed = false;
+	};
+
+	module.exports = new Async();
+	module.exports.firstLineError = firstLineError;
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(97)))
+
+/***/ },
+/* 63 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * The MIT License (MIT)
+	 * 
+	 * Copyright (c) 2014 Petka Antonov
+	 * 
+	 * Permission is hereby granted, free of charge, to any person obtaining a copy
+	 * of this software and associated documentation files (the "Software"), to deal
+	 * in the Software without restriction, including without limitation the rights
+	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	 * copies of the Software, and to permit persons to whom the Software is
+	 * furnished to do so, subject to the following conditions:</p>
+	 * 
+	 * The above copyright notice and this permission notice shall be included in
+	 * all copies or substantial portions of the Software.
+	 * 
+	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	 * THE SOFTWARE.
+	 * 
+	 */
+	"use strict";
+	var Objectfreeze = __webpack_require__(156).freeze;
+	var propertyIsWritable = __webpack_require__(156).propertyIsWritable;
+	var util = __webpack_require__(61);
+	var inherits = util.inherits;
+	var notEnumerableProp = util.notEnumerableProp;
+
+	function markAsOriginatingFromRejection(e) {
+	    try {
+	        notEnumerableProp(e, "isOperational", true);
+	    }
+	    catch(ignore) {}
+	}
+
+	function originatesFromRejection(e) {
+	    if (e == null) return false;
+	    return ((e instanceof OperationalError) ||
+	        e["isOperational"] === true);
+	}
+
+	function isError(obj) {
+	    return obj instanceof Error;
+	}
+
+	function canAttachTrace(obj) {
+	    return isError(obj) && propertyIsWritable(obj, "stack");
+	}
+
+	function subError(nameProperty, defaultMessage) {
+	    function SubError(message) {
+	        if (!(this instanceof SubError)) return new SubError(message);
+	        notEnumerableProp(this, "message",
+	            typeof message === "string" ? message : defaultMessage);
+	        notEnumerableProp(this, "name", nameProperty);
+	        if (Error.captureStackTrace) {
+	            Error.captureStackTrace(this, this.constructor);
+	        }
+	    }
+	    inherits(SubError, Error);
+	    return SubError;
+	}
+
+	var _TypeError, _RangeError;
+	var CancellationError = subError("CancellationError", "cancellation error");
+	var TimeoutError = subError("TimeoutError", "timeout error");
+	var AggregateError = subError("AggregateError", "aggregate error");
+	try {
+	    _TypeError = TypeError;
+	    _RangeError = RangeError;
+	} catch(e) {
+	    _TypeError = subError("TypeError", "type error");
+	    _RangeError = subError("RangeError", "range error");
+	}
+
+	var methods = ("join pop push shift unshift slice filter forEach some " +
+	    "every map indexOf lastIndexOf reduce reduceRight sort reverse").split(" ");
+
+	for (var i = 0; i < methods.length; ++i) {
+	    if (typeof Array.prototype[methods[i]] === "function") {
+	        AggregateError.prototype[methods[i]] = Array.prototype[methods[i]];
+	    }
+	}
+
+	AggregateError.prototype.length = 0;
+	AggregateError.prototype["isOperational"] = true;
+	var level = 0;
+	AggregateError.prototype.toString = function() {
+	    var indent = Array(level * 4 + 1).join(" ");
+	    var ret = "\n" + indent + "AggregateError of:" + "\n";
+	    level++;
+	    indent = Array(level * 4 + 1).join(" ");
+	    for (var i = 0; i < this.length; ++i) {
+	        var str = this[i] === this ? "[Circular AggregateError]" : this[i] + "";
+	        var lines = str.split("\n");
+	        for (var j = 0; j < lines.length; ++j) {
+	            lines[j] = indent + lines[j];
+	        }
+	        str = lines.join("\n");
+	        ret += str + "\n";
+	    }
+	    level--;
+	    return ret;
+	};
+
+	function OperationalError(message) {
+	    notEnumerableProp(this, "name", "OperationalError");
+	    notEnumerableProp(this, "message", message);
+	    this.cause = message;
+	    this["isOperational"] = true;
+
+	    if (message instanceof Error) {
+	        notEnumerableProp(this, "message", message.message);
+	        notEnumerableProp(this, "stack", message.stack);
+	    } else if (Error.captureStackTrace) {
+	        Error.captureStackTrace(this, this.constructor);
+	    }
+
+	}
+	inherits(OperationalError, Error);
+
+	var key = "__BluebirdErrorTypes__";
+	var errorTypes = Error[key];
+	if (!errorTypes) {
+	    errorTypes = Objectfreeze({
+	        CancellationError: CancellationError,
+	        TimeoutError: TimeoutError,
+	        OperationalError: OperationalError,
+	        RejectionError: OperationalError,
+	        AggregateError: AggregateError
+	    });
+	    notEnumerableProp(Error, key, errorTypes);
+	}
+
+	module.exports = {
+	    Error: Error,
+	    TypeError: _TypeError,
+	    RangeError: _RangeError,
+	    CancellationError: errorTypes.CancellationError,
+	    OperationalError: errorTypes.OperationalError,
+	    TimeoutError: errorTypes.TimeoutError,
+	    AggregateError: errorTypes.AggregateError,
+	    originatesFromRejection: originatesFromRejection,
+	    markAsOriginatingFromRejection: markAsOriginatingFromRejection,
+	    canAttachTrace: canAttachTrace
+	};
+
+
+/***/ },
+/* 64 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * The MIT License (MIT)
+	 * 
+	 * Copyright (c) 2014 Petka Antonov
+	 * 
+	 * Permission is hereby granted, free of charge, to any person obtaining a copy
+	 * of this software and associated documentation files (the "Software"), to deal
+	 * in the Software without restriction, including without limitation the rights
+	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	 * copies of the Software, and to permit persons to whom the Software is
+	 * furnished to do so, subject to the following conditions:</p>
+	 * 
+	 * The above copyright notice and this permission notice shall be included in
+	 * all copies or substantial portions of the Software.
+	 * 
+	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	 * THE SOFTWARE.
+	 * 
+	 */
+	"use strict";
+	module.exports = function(Promise, INTERNAL) {
+	var util = __webpack_require__(61);
+	var canAttachTrace = __webpack_require__(63).canAttachTrace;
+	var errorObj = util.errorObj;
+	var isObject = util.isObject;
+
+	function getThen(obj) {
+	    try {
+	        return obj.then;
+	    }
+	    catch(e) {
+	        errorObj.e = e;
+	        return errorObj;
+	    }
+	}
+
+	function tryConvertToPromise(obj, traceParent) {
+	    if (isObject(obj)) {
+	        if (obj instanceof Promise) {
+	            return obj;
+	        }
+	        else if (isAnyBluebirdPromise(obj)) {
+	            var ret = new Promise(INTERNAL);
+	            ret._setTrace(undefined);
+	            obj._then(
+	                ret._fulfillUnchecked,
+	                ret._rejectUncheckedCheckError,
+	                ret._progressUnchecked,
+	                ret,
+	                null
+	            );
+	            return ret;
+	        }
+	        var then = getThen(obj);
+	        if (then === errorObj) {
+	            if (traceParent !== undefined && canAttachTrace(then.e)) {
+	                traceParent._attachExtraTrace(then.e);
+	            }
+	            return Promise.reject(then.e);
+	        } else if (typeof then === "function") {
+	            return doThenable(obj, then, traceParent);
+	        }
+	    }
+	    return obj;
+	}
+
+	var hasProp = {}.hasOwnProperty;
+	function isAnyBluebirdPromise(obj) {
+	    return hasProp.call(obj, "_promise0");
+	}
+
+	function doThenable(x, then, traceParent) {
+	    var resolver = Promise.defer();
+	    var called = false;
+	    try {
+	        then.call(
+	            x,
+	            resolveFromThenable,
+	            rejectFromThenable,
+	            progressFromThenable
+	        );
+	    } catch(e) {
+	        if (!called) {
+	            called = true;
+	            var trace = canAttachTrace(e) ? e : new Error(e + "");
+	            if (traceParent !== undefined) {
+	                traceParent._attachExtraTrace(trace);
+	            }
+	            resolver.promise._reject(e, trace);
+	        }
+	    }
+	    return resolver.promise;
+
+	    function resolveFromThenable(y) {
+	        if (called) return;
+	        called = true;
+
+	        if (x === y) {
+	            var e = Promise._makeSelfResolutionError();
+	            if (traceParent !== undefined) {
+	                traceParent._attachExtraTrace(e);
+	            }
+	            resolver.promise._reject(e, undefined);
+	            return;
+	        }
+	        resolver.resolve(y);
+	    }
+
+	    function rejectFromThenable(r) {
+	        if (called) return;
+	        called = true;
+	        var trace = canAttachTrace(r) ? r : new Error(r + "");
+	        if (traceParent !== undefined) {
+	            traceParent._attachExtraTrace(trace);
+	        }
+	        resolver.promise._reject(r, trace);
+	    }
+
+	    function progressFromThenable(v) {
+	        if (called) return;
+	        var promise = resolver.promise;
+	        if (typeof promise._progress === "function") {
+	            promise._progress(v);
+	        }
+	    }
+	}
+
+	return tryConvertToPromise;
+	};
+
+
+/***/ },
+/* 65 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * The MIT License (MIT)
+	 * 
+	 * Copyright (c) 2014 Petka Antonov
+	 * 
+	 * Permission is hereby granted, free of charge, to any person obtaining a copy
+	 * of this software and associated documentation files (the "Software"), to deal
+	 * in the Software without restriction, including without limitation the rights
+	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	 * copies of the Software, and to permit persons to whom the Software is
+	 * furnished to do so, subject to the following conditions:</p>
+	 * 
+	 * The above copyright notice and this permission notice shall be included in
+	 * all copies or substantial portions of the Software.
+	 * 
+	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	 * THE SOFTWARE.
+	 * 
+	 */
+	"use strict";
+	module.exports = function(Promise, INTERNAL, tryConvertToPromise) {
+	var canAttachTrace = __webpack_require__(63).canAttachTrace;
+	var util = __webpack_require__(61);
+	var isArray = util.isArray;
+
+	function toResolutionValue(val) {
+	    switch(val) {
+	    case -1: return undefined;
+	    case -2: return [];
+	    case -3: return {};
+	    }
+	}
+
+	function PromiseArray(values) {
+	    var promise = this._promise = new Promise(INTERNAL);
+	    var parent;
+	    if (values instanceof Promise) {
+	        parent = values;
+	        promise._propagateFrom(parent, 1 | 4);
+	    }
+	    promise._setTrace(parent);
+	    this._values = values;
+	    this._length = 0;
+	    this._totalResolved = 0;
+	    this._init(undefined, -2);
+	}
+	PromiseArray.prototype.length = function () {
+	    return this._length;
+	};
+
+	PromiseArray.prototype.promise = function () {
+	    return this._promise;
+	};
+
+	PromiseArray.prototype._init = function init(_, resolveValueIfEmpty) {
+
+	    var values = tryConvertToPromise(this._values, undefined);
+	    if (values instanceof Promise) {
+	        values._setBoundTo(this._promise._boundTo);
+	        values = values._target();
+	        this._values = values;
+	        if (values._isFulfilled()) {
+	            values = values._value();
+	            if (!isArray(values)) {
+	                var err = new Promise.TypeError("expecting an array, a promise or a thenable\u000a\u000a    See http://goo.gl/s8MMhc\u000a");
+	                this.__hardReject__(err);
+	                return;
+	            }
+	        } else if (values._isPending()) {
+	            values._then(
+	                init,
+	                this._reject,
+	                undefined,
+	                this,
+	                resolveValueIfEmpty
+	           );
+	            return;
+	        } else {
+	            values._unsetRejectionIsUnhandled();
+	            this._reject(values._reason());
+	            return;
+	        }
+	    } else if (!isArray(values)) {
+	        var err = new Promise.TypeError("expecting an array, a promise or a thenable\u000a\u000a    See http://goo.gl/s8MMhc\u000a");
+	        this.__hardReject__(err);
+	        return;
+	    }
+
+	    if (values.length === 0) {
+	        if (resolveValueIfEmpty === -5) {
+	            this._resolveEmptyArray();
+	        }
+	        else {
+	            this._resolve(toResolutionValue(resolveValueIfEmpty));
+	        }
+	        return;
+	    }
+	    var len = this.getActualLength(values.length);
+	    this._length = len;
+	    this._values = this.shouldCopyValues() ? new Array(len) : this._values;
+	    var promise = this._promise;
+	    for (var i = 0; i < len; ++i) {
+	        if (this._isResolved()) return;
+	        var maybePromise = tryConvertToPromise(values[i], promise);
+	        if (maybePromise instanceof Promise) {
+	            maybePromise = maybePromise._target();
+	            if (maybePromise._isPending()) {
+	                maybePromise._proxyPromiseArray(this, i);
+	            } else if (maybePromise._isFulfilled()) {
+	                this._promiseFulfilled(maybePromise._value(), i);
+	            } else {
+	                maybePromise._unsetRejectionIsUnhandled();
+	                this._promiseRejected(maybePromise._reason(), i);
+	            }
+	        } else {
+	            this._promiseFulfilled(maybePromise, i);
+	        }
+	    }
+	};
+
+	PromiseArray.prototype._isResolved = function () {
+	    return this._values === null;
+	};
+
+	PromiseArray.prototype._resolve = function (value) {
+	    this._values = null;
+	    this._promise._fulfill(value);
+	};
+
+	PromiseArray.prototype.__hardReject__ =
+	PromiseArray.prototype._reject = function (reason) {
+	    this._values = null;
+	    var trace = canAttachTrace(reason) ? reason : new Error(reason + "");
+	    this._promise._attachExtraTrace(trace);
+	    this._promise._reject(reason, trace);
+	};
+
+	PromiseArray.prototype._promiseProgressed = function (progressValue, index) {
+	    this._promise._progress({
+	        index: index,
+	        value: progressValue
+	    });
+	};
+
+
+	PromiseArray.prototype._promiseFulfilled = function (value, index) {
+	    this._values[index] = value;
+	    var totalResolved = ++this._totalResolved;
+	    if (totalResolved >= this._length) {
+	        this._resolve(this._values);
+	    }
+	};
+
+	PromiseArray.prototype._promiseRejected = function (reason, index) {
+	    this._totalResolved++;
+	    this._reject(reason);
+	};
+
+	PromiseArray.prototype.shouldCopyValues = function () {
+	    return true;
+	};
+
+	PromiseArray.prototype.getActualLength = function (len) {
+	    return len;
+	};
+
+	return PromiseArray;
+	};
+
+
+/***/ },
+/* 66 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * The MIT License (MIT)
+	 * 
+	 * Copyright (c) 2014 Petka Antonov
+	 * 
+	 * Permission is hereby granted, free of charge, to any person obtaining a copy
+	 * of this software and associated documentation files (the "Software"), to deal
+	 * in the Software without restriction, including without limitation the rights
+	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	 * copies of the Software, and to permit persons to whom the Software is
+	 * furnished to do so, subject to the following conditions:</p>
+	 * 
+	 * The above copyright notice and this permission notice shall be included in
+	 * all copies or substantial portions of the Software.
+	 * 
+	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	 * THE SOFTWARE.
+	 * 
+	 */
+	"use strict";
+	module.exports = function() {
+	var inherits = __webpack_require__(61).inherits;
+	var defineProperty = __webpack_require__(156).defineProperty;
+	var rtraceline = null;
+	var formatStack = null;
+
+	function CapturedTrace(parent) {
+	    this._parent = parent;
+	    captureStackTrace(this, CapturedTrace);
+
+	}
+	inherits(CapturedTrace, Error);
+
+	CapturedTrace.prototype.parent = function() {
+	    return this._parent;
+	};
+
+	CapturedTrace.prototype.setParent = function(parent) {
+	    if (parent === this) return;
+	    this._parent = parent;
+	};
+
+	CapturedTrace.prototype.hasParent = function() {
+	    return this._parent !== undefined;
+	};
+
+	CapturedTrace.prototype.attachExtraTrace = function(error) {
+	    var trace = this;
+	    var stack = error.stack;
+	    stack = typeof stack === "string" ? stack.split("\n") : [];
+	    this.protectErrorMessageNewlines(stack);
+	    var headerLineCount = 1;
+	    var combinedTraces = 1;
+
+	    do {
+	        stack = trace.combine(stack);
+	        combinedTraces++;
+	    } while ((trace = trace.parent()) != null);
+
+	    var stackTraceLimit = Error.stackTraceLimit || 10;
+	    var max = (stackTraceLimit + headerLineCount) * combinedTraces;
+	    var len = stack.length;
+	    if (len > max) {
+	        stack.length = max;
+	    }
+
+	    if (len > 0)
+	        stack[0] = stack[0].split("\u0002\u0000\u0001").join("\n");
+
+	    if (stack.length <= headerLineCount) {
+	        error.stack = "(No stack trace)";
+	    } else {
+	        error.stack = stack.join("\n");
+	    }
+	};
+
+	CapturedTrace.prototype.combine = function(current) {
+	    var prev = this.stack.split("\n");
+	    var currentLastIndex = current.length - 1;
+	    var currentLastLine = current[currentLastIndex];
+	    var commonRootMeetPoint = -1;
+	    for (var i = prev.length - 1; i >= 0; --i) {
+	        if (prev[i] === currentLastLine) {
+	            commonRootMeetPoint = i;
+	            break;
+	        }
+	    }
+
+	    for (var i = commonRootMeetPoint; i >= 0; --i) {
+	        var line = prev[i];
+	        if (current[currentLastIndex] === line) {
+	            current.pop();
+	            currentLastIndex--;
+	        } else {
+	            break;
+	        }
+	    }
+
+	    current.push("From previous event:");
+	    var lines = current.concat(prev);
+
+	    var ret = [];
+
+	    for (var i = 0, len = lines.length; i < len; ++i) {
+	        if (((rtraceline.test(lines[i]) && shouldIgnore(lines[i])) ||
+	            (i > 0 && !rtraceline.test(lines[i])) &&
+	            lines[i] !== "From previous event:")
+	       ) {
+	            continue;
+	        }
+	        ret.push(lines[i]);
+	    }
+	    return ret;
+	};
+
+	CapturedTrace.prototype.protectErrorMessageNewlines = function(stack) {
+	    for (var i = 0; i < stack.length; ++i) {
+	        if (rtraceline.test(stack[i])) {
+	            break;
+	        }
+	    }
+
+	    if (i <= 1) return;
+
+	    var errorMessageLines = [];
+	    for (var j = 0; j < i; ++j) {
+	        errorMessageLines.push(stack.shift());
+	    }
+	    stack.unshift(errorMessageLines.join("\u0002\u0000\u0001"));
+	};
+
+	CapturedTrace.formatAndLogError = function(error, title) {
+	    if (typeof console === "object") {
+	        var message;
+	        if (typeof error === "object" || typeof error === "function") {
+	            var stack = error.stack;
+	            message = title + formatStack(stack, error);
+	        } else {
+	            message = title + String(error);
+	        }
+	        if (typeof console.warn === "function" ||
+	            typeof console.warn === "object") {
+	            console.warn(message);
+	        } else if (typeof console.log === "function" ||
+	            typeof console.log === "object") {
+	            console.log(message);
+	        }
+	    }
+	};
+
+	CapturedTrace.unhandledRejection = function (reason) {
+	    CapturedTrace.formatAndLogError(
+	        reason, "^--- With additional stack trace: ");
+	};
+
+	CapturedTrace.possiblyUnhandledRejection = function (reason) {
+	    CapturedTrace.formatAndLogError(
+	        reason, "Possibly unhandled ");
+	};
+
+	CapturedTrace.isSupported = function () {
+	    return typeof captureStackTrace === "function";
+	};
+
+	function formatNonError(obj) {
+	    var str;
+	    if (typeof obj === "function") {
+	        str = "[function " +
+	            (obj.name || "anonymous") +
+	            "]";
+	    } else {
+	        str = obj.toString();
+	        var ruselessToString = /\[object [a-zA-Z0-9$_]+\]/;
+	        if (ruselessToString.test(str)) {
+	            try {
+	                var newStr = JSON.stringify(obj);
+	                str = newStr;
+	            }
+	            catch(e) {
+
+	            }
+	        }
+	        if (str.length === 0) {
+	            str = "(empty array)";
+	        }
+	    }
+	    return ("(<" + snip(str) + ">, no stack trace)");
+	}
+
+	function snip(str) {
+	    var maxChars = 41;
+	    if (str.length < maxChars) {
+	        return str;
+	    }
+	    return str.substr(0, maxChars - 3) + "...";
+	}
+
+	var shouldIgnore = function() { return false; };
+	var parseLineInfoRegex = /[\/<\(]([^:\/]+):(\d+):(?:\d+)\)?\s*$/;
+	function parseLineInfo(line) {
+	    var matches = line.match(parseLineInfoRegex);
+	    if (matches) {
+	        return {
+	            fileName: matches[1],
+	            line: parseInt(matches[2], 10)
+	        };
+	    }
+	}
+	CapturedTrace.setBounds = function(firstLineError, lastLineError) {
+	    if (!CapturedTrace.isSupported()) return;
+	    var firstStackLines = firstLineError.stack.split("\n");
+	    var lastStackLines = lastLineError.stack.split("\n");
+	    var firstIndex = -1;
+	    var lastIndex = -1;
+	    var firstFileName;
+	    var lastFileName;
+	    for (var i = 0; i < firstStackLines.length; ++i) {
+	        var result = parseLineInfo(firstStackLines[i]);
+	        if (result) {
+	            firstFileName = result.fileName;
+	            firstIndex = result.line;
+	            break;
+	        }
+	    }
+	    for (var i = 0; i < lastStackLines.length; ++i) {
+	        var result = parseLineInfo(lastStackLines[i]);
+	        if (result) {
+	            lastFileName = result.fileName;
+	            lastIndex = result.line;
+	            break;
+	        }
+	    }
+	    if (firstIndex < 0 || lastIndex < 0 || !firstFileName || !lastFileName ||
+	        firstFileName !== lastFileName || firstIndex >= lastIndex) {
+	        return;
+	    }
+
+	    shouldIgnore = function(line) {
+	        var info = parseLineInfo(line);
+	        if (info) {
+	            if (info.fileName === firstFileName &&
+	                (firstIndex <= info.line && info.line <= lastIndex)) {
+	                return true;
+	            }
+	        }
+	        return false;
+	    };
+	};
+
+	var captureStackTrace = (function stackDetection() {
+	    if (typeof Error.stackTraceLimit === "number" &&
+	        typeof Error.captureStackTrace === "function") {
+	        rtraceline = /^\s*at\s*/;
+	        formatStack = function(stack, error) {
+	            if (typeof stack === "string") return stack;
+
+	            if (error.name !== undefined &&
+	                error.message !== undefined) {
+	                return error.name + ". " + error.message;
+	            }
+	            return formatNonError(error);
+
+
+	        };
+	        var captureStackTrace = Error.captureStackTrace;
+	        var bluebirdRegexp = /[\\\/]bluebird[\\\/]js[\\\/](main|debug|zalgo)/;
+	        shouldIgnore = function(line) {
+	            return bluebirdRegexp.test(line);
+	        };
+	        return function(receiver, ignoreUntil) {
+	            captureStackTrace(receiver, ignoreUntil);
+	        };
+	    }
+	    var err = new Error();
+
+	    if (typeof err.stack === "string" &&
+	        typeof "".startsWith === "function" &&
+	        (err.stack.startsWith("stackDetection@")) &&
+	        stackDetection.name === "stackDetection") {
+
+	        defineProperty(Error, "stackTraceLimit", {
+	            writable: true,
+	            enumerable: false,
+	            configurable: false,
+	            value: 25
+	        });
+	        rtraceline = /@/;
+	        var rline = /[@\n]/;
+
+	        formatStack = function(stack, error) {
+	            if (typeof stack === "string") {
+	                return (error.name + ". " + error.message + "\n" + stack);
+	            }
+
+	            if (error.name !== undefined &&
+	                error.message !== undefined) {
+	                return error.name + ". " + error.message;
+	            }
+	            return formatNonError(error);
+	        };
+
+	        return function captureStackTrace(o) {
+	            var stack = new Error().stack;
+	            var split = stack.split(rline);
+	            var len = split.length;
+	            var ret = "";
+	            for (var i = 0; i < len; i += 2) {
+	                ret += split[i];
+	                ret += "@";
+	                ret += split[i + 1];
+	                ret += "\n";
+	            }
+	            o.stack = ret;
+	        };
+	    } else {
+	        formatStack = function(stack, error) {
+	            if (typeof stack === "string") return stack;
+
+	            if ((typeof error === "object" ||
+	                typeof error === "function") &&
+	                error.name !== undefined &&
+	                error.message !== undefined) {
+	                return error.name + ". " + error.message;
+	            }
+	            return formatNonError(error);
+	        };
+
+	        return null;
+	    }
+	})();
+
+	return CapturedTrace;
+	};
+
+
+/***/ },
+/* 67 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * The MIT License (MIT)
+	 * 
+	 * Copyright (c) 2014 Petka Antonov
+	 * 
+	 * Permission is hereby granted, free of charge, to any person obtaining a copy
+	 * of this software and associated documentation files (the "Software"), to deal
+	 * in the Software without restriction, including without limitation the rights
+	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	 * copies of the Software, and to permit persons to whom the Software is
+	 * furnished to do so, subject to the following conditions:</p>
+	 * 
+	 * The above copyright notice and this permission notice shall be included in
+	 * all copies or substantial portions of the Software.
+	 * 
+	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	 * THE SOFTWARE.
+	 * 
+	 */
+	"use strict";
+	module.exports = function(NEXT_FILTER) {
+	var util = __webpack_require__(61);
+	var errors = __webpack_require__(63);
+	var tryCatch1 = util.tryCatch1;
+	var errorObj = util.errorObj;
+	var keys = __webpack_require__(156).keys;
+	var TypeError = errors.TypeError;
+
+	function CatchFilter(instances, callback, promise) {
+	    this._instances = instances;
+	    this._callback = callback;
+	    this._promise = promise;
+	}
+
+	function safePredicate(predicate, e) {
+	    var safeObject = {};
+	    var retfilter = tryCatch1(predicate, safeObject, e);
+
+	    if (retfilter === errorObj) return retfilter;
+
+	    var safeKeys = keys(safeObject);
+	    if (safeKeys.length) {
+	        errorObj.e = new TypeError("Catch filter must inherit from Error or be a simple predicate function\u000a\u000a    See http://goo.gl/o84o68\u000a");
+	        return errorObj;
+	    }
+	    return retfilter;
+	}
+
+	CatchFilter.prototype.doFilter = function (e) {
+	    var cb = this._callback;
+	    var promise = this._promise;
+	    var boundTo = promise._boundTo;
+	    for (var i = 0, len = this._instances.length; i < len; ++i) {
+	        var item = this._instances[i];
+	        var itemIsErrorType = item === Error ||
+	            (item != null && item.prototype instanceof Error);
+
+	        if (itemIsErrorType && e instanceof item) {
+	            var ret = tryCatch1(cb, boundTo, e);
+	            if (ret === errorObj) {
+	                NEXT_FILTER.e = ret.e;
+	                return NEXT_FILTER;
+	            }
+	            return ret;
+	        } else if (typeof item === "function" && !itemIsErrorType) {
+	            var shouldHandle = safePredicate(item, e);
+	            if (shouldHandle === errorObj) {
+	                var trace = errors.canAttachTrace(errorObj.e)
+	                    ? errorObj.e
+	                    : new Error(errorObj.e + "");
+	                this._promise._attachExtraTrace(trace);
+	                e = errorObj.e;
+	                break;
+	            } else if (shouldHandle) {
+	                var ret = tryCatch1(cb, boundTo, e);
+	                if (ret === errorObj) {
+	                    NEXT_FILTER.e = ret.e;
+	                    return NEXT_FILTER;
+	                }
+	                return ret;
+	            }
+	        }
+	    }
+	    NEXT_FILTER.e = e;
+	    return NEXT_FILTER;
+	};
+
+	return CatchFilter;
+	};
+
+
+/***/ },
+/* 68 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * The MIT License (MIT)
+	 * 
+	 * Copyright (c) 2014 Petka Antonov
+	 * 
+	 * Permission is hereby granted, free of charge, to any person obtaining a copy
+	 * of this software and associated documentation files (the "Software"), to deal
+	 * in the Software without restriction, including without limitation the rights
+	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	 * copies of the Software, and to permit persons to whom the Software is
+	 * furnished to do so, subject to the following conditions:</p>
+	 * 
+	 * The above copyright notice and this permission notice shall be included in
+	 * all copies or substantial portions of the Software.
+	 * 
+	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	 * THE SOFTWARE.
+	 * 
+	 */
+	"use strict";
+	var util = __webpack_require__(61);
+	var maybeWrapAsError = util.maybeWrapAsError;
+	var errors = __webpack_require__(63);
+	var TimeoutError = errors.TimeoutError;
+	var OperationalError = errors.OperationalError;
+	var async = __webpack_require__(62);
+	var haveGetters = util.haveGetters;
+	var es5 = __webpack_require__(156);
+
+	function isUntypedError(obj) {
+	    return obj instanceof Error &&
+	        es5.getPrototypeOf(obj) === Error.prototype;
+	}
+
+	function wrapAsOperationalError(obj) {
+	    var ret;
+	    if (isUntypedError(obj)) {
+	        ret = new OperationalError(obj);
+	    } else {
+	        ret = obj;
+	    }
+	    errors.markAsOriginatingFromRejection(ret);
+	    return ret;
+	}
+
+	function nodebackForPromise(promise) {
+	    return function(err, value) {
+	        if (promise === null) return;
+
+	        if (err) {
+	            var wrapped = wrapAsOperationalError(maybeWrapAsError(err));
+	            promise._attachExtraTrace(wrapped);
+	            promise._reject(wrapped);
+	        } else if (arguments.length > 2) {
+	            var $_len = arguments.length;var args = new Array($_len - 1); for(var $_i = 1; $_i < $_len; ++$_i) {args[$_i - 1] = arguments[$_i];}
+	            promise._fulfill(args);
+	        } else {
+	            promise._fulfill(value);
+	        }
+
+	        promise = null;
+	    };
+	}
+
+
+	var PromiseResolver;
+	if (!haveGetters) {
+	    PromiseResolver = function (promise) {
+	        this.promise = promise;
+	        this.asCallback = nodebackForPromise(promise);
+	        this.callback = this.asCallback;
+	    };
+	}
+	else {
+	    PromiseResolver = function (promise) {
+	        this.promise = promise;
+	    };
+	}
+	if (haveGetters) {
+	    var prop = {
+	        get: function() {
+	            return nodebackForPromise(this.promise);
+	        }
+	    };
+	    es5.defineProperty(PromiseResolver.prototype, "asCallback", prop);
+	    es5.defineProperty(PromiseResolver.prototype, "callback", prop);
+	}
+
+	PromiseResolver._nodebackForPromise = nodebackForPromise;
+
+	PromiseResolver.prototype.toString = function () {
+	    return "[object PromiseResolver]";
+	};
+
+	PromiseResolver.prototype.resolve =
+	PromiseResolver.prototype.fulfill = function (value) {
+	    if (!(this instanceof PromiseResolver)) {
+	        throw new TypeError("Illegal invocation, resolver resolve/reject must be called within a resolver context. Consider using the promise constructor instead.\u000a\u000a    See http://goo.gl/sdkXL9\u000a");
+	    }
+
+	    var promise = this.promise;
+	    if (promise._tryFollow(value)) {
+	        return;
+	    }
+	    async.invoke(promise._fulfill, promise, value);
+	};
+
+	PromiseResolver.prototype.reject = function (reason) {
+	    if (!(this instanceof PromiseResolver)) {
+	        throw new TypeError("Illegal invocation, resolver resolve/reject must be called within a resolver context. Consider using the promise constructor instead.\u000a\u000a    See http://goo.gl/sdkXL9\u000a");
+	    }
+
+	    var promise = this.promise;
+	    errors.markAsOriginatingFromRejection(reason);
+	    var trace = errors.canAttachTrace(reason) ? reason : new Error(reason + "");
+	    promise._attachExtraTrace(trace);
+	    async.invoke(promise._reject, promise, reason);
+	    if (trace !== reason) {
+	        async.invoke(this._setCarriedStackTrace, this, trace);
+	    }
+	};
+
+	PromiseResolver.prototype.progress = function (value) {
+	    if (!(this instanceof PromiseResolver)) {
+	        throw new TypeError("Illegal invocation, resolver resolve/reject must be called within a resolver context. Consider using the promise constructor instead.\u000a\u000a    See http://goo.gl/sdkXL9\u000a");
+	    }
+	    async.invoke(this.promise._progress, this.promise, value);
+	};
+
+	PromiseResolver.prototype.cancel = function () {
+	    async.invoke(this.promise.cancel, this.promise, undefined);
+	};
+
+	PromiseResolver.prototype.timeout = function () {
+	    this.reject(new TimeoutError("timeout"));
+	};
+
+	PromiseResolver.prototype.isResolved = function () {
+	    return this.promise.isResolved();
+	};
+
+	PromiseResolver.prototype.toJSON = function () {
+	    return this.promise.toJSON();
+	};
+
+	PromiseResolver.prototype._setCarriedStackTrace = function (trace) {
+	    if (this.promise.isRejected()) {
+	        this.promise._setCarriedStackTrace(trace);
+	    }
+	};
+
+	module.exports = PromiseResolver;
+
+
+/***/ },
+/* 69 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * The MIT License (MIT)
+	 * 
+	 * Copyright (c) 2014 Petka Antonov
+	 * 
+	 * Permission is hereby granted, free of charge, to any person obtaining a copy
+	 * of this software and associated documentation files (the "Software"), to deal
+	 * in the Software without restriction, including without limitation the rights
+	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	 * copies of the Software, and to permit persons to whom the Software is
+	 * furnished to do so, subject to the following conditions:</p>
+	 * 
+	 * The above copyright notice and this permission notice shall be included in
+	 * all copies or substantial portions of the Software.
+	 * 
+	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	 * THE SOFTWARE.
+	 * 
+	 */
+	"use strict";
+	module.exports = function(Promise) {
+	var TypeError = __webpack_require__(63).TypeError;
+
+	function apiRejection(msg) {
+	    var error = new TypeError(msg);
+	    var ret = Promise.rejected(error);
+	    var parent = ret._peekContext();
+	    if (parent != null) {
+	        parent.attachExtraTrace(error);
+	    }
+	    return ret;
+	}
+
+	return apiRejection;
+	};
+
+
+/***/ },
+/* 70 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * The MIT License (MIT)
+	 * 
+	 * Copyright (c) 2014 Petka Antonov
+	 * 
+	 * Permission is hereby granted, free of charge, to any person obtaining a copy
+	 * of this software and associated documentation files (the "Software"), to deal
+	 * in the Software without restriction, including without limitation the rights
+	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	 * copies of the Software, and to permit persons to whom the Software is
+	 * furnished to do so, subject to the following conditions:</p>
+	 * 
+	 * The above copyright notice and this permission notice shall be included in
+	 * all copies or substantial portions of the Software.
+	 * 
+	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	 * THE SOFTWARE.
+	 * 
+	 */
+	"use strict";
+	module.exports = function(Promise, NEXT_FILTER, tryConvertToPromise) {
+	var util = __webpack_require__(61);
+	var wrapsPrimitiveReceiver = util.wrapsPrimitiveReceiver;
+	var isPrimitive = util.isPrimitive;
+	var thrower = util.thrower;
+
+	function returnThis() {
+	    return this;
+	}
+	function throwThis() {
+	    throw this;
+	}
+	function return$(r) {
+	    return function() {
+	        return r;
+	    };
+	}
+	function throw$(r) {
+	    return function() {
+	        throw r;
+	    };
+	}
+	function promisedFinally(ret, reasonOrValue, isFulfilled) {
+	    var then;
+	    if (wrapsPrimitiveReceiver && isPrimitive(reasonOrValue)) {
+	        then = isFulfilled ? return$(reasonOrValue) : throw$(reasonOrValue);
+	    } else {
+	        then = isFulfilled ? returnThis : throwThis;
+	    }
+	    return ret._then(then, thrower, undefined, reasonOrValue, undefined);
+	}
+
+	function finallyHandler(reasonOrValue) {
+	    var promise = this.promise;
+	    var handler = this.handler;
+
+	    var ret = promise._isBound()
+	                    ? handler.call(promise._boundTo)
+	                    : handler();
+
+	    if (ret !== undefined) {
+	        var maybePromise = tryConvertToPromise(ret, undefined);
+	        if (maybePromise instanceof Promise) {
+	            maybePromise = maybePromise._target();
+	            return promisedFinally(maybePromise, reasonOrValue,
+	                                    promise.isFulfilled());
+	        }
+	    }
+
+	    if (promise.isRejected()) {
+	        NEXT_FILTER.e = reasonOrValue;
+	        return NEXT_FILTER;
+	    } else {
+	        return reasonOrValue;
+	    }
+	}
+
+	function tapHandler(value) {
+	    var promise = this.promise;
+	    var handler = this.handler;
+
+	    var ret = promise._isBound()
+	                    ? handler.call(promise._boundTo, value)
+	                    : handler(value);
+
+	    if (ret !== undefined) {
+	        var maybePromise = tryConvertToPromise(ret, undefined);
+	        if (maybePromise instanceof Promise) {
+	            maybePromise = maybePromise._target();
+	            return promisedFinally(maybePromise, value, true);
+	        }
+	    }
+	    return value;
+	}
+
+	Promise.prototype._passThroughHandler = function (handler, isFinally) {
+	    if (typeof handler !== "function") return this.then();
+
+	    var promiseAndHandler = {
+	        promise: this,
+	        handler: handler
+	    };
+
+	    return this._then(
+	            isFinally ? finallyHandler : tapHandler,
+	            isFinally ? finallyHandler : undefined, undefined,
+	            promiseAndHandler, undefined);
+	};
+
+	Promise.prototype.lastly =
+	Promise.prototype["finally"] = function (handler) {
+	    return this._passThroughHandler(handler, true);
+	};
+
+	Promise.prototype.tap = function (handler) {
+	    return this._passThroughHandler(handler, false);
+	};
+	};
+
+
+/***/ },
+/* 71 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * The MIT License (MIT)
+	 * 
+	 * Copyright (c) 2014 Petka Antonov
+	 * 
+	 * Permission is hereby granted, free of charge, to any person obtaining a copy
+	 * of this software and associated documentation files (the "Software"), to deal
+	 * in the Software without restriction, including without limitation the rights
+	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	 * copies of the Software, and to permit persons to whom the Software is
+	 * furnished to do so, subject to the following conditions:</p>
+	 * 
+	 * The above copyright notice and this permission notice shall be included in
+	 * all copies or substantial portions of the Software.
+	 * 
+	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	 * THE SOFTWARE.
+	 * 
+	 */
+	"use strict";
+	var util = __webpack_require__(61);
+	var isPrimitive = util.isPrimitive;
+	var wrapsPrimitiveReceiver = util.wrapsPrimitiveReceiver;
+
+	module.exports = function(Promise) {
+	var returner = function () {
+	    return this;
+	};
+	var thrower = function () {
+	    throw this;
+	};
+
+	var wrapper = function (value, action) {
+	    if (action === 1) {
+	        return function () {
+	            throw value;
+	        };
+	    } else if (action === 2) {
+	        return function () {
+	            return value;
+	        };
+	    }
+	};
+
+
+	Promise.prototype["return"] =
+	Promise.prototype.thenReturn = function (value) {
+	    if (wrapsPrimitiveReceiver && isPrimitive(value)) {
+	        return this._then(
+	            wrapper(value, 2),
+	            undefined,
+	            undefined,
+	            undefined,
+	            undefined
+	       );
+	    }
+	    return this._then(returner, undefined, undefined, value, undefined);
+	};
+
+	Promise.prototype["throw"] =
+	Promise.prototype.thenThrow = function (reason) {
+	    if (wrapsPrimitiveReceiver && isPrimitive(reason)) {
+	        return this._then(
+	            wrapper(reason, 1),
+	            undefined,
+	            undefined,
+	            undefined,
+	            undefined
+	       );
+	    }
+	    return this._then(thrower, undefined, undefined, reason, undefined);
+	};
+	};
+
+
+/***/ },
+/* 72 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * The MIT License (MIT)
+	 * 
+	 * Copyright (c) 2014 Petka Antonov
+	 * 
+	 * Permission is hereby granted, free of charge, to any person obtaining a copy
+	 * of this software and associated documentation files (the "Software"), to deal
+	 * in the Software without restriction, including without limitation the rights
+	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	 * copies of the Software, and to permit persons to whom the Software is
+	 * furnished to do so, subject to the following conditions:</p>
+	 * 
+	 * The above copyright notice and this permission notice shall be included in
+	 * all copies or substantial portions of the Software.
+	 * 
+	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	 * THE SOFTWARE.
+	 * 
+	 */
+	"use strict";
+	module.exports = function(Promise) {
+	function PromiseInspection(promise) {
+	    if (promise !== undefined) {
+	        promise = promise._target();
+	        this._bitField = promise._bitField;
+	        this._settledValue = promise._isResolved()
+	            ? promise._settledValue
+	            : undefined;
+	    }
+	    else {
+	        this._bitField = 0;
+	        this._settledValue = undefined;
+	    }
+	}
+
+	PromiseInspection.prototype.value = function () {
+	    if (!this.isFulfilled()) {
+	        throw new TypeError("cannot get fulfillment value of a non-fulfilled promise\u000a\u000a    See http://goo.gl/hc1DLj\u000a");
+	    }
+	    return this._settledValue;
+	};
+
+	PromiseInspection.prototype.error =
+	PromiseInspection.prototype.reason = function () {
+	    if (!this.isRejected()) {
+	        throw new TypeError("cannot get rejection reason of a non-rejected promise\u000a\u000a    See http://goo.gl/hPuiwB\u000a");
+	    }
+	    return this._settledValue;
+	};
+
+	PromiseInspection.prototype.isFulfilled =
+	Promise.prototype._isFulfilled = function () {
+	    return (this._bitField & 268435456) > 0;
+	};
+
+	PromiseInspection.prototype.isRejected =
+	Promise.prototype._isRejected = function () {
+	    return (this._bitField & 134217728) > 0;
+	};
+
+	PromiseInspection.prototype.isPending =
+	Promise.prototype._isPending = function () {
+	    return (this._bitField & 402653184) === 0;
+	};
+
+	PromiseInspection.prototype.isResolved =
+	Promise.prototype._isResolved = function () {
+	    return (this._bitField & 402653184) > 0;
+	};
+
+	Promise.prototype.isPending = function() {
+	    return this._target()._isPending();
+	};
+
+	Promise.prototype.isRejected = function() {
+	    return this._target()._isRejected();
+	};
+
+	Promise.prototype.isFulfilled = function() {
+	    return this._target()._isFulfilled();
+	};
+
+	Promise.prototype.isResolved = function() {
+	    return this._target()._isResolved();
+	};
+
+	Promise.prototype._value = function() {
+	    return this._settledValue;
+	};
+
+	Promise.prototype._reason = function() {
+	    return this._settledValue;
+	};
+
+	Promise.prototype.value = function() {
+	    var target = this._target();
+	    if (!target.isFulfilled()) {
+	        throw new TypeError("cannot get fulfillment value of a non-fulfilled promise\u000a\u000a    See http://goo.gl/hc1DLj\u000a");
+	    }
+	    return target._settledValue;
+	};
+
+	Promise.prototype.reason = function() {
+	    var target = this._target();
+	    if (!target.isRejected()) {
+	        throw new TypeError("cannot get rejection reason of a non-rejected promise\u000a\u000a    See http://goo.gl/hPuiwB\u000a");
+	    }
+	    return target._settledValue;
+	};
+
+
+	Promise.PromiseInspection = PromiseInspection;
+	};
+
+
+/***/ },
+/* 73 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * The MIT License (MIT)
+	 * 
+	 * Copyright (c) 2014 Petka Antonov
+	 * 
+	 * Permission is hereby granted, free of charge, to any person obtaining a copy
+	 * of this software and associated documentation files (the "Software"), to deal
+	 * in the Software without restriction, including without limitation the rights
+	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	 * copies of the Software, and to permit persons to whom the Software is
+	 * furnished to do so, subject to the following conditions:</p>
+	 * 
+	 * The above copyright notice and this permission notice shall be included in
+	 * all copies or substantial portions of the Software.
+	 * 
+	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	 * THE SOFTWARE.
+	 * 
+	 */
+	"use strict";
+	module.exports =
+	function(Promise, PromiseArray, tryConvertToPromise, INTERNAL) {
+	var util = __webpack_require__(61);
+	var canEvaluate = util.canEvaluate;
+	var tryCatch1 = util.tryCatch1;
+	var errorObj = util.errorObj;
+
+
+	if (canEvaluate) {
+	    var thenCallback = function(i) {
+	        return new Function("value", "holder", "                             \n\
+	            'use strict';                                                    \n\
+	            holder.pIndex = value;                                           \n\
+	            holder.checkFulfillment(this);                                   \n\
+	            ".replace(/Index/g, i));
+	    };
+
+	    var caller = function(count) {
+	        var values = [];
+	        for (var i = 1; i <= count; ++i) values.push("holder.p" + i);
+	        return new Function("holder", "                                      \n\
+	            'use strict';                                                    \n\
+	            var callback = holder.fn;                                        \n\
+	            return callback(values);                                         \n\
+	            ".replace(/values/g, values.join(", ")));
+	    };
+	    var thenCallbacks = [];
+	    var callers = [undefined];
+	    for (var i = 1; i <= 5; ++i) {
+	        thenCallbacks.push(thenCallback(i));
+	        callers.push(caller(i));
+	    }
+
+	    var Holder = function(total, fn) {
+	        this.p1 = this.p2 = this.p3 = this.p4 = this.p5 = null;
+	        this.fn = fn;
+	        this.total = total;
+	        this.now = 0;
+	    };
+
+	    Holder.prototype.callers = callers;
+	    Holder.prototype.checkFulfillment = function(promise) {
+	        var now = this.now;
+	        now++;
+	        var total = this.total;
+	        if (now >= total) {
+	            var handler = this.callers[total];
+	            var ret = tryCatch1(handler, undefined, this);
+	            if (ret === errorObj) {
+	                promise._rejectUnchecked(ret.e);
+	            } else if (!promise._tryFollow(ret)) {
+	                promise._fulfillUnchecked(ret);
+	            }
+	        } else {
+	            this.now = now;
+	        }
+	    };
+	}
+
+	function reject(reason) {
+	    this._reject(reason);
+	}
+
+	Promise.join = function () {
+	    var last = arguments.length - 1;
+	    var fn;
+	    if (last > 0 && typeof arguments[last] === "function") {
+	        fn = arguments[last];
+	        if (last < 6 && canEvaluate) {
+	            var ret = new Promise(INTERNAL);
+	            ret._setTrace(undefined);
+	            var holder = new Holder(last, fn);
+	            var callbacks = thenCallbacks;
+	            for (var i = 0; i < last; ++i) {
+	                var maybePromise = tryConvertToPromise(arguments[i], undefined);
+	                if (maybePromise instanceof Promise) {
+	                    maybePromise = maybePromise._target();
+	                    if (maybePromise._isPending()) {
+	                        maybePromise._then(callbacks[i], reject,
+	                                           undefined, ret, holder);
+	                    } else if (maybePromise._isFulfilled()) {
+	                        callbacks[i].call(ret,
+	                                          maybePromise._value(), holder);
+	                    } else {
+	                        ret._reject(maybePromise._reason());
+	                        maybePromise._unsetRejectionIsUnhandled();
+	                    }
+	                } else {
+	                    callbacks[i].call(ret, maybePromise, holder);
+	                }
+	            }
+	            return ret;
+	        }
+	    }
+	    var $_len = arguments.length;var args = new Array($_len); for(var $_i = 0; $_i < $_len; ++$_i) {args[$_i] = arguments[$_i];}
+	    var ret = new PromiseArray(args).promise();
+	    return fn !== undefined ? ret.spread(fn) : ret;
+	};
+
+	};
+
+
+/***/ },
+/* 74 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * The MIT License (MIT)
+	 * 
+	 * Copyright (c) 2014 Petka Antonov
+	 * 
+	 * Permission is hereby granted, free of charge, to any person obtaining a copy
+	 * of this software and associated documentation files (the "Software"), to deal
+	 * in the Software without restriction, including without limitation the rights
+	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	 * copies of the Software, and to permit persons to whom the Software is
+	 * furnished to do so, subject to the following conditions:</p>
+	 * 
+	 * The above copyright notice and this permission notice shall be included in
+	 * all copies or substantial portions of the Software.
+	 * 
+	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	 * THE SOFTWARE.
+	 * 
+	 */
+	"use strict";
+	module.exports = function(Promise, INTERNAL, tryConvertToPromise) {
+	var util = __webpack_require__(61);
+	var errors = __webpack_require__(63);
+	var apiRejection = __webpack_require__(69)(Promise);
+	var TimeoutError = Promise.TimeoutError;
+
+	var afterTimeout = function (promise, message) {
+	    if (!promise.isPending()) return;
+	    if (typeof message !== "string") {
+	        message = "operation timed out";
+	    }
+	    var err = new TimeoutError(message);
+	    errors.markAsOriginatingFromRejection(err);
+	    promise._attachExtraTrace(err);
+	    promise._cancel(err);
+	};
+
+	var afterDelay = function (value, promise) {
+	    promise._fulfill(value);
+	};
+
+	var delay = Promise.delay = function (value, ms) {
+	    if (ms === undefined) {
+	        ms = value;
+	        value = undefined;
+	    }
+	    ms = +ms;
+	    var maybePromise = tryConvertToPromise(value, undefined);
+	    var promise = new Promise(INTERNAL);
+
+	    if (maybePromise instanceof Promise) {
+	        promise._propagateFrom(maybePromise, 7);
+	        promise._follow(maybePromise._target());
+	        return promise.then(function(value) {
+	            return Promise.delay(value, ms);
+	        });
+	    } else {
+	        promise._setTrace(undefined);
+	        setTimeout(function delayTimeout() {
+	            afterDelay(value, promise);
+	        }, ms);
+	    }
+	    return promise;
+	};
+
+	Promise.prototype.delay = function (ms) {
+	    return delay(this, ms);
+	};
+
+	function successClear(value) {
+	    var handle = this;
+	    if (handle instanceof Number) handle = +handle;
+	    clearTimeout(handle);
+	    return value;
+	}
+
+	function failureClear(reason) {
+	    var handle = this;
+	    if (handle instanceof Number) handle = +handle;
+	    clearTimeout(handle);
+	    throw reason;
+	}
+
+	Promise.prototype.timeout = function (ms, message) {
+	    var target = this._target();
+	    ms = +ms;
+	    var ret = new Promise(INTERNAL).cancellable();
+	    ret._propagateFrom(this, 7);
+	    ret._follow(target);
+	    var handle = setTimeout(function timeoutTimeout() {
+	        afterTimeout(ret, message);
+	    }, ms);
+	    return ret._then(successClear, failureClear, undefined, handle, undefined);
+	};
+
+	};
+
+
+/***/ },
+/* 75 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * The MIT License (MIT)
+	 * 
+	 * Copyright (c) 2014 Petka Antonov
+	 * 
+	 * Permission is hereby granted, free of charge, to any person obtaining a copy
+	 * of this software and associated documentation files (the "Software"), to deal
+	 * in the Software without restriction, including without limitation the rights
+	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	 * copies of the Software, and to permit persons to whom the Software is
+	 * furnished to do so, subject to the following conditions:</p>
+	 * 
+	 * The above copyright notice and this permission notice shall be included in
+	 * all copies or substantial portions of the Software.
+	 * 
+	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	 * THE SOFTWARE.
+	 * 
+	 */
+	"use strict";
+	module.exports = function(Promise, INTERNAL, tryConvertToPromise) {
+	var apiRejection = __webpack_require__(69)(Promise);
+	var isArray = __webpack_require__(61).isArray;
+
+	var raceLater = function (promise) {
+	    return promise.then(function(array) {
+	        return race(array, promise);
+	    });
+	};
+
+	function race(promises, parent) {
+	    var maybePromise = tryConvertToPromise(promises, undefined);
+
+	    if (maybePromise instanceof Promise) {
+	        return raceLater(maybePromise);
+	    } else if (!isArray(promises)) {
+	        return apiRejection("expecting an array, a promise or a thenable\u000a\u000a    See http://goo.gl/s8MMhc\u000a");
+	    }
+
+	    var ret = new Promise(INTERNAL);
+	    if (parent !== undefined) {
+	        ret._propagateFrom(parent, 7);
+	    } else {
+	        ret._setTrace(undefined);
+	    }
+	    var fulfill = ret._fulfill;
+	    var reject = ret._reject;
+	    for (var i = 0, len = promises.length; i < len; ++i) {
+	        var val = promises[i];
+
+	        if (val === undefined && !(i in promises)) {
+	            continue;
+	        }
+
+	        Promise.cast(val)._then(fulfill, reject, undefined, ret, null);
+	    }
+	    return ret;
+	}
+
+	Promise.race = function (promises) {
+	    return race(promises, undefined);
+	};
+
+	Promise.prototype.race = function () {
+	    return race(this, undefined);
+	};
+
+	};
+
+
+/***/ },
+/* 76 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * The MIT License (MIT)
+	 * 
+	 * Copyright (c) 2014 Petka Antonov
+	 * 
+	 * Permission is hereby granted, free of charge, to any person obtaining a copy
+	 * of this software and associated documentation files (the "Software"), to deal
+	 * in the Software without restriction, including without limitation the rights
+	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	 * copies of the Software, and to permit persons to whom the Software is
+	 * furnished to do so, subject to the following conditions:</p>
+	 * 
+	 * The above copyright notice and this permission notice shall be included in
+	 * all copies or substantial portions of the Software.
+	 * 
+	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	 * THE SOFTWARE.
+	 * 
+	 */
+	"use strict";
+	var cr = Object.create;
+	if (cr) {
+	    var callerCache = cr(null);
+	    var getterCache = cr(null);
+	    callerCache[" size"] = getterCache[" size"] = 0;
+	}
+
+	module.exports = function(Promise) {
+	var util = __webpack_require__(61);
+	var canEvaluate = util.canEvaluate;
+	var isIdentifier = util.isIdentifier;
+
+	function makeMethodCaller (methodName) {
+	    return new Function("obj", "                                             \n\
+	        'use strict'                                                         \n\
+	        var len = this.length;                                               \n\
+	        switch(len) {                                                        \n\
+	            case 1: return obj.methodName(this[0]);                          \n\
+	            case 2: return obj.methodName(this[0], this[1]);                 \n\
+	            case 3: return obj.methodName(this[0], this[1], this[2]);        \n\
+	            case 0: return obj.methodName();                                 \n\
+	            default: return obj.methodName.apply(obj, this);                 \n\
+	        }                                                                    \n\
+	        ".replace(/methodName/g, methodName));
+	}
+
+	function makeGetter (propertyName) {
+	    return new Function("obj", "                                             \n\
+	        'use strict';                                                        \n\
+	        return obj.propertyName;                                             \n\
+	        ".replace("propertyName", propertyName));
+	}
+
+	function getCompiled(name, compiler, cache) {
+	    var ret = cache[name];
+	    if (typeof ret !== "function") {
+	        if (!isIdentifier(name)) {
+	            return null;
+	        }
+	        ret = compiler(name);
+	        cache[name] = ret;
+	        cache[" size"]++;
+	        if (cache[" size"] > 512) {
+	            var keys = Object.keys(cache);
+	            for (var i = 0; i < 256; ++i) delete cache[keys[i]];
+	            cache[" size"] = keys.length - 256;
+	        }
+	    }
+	    return ret;
+	}
+
+	function getMethodCaller(name) {
+	    return getCompiled(name, makeMethodCaller, callerCache);
+	}
+
+	function getGetter(name) {
+	    return getCompiled(name, makeGetter, getterCache);
+	}
+
+	function caller(obj) {
+	    return obj[this.pop()].apply(obj, this);
+	}
+	Promise.prototype.call = function (methodName) {
+	    var $_len = arguments.length;var args = new Array($_len - 1); for(var $_i = 1; $_i < $_len; ++$_i) {args[$_i - 1] = arguments[$_i];}
+	    if (canEvaluate) {
+	        var maybeCaller = getMethodCaller(methodName);
+	        if (maybeCaller !== null) {
+	            return this._then(
+	                maybeCaller, undefined, undefined, args, undefined);
+	        }
+	    }
+	    args.push(methodName);
+	    return this._then(caller, undefined, undefined, args, undefined);
+	};
+
+	function namedGetter(obj) {
+	    return obj[this];
+	}
+	function indexedGetter(obj) {
+	    var index = +this;
+	    if (index < 0) index = Math.max(0, index + obj.length);
+	    return obj[index];
+	}
+	Promise.prototype.get = function (propertyName) {
+	    var isIndex = (typeof propertyName === "number");
+	    var getter;
+	    if (!isIndex) {
+	        if (canEvaluate) {
+	            var maybeGetter = getGetter(propertyName);
+	            getter = maybeGetter !== null ? maybeGetter : namedGetter;
+	        } else {
+	            getter = namedGetter;
+	        }
+	    } else {
+	        getter = indexedGetter;
+	    }
+	    return this._then(getter, undefined, undefined, propertyName, undefined);
+	};
+	};
+
+
+/***/ },
+/* 77 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * The MIT License (MIT)
+	 * 
+	 * Copyright (c) 2014 Petka Antonov
+	 * 
+	 * Permission is hereby granted, free of charge, to any person obtaining a copy
+	 * of this software and associated documentation files (the "Software"), to deal
+	 * in the Software without restriction, including without limitation the rights
+	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	 * copies of the Software, and to permit persons to whom the Software is
+	 * furnished to do so, subject to the following conditions:</p>
+	 * 
+	 * The above copyright notice and this permission notice shall be included in
+	 * all copies or substantial portions of the Software.
+	 * 
+	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	 * THE SOFTWARE.
+	 * 
+	 */
+	"use strict";
+	module.exports = function(Promise,
+	                          apiRejection,
+	                          INTERNAL,
+	                          tryConvertToPromise) {
+	var errors = __webpack_require__(63);
+	var TypeError = errors.TypeError;
+	var deprecated = __webpack_require__(61).deprecated;
+	var util = __webpack_require__(61);
+	var errorObj = util.errorObj;
+	var tryCatch1 = util.tryCatch1;
+	var yieldHandlers = [];
+
+	function promiseFromYieldHandler(value, yieldHandlers, traceParent) {
+	    var _errorObj = errorObj;
+	    var _Promise = Promise;
+	    var len = yieldHandlers.length;
+	    for (var i = 0; i < len; ++i) {
+	        var result = tryCatch1(yieldHandlers[i], undefined, value);
+	        if (result === _errorObj) {
+	            return _Promise.reject(_errorObj.e);
+	        }
+	        var maybePromise = tryConvertToPromise(result, traceParent);
+	        if (maybePromise instanceof _Promise) return maybePromise;
+	    }
+	    return null;
+	}
+
+	function PromiseSpawn(generatorFunction, receiver, yieldHandler) {
+	    var promise = this._promise = new Promise(INTERNAL);
+	    promise._setTrace(undefined);
+	    this._generatorFunction = generatorFunction;
+	    this._receiver = receiver;
+	    this._generator = undefined;
+	    this._yieldHandlers = typeof yieldHandler === "function"
+	        ? [yieldHandler].concat(yieldHandlers)
+	        : yieldHandlers;
+	}
+
+	PromiseSpawn.prototype.promise = function () {
+	    return this._promise;
+	};
+
+	PromiseSpawn.prototype._run = function () {
+	    this._generator = this._generatorFunction.call(this._receiver);
+	    this._receiver =
+	        this._generatorFunction = undefined;
+	    this._next(undefined);
+	};
+
+	PromiseSpawn.prototype._continue = function (result) {
+	    if (result === errorObj) {
+	        this._generator = undefined;
+	        var trace = errors.canAttachTrace(result.e)
+	            ? result.e : new Error(result.e + "");
+	        this._promise._attachExtraTrace(trace);
+	        this._promise._reject(result.e, trace);
+	        return;
+	    }
+
+	    var value = result.value;
+	    if (result.done === true) {
+	        this._generator = undefined;
+	        if (!this._promise._tryFollow(value)) {
+	            this._promise._fulfill(value);
+	        }
+	    } else {
+	        var maybePromise = tryConvertToPromise(value, this._promise);
+	        if (!(maybePromise instanceof Promise)) {
+	            maybePromise =
+	                promiseFromYieldHandler(maybePromise,
+	                                        this._yieldHandlers,
+	                                        this._promise);
+	            if (maybePromise === null) {
+	                this._throw(new TypeError("A value was yielded that could not be treated as a promise\u000a\u000a    See http://goo.gl/4Y4pDk\u000a"));
+	                return;
+	            }
+	        }
+	        maybePromise._then(
+	            this._next,
+	            this._throw,
+	            undefined,
+	            this,
+	            null
+	       );
+	    }
+	};
+
+	PromiseSpawn.prototype._throw = function (reason) {
+	    if (errors.canAttachTrace(reason))
+	        this._promise._attachExtraTrace(reason);
+	    this._continue(
+	        tryCatch1(this._generator["throw"], this._generator, reason)
+	   );
+	};
+
+	PromiseSpawn.prototype._next = function (value) {
+	    this._continue(
+	        tryCatch1(this._generator.next, this._generator, value)
+	   );
+	};
+
+	Promise.coroutine = function (generatorFunction, options) {
+	    if (typeof generatorFunction !== "function") {
+	        throw new TypeError("generatorFunction must be a function\u000a\u000a    See http://goo.gl/6Vqhm0\u000a");
+	    }
+	    var yieldHandler = Object(options).yieldHandler;
+	    var PromiseSpawn$ = PromiseSpawn;
+	    return function () {
+	        var generator = generatorFunction.apply(this, arguments);
+	        var spawn = new PromiseSpawn$(undefined, undefined, yieldHandler);
+	        spawn._generator = generator;
+	        spawn._next(undefined);
+	        return spawn.promise();
+	    };
+	};
+
+	Promise.coroutine.addYieldHandler = function(fn) {
+	    if (typeof fn !== "function") throw new TypeError("fn must be a function\u000a\u000a    See http://goo.gl/916lJJ\u000a");
+	    yieldHandlers.push(fn);
+	};
+
+	Promise.spawn = function (generatorFunction) {
+	    deprecated("Promise.spawn is deprecated. Use Promise.coroutine instead.");
+	    if (typeof generatorFunction !== "function") {
+	        return apiRejection("generatorFunction must be a function\u000a\u000a    See http://goo.gl/6Vqhm0\u000a");
+	    }
+	    var spawn = new PromiseSpawn(generatorFunction, this);
+	    var ret = spawn.promise();
+	    spawn._run(Promise.spawn);
+	    return ret;
+	};
+	};
+
+
+/***/ },
+/* 78 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * The MIT License (MIT)
+	 * 
+	 * Copyright (c) 2014 Petka Antonov
+	 * 
+	 * Permission is hereby granted, free of charge, to any person obtaining a copy
+	 * of this software and associated documentation files (the "Software"), to deal
+	 * in the Software without restriction, including without limitation the rights
+	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	 * copies of the Software, and to permit persons to whom the Software is
+	 * furnished to do so, subject to the following conditions:</p>
+	 * 
+	 * The above copyright notice and this permission notice shall be included in
+	 * all copies or substantial portions of the Software.
+	 * 
+	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	 * THE SOFTWARE.
+	 * 
+	 */
+	"use strict";
+	module.exports = function(Promise,
+	                          PromiseArray,
+	                          apiRejection,
+	                          tryConvertToPromise,
+	                          INTERNAL) {
+	var util = __webpack_require__(61);
+	var tryCatch3 = util.tryCatch3;
+	var errorObj = util.errorObj;
+	var PENDING = {};
+	var EMPTY_ARRAY = [];
+
+	function MappingPromiseArray(promises, fn, limit, _filter) {
+	    this.constructor$(promises);
+	    this._callback = fn;
+	    this._preservedValues = _filter === INTERNAL
+	        ? new Array(this.length())
+	        : null;
+	    this._limit = limit;
+	    this._inFlight = 0;
+	    this._queue = limit >= 1 ? [] : EMPTY_ARRAY;
+	    this._init$(undefined, -2);
+	}
+	util.inherits(MappingPromiseArray, PromiseArray);
+
+	MappingPromiseArray.prototype._init = function () {};
+
+	MappingPromiseArray.prototype._promiseFulfilled = function (value, index) {
+	    var values = this._values;
+	    var length = this.length();
+	    var preservedValues = this._preservedValues;
+	    var limit = this._limit;
+	    if (values[index] === PENDING) {
+	        values[index] = value;
+	        if (limit >= 1) {
+	            this._inFlight--;
+	            this._drainQueue();
+	            if (this._isResolved()) return;
+	        }
+	    } else {
+	        if (limit >= 1 && this._inFlight >= limit) {
+	            values[index] = value;
+	            this._queue.push(index);
+	            return;
+	        }
+	        if (preservedValues !== null) preservedValues[index] = value;
+
+	        var callback = this._callback;
+	        var receiver = this._promise._boundTo;
+	        var ret = tryCatch3(callback, receiver, value, index, length);
+	        if (ret === errorObj) return this._reject(ret.e);
+
+	        var maybePromise = tryConvertToPromise(ret, this._promise);
+	        if (maybePromise instanceof Promise) {
+	            maybePromise = maybePromise._target();
+	            if (maybePromise._isPending()) {
+	                if (limit >= 1) this._inFlight++;
+	                values[index] = PENDING;
+	                return maybePromise._proxyPromiseArray(this, index);
+	            } else if (maybePromise._isFulfilled()) {
+	                ret = maybePromise._value();
+	            } else {
+	                maybePromise._unsetRejectionIsUnhandled();
+	                return this._reject(maybePromise._reason());
+	            }
+	        }
+	        values[index] = ret;
+	    }
+	    var totalResolved = ++this._totalResolved;
+	    if (totalResolved >= length) {
+	        if (preservedValues !== null) {
+	            this._filter(values, preservedValues);
+	        } else {
+	            this._resolve(values);
+	        }
+
+	    }
+	};
+
+	MappingPromiseArray.prototype._drainQueue = function () {
+	    var queue = this._queue;
+	    var limit = this._limit;
+	    var values = this._values;
+	    while (queue.length > 0 && this._inFlight < limit) {
+	        if (this._isResolved()) return;
+	        var index = queue.pop();
+	        this._promiseFulfilled(values[index], index);
+	    }
+	};
+
+	MappingPromiseArray.prototype._filter = function (booleans, values) {
+	    var len = values.length;
+	    var ret = new Array(len);
+	    var j = 0;
+	    for (var i = 0; i < len; ++i) {
+	        if (booleans[i]) ret[j++] = values[i];
+	    }
+	    ret.length = j;
+	    this._resolve(ret);
+	};
+
+	MappingPromiseArray.prototype.preservedValues = function () {
+	    return this._preservedValues;
+	};
+
+	function map(promises, fn, options, _filter) {
+	    var limit = typeof options === "object" && options !== null
+	        ? options.concurrency
+	        : 0;
+	    limit = typeof limit === "number" &&
+	        isFinite(limit) && limit >= 1 ? limit : 0;
+	    return new MappingPromiseArray(promises, fn, limit, _filter);
+	}
+
+	Promise.prototype.map = function (fn, options) {
+	    if (typeof fn !== "function") return apiRejection("fn must be a function\u000a\u000a    See http://goo.gl/916lJJ\u000a");
+
+	    return map(this, fn, options, null).promise();
+	};
+
+	Promise.map = function (promises, fn, options, _filter) {
+	    if (typeof fn !== "function") return apiRejection("fn must be a function\u000a\u000a    See http://goo.gl/916lJJ\u000a");
+	    return map(promises, fn, options, _filter).promise();
+	};
+
+
+	};
+
+
+/***/ },
+/* 79 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * The MIT License (MIT)
+	 * 
+	 * Copyright (c) 2014 Petka Antonov
+	 * 
+	 * Permission is hereby granted, free of charge, to any person obtaining a copy
+	 * of this software and associated documentation files (the "Software"), to deal
+	 * in the Software without restriction, including without limitation the rights
+	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	 * copies of the Software, and to permit persons to whom the Software is
+	 * furnished to do so, subject to the following conditions:</p>
+	 * 
+	 * The above copyright notice and this permission notice shall be included in
+	 * all copies or substantial portions of the Software.
+	 * 
+	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	 * THE SOFTWARE.
+	 * 
+	 */
+	"use strict";
+	module.exports = function(Promise) {
+	var util = __webpack_require__(61);
+	var async = __webpack_require__(62);
+	var tryCatch2 = util.tryCatch2;
+	var tryCatch1 = util.tryCatch1;
+	var errorObj = util.errorObj;
+
+	function thrower(r) {
+	    throw r;
+	}
+
+	function spreadAdapter(val, receiver) {
+	    if (!util.isArray(val)) return successAdapter(val, receiver);
+	    var ret = util.tryCatchApply(this, [null].concat(val), receiver);
+	    if (ret === errorObj) {
+	        async.invokeLater(thrower, undefined, ret.e);
+	    }
+	}
+
+	function successAdapter(val, receiver) {
+	    var nodeback = this;
+	    var ret = val === undefined
+	        ? tryCatch1(nodeback, receiver, null)
+	        : tryCatch2(nodeback, receiver, null, val);
+	    if (ret === errorObj) {
+	        async.invokeLater(thrower, undefined, ret.e);
+	    }
+	}
+	function errorAdapter(reason, receiver) {
+	    var nodeback = this;
+	    var ret = tryCatch1(nodeback, receiver, reason);
+	    if (ret === errorObj) {
+	        async.invokeLater(thrower, undefined, ret.e);
+	    }
+	}
+
+	Promise.prototype.nodeify = function (nodeback, options) {
+	    if (typeof nodeback == "function") {
+	        var adapter = successAdapter;
+	        if (options !== undefined && Object(options).spread) {
+	            adapter = spreadAdapter;
+	        }
+	        this._then(
+	            adapter,
+	            errorAdapter,
+	            undefined,
+	            nodeback,
+	            this._boundTo
+	        );
+	    }
+	    return this;
+	};
+	};
+
+
+/***/ },
+/* 80 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * The MIT License (MIT)
+	 * 
+	 * Copyright (c) 2014 Petka Antonov
+	 * 
+	 * Permission is hereby granted, free of charge, to any person obtaining a copy
+	 * of this software and associated documentation files (the "Software"), to deal
+	 * in the Software without restriction, including without limitation the rights
+	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	 * copies of the Software, and to permit persons to whom the Software is
+	 * furnished to do so, subject to the following conditions:</p>
+	 * 
+	 * The above copyright notice and this permission notice shall be included in
+	 * all copies or substantial portions of the Software.
+	 * 
+	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	 * THE SOFTWARE.
+	 * 
+	 */
+	"use strict";
+	module.exports = function(Promise, INTERNAL) {
+	var THIS = {};
+	var util = __webpack_require__(61);
+	var nodebackForPromise = __webpack_require__(68)
+	    ._nodebackForPromise;
+	var withAppended = util.withAppended;
+	var maybeWrapAsError = util.maybeWrapAsError;
+	var canEvaluate = util.canEvaluate;
+	var TypeError = __webpack_require__(63).TypeError;
+	var defaultSuffix = "Async";
+	var defaultFilter = function(name, func) {
+	    return util.isIdentifier(name) &&
+	        name.charAt(0) !== "_" &&
+	        !util.isClass(func);
+	};
+	var defaultPromisified = {__isPromisified__: true};
+
+
+	function escapeIdentRegex(str) {
+	    return str.replace(/([$])/, "\\$");
+	}
+
+	function isPromisified(fn) {
+	    try {
+	        return fn.__isPromisified__ === true;
+	    }
+	    catch (e) {
+	        return false;
+	    }
+	}
+
+	function hasPromisified(obj, key, suffix) {
+	    var val = util.getDataPropertyOrDefault(obj, key + suffix,
+	                                            defaultPromisified);
+	    return val ? isPromisified(val) : false;
+	}
+	function checkValid(ret, suffix, suffixRegexp) {
+	    for (var i = 0; i < ret.length; i += 2) {
+	        var key = ret[i];
+	        if (suffixRegexp.test(key)) {
+	            var keyWithoutAsyncSuffix = key.replace(suffixRegexp, "");
+	            for (var j = 0; j < ret.length; j += 2) {
+	                if (ret[j] === keyWithoutAsyncSuffix) {
+	                    throw new TypeError("Cannot promisify an API that has normal methods with '%s'-suffix\u000a\u000a    See http://goo.gl/iWrZbw\u000a"
+	                        .replace("%s", suffix));
+	                }
+	            }
+	        }
+	    }
+	}
+
+	function promisifiableMethods(obj, suffix, suffixRegexp, filter) {
+	    var keys = util.inheritedDataKeys(obj);
+	    var ret = [];
+	    for (var i = 0; i < keys.length; ++i) {
+	        var key = keys[i];
+	        var value = obj[key];
+	        if (typeof value === "function" &&
+	            !isPromisified(value) &&
+	            !hasPromisified(obj, key, suffix) &&
+	            filter(key, value, obj)) {
+	            ret.push(key, value);
+	        }
+	    }
+	    checkValid(ret, suffix, suffixRegexp);
+	    return ret;
+	}
+
+	function switchCaseArgumentOrder(likelyArgumentCount) {
+	    var ret = [likelyArgumentCount];
+	    var min = Math.max(0, likelyArgumentCount - 1 - 5);
+	    for(var i = likelyArgumentCount - 1; i >= min; --i) {
+	        if (i === likelyArgumentCount) continue;
+	        ret.push(i);
+	    }
+	    for(var i = likelyArgumentCount + 1; i <= 5; ++i) {
+	        ret.push(i);
+	    }
+	    return ret;
+	}
+
+	function argumentSequence(argumentCount) {
+	    return util.filledRange(argumentCount, "arguments[", "]");
+	}
+
+	function parameterDeclaration(parameterCount) {
+	    return util.filledRange(parameterCount, "_arg", "");
+	}
+
+	function parameterCount(fn) {
+	    if (typeof fn.length === "number") {
+	        return Math.max(Math.min(fn.length, 1023 + 1), 0);
+	    }
+	    return 0;
+	}
+
+	function generatePropertyAccess(key) {
+	    if (util.isIdentifier(key)) {
+	        return "." + key;
+	    }
+	    else return "['" + key.replace(/(['\\])/g, "\\$1") + "']";
+	}
+
+	function makeNodePromisifiedEval(callback, receiver, originalName, fn, suffix) {
+	    var newParameterCount = Math.max(0, parameterCount(fn) - 1);
+	    var argumentOrder = switchCaseArgumentOrder(newParameterCount);
+	    var callbackName =
+	        (typeof originalName === "string" && util.isIdentifier(originalName)
+	            ? originalName + suffix
+	            : "promisified");
+
+	    function generateCallForArgumentCount(count) {
+	        var args = argumentSequence(count).join(", ");
+	        var comma = count > 0 ? ", " : "";
+	        var ret;
+	        if (typeof callback === "string") {
+	            ret = "                                                          \n\
+	                this.method({{args}}, fn);                                   \n\
+	                break;                                                       \n\
+	            ".replace(".method", generatePropertyAccess(callback));
+	        } else if (receiver === THIS) {
+	            ret =  "                                                         \n\
+	                callback.call(this, {{args}}, fn);                           \n\
+	                break;                                                       \n\
+	            ";
+	        } else if (receiver !== undefined) {
+	            ret =  "                                                         \n\
+	                callback.call(receiver, {{args}}, fn);                       \n\
+	                break;                                                       \n\
+	            ";
+	        } else {
+	            ret =  "                                                         \n\
+	                callback({{args}}, fn);                                      \n\
+	                break;                                                       \n\
+	            ";
+	        }
+	        return ret.replace("{{args}}", args).replace(", ", comma);
+	    }
+
+	    function generateArgumentSwitchCase() {
+	        var ret = "";
+	        for(var i = 0; i < argumentOrder.length; ++i) {
+	            ret += "case " + argumentOrder[i] +":" +
+	                generateCallForArgumentCount(argumentOrder[i]);
+	        }
+	        var codeForCall;
+	        if (typeof callback === "string") {
+	            codeForCall = "                                                  \n\
+	                this.property.apply(this, args);                             \n\
+	            "
+	                .replace(".property", generatePropertyAccess(callback));
+	        } else if (receiver === THIS) {
+	            codeForCall = "                                                  \n\
+	                callback.apply(this, args);                                  \n\
+	            ";
+	        } else {
+	            codeForCall = "                                                  \n\
+	                callback.apply(receiver, args);                              \n\
+	            ";
+	        }
+
+	        ret += "                                                             \n\
+	        default:                                                             \n\
+	            var args = new Array(len + 1);                                   \n\
+	            var i = 0;                                                       \n\
+	            for (var i = 0; i < len; ++i) {                                  \n\
+	               args[i] = arguments[i];                                       \n\
+	            }                                                                \n\
+	            args[i] = fn;                                                    \n\
+	            [CodeForCall]                                                    \n\
+	            break;                                                           \n\
+	        ".replace("[CodeForCall]", codeForCall);
+	        return ret;
+	    }
+
+	    return new Function("Promise",
+	                        "callback",
+	                        "receiver",
+	                        "withAppended",
+	                        "maybeWrapAsError",
+	                        "nodebackForPromise",
+	                        "INTERNAL","                                         \n\
+	        var ret = function (Parameters) {                        \n\
+	            'use strict';                                                    \n\
+	            var len = arguments.length;                                      \n\
+	            var promise = new Promise(INTERNAL);                             \n\
+	            promise._setTrace(undefined);                                    \n\
+	            var fn = nodebackForPromise(promise);                            \n\
+	            try {                                                            \n\
+	                switch(len) {                                                \n\
+	                    [CodeForSwitchCase]                                      \n\
+	                }                                                            \n\
+	            } catch (e) {                                                    \n\
+	                var wrapped = maybeWrapAsError(e);                           \n\
+	                promise._attachExtraTrace(wrapped);                          \n\
+	                promise._reject(wrapped);                                    \n\
+	            }                                                                \n\
+	            return promise;                                                  \n\
+	        };                                                                   \n\
+	        ret.__isPromisified__ = true;                                        \n\
+	        return ret;                                                          \n\
+	        "
+	        .replace("FunctionName", callbackName)
+	        .replace("Parameters", parameterDeclaration(newParameterCount))
+	        .replace("[CodeForSwitchCase]", generateArgumentSwitchCase()))(
+	            Promise,
+	            callback,
+	            receiver,
+	            withAppended,
+	            maybeWrapAsError,
+	            nodebackForPromise,
+	            INTERNAL
+	        );
+	}
+
+	function makeNodePromisifiedClosure(callback, receiver) {
+	    function promisified() {
+	        var _receiver = receiver;
+	        if (receiver === THIS) _receiver = this;
+	        if (typeof callback === "string") {
+	            callback = _receiver[callback];
+	        }
+	        var promise = new Promise(INTERNAL);
+	        promise._setTrace(undefined);
+	        var fn = nodebackForPromise(promise);
+	        try {
+	            callback.apply(_receiver, withAppended(arguments, fn));
+	        } catch(e) {
+	            var wrapped = maybeWrapAsError(e);
+	            promise._attachExtraTrace(wrapped);
+	            promise._reject(wrapped);
+	        }
+	        return promise;
+	    }
+	    promisified.__isPromisified__ = true;
+	    return promisified;
+	}
+
+	var makeNodePromisified = canEvaluate
+	    ? makeNodePromisifiedEval
+	    : makeNodePromisifiedClosure;
+
+	function promisifyAll(obj, suffix, filter, promisifier) {
+	    var suffixRegexp = new RegExp(escapeIdentRegex(suffix) + "$");
+	    var methods =
+	        promisifiableMethods(obj, suffix, suffixRegexp, filter);
+
+	    for (var i = 0, len = methods.length; i < len; i+= 2) {
+	        var key = methods[i];
+	        var fn = methods[i+1];
+	        var promisifiedKey = key + suffix;
+	        obj[promisifiedKey] = promisifier === makeNodePromisified
+	                ? makeNodePromisified(key, THIS, key, fn, suffix)
+	                : promisifier(fn);
+	    }
+	    util.toFastProperties(obj);
+	    return obj;
+	}
+
+	function promisify(callback, receiver) {
+	    return makeNodePromisified(callback, receiver, undefined, callback);
+	}
+
+	Promise.promisify = function (fn, receiver) {
+	    if (typeof fn !== "function") {
+	        throw new TypeError("fn must be a function\u000a\u000a    See http://goo.gl/916lJJ\u000a");
+	    }
+	    if (isPromisified(fn)) {
+	        return fn;
+	    }
+	    return promisify(fn, arguments.length < 2 ? THIS : receiver);
+	};
+
+	Promise.promisifyAll = function (target, options) {
+	    if (typeof target !== "function" && typeof target !== "object") {
+	        throw new TypeError("the target of promisifyAll must be an object or a function\u000a\u000a    See http://goo.gl/9ITlV0\u000a");
+	    }
+	    options = Object(options);
+	    var suffix = options.suffix;
+	    if (typeof suffix !== "string") suffix = defaultSuffix;
+	    var filter = options.filter;
+	    if (typeof filter !== "function") filter = defaultFilter;
+	    var promisifier = options.promisifier;
+	    if (typeof promisifier !== "function") promisifier = makeNodePromisified;
+
+	    if (!util.isIdentifier(suffix)) {
+	        throw new RangeError("suffix must be a valid identifier\u000a\u000a    See http://goo.gl/8FZo5V\u000a");
+	    }
+
+	    var keys = util.inheritedDataKeys(target, {includeHidden: true});
+	    for (var i = 0; i < keys.length; ++i) {
+	        var value = target[keys[i]];
+	        if (keys[i] !== "constructor" &&
+	            util.isClass(value)) {
+	            promisifyAll(value.prototype, suffix, filter, promisifier);
+	            promisifyAll(value, suffix, filter, promisifier);
+	        }
+	    }
+
+	    return promisifyAll(target, suffix, filter, promisifier);
+	};
+	};
+
+
+
+/***/ },
+/* 81 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * The MIT License (MIT)
+	 * 
+	 * Copyright (c) 2014 Petka Antonov
+	 * 
+	 * Permission is hereby granted, free of charge, to any person obtaining a copy
+	 * of this software and associated documentation files (the "Software"), to deal
+	 * in the Software without restriction, including without limitation the rights
+	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	 * copies of the Software, and to permit persons to whom the Software is
+	 * furnished to do so, subject to the following conditions:</p>
+	 * 
+	 * The above copyright notice and this permission notice shall be included in
+	 * all copies or substantial portions of the Software.
+	 * 
+	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	 * THE SOFTWARE.
+	 * 
+	 */
+	"use strict";
+	module.exports = function(Promise, PromiseArray, tryConvertToPromise) {
+	var util = __webpack_require__(61);
+	var apiRejection = __webpack_require__(69)(Promise);
+	var isObject = util.isObject;
+	var es5 = __webpack_require__(156);
+
+	function PropertiesPromiseArray(obj) {
+	    var keys = es5.keys(obj);
+	    var len = keys.length;
+	    var values = new Array(len * 2);
+	    for (var i = 0; i < len; ++i) {
+	        var key = keys[i];
+	        values[i] = obj[key];
+	        values[i + len] = key;
+	    }
+	    this.constructor$(values);
+	}
+	util.inherits(PropertiesPromiseArray, PromiseArray);
+
+	PropertiesPromiseArray.prototype._init = function () {
+	    this._init$(undefined, -3) ;
+	};
+
+	PropertiesPromiseArray.prototype._promiseFulfilled = function (value, index) {
+	    this._values[index] = value;
+	    var totalResolved = ++this._totalResolved;
+	    if (totalResolved >= this._length) {
+	        var val = {};
+	        var keyOffset = this.length();
+	        for (var i = 0, len = this.length(); i < len; ++i) {
+	            val[this._values[i + keyOffset]] = this._values[i];
+	        }
+	        this._resolve(val);
+	    }
+	};
+
+	PropertiesPromiseArray.prototype._promiseProgressed = function (value, index) {
+	    this._promise._progress({
+	        key: this._values[index + this.length()],
+	        value: value
+	    });
+	};
+
+	PropertiesPromiseArray.prototype.shouldCopyValues = function () {
+	    return false;
+	};
+
+	PropertiesPromiseArray.prototype.getActualLength = function (len) {
+	    return len >> 1;
+	};
+
+	function props(promises) {
+	    var ret;
+	    var castValue = tryConvertToPromise(promises, undefined);
+
+	    if (!isObject(castValue)) {
+	        return apiRejection("cannot await properties of a non-object\u000a\u000a    See http://goo.gl/OsFKC8\u000a");
+	    } else if (castValue instanceof Promise) {
+	        ret = castValue._then(
+	            Promise.props, undefined, undefined, undefined, undefined);
+	    } else {
+	        ret = new PropertiesPromiseArray(castValue).promise();
+	    }
+
+	    if (castValue instanceof Promise) {
+	        ret._propagateFrom(castValue, 4);
+	    }
+	    return ret;
+	}
+
+	Promise.prototype.props = function () {
+	    return props(this);
+	};
+
+	Promise.props = function (promises) {
+	    return props(promises);
+	};
+	};
+
+
+/***/ },
+/* 82 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * The MIT License (MIT)
+	 * 
+	 * Copyright (c) 2014 Petka Antonov
+	 * 
+	 * Permission is hereby granted, free of charge, to any person obtaining a copy
+	 * of this software and associated documentation files (the "Software"), to deal
+	 * in the Software without restriction, including without limitation the rights
+	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	 * copies of the Software, and to permit persons to whom the Software is
+	 * furnished to do so, subject to the following conditions:</p>
+	 * 
+	 * The above copyright notice and this permission notice shall be included in
+	 * all copies or substantial portions of the Software.
+	 * 
+	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	 * THE SOFTWARE.
+	 * 
+	 */
+	"use strict";
+	module.exports = function(Promise,
+	                          PromiseArray,
+	                          apiRejection,
+	                          tryConvertToPromise,
+	                          INTERNAL) {
+	var util = __webpack_require__(61);
+	var tryCatch4 = util.tryCatch4;
+	var tryCatch3 = util.tryCatch3;
+	var errorObj = util.errorObj;
+	function ReductionPromiseArray(promises, fn, accum, _each) {
+	    this.constructor$(promises);
+	    this._preservedValues = _each === INTERNAL ? [] : null;
+	    this._zerothIsAccum = (accum === undefined);
+	    this._gotAccum = false;
+	    this._reducingIndex = (this._zerothIsAccum ? 1 : 0);
+	    this._valuesPhase = undefined;
+
+	    var maybePromise = tryConvertToPromise(accum, undefined);
+	    var rejected = false;
+	    var isPromise = maybePromise instanceof Promise;
+	    if (isPromise) {
+	        maybePromise = maybePromise._target();
+	        if (maybePromise._isPending()) {
+	            maybePromise._proxyPromiseArray(this, -1);
+	        } else if (maybePromise._isFulfilled()) {
+	            accum = maybePromise._value();
+	            this._gotAccum = true;
+	        } else {
+	            maybePromise._unsetRejectionIsUnhandled();
+	            this._reject(maybePromise._reason());
+	            rejected = true;
+	        }
+	    }
+	    if (!(isPromise || this._zerothIsAccum)) this._gotAccum = true;
+	    this._callback = fn;
+	    this._accum = accum;
+	    if (!rejected) this._init$(undefined, -5);
+	}
+	util.inherits(ReductionPromiseArray, PromiseArray);
+
+	ReductionPromiseArray.prototype._init = function () {};
+
+	ReductionPromiseArray.prototype._resolveEmptyArray = function () {
+	    if (this._gotAccum || this._zerothIsAccum) {
+	        this._resolve(this._preservedValues !== null
+	                        ? [] : this._accum);
+	    }
+	};
+
+	ReductionPromiseArray.prototype._promiseFulfilled = function (value, index) {
+	    var values = this._values;
+	    values[index] = value;
+	    var length = this.length();
+	    var preservedValues = this._preservedValues;
+	    var isEach = preservedValues !== null;
+	    var gotAccum = this._gotAccum;
+	    var valuesPhase = this._valuesPhase;
+	    var valuesPhaseIndex;
+	    if (!valuesPhase) {
+	        valuesPhase = this._valuesPhase = Array(length);
+	        for (valuesPhaseIndex=0; valuesPhaseIndex<length; ++valuesPhaseIndex) {
+	            valuesPhase[valuesPhaseIndex] = 0;
+	        }
+	    }
+	    valuesPhaseIndex = valuesPhase[index];
+
+	    if (index === 0 && this._zerothIsAccum) {
+	        if (!gotAccum) {
+	            this._accum = value;
+	            this._gotAccum = gotAccum = true;
+	        }
+	        valuesPhase[index] = ((valuesPhaseIndex === 0)
+	            ? 1 : 2);
+	    } else if (index === -1) {
+	        if (!gotAccum) {
+	            this._accum = value;
+	            this._gotAccum = gotAccum = true;
+	        }
+	    } else {
+	        if (valuesPhaseIndex === 0) {
+	            valuesPhase[index] = 1;
+	        }
+	        else {
+	            valuesPhase[index] = 2;
+	            if (gotAccum) {
+	                this._accum = value;
+	            }
+	        }
+	    }
+	    if (!gotAccum) return;
+
+	    var callback = this._callback;
+	    var receiver = this._promise._boundTo;
+	    var ret;
+
+	    for (var i = this._reducingIndex; i < length; ++i) {
+	        valuesPhaseIndex = valuesPhase[i];
+	        if (valuesPhaseIndex === 2) {
+	            this._reducingIndex = i + 1;
+	            continue;
+	        }
+	        if (valuesPhaseIndex !== 1) return;
+	        value = values[i];
+	        if (value instanceof Promise) {
+	            value = value._target();
+	            if (value._isFulfilled()) {
+	                value = value._value();
+	            } else if (value._isPending()) {
+	                return;
+	            } else {
+	                value._unsetRejectionIsUnhandled();
+	                return this._reject(value._reason());
+	            }
+	        }
+
+	        if (isEach) {
+	            preservedValues.push(value);
+	            ret = tryCatch3(callback, receiver, value, i, length);
+	        }
+	        else {
+	            ret = tryCatch4(callback, receiver, this._accum, value, i, length);
+	        }
+
+	        if (ret === errorObj) return this._reject(ret.e);
+
+	        var maybePromise = tryConvertToPromise(ret, this._promise);
+	        if (maybePromise instanceof Promise) {
+	            maybePromise = maybePromise._target();
+	            if (maybePromise._isPending()) {
+	                valuesPhase[i] = 4;
+	                return maybePromise._proxyPromiseArray(this, i);
+	            } else if (maybePromise._isFulfilled()) {
+	                ret = maybePromise._value();
+	            } else {
+	                maybePromise._unsetRejectionIsUnhandled();
+	                return this._reject(maybePromise._reason());
+	            }
+	        }
+
+	        this._reducingIndex = i + 1;
+	        this._accum = ret;
+	    }
+
+	    if (this._reducingIndex < length) return;
+	    this._resolve(isEach ? preservedValues : this._accum);
+	};
+
+	function reduce(promises, fn, initialValue, _each) {
+	    if (typeof fn !== "function") return apiRejection("fn must be a function\u000a\u000a    See http://goo.gl/916lJJ\u000a");
+	    var array = new ReductionPromiseArray(promises, fn, initialValue, _each);
+	    return array.promise();
+	}
+
+	Promise.prototype.reduce = function (fn, initialValue) {
+	    return reduce(this, fn, initialValue, null);
+	};
+
+	Promise.reduce = function (promises, fn, initialValue, _each) {
+	    return reduce(promises, fn, initialValue, _each);
+	};
+	};
+
+
+/***/ },
+/* 83 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * The MIT License (MIT)
+	 * 
+	 * Copyright (c) 2014 Petka Antonov
+	 * 
+	 * Permission is hereby granted, free of charge, to any person obtaining a copy
+	 * of this software and associated documentation files (the "Software"), to deal
+	 * in the Software without restriction, including without limitation the rights
+	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	 * copies of the Software, and to permit persons to whom the Software is
+	 * furnished to do so, subject to the following conditions:</p>
+	 * 
+	 * The above copyright notice and this permission notice shall be included in
+	 * all copies or substantial portions of the Software.
+	 * 
+	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	 * THE SOFTWARE.
+	 * 
+	 */
+	"use strict";
+	module.exports =
+	    function(Promise, PromiseArray) {
+	var PromiseInspection = Promise.PromiseInspection;
+	var util = __webpack_require__(61);
+
+	function SettledPromiseArray(values) {
+	    this.constructor$(values);
+	}
+	util.inherits(SettledPromiseArray, PromiseArray);
+
+	SettledPromiseArray.prototype._promiseResolved = function (index, inspection) {
+	    this._values[index] = inspection;
+	    var totalResolved = ++this._totalResolved;
+	    if (totalResolved >= this._length) {
+	        this._resolve(this._values);
+	    }
+	};
+
+	SettledPromiseArray.prototype._promiseFulfilled = function (value, index) {
+	    var ret = new PromiseInspection();
+	    ret._bitField = 268435456;
+	    ret._settledValue = value;
+	    this._promiseResolved(index, ret);
+	};
+	SettledPromiseArray.prototype._promiseRejected = function (reason, index) {
+	    var ret = new PromiseInspection();
+	    ret._bitField = 134217728;
+	    ret._settledValue = reason;
+	    this._promiseResolved(index, ret);
+	};
+
+	Promise.settle = function (promises) {
+	    return new SettledPromiseArray(promises).promise();
+	};
+
+	Promise.prototype.settle = function () {
+	    return new SettledPromiseArray(this).promise();
+	};
+	};
+
 
 /***/ },
 /* 84 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var React = __webpack_require__(10);
+	/**
+	 * The MIT License (MIT)
+	 * 
+	 * Copyright (c) 2014 Petka Antonov
+	 * 
+	 * Permission is hereby granted, free of charge, to any person obtaining a copy
+	 * of this software and associated documentation files (the "Software"), to deal
+	 * in the Software without restriction, including without limitation the rights
+	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	 * copies of the Software, and to permit persons to whom the Software is
+	 * furnished to do so, subject to the following conditions:</p>
+	 * 
+	 * The above copyright notice and this permission notice shall be included in
+	 * all copies or substantial portions of the Software.
+	 * 
+	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	 * THE SOFTWARE.
+	 * 
+	 */
+	"use strict";
+	module.exports =
+	function(Promise, PromiseArray, apiRejection) {
+	var util = __webpack_require__(61);
+	var RangeError = __webpack_require__(63).RangeError;
+	var AggregateError = __webpack_require__(63).AggregateError;
+	var isArray = util.isArray;
+
+
+	function SomePromiseArray(values) {
+	    this.constructor$(values);
+	    this._howMany = 0;
+	    this._unwrap = false;
+	    this._initialized = false;
+	}
+	util.inherits(SomePromiseArray, PromiseArray);
+
+	SomePromiseArray.prototype._init = function () {
+	    if (!this._initialized) {
+	        return;
+	    }
+	    if (this._howMany === 0) {
+	        this._resolve([]);
+	        return;
+	    }
+	    this._init$(undefined, -5);
+	    var isArrayResolved = isArray(this._values);
+	    if (!this._isResolved() &&
+	        isArrayResolved &&
+	        this._howMany > this._canPossiblyFulfill()) {
+	        this._reject(this._getRangeError(this.length()));
+	    }
+	};
+
+	SomePromiseArray.prototype.init = function () {
+	    this._initialized = true;
+	    this._init();
+	};
+
+	SomePromiseArray.prototype.setUnwrap = function () {
+	    this._unwrap = true;
+	};
+
+	SomePromiseArray.prototype.howMany = function () {
+	    return this._howMany;
+	};
+
+	SomePromiseArray.prototype.setHowMany = function (count) {
+	    if (this._isResolved()) return;
+	    this._howMany = count;
+	};
+
+	SomePromiseArray.prototype._promiseFulfilled = function (value) {
+	    this._addFulfilled(value);
+	    if (this._fulfilled() === this.howMany()) {
+	        this._values.length = this.howMany();
+	        if (this.howMany() === 1 && this._unwrap) {
+	            this._resolve(this._values[0]);
+	        } else {
+	            this._resolve(this._values);
+	        }
+	    }
+
+	};
+	SomePromiseArray.prototype._promiseRejected = function (reason) {
+	    this._addRejected(reason);
+	    if (this.howMany() > this._canPossiblyFulfill()) {
+	        var e = new AggregateError();
+	        for (var i = this.length(); i < this._values.length; ++i) {
+	            e.push(this._values[i]);
+	        }
+	        this._reject(e);
+	    }
+	};
+
+	SomePromiseArray.prototype._fulfilled = function () {
+	    return this._totalResolved;
+	};
+
+	SomePromiseArray.prototype._rejected = function () {
+	    return this._values.length - this.length();
+	};
+
+	SomePromiseArray.prototype._addRejected = function (reason) {
+	    this._values.push(reason);
+	};
+
+	SomePromiseArray.prototype._addFulfilled = function (value) {
+	    this._values[this._totalResolved++] = value;
+	};
+
+	SomePromiseArray.prototype._canPossiblyFulfill = function () {
+	    return this.length() - this._rejected();
+	};
+
+	SomePromiseArray.prototype._getRangeError = function (count) {
+	    var message = "Input array must contain at least " +
+	            this._howMany + " items but contains only " + count + " items";
+	    return new RangeError(message);
+	};
+
+	SomePromiseArray.prototype._resolveEmptyArray = function () {
+	    this._reject(this._getRangeError(0));
+	};
+
+	function some(promises, howMany) {
+	    if ((howMany | 0) !== howMany || howMany < 0) {
+	        return apiRejection("expecting a positive integer\u000a\u000a    See http://goo.gl/1wAmHx\u000a");
+	    }
+	    var ret = new SomePromiseArray(promises);
+	    var promise = ret.promise();
+	    if (promise.isRejected()) {
+	        return promise;
+	    }
+	    ret.setHowMany(howMany);
+	    ret.init();
+	    return promise;
+	}
+
+	Promise.some = function (promises, howMany) {
+	    return some(promises, howMany);
+	};
+
+	Promise.prototype.some = function (howMany) {
+	    return some(this, howMany);
+	};
+
+	Promise._SomePromiseArray = SomePromiseArray;
+	};
+
+
+/***/ },
+/* 85 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * The MIT License (MIT)
+	 * 
+	 * Copyright (c) 2014 Petka Antonov
+	 * 
+	 * Permission is hereby granted, free of charge, to any person obtaining a copy
+	 * of this software and associated documentation files (the "Software"), to deal
+	 * in the Software without restriction, including without limitation the rights
+	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	 * copies of the Software, and to permit persons to whom the Software is
+	 * furnished to do so, subject to the following conditions:</p>
+	 * 
+	 * The above copyright notice and this permission notice shall be included in
+	 * all copies or substantial portions of the Software.
+	 * 
+	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	 * THE SOFTWARE.
+	 * 
+	 */
+	"use strict";
+	module.exports = function(Promise, PromiseArray) {
+	var util = __webpack_require__(61);
+	var async = __webpack_require__(62);
+	var errors = __webpack_require__(63);
+	var tryCatch1 = util.tryCatch1;
+	var errorObj = util.errorObj;
+
+	Promise.prototype.progressed = function (handler) {
+	    return this._then(undefined, undefined, handler, undefined, undefined);
+	};
+
+	Promise.prototype._progress = function (progressValue) {
+	    if (this._isFollowingOrFulfilledOrRejected()) return;
+	    this._target()._progressUnchecked(progressValue);
+
+	};
+
+	Promise.prototype._progressHandlerAt = function (index) {
+	    return index === 0
+	        ? this._progressHandler0
+	        : this[(index << 2) + index - 5 + 2];
+	};
+
+	Promise.prototype._doProgressWith = function (progression) {
+	    var progressValue = progression.value;
+	    var handler = progression.handler;
+	    var promise = progression.promise;
+	    var receiver = progression.receiver;
+
+	    var ret = tryCatch1(handler, receiver, progressValue);
+	    if (ret === errorObj) {
+	        if (ret.e != null &&
+	            ret.e.name !== "StopProgressPropagation") {
+	            var trace = errors.canAttachTrace(ret.e)
+	                ? ret.e : new Error(ret.e + "");
+	            promise._attachExtraTrace(trace);
+	            promise._progress(ret.e);
+	        }
+	    } else if (ret instanceof Promise) {
+	        ret._then(promise._progress, null, null, promise, undefined);
+	    } else {
+	        promise._progress(ret);
+	    }
+	};
+
+
+	Promise.prototype._progressUnchecked = function (progressValue) {
+	    var len = this._length();
+	    var progress = this._progress;
+	    for (var i = 0; i < len; i++) {
+	        var handler = this._progressHandlerAt(i);
+	        var promise = this._promiseAt(i);
+	        if (!(promise instanceof Promise)) {
+	            var receiver = this._receiverAt(i);
+	            if (typeof handler === "function") {
+	                handler.call(receiver, progressValue, promise);
+	            } else if (receiver instanceof PromiseArray &&
+	                       !receiver._isResolved()) {
+	                receiver._promiseProgressed(progressValue, promise);
+	            }
+	            continue;
+	        }
+
+	        if (typeof handler === "function") {
+	            async.invoke(this._doProgressWith, this, {
+	                handler: handler,
+	                promise: promise,
+	                receiver: this._receiverAt(i),
+	                value: progressValue
+	            });
+	        } else {
+	            async.invoke(progress, promise, progressValue);
+	        }
+	    }
+	};
+	};
+
+
+/***/ },
+/* 86 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * The MIT License (MIT)
+	 * 
+	 * Copyright (c) 2014 Petka Antonov
+	 * 
+	 * Permission is hereby granted, free of charge, to any person obtaining a copy
+	 * of this software and associated documentation files (the "Software"), to deal
+	 * in the Software without restriction, including without limitation the rights
+	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	 * copies of the Software, and to permit persons to whom the Software is
+	 * furnished to do so, subject to the following conditions:</p>
+	 * 
+	 * The above copyright notice and this permission notice shall be included in
+	 * all copies or substantial portions of the Software.
+	 * 
+	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	 * THE SOFTWARE.
+	 * 
+	 */
+	"use strict";
+	module.exports = function(Promise, INTERNAL) {
+	var errors = __webpack_require__(63);
+	var canAttachTrace = errors.canAttachTrace;
+	var async = __webpack_require__(62);
+	var CancellationError = errors.CancellationError;
+
+	Promise.prototype._cancel = function (reason) {
+	    if (!this.isCancellable()) return this;
+	    var parent;
+	    var promiseToReject = this;
+	    while ((parent = promiseToReject._cancellationParent) !== undefined &&
+	        parent.isCancellable()) {
+	        promiseToReject = parent;
+	    }
+	    this._unsetCancellable();
+	    promiseToReject._attachExtraTrace(reason);
+	    promiseToReject._target()._rejectUnchecked(reason);
+	};
+
+	Promise.prototype.cancel = function (reason) {
+	    if (!this.isCancellable()) return this;
+	    reason = reason !== undefined
+	        ? (canAttachTrace(reason) ? reason : new Error(reason + ""))
+	        : new CancellationError();
+	    async.invokeLater(this._cancel, this, reason);
+	    return this;
+	};
+
+	Promise.prototype.cancellable = function () {
+	    if (this._cancellable()) return this;
+	    this._setCancellable();
+	    this._cancellationParent = undefined;
+	    return this;
+	};
+
+	Promise.prototype.uncancellable = function () {
+	    var ret = new Promise(INTERNAL);
+	    ret._propagateFrom(this, 2 | 4);
+	    ret._follow(this);
+	    ret._unsetCancellable();
+	    return ret;
+	};
+
+	Promise.prototype.fork = function (didFulfill, didReject, didProgress) {
+	    var ret = this._then(didFulfill, didReject, didProgress,
+	                         undefined, undefined);
+
+	    ret._setCancellable();
+	    ret._cancellationParent = undefined;
+	    return ret;
+	};
+	};
+
+
+/***/ },
+/* 87 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * The MIT License (MIT)
+	 * 
+	 * Copyright (c) 2014 Petka Antonov
+	 * 
+	 * Permission is hereby granted, free of charge, to any person obtaining a copy
+	 * of this software and associated documentation files (the "Software"), to deal
+	 * in the Software without restriction, including without limitation the rights
+	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	 * copies of the Software, and to permit persons to whom the Software is
+	 * furnished to do so, subject to the following conditions:</p>
+	 * 
+	 * The above copyright notice and this permission notice shall be included in
+	 * all copies or substantial portions of the Software.
+	 * 
+	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	 * THE SOFTWARE.
+	 * 
+	 */
+	"use strict";
+	module.exports = function(Promise, INTERNAL) {
+	var PromiseMap = Promise.map;
+
+	Promise.prototype.filter = function (fn, options) {
+	    return PromiseMap(this, fn, options, INTERNAL);
+	};
+
+	Promise.filter = function (promises, fn, options) {
+	    return PromiseMap(promises, fn, options, INTERNAL);
+	};
+	};
+
+
+/***/ },
+/* 88 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * The MIT License (MIT)
+	 * 
+	 * Copyright (c) 2014 Petka Antonov
+	 * 
+	 * Permission is hereby granted, free of charge, to any person obtaining a copy
+	 * of this software and associated documentation files (the "Software"), to deal
+	 * in the Software without restriction, including without limitation the rights
+	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	 * copies of the Software, and to permit persons to whom the Software is
+	 * furnished to do so, subject to the following conditions:</p>
+	 * 
+	 * The above copyright notice and this permission notice shall be included in
+	 * all copies or substantial portions of the Software.
+	 * 
+	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	 * THE SOFTWARE.
+	 * 
+	 */
+	"use strict";
+	module.exports = function(Promise) {
+	var SomePromiseArray = Promise._SomePromiseArray;
+	function any(promises) {
+	    var ret = new SomePromiseArray(promises);
+	    var promise = ret.promise();
+	    if (promise.isRejected()) {
+	        return promise;
+	    }
+	    ret.setHowMany(1);
+	    ret.setUnwrap();
+	    ret.init();
+	    return promise;
+	}
+
+	Promise.any = function (promises) {
+	    return any(promises);
+	};
+
+	Promise.prototype.any = function () {
+	    return any(this);
+	};
+
+	};
+
+
+/***/ },
+/* 89 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * The MIT License (MIT)
+	 * 
+	 * Copyright (c) 2014 Petka Antonov
+	 * 
+	 * Permission is hereby granted, free of charge, to any person obtaining a copy
+	 * of this software and associated documentation files (the "Software"), to deal
+	 * in the Software without restriction, including without limitation the rights
+	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	 * copies of the Software, and to permit persons to whom the Software is
+	 * furnished to do so, subject to the following conditions:</p>
+	 * 
+	 * The above copyright notice and this permission notice shall be included in
+	 * all copies or substantial portions of the Software.
+	 * 
+	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	 * THE SOFTWARE.
+	 * 
+	 */
+	"use strict";
+	module.exports = function(Promise, INTERNAL) {
+	var PromiseReduce = Promise.reduce;
+
+	Promise.prototype.each = function (fn) {
+	    return PromiseReduce(this, fn, null, INTERNAL);
+	};
+
+	Promise.each = function (promises, fn) {
+	    return PromiseReduce(promises, fn, null, INTERNAL);
+	};
+	};
+
+
+/***/ },
+/* 90 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * The MIT License (MIT)
+	 * 
+	 * Copyright (c) 2014 Petka Antonov
+	 * 
+	 * Permission is hereby granted, free of charge, to any person obtaining a copy
+	 * of this software and associated documentation files (the "Software"), to deal
+	 * in the Software without restriction, including without limitation the rights
+	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	 * copies of the Software, and to permit persons to whom the Software is
+	 * furnished to do so, subject to the following conditions:</p>
+	 * 
+	 * The above copyright notice and this permission notice shall be included in
+	 * all copies or substantial portions of the Software.
+	 * 
+	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	 * THE SOFTWARE.
+	 * 
+	 */
+	"use strict";
+	module.exports = function (Promise, apiRejection, tryConvertToPromise) {
+	    var TypeError = __webpack_require__(63).TypeError;
+	    var inherits = __webpack_require__(61).inherits;
+	    var PromiseInspection = Promise.PromiseInspection;
+
+	    function inspectionMapper(inspections) {
+	        var len = inspections.length;
+	        for (var i = 0; i < len; ++i) {
+	            var inspection = inspections[i];
+	            if (inspection.isRejected()) {
+	                return Promise.reject(inspection.error());
+	            }
+	            inspections[i] = inspection._settledValue;
+	        }
+	        return inspections;
+	    }
+
+	    function thrower(e) {
+	        setTimeout(function(){throw e;}, 0);
+	    }
+
+	    function castPreservingDisposable(thenable) {
+	        var maybePromise = tryConvertToPromise(thenable, undefined);
+	        if (maybePromise !== thenable &&
+	            typeof thenable._isDisposable === "function" &&
+	            typeof thenable._getDisposer === "function" &&
+	            thenable._isDisposable()) {
+	            maybePromise._setDisposable(thenable._getDisposer());
+	        }
+	        return maybePromise;
+	    }
+	    function dispose(resources, inspection) {
+	        var i = 0;
+	        var len = resources.length;
+	        var ret = Promise.defer();
+	        function iterator() {
+	            if (i >= len) return ret.resolve();
+	            var maybePromise = castPreservingDisposable(resources[i++]);
+	            if (maybePromise instanceof Promise &&
+	                maybePromise._isDisposable()) {
+	                try {
+	                    maybePromise = tryConvertToPromise(
+	                        maybePromise._getDisposer().tryDispose(inspection),
+	                        undefined);
+	                } catch (e) {
+	                    return thrower(e);
+	                }
+	                if (maybePromise instanceof Promise) {
+	                    return maybePromise._then(iterator, thrower,
+	                                              null, null, null);
+	                }
+	            }
+	            iterator();
+	        }
+	        iterator();
+	        return ret.promise;
+	    }
+
+	    function disposerSuccess(value) {
+	        var inspection = new PromiseInspection();
+	        inspection._settledValue = value;
+	        inspection._bitField = 268435456;
+	        return dispose(this, inspection).thenReturn(value);
+	    }
+
+	    function disposerFail(reason) {
+	        var inspection = new PromiseInspection();
+	        inspection._settledValue = reason;
+	        inspection._bitField = 134217728;
+	        return dispose(this, inspection).thenThrow(reason);
+	    }
+
+	    function Disposer(data, promise) {
+	        this._data = data;
+	        this._promise = promise;
+	    }
+
+	    Disposer.prototype.data = function () {
+	        return this._data;
+	    };
+
+	    Disposer.prototype.promise = function () {
+	        return this._promise;
+	    };
+
+	    Disposer.prototype.resource = function () {
+	        if (this.promise()._isFulfilled()) {
+	            return this.promise()._value();
+	        }
+	        return null;
+	    };
+
+	    Disposer.prototype.tryDispose = function(inspection) {
+	        var resource = this.resource();
+	        var ret = resource !== null
+	            ? this.doDispose(resource, inspection) : null;
+	        this._promise._unsetDisposable();
+	        this._data = this._promise = null;
+	        return ret;
+	    };
+
+	    Disposer.isDisposer = function (d) {
+	        return (d != null &&
+	                typeof d.resource === "function" &&
+	                typeof d.tryDispose === "function");
+	    };
+
+	    function FunctionDisposer(fn, promise) {
+	        this.constructor$(fn, promise);
+	    }
+	    inherits(FunctionDisposer, Disposer);
+
+	    FunctionDisposer.prototype.doDispose = function (resource, inspection) {
+	        var fn = this.data();
+	        return fn.call(resource, resource, inspection);
+	    };
+
+	    Promise.using = function () {
+	        var len = arguments.length;
+	        if (len < 2) return apiRejection(
+	                        "you must pass at least 2 arguments to Promise.using");
+	        var fn = arguments[len - 1];
+	        if (typeof fn !== "function") return apiRejection("fn must be a function\u000a\u000a    See http://goo.gl/916lJJ\u000a");
+	        len--;
+	        var resources = new Array(len);
+	        for (var i = 0; i < len; ++i) {
+	            var resource = arguments[i];
+	            if (Disposer.isDisposer(resource)) {
+	                var disposer = resource;
+	                resource = resource.promise();
+	                resource._setDisposable(disposer);
+	            }
+	            resources[i] = resource;
+	        }
+
+	        return Promise.settle(resources)
+	            .then(inspectionMapper)
+	            .spread(fn)
+	            ._then(
+	                disposerSuccess, disposerFail, undefined, resources, undefined);
+	    };
+
+	    Promise.prototype._setDisposable = function (disposer) {
+	        this._bitField = this._bitField | 262144;
+	        this._disposer = disposer;
+	    };
+
+	    Promise.prototype._isDisposable = function () {
+	        return (this._bitField & 262144) > 0;
+	    };
+
+	    Promise.prototype._getDisposer = function () {
+	        return this._disposer;
+	    };
+
+	    Promise.prototype._unsetDisposable = function () {
+	        this._bitField = this._bitField & (~262144);
+	        this._disposer = undefined;
+	    };
+
+	    Promise.prototype.disposer = function (fn) {
+	        if (typeof fn === "function") {
+	            return new FunctionDisposer(fn, this._target());
+	        }
+	        throw new TypeError();
+	    };
+
+	};
+
+
+/***/ },
+/* 91 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var LifeCycle = {
+	    CREATED: 'lifecycle:created',
+	    UPDATED: 'lifecycle:updated',
+	    MOUNTED: 'lifecycle:mounted',
+	    UNMOUNTED: 'lifecycle:unmounted',
+	    PAUSED: 'lifecycle:paused',
+	    RESUMED: 'lifecycle:resumed',
+	    DISPOSED: 'lifecycle:disposed'
+	};
+	module.exports = LifeCycle;
+
+
+/***/ },
+/* 92 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// This class is real Aggregator instance
+	// but user was given IAggregator
+	var Aggregator = (function () {
+	    function Aggregator(aggregator) {
+	        if (!aggregator.aggregate && aggregator instanceof Function)
+	            this.aggregator = new aggregator();
+	        else
+	            this.aggregator = aggregator;
+	        if (!this.aggregator.aggregate)
+	            throw 'aggregate does not defined';
+	    }
+	    Aggregator.prototype.callInitState = function (props) {
+	        if (this.aggregator.initState instanceof Function)
+	            return this.aggregator.initState(props);
+	    };
+	    Aggregator.prototype.callAggregate = function (props, state) {
+	        return this.aggregator.aggregate(props, state);
+	    };
+	    Aggregator.prototype.buildTemplateProps = function (props, forceState) {
+	        var _this = this;
+	        return new Promise(function (done) {
+	            var state = forceState ? forceState : _this.callInitState(props);
+	            Promise.resolve(state).then(function (nextState) {
+	                var templateProps = _this.callAggregate(props, nextState);
+	                Promise.resolve(templateProps).then(function (nextTemplateProps) {
+	                    done({ props: props, state: nextState, templateProps: nextTemplateProps });
+	                });
+	            });
+	        });
+	    };
+	    return Aggregator;
+	})();
+	module.exports = Aggregator;
+
+
+/***/ },
+/* 93 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var hasOwn = Object.prototype.hasOwnProperty;
+	var toString = Object.prototype.toString;
+	var undefined;
+
+	var isPlainObject = function isPlainObject(obj) {
+		'use strict';
+		if (!obj || toString.call(obj) !== '[object Object]') {
+			return false;
+		}
+
+		var has_own_constructor = hasOwn.call(obj, 'constructor');
+		var has_is_property_of_method = obj.constructor && obj.constructor.prototype && hasOwn.call(obj.constructor.prototype, 'isPrototypeOf');
+		// Not own constructor property must be Object
+		if (obj.constructor && !has_own_constructor && !has_is_property_of_method) {
+			return false;
+		}
+
+		// Own properties are enumerated firstly, so to speed up,
+		// if last one is own, then all properties are own.
+		var key;
+		for (key in obj) {}
+
+		return key === undefined || hasOwn.call(obj, key);
+	};
+
+	module.exports = function extend() {
+		'use strict';
+		var options, name, src, copy, copyIsArray, clone,
+			target = arguments[0],
+			i = 1,
+			length = arguments.length,
+			deep = false;
+
+		// Handle a deep copy situation
+		if (typeof target === 'boolean') {
+			deep = target;
+			target = arguments[1] || {};
+			// skip the boolean and the target
+			i = 2;
+		} else if ((typeof target !== 'object' && typeof target !== 'function') || target == null) {
+			target = {};
+		}
+
+		for (; i < length; ++i) {
+			options = arguments[i];
+			// Only deal with non-null/undefined values
+			if (options != null) {
+				// Extend the base object
+				for (name in options) {
+					src = target[name];
+					copy = options[name];
+
+					// Prevent never-ending loop
+					if (target === copy) {
+						continue;
+					}
+
+					// Recurse if we're merging plain objects or arrays
+					if (deep && copy && (isPlainObject(copy) || (copyIsArray = Array.isArray(copy)))) {
+						if (copyIsArray) {
+							copyIsArray = false;
+							clone = src && Array.isArray(src) ? src : [];
+						} else {
+							clone = src && isPlainObject(src) ? src : {};
+						}
+
+						// Never move original objects, clone them
+						target[name] = extend(deep, clone, copy);
+
+					// Don't bring in undefined values
+					} else if (copy !== undefined) {
+						target[name] = copy;
+					}
+				}
+			}
+		}
+
+		// Return the modified object
+		return target;
+	};
+
+
+
+/***/ },
+/* 94 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(12);
 	module.exports= function (locals) {
 	  var jade_mixins = {};  var onMouseMove = "onMouseMove" in locals ? locals.onMouseMove : jade_globals_onMouseMove;
 	  var onMouseDown = "onMouseDown" in locals ? locals.onMouseDown : jade_globals_onMouseDown;
@@ -13710,7 +13866,45 @@
 	}
 
 /***/ },
-/* 85 */
+/* 95 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(12);
+	module.exports= function (locals) {  var onClickBack = "onClickBack" in locals ? locals.onClickBack : jade_globals_onClickBack;
+	  return function() {
+	    var tags = [];
+	    tags.push(React.createElement("div", {
+	      className: "menu"
+	    }, React.createElement("h1", {}, "menu"), React.createElement("button", {
+	      onClick: onClickBack
+	    }, "Back")));
+	    if (1 === tags.length) return tags.pop();
+	    tags.unshift("div", null);
+	    return React.createElement.apply(React, tags);
+	  }.call(this);
+	}
+
+/***/ },
+/* 96 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(12);
+	module.exports= function (locals) {  var onClick = "onClick" in locals ? locals.onClick : jade_globals_onClick;
+	  return function() {
+	    var tags = [];
+	    tags.push(React.createElement("div", {
+	      className: "opening"
+	    }, React.createElement("h1", {}, "Actrogue2"), React.createElement("button", {
+	      onClick: onClick
+	    }, "Game Start")));
+	    if (1 === tags.length) return tags.pop();
+	    tags.unshift("div", null);
+	    return React.createElement.apply(React, tags);
+	  }.call(this);
+	}
+
+/***/ },
+/* 97 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// shim for using process in browser
@@ -13802,7 +13996,7 @@
 
 
 /***/ },
-/* 86 */
+/* 98 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -13821,7 +14015,7 @@
 
 	"use strict";
 
-	var invariant = __webpack_require__(91);
+	var invariant = __webpack_require__(103);
 
 	function checkMask(value, bitmask) {
 	  return (value & bitmask) === bitmask;
@@ -14101,10 +14295,10 @@
 
 	module.exports = DOMProperty;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(85)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(97)))
 
 /***/ },
-/* 87 */
+/* 99 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -14149,7 +14343,7 @@
 
 
 /***/ },
-/* 88 */
+/* 100 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -14187,7 +14381,7 @@
 
 
 /***/ },
-/* 89 */
+/* 101 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -14203,7 +14397,7 @@
 
 	"use strict";
 
-	var emptyFunction = __webpack_require__(141);
+	var emptyFunction = __webpack_require__(153);
 
 	/**
 	 * Similar to invariant but only logs a warning if the condition is not met.
@@ -14232,10 +14426,10 @@
 
 	module.exports = warning;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(85)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(97)))
 
 /***/ },
-/* 90 */
+/* 102 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -14251,7 +14445,7 @@
 
 	"use strict";
 
-	var keyMirror = __webpack_require__(96);
+	var keyMirror = __webpack_require__(108);
 
 	var PropagationPhases = keyMirror({bubbled: null, captured: null});
 
@@ -14311,7 +14505,7 @@
 
 
 /***/ },
-/* 91 */
+/* 103 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -14368,10 +14562,10 @@
 
 	module.exports = invariant;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(85)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(97)))
 
 /***/ },
-/* 92 */
+/* 104 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -14387,7 +14581,7 @@
 
 	"use strict";
 
-	var invariant = __webpack_require__(91);
+	var invariant = __webpack_require__(103);
 
 	/**
 	 * Static poolers. Several custom versions for each potential number of
@@ -14487,10 +14681,10 @@
 
 	module.exports = PooledClass;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(85)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(97)))
 
 /***/ },
-/* 93 */
+/* 105 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -14506,10 +14700,10 @@
 
 	"use strict";
 
-	var ReactElement = __webpack_require__(33);
-	var ReactInstanceHandles = __webpack_require__(38);
+	var ReactElement = __webpack_require__(43);
+	var ReactInstanceHandles = __webpack_require__(48);
 
-	var invariant = __webpack_require__(91);
+	var invariant = __webpack_require__(103);
 
 	var SEPARATOR = ReactInstanceHandles.SEPARATOR;
 	var SUBSEPARATOR = ':';
@@ -14673,10 +14867,10 @@
 
 	module.exports = traverseAllChildren;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(85)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(97)))
 
 /***/ },
-/* 94 */
+/* 106 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -14692,8 +14886,8 @@
 
 	"use strict";
 
-	var emptyObject = __webpack_require__(149);
-	var invariant = __webpack_require__(91);
+	var emptyObject = __webpack_require__(163);
+	var invariant = __webpack_require__(103);
 
 	/**
 	 * ReactOwners are capable of storing references to owned components.
@@ -14832,10 +15026,10 @@
 
 	module.exports = ReactOwner;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(85)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(97)))
 
 /***/ },
-/* 95 */
+/* 107 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -14851,15 +15045,15 @@
 
 	"use strict";
 
-	var CallbackQueue = __webpack_require__(150);
-	var PooledClass = __webpack_require__(92);
-	var ReactCurrentOwner = __webpack_require__(32);
-	var ReactPerf = __webpack_require__(42);
-	var Transaction = __webpack_require__(151);
+	var CallbackQueue = __webpack_require__(164);
+	var PooledClass = __webpack_require__(104);
+	var ReactCurrentOwner = __webpack_require__(42);
+	var ReactPerf = __webpack_require__(52);
+	var Transaction = __webpack_require__(165);
 
-	var assign = __webpack_require__(46);
-	var invariant = __webpack_require__(91);
-	var warning = __webpack_require__(89);
+	var assign = __webpack_require__(56);
+	var invariant = __webpack_require__(103);
+	var warning = __webpack_require__(101);
 
 	var dirtyComponents = [];
 	var asapCallbackQueue = CallbackQueue.getPooled();
@@ -15125,10 +15319,10 @@
 
 	module.exports = ReactUpdates;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(85)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(97)))
 
 /***/ },
-/* 96 */
+/* 108 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -15145,7 +15339,7 @@
 
 	"use strict";
 
-	var invariant = __webpack_require__(91);
+	var invariant = __webpack_require__(103);
 
 	/**
 	 * Constructs an enumeration with keys equal to their value.
@@ -15183,10 +15377,10 @@
 
 	module.exports = keyMirror;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(85)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(97)))
 
 /***/ },
-/* 97 */
+/* 109 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -15202,9 +15396,9 @@
 
 	"use strict";
 
-	var ReactElement = __webpack_require__(33);
+	var ReactElement = __webpack_require__(43);
 
-	var invariant = __webpack_require__(91);
+	var invariant = __webpack_require__(103);
 
 	var component;
 	// This registry keeps track of the React IDs of the components that rendered to
@@ -15263,10 +15457,10 @@
 
 	module.exports = ReactEmptyComponent;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(85)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(97)))
 
 /***/ },
-/* 98 */
+/* 110 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -15302,7 +15496,7 @@
 
 
 /***/ },
-/* 99 */
+/* 111 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -15318,11 +15512,11 @@
 
 	"use strict";
 
-	var assign = __webpack_require__(46);
-	var emptyFunction = __webpack_require__(141);
-	var invariant = __webpack_require__(91);
-	var joinClasses = __webpack_require__(152);
-	var warning = __webpack_require__(89);
+	var assign = __webpack_require__(56);
+	var emptyFunction = __webpack_require__(153);
+	var invariant = __webpack_require__(103);
+	var joinClasses = __webpack_require__(166);
+	var warning = __webpack_require__(101);
 
 	var didWarn = false;
 
@@ -15469,10 +15663,10 @@
 
 	module.exports = ReactPropTransferer;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(85)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(97)))
 
 /***/ },
-/* 100 */
+/* 112 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -15488,7 +15682,7 @@
 
 	"use strict";
 
-	var keyMirror = __webpack_require__(96);
+	var keyMirror = __webpack_require__(108);
 
 	var ReactPropTypeLocations = keyMirror({
 	  prop: null,
@@ -15500,7 +15694,7 @@
 
 
 /***/ },
-/* 101 */
+/* 113 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -15528,10 +15722,10 @@
 
 	module.exports = ReactPropTypeLocationNames;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(85)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(97)))
 
 /***/ },
-/* 102 */
+/* 114 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -15548,12 +15742,12 @@
 
 	"use strict";
 
-	var warning = __webpack_require__(89);
+	var warning = __webpack_require__(101);
 
-	var ReactElement = __webpack_require__(33);
-	var ReactLegacyElement = __webpack_require__(39);
-	var ReactNativeComponent = __webpack_require__(153);
-	var ReactEmptyComponent = __webpack_require__(97);
+	var ReactElement = __webpack_require__(43);
+	var ReactLegacyElement = __webpack_require__(49);
+	var ReactNativeComponent = __webpack_require__(167);
+	var ReactEmptyComponent = __webpack_require__(109);
 
 	/**
 	 * Given an `element` create an instance that will actually be mounted.
@@ -15645,10 +15839,10 @@
 
 	module.exports = instantiateReactComponent;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(85)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(97)))
 
 /***/ },
-/* 103 */
+/* 115 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -15688,7 +15882,7 @@
 
 
 /***/ },
-/* 104 */
+/* 116 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -15704,7 +15898,7 @@
 
 	"use strict";
 
-	var invariant = __webpack_require__(91);
+	var invariant = __webpack_require__(103);
 
 	/**
 	 * Provides open-source compatible instrumentation for monitoring certain API
@@ -15722,10 +15916,10 @@
 
 	module.exports = monitorCodeUse;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(85)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(97)))
 
 /***/ },
-/* 105 */
+/* 117 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -15782,7 +15976,7 @@
 
 
 /***/ },
-/* 106 */
+/* 118 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -15824,7 +16018,7 @@
 
 
 /***/ },
-/* 107 */
+/* 119 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -15841,14 +16035,14 @@
 
 	"use strict";
 
-	var CSSProperty = __webpack_require__(154);
-	var ExecutionEnvironment = __webpack_require__(49);
+	var CSSProperty = __webpack_require__(168);
+	var ExecutionEnvironment = __webpack_require__(59);
 
-	var camelizeStyleName = __webpack_require__(155);
-	var dangerousStyleValue = __webpack_require__(156);
-	var hyphenateStyleName = __webpack_require__(157);
-	var memoizeStringOnly = __webpack_require__(88);
-	var warning = __webpack_require__(89);
+	var camelizeStyleName = __webpack_require__(169);
+	var dangerousStyleValue = __webpack_require__(170);
+	var hyphenateStyleName = __webpack_require__(171);
+	var memoizeStringOnly = __webpack_require__(100);
+	var warning = __webpack_require__(101);
 
 	var processStyleName = memoizeStringOnly(function(styleName) {
 	  return hyphenateStyleName(styleName);
@@ -15959,10 +16153,10 @@
 
 	module.exports = CSSPropertyOperations;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(85)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(97)))
 
 /***/ },
-/* 108 */
+/* 120 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -15978,10 +16172,10 @@
 
 	"use strict";
 
-	var ReactEmptyComponent = __webpack_require__(97);
-	var ReactMount = __webpack_require__(40);
+	var ReactEmptyComponent = __webpack_require__(109);
+	var ReactMount = __webpack_require__(50);
 
-	var invariant = __webpack_require__(91);
+	var invariant = __webpack_require__(103);
 
 	var ReactBrowserComponentMixin = {
 	  /**
@@ -16005,10 +16199,10 @@
 
 	module.exports = ReactBrowserComponentMixin;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(85)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(97)))
 
 /***/ },
-/* 109 */
+/* 121 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -16025,14 +16219,14 @@
 
 	"use strict";
 
-	var EventConstants = __webpack_require__(90);
-	var EventPluginHub = __webpack_require__(158);
-	var EventPluginRegistry = __webpack_require__(159);
-	var ReactEventEmitterMixin = __webpack_require__(160);
-	var ViewportMetrics = __webpack_require__(161);
+	var EventConstants = __webpack_require__(102);
+	var EventPluginHub = __webpack_require__(172);
+	var EventPluginRegistry = __webpack_require__(173);
+	var ReactEventEmitterMixin = __webpack_require__(174);
+	var ViewportMetrics = __webpack_require__(175);
 
-	var assign = __webpack_require__(46);
-	var isEventSupported = __webpack_require__(110);
+	var assign = __webpack_require__(56);
+	var isEventSupported = __webpack_require__(122);
 
 	/**
 	 * Summary of `ReactBrowserEventEmitter` event handling:
@@ -16367,7 +16561,7 @@
 
 
 /***/ },
-/* 110 */
+/* 122 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -16383,7 +16577,7 @@
 
 	"use strict";
 
-	var ExecutionEnvironment = __webpack_require__(49);
+	var ExecutionEnvironment = __webpack_require__(59);
 
 	var useHasFeature;
 	if (ExecutionEnvironment.canUseDOM) {
@@ -16436,7 +16630,7 @@
 
 
 /***/ },
-/* 111 */
+/* 123 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -16453,12 +16647,12 @@
 
 	"use strict";
 
-	var EventConstants = __webpack_require__(90);
-	var EventPropagators = __webpack_require__(162);
-	var ExecutionEnvironment = __webpack_require__(49);
-	var SyntheticInputEvent = __webpack_require__(163);
+	var EventConstants = __webpack_require__(102);
+	var EventPropagators = __webpack_require__(176);
+	var ExecutionEnvironment = __webpack_require__(59);
+	var SyntheticInputEvent = __webpack_require__(177);
 
-	var keyOf = __webpack_require__(103);
+	var keyOf = __webpack_require__(115);
 
 	var canUseTextInputEvent = (
 	  ExecutionEnvironment.canUseDOM &&
@@ -16662,7 +16856,7 @@
 
 
 /***/ },
-/* 112 */
+/* 124 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -16678,16 +16872,16 @@
 
 	"use strict";
 
-	var EventConstants = __webpack_require__(90);
-	var EventPluginHub = __webpack_require__(158);
-	var EventPropagators = __webpack_require__(162);
-	var ExecutionEnvironment = __webpack_require__(49);
-	var ReactUpdates = __webpack_require__(95);
-	var SyntheticEvent = __webpack_require__(164);
+	var EventConstants = __webpack_require__(102);
+	var EventPluginHub = __webpack_require__(172);
+	var EventPropagators = __webpack_require__(176);
+	var ExecutionEnvironment = __webpack_require__(59);
+	var ReactUpdates = __webpack_require__(107);
+	var SyntheticEvent = __webpack_require__(178);
 
-	var isEventSupported = __webpack_require__(110);
-	var isTextInputElement = __webpack_require__(165);
-	var keyOf = __webpack_require__(103);
+	var isEventSupported = __webpack_require__(122);
+	var isTextInputElement = __webpack_require__(179);
+	var keyOf = __webpack_require__(115);
 
 	var topLevelTypes = EventConstants.topLevelTypes;
 
@@ -17048,7 +17242,7 @@
 
 
 /***/ },
-/* 113 */
+/* 125 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -17077,7 +17271,7 @@
 
 
 /***/ },
-/* 114 */
+/* 126 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -17094,14 +17288,14 @@
 
 	"use strict";
 
-	var EventConstants = __webpack_require__(90);
-	var EventPropagators = __webpack_require__(162);
-	var ExecutionEnvironment = __webpack_require__(49);
-	var ReactInputSelection = __webpack_require__(166);
-	var SyntheticCompositionEvent = __webpack_require__(167);
+	var EventConstants = __webpack_require__(102);
+	var EventPropagators = __webpack_require__(176);
+	var ExecutionEnvironment = __webpack_require__(59);
+	var ReactInputSelection = __webpack_require__(180);
+	var SyntheticCompositionEvent = __webpack_require__(181);
 
-	var getTextContentAccessor = __webpack_require__(168);
-	var keyOf = __webpack_require__(103);
+	var getTextContentAccessor = __webpack_require__(182);
+	var keyOf = __webpack_require__(115);
 
 	var END_KEYCODES = [9, 13, 27, 32]; // Tab, Return, Esc, Space
 	var START_KEYCODE = 229;
@@ -17340,7 +17534,7 @@
 
 
 /***/ },
-/* 115 */
+/* 127 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -17356,7 +17550,7 @@
 
 	"use strict";
 
-	 var keyOf = __webpack_require__(103);
+	 var keyOf = __webpack_require__(115);
 
 	/**
 	 * Module that is injectable into `EventPluginHub`, that specifies a
@@ -17384,7 +17578,7 @@
 
 
 /***/ },
-/* 116 */
+/* 128 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -17401,12 +17595,12 @@
 
 	"use strict";
 
-	var EventConstants = __webpack_require__(90);
-	var EventPropagators = __webpack_require__(162);
-	var SyntheticMouseEvent = __webpack_require__(169);
+	var EventConstants = __webpack_require__(102);
+	var EventPropagators = __webpack_require__(176);
+	var SyntheticMouseEvent = __webpack_require__(183);
 
-	var ReactMount = __webpack_require__(40);
-	var keyOf = __webpack_require__(103);
+	var ReactMount = __webpack_require__(50);
+	var keyOf = __webpack_require__(115);
 
 	var topLevelTypes = EventConstants.topLevelTypes;
 	var getFirstReactDOM = ReactMount.getFirstReactDOM;
@@ -17528,7 +17722,7 @@
 
 
 /***/ },
-/* 117 */
+/* 129 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -17546,8 +17740,8 @@
 
 	"use strict";
 
-	var DOMProperty = __webpack_require__(86);
-	var ExecutionEnvironment = __webpack_require__(49);
+	var DOMProperty = __webpack_require__(98);
+	var ExecutionEnvironment = __webpack_require__(59);
 
 	var MUST_USE_ATTRIBUTE = DOMProperty.injection.MUST_USE_ATTRIBUTE;
 	var MUST_USE_PROPERTY = DOMProperty.injection.MUST_USE_PROPERTY;
@@ -17621,7 +17815,11 @@
 	    draggable: null,
 	    encType: null,
 	    form: MUST_USE_ATTRIBUTE,
+	    formAction: MUST_USE_ATTRIBUTE,
+	    formEncType: MUST_USE_ATTRIBUTE,
+	    formMethod: MUST_USE_ATTRIBUTE,
 	    formNoValidate: HAS_BOOLEAN_VALUE,
+	    formTarget: MUST_USE_ATTRIBUTE,
 	    frameBorder: MUST_USE_ATTRIBUTE,
 	    height: MUST_USE_ATTRIBUTE,
 	    hidden: MUST_USE_ATTRIBUTE | HAS_BOOLEAN_VALUE,
@@ -17636,6 +17834,8 @@
 	    list: MUST_USE_ATTRIBUTE,
 	    loop: MUST_USE_PROPERTY | HAS_BOOLEAN_VALUE,
 	    manifest: MUST_USE_ATTRIBUTE,
+	    marginHeight: null,
+	    marginWidth: null,
 	    max: null,
 	    maxLength: MUST_USE_ATTRIBUTE,
 	    media: MUST_USE_ATTRIBUTE,
@@ -17718,7 +17918,7 @@
 
 
 /***/ },
-/* 118 */
+/* 130 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -17735,9 +17935,9 @@
 
 	"use strict";
 
-	var EventConstants = __webpack_require__(90);
+	var EventConstants = __webpack_require__(102);
 
-	var emptyFunction = __webpack_require__(141);
+	var emptyFunction = __webpack_require__(153);
 
 	var topLevelTypes = EventConstants.topLevelTypes;
 
@@ -17780,7 +17980,7 @@
 
 
 /***/ },
-/* 119 */
+/* 131 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -17798,15 +17998,15 @@
 
 	"use strict";
 
-	var ReactDOMIDOperations = __webpack_require__(170);
-	var ReactMarkupChecksum = __webpack_require__(142);
-	var ReactMount = __webpack_require__(40);
-	var ReactPerf = __webpack_require__(42);
-	var ReactReconcileTransaction = __webpack_require__(171);
+	var ReactDOMIDOperations = __webpack_require__(184);
+	var ReactMarkupChecksum = __webpack_require__(154);
+	var ReactMount = __webpack_require__(50);
+	var ReactPerf = __webpack_require__(52);
+	var ReactReconcileTransaction = __webpack_require__(185);
 
-	var getReactRootElementInContainer = __webpack_require__(138);
-	var invariant = __webpack_require__(91);
-	var setInnerHTML = __webpack_require__(172);
+	var getReactRootElementInContainer = __webpack_require__(150);
+	var invariant = __webpack_require__(103);
+	var setInnerHTML = __webpack_require__(186);
 
 
 	var ELEMENT_NODE_TYPE = 1;
@@ -17902,10 +18102,10 @@
 
 	module.exports = ReactComponentBrowserEnvironment;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(85)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(97)))
 
 /***/ },
-/* 120 */
+/* 132 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -17921,11 +18121,11 @@
 
 	"use strict";
 
-	var ReactUpdates = __webpack_require__(95);
-	var Transaction = __webpack_require__(151);
+	var ReactUpdates = __webpack_require__(107);
+	var Transaction = __webpack_require__(165);
 
-	var assign = __webpack_require__(46);
-	var emptyFunction = __webpack_require__(141);
+	var assign = __webpack_require__(56);
+	var emptyFunction = __webpack_require__(153);
 
 	var RESET_BATCHED_UPDATES = {
 	  initialize: emptyFunction,
@@ -17982,7 +18182,7 @@
 
 
 /***/ },
-/* 121 */
+/* 133 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -17998,13 +18198,13 @@
 
 	"use strict";
 
-	var AutoFocusMixin = __webpack_require__(173);
-	var ReactBrowserComponentMixin = __webpack_require__(108);
-	var ReactCompositeComponent = __webpack_require__(30);
-	var ReactElement = __webpack_require__(33);
-	var ReactDOM = __webpack_require__(35);
+	var AutoFocusMixin = __webpack_require__(187);
+	var ReactBrowserComponentMixin = __webpack_require__(120);
+	var ReactCompositeComponent = __webpack_require__(40);
+	var ReactElement = __webpack_require__(43);
+	var ReactDOM = __webpack_require__(45);
 
-	var keyMirror = __webpack_require__(96);
+	var keyMirror = __webpack_require__(108);
 
 	// Store a reference to the <button> `ReactDOMComponent`. TODO: use string
 	var button = ReactElement.createFactory(ReactDOM.button.type);
@@ -18051,7 +18251,7 @@
 
 
 /***/ },
-/* 122 */
+/* 134 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -18067,12 +18267,12 @@
 
 	"use strict";
 
-	var EventConstants = __webpack_require__(90);
-	var LocalEventTrapMixin = __webpack_require__(174);
-	var ReactBrowserComponentMixin = __webpack_require__(108);
-	var ReactCompositeComponent = __webpack_require__(30);
-	var ReactElement = __webpack_require__(33);
-	var ReactDOM = __webpack_require__(35);
+	var EventConstants = __webpack_require__(102);
+	var LocalEventTrapMixin = __webpack_require__(188);
+	var ReactBrowserComponentMixin = __webpack_require__(120);
+	var ReactCompositeComponent = __webpack_require__(40);
+	var ReactElement = __webpack_require__(43);
+	var ReactDOM = __webpack_require__(45);
 
 	// Store a reference to the <form> `ReactDOMComponent`. TODO: use string
 	var form = ReactElement.createFactory(ReactDOM.form.type);
@@ -18105,7 +18305,7 @@
 
 
 /***/ },
-/* 123 */
+/* 135 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -18121,12 +18321,12 @@
 
 	"use strict";
 
-	var EventConstants = __webpack_require__(90);
-	var LocalEventTrapMixin = __webpack_require__(174);
-	var ReactBrowserComponentMixin = __webpack_require__(108);
-	var ReactCompositeComponent = __webpack_require__(30);
-	var ReactElement = __webpack_require__(33);
-	var ReactDOM = __webpack_require__(35);
+	var EventConstants = __webpack_require__(102);
+	var LocalEventTrapMixin = __webpack_require__(188);
+	var ReactBrowserComponentMixin = __webpack_require__(120);
+	var ReactCompositeComponent = __webpack_require__(40);
+	var ReactElement = __webpack_require__(43);
+	var ReactDOM = __webpack_require__(45);
 
 	// Store a reference to the <img> `ReactDOMComponent`. TODO: use string
 	var img = ReactElement.createFactory(ReactDOM.img.type);
@@ -18157,7 +18357,7 @@
 
 
 /***/ },
-/* 124 */
+/* 136 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -18173,18 +18373,18 @@
 
 	"use strict";
 
-	var AutoFocusMixin = __webpack_require__(173);
-	var DOMPropertyOperations = __webpack_require__(26);
-	var LinkedValueUtils = __webpack_require__(175);
-	var ReactBrowserComponentMixin = __webpack_require__(108);
-	var ReactCompositeComponent = __webpack_require__(30);
-	var ReactElement = __webpack_require__(33);
-	var ReactDOM = __webpack_require__(35);
-	var ReactMount = __webpack_require__(40);
-	var ReactUpdates = __webpack_require__(95);
+	var AutoFocusMixin = __webpack_require__(187);
+	var DOMPropertyOperations = __webpack_require__(36);
+	var LinkedValueUtils = __webpack_require__(189);
+	var ReactBrowserComponentMixin = __webpack_require__(120);
+	var ReactCompositeComponent = __webpack_require__(40);
+	var ReactElement = __webpack_require__(43);
+	var ReactDOM = __webpack_require__(45);
+	var ReactMount = __webpack_require__(50);
+	var ReactUpdates = __webpack_require__(107);
 
-	var assign = __webpack_require__(46);
-	var invariant = __webpack_require__(91);
+	var assign = __webpack_require__(56);
+	var invariant = __webpack_require__(103);
 
 	// Store a reference to the <input> `ReactDOMComponent`. TODO: use string
 	var input = ReactElement.createFactory(ReactDOM.input.type);
@@ -18335,10 +18535,10 @@
 
 	module.exports = ReactDOMInput;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(85)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(97)))
 
 /***/ },
-/* 125 */
+/* 137 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -18354,12 +18554,12 @@
 
 	"use strict";
 
-	var ReactBrowserComponentMixin = __webpack_require__(108);
-	var ReactCompositeComponent = __webpack_require__(30);
-	var ReactElement = __webpack_require__(33);
-	var ReactDOM = __webpack_require__(35);
+	var ReactBrowserComponentMixin = __webpack_require__(120);
+	var ReactCompositeComponent = __webpack_require__(40);
+	var ReactElement = __webpack_require__(43);
+	var ReactDOM = __webpack_require__(45);
 
-	var warning = __webpack_require__(89);
+	var warning = __webpack_require__(101);
 
 	// Store a reference to the <option> `ReactDOMComponent`. TODO: use string
 	var option = ReactElement.createFactory(ReactDOM.option.type);
@@ -18391,10 +18591,10 @@
 
 	module.exports = ReactDOMOption;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(85)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(97)))
 
 /***/ },
-/* 126 */
+/* 138 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -18410,15 +18610,15 @@
 
 	"use strict";
 
-	var AutoFocusMixin = __webpack_require__(173);
-	var LinkedValueUtils = __webpack_require__(175);
-	var ReactBrowserComponentMixin = __webpack_require__(108);
-	var ReactCompositeComponent = __webpack_require__(30);
-	var ReactElement = __webpack_require__(33);
-	var ReactDOM = __webpack_require__(35);
-	var ReactUpdates = __webpack_require__(95);
+	var AutoFocusMixin = __webpack_require__(187);
+	var LinkedValueUtils = __webpack_require__(189);
+	var ReactBrowserComponentMixin = __webpack_require__(120);
+	var ReactCompositeComponent = __webpack_require__(40);
+	var ReactElement = __webpack_require__(43);
+	var ReactDOM = __webpack_require__(45);
+	var ReactUpdates = __webpack_require__(107);
 
-	var assign = __webpack_require__(46);
+	var assign = __webpack_require__(56);
 
 	// Store a reference to the <select> `ReactDOMComponent`. TODO: use string
 	var select = ReactElement.createFactory(ReactDOM.select.type);
@@ -18582,7 +18782,7 @@
 
 
 /***/ },
-/* 127 */
+/* 139 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -18598,19 +18798,19 @@
 
 	"use strict";
 
-	var AutoFocusMixin = __webpack_require__(173);
-	var DOMPropertyOperations = __webpack_require__(26);
-	var LinkedValueUtils = __webpack_require__(175);
-	var ReactBrowserComponentMixin = __webpack_require__(108);
-	var ReactCompositeComponent = __webpack_require__(30);
-	var ReactElement = __webpack_require__(33);
-	var ReactDOM = __webpack_require__(35);
-	var ReactUpdates = __webpack_require__(95);
+	var AutoFocusMixin = __webpack_require__(187);
+	var DOMPropertyOperations = __webpack_require__(36);
+	var LinkedValueUtils = __webpack_require__(189);
+	var ReactBrowserComponentMixin = __webpack_require__(120);
+	var ReactCompositeComponent = __webpack_require__(40);
+	var ReactElement = __webpack_require__(43);
+	var ReactDOM = __webpack_require__(45);
+	var ReactUpdates = __webpack_require__(107);
 
-	var assign = __webpack_require__(46);
-	var invariant = __webpack_require__(91);
+	var assign = __webpack_require__(56);
+	var invariant = __webpack_require__(103);
 
-	var warning = __webpack_require__(89);
+	var warning = __webpack_require__(101);
 
 	// Store a reference to the <textarea> `ReactDOMComponent`. TODO: use string
 	var textarea = ReactElement.createFactory(ReactDOM.textarea.type);
@@ -18723,10 +18923,10 @@
 
 	module.exports = ReactDOMTextarea;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(85)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(97)))
 
 /***/ },
-/* 128 */
+/* 140 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -18743,16 +18943,16 @@
 
 	"use strict";
 
-	var EventListener = __webpack_require__(176);
-	var ExecutionEnvironment = __webpack_require__(49);
-	var PooledClass = __webpack_require__(92);
-	var ReactInstanceHandles = __webpack_require__(38);
-	var ReactMount = __webpack_require__(40);
-	var ReactUpdates = __webpack_require__(95);
+	var EventListener = __webpack_require__(190);
+	var ExecutionEnvironment = __webpack_require__(59);
+	var PooledClass = __webpack_require__(104);
+	var ReactInstanceHandles = __webpack_require__(48);
+	var ReactMount = __webpack_require__(50);
+	var ReactUpdates = __webpack_require__(107);
 
-	var assign = __webpack_require__(46);
-	var getEventTarget = __webpack_require__(177);
-	var getUnboundedScrollPosition = __webpack_require__(178);
+	var assign = __webpack_require__(56);
+	var getEventTarget = __webpack_require__(191);
+	var getUnboundedScrollPosition = __webpack_require__(192);
 
 	/**
 	 * Finds the parent React component of `node`.
@@ -18914,7 +19114,7 @@
 
 
 /***/ },
-/* 129 */
+/* 141 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -18930,16 +19130,16 @@
 
 	"use strict";
 
-	var DOMProperty = __webpack_require__(86);
-	var EventPluginHub = __webpack_require__(158);
-	var ReactComponent = __webpack_require__(29);
-	var ReactCompositeComponent = __webpack_require__(30);
-	var ReactEmptyComponent = __webpack_require__(97);
-	var ReactBrowserEventEmitter = __webpack_require__(109);
-	var ReactNativeComponent = __webpack_require__(153);
-	var ReactPerf = __webpack_require__(42);
-	var ReactRootIndex = __webpack_require__(136);
-	var ReactUpdates = __webpack_require__(95);
+	var DOMProperty = __webpack_require__(98);
+	var EventPluginHub = __webpack_require__(172);
+	var ReactComponent = __webpack_require__(39);
+	var ReactCompositeComponent = __webpack_require__(40);
+	var ReactEmptyComponent = __webpack_require__(109);
+	var ReactBrowserEventEmitter = __webpack_require__(121);
+	var ReactNativeComponent = __webpack_require__(167);
+	var ReactPerf = __webpack_require__(52);
+	var ReactRootIndex = __webpack_require__(148);
+	var ReactUpdates = __webpack_require__(107);
 
 	var ReactInjection = {
 	  Component: ReactComponent.injection,
@@ -18958,7 +19158,7 @@
 
 
 /***/ },
-/* 130 */
+/* 142 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -18974,15 +19174,15 @@
 
 	"use strict";
 
-	var EventConstants = __webpack_require__(90);
-	var EventPropagators = __webpack_require__(162);
-	var ReactInputSelection = __webpack_require__(166);
-	var SyntheticEvent = __webpack_require__(164);
+	var EventConstants = __webpack_require__(102);
+	var EventPropagators = __webpack_require__(176);
+	var ReactInputSelection = __webpack_require__(180);
+	var SyntheticEvent = __webpack_require__(178);
 
-	var getActiveElement = __webpack_require__(179);
-	var isTextInputElement = __webpack_require__(165);
-	var keyOf = __webpack_require__(103);
-	var shallowEqual = __webpack_require__(180);
+	var getActiveElement = __webpack_require__(193);
+	var isTextInputElement = __webpack_require__(179);
+	var keyOf = __webpack_require__(115);
+	var shallowEqual = __webpack_require__(194);
 
 	var topLevelTypes = EventConstants.topLevelTypes;
 
@@ -19157,7 +19357,7 @@
 
 
 /***/ },
-/* 131 */
+/* 143 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -19192,7 +19392,7 @@
 
 
 /***/ },
-/* 132 */
+/* 144 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -19208,24 +19408,24 @@
 
 	"use strict";
 
-	var EventConstants = __webpack_require__(90);
-	var EventPluginUtils = __webpack_require__(27);
-	var EventPropagators = __webpack_require__(162);
-	var SyntheticClipboardEvent = __webpack_require__(181);
-	var SyntheticEvent = __webpack_require__(164);
-	var SyntheticFocusEvent = __webpack_require__(182);
-	var SyntheticKeyboardEvent = __webpack_require__(183);
-	var SyntheticMouseEvent = __webpack_require__(169);
-	var SyntheticDragEvent = __webpack_require__(184);
-	var SyntheticTouchEvent = __webpack_require__(185);
-	var SyntheticUIEvent = __webpack_require__(186);
-	var SyntheticWheelEvent = __webpack_require__(187);
+	var EventConstants = __webpack_require__(102);
+	var EventPluginUtils = __webpack_require__(37);
+	var EventPropagators = __webpack_require__(176);
+	var SyntheticClipboardEvent = __webpack_require__(195);
+	var SyntheticEvent = __webpack_require__(178);
+	var SyntheticFocusEvent = __webpack_require__(196);
+	var SyntheticKeyboardEvent = __webpack_require__(197);
+	var SyntheticMouseEvent = __webpack_require__(183);
+	var SyntheticDragEvent = __webpack_require__(198);
+	var SyntheticTouchEvent = __webpack_require__(199);
+	var SyntheticUIEvent = __webpack_require__(200);
+	var SyntheticWheelEvent = __webpack_require__(201);
 
-	var getEventCharCode = __webpack_require__(188);
+	var getEventCharCode = __webpack_require__(202);
 
-	var invariant = __webpack_require__(91);
-	var keyOf = __webpack_require__(103);
-	var warning = __webpack_require__(89);
+	var invariant = __webpack_require__(103);
+	var keyOf = __webpack_require__(115);
+	var warning = __webpack_require__(101);
 
 	var topLevelTypes = EventConstants.topLevelTypes;
 
@@ -19620,10 +19820,10 @@
 
 	module.exports = SimpleEventPlugin;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(85)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(97)))
 
 /***/ },
-/* 133 */
+/* 145 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -19641,7 +19841,7 @@
 
 	"use strict";
 
-	var DOMProperty = __webpack_require__(86);
+	var DOMProperty = __webpack_require__(98);
 
 	var MUST_USE_ATTRIBUTE = DOMProperty.injection.MUST_USE_ATTRIBUTE;
 
@@ -19719,7 +19919,7 @@
 
 
 /***/ },
-/* 134 */
+/* 146 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -19737,10 +19937,10 @@
 	"use strict";
 
 	// Defeat circular references by requiring this directly.
-	var ReactCompositeComponent = __webpack_require__(30);
-	var ReactElement = __webpack_require__(33);
+	var ReactCompositeComponent = __webpack_require__(40);
+	var ReactElement = __webpack_require__(43);
 
-	var invariant = __webpack_require__(91);
+	var invariant = __webpack_require__(103);
 
 	/**
 	 * Create a component that will throw an exception when unmounted.
@@ -19780,10 +19980,10 @@
 
 	module.exports = createFullPageComponent;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(85)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(97)))
 
 /***/ },
-/* 135 */
+/* 147 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -19800,12 +20000,12 @@
 
 	"use strict";
 
-	var DOMProperty = __webpack_require__(86);
-	var ReactDefaultPerfAnalysis = __webpack_require__(189);
-	var ReactMount = __webpack_require__(40);
-	var ReactPerf = __webpack_require__(42);
+	var DOMProperty = __webpack_require__(98);
+	var ReactDefaultPerfAnalysis = __webpack_require__(203);
+	var ReactMount = __webpack_require__(50);
+	var ReactPerf = __webpack_require__(52);
 
-	var performanceNow = __webpack_require__(190);
+	var performanceNow = __webpack_require__(204);
 
 	function roundFloat(val) {
 	  return Math.floor(val * 100) / 100;
@@ -20047,7 +20247,7 @@
 
 
 /***/ },
-/* 136 */
+/* 148 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -20082,7 +20282,7 @@
 
 
 /***/ },
-/* 137 */
+/* 149 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -20097,7 +20297,7 @@
 	 * @typechecks
 	 */
 
-	var isTextNode = __webpack_require__(191);
+	var isTextNode = __webpack_require__(205);
 
 	/*jslint bitwise:true */
 
@@ -20130,7 +20330,7 @@
 
 
 /***/ },
-/* 138 */
+/* 150 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -20169,7 +20369,7 @@
 
 
 /***/ },
-/* 139 */
+/* 151 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -20185,7 +20385,7 @@
 
 	"use strict";
 
-	var keyMirror = __webpack_require__(96);
+	var keyMirror = __webpack_require__(108);
 
 	/**
 	 * When a component's children are updated, a series of update configuration
@@ -20206,7 +20406,7 @@
 
 
 /***/ },
-/* 140 */
+/* 152 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -20222,10 +20422,10 @@
 
 	"use strict";
 
-	var ReactTextComponent = __webpack_require__(45);
+	var ReactTextComponent = __webpack_require__(55);
 
-	var traverseAllChildren = __webpack_require__(93);
-	var warning = __webpack_require__(89);
+	var traverseAllChildren = __webpack_require__(105);
+	var warning = __webpack_require__(101);
 
 	/**
 	 * @param {function} traverseContext Context passed through traversal.
@@ -20275,10 +20475,10 @@
 
 	module.exports = flattenChildren;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(85)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(97)))
 
 /***/ },
-/* 141 */
+/* 153 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -20316,7 +20516,7 @@
 
 
 /***/ },
-/* 142 */
+/* 154 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -20332,7 +20532,7 @@
 
 	"use strict";
 
-	var adler32 = __webpack_require__(192);
+	var adler32 = __webpack_require__(206);
 
 	var ReactMarkupChecksum = {
 	  CHECKSUM_ATTR_NAME: 'data-react-checksum',
@@ -20368,7 +20568,7 @@
 
 
 /***/ },
-/* 143 */
+/* 155 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -20385,13 +20585,13 @@
 
 	"use strict";
 
-	var PooledClass = __webpack_require__(92);
-	var CallbackQueue = __webpack_require__(150);
-	var ReactPutListenerQueue = __webpack_require__(193);
-	var Transaction = __webpack_require__(151);
+	var PooledClass = __webpack_require__(104);
+	var CallbackQueue = __webpack_require__(164);
+	var ReactPutListenerQueue = __webpack_require__(207);
+	var Transaction = __webpack_require__(165);
 
-	var assign = __webpack_require__(46);
-	var emptyFunction = __webpack_require__(141);
+	var assign = __webpack_require__(56);
+	var emptyFunction = __webpack_require__(153);
 
 	/**
 	 * Provides a `CallbackQueue` queue for collecting `onDOMReady` callbacks
@@ -20485,7 +20685,109 @@
 
 
 /***/ },
-/* 144 */
+/* 156 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * The MIT License (MIT)
+	 * 
+	 * Copyright (c) 2014 Petka Antonov
+	 * 
+	 * Permission is hereby granted, free of charge, to any person obtaining a copy
+	 * of this software and associated documentation files (the "Software"), to deal
+	 * in the Software without restriction, including without limitation the rights
+	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	 * copies of the Software, and to permit persons to whom the Software is
+	 * furnished to do so, subject to the following conditions:</p>
+	 * 
+	 * The above copyright notice and this permission notice shall be included in
+	 * all copies or substantial portions of the Software.
+	 * 
+	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	 * THE SOFTWARE.
+	 * 
+	 */
+	var isES5 = (function(){
+	    "use strict";
+	    return this === undefined;
+	})();
+
+	if (isES5) {
+	    module.exports = {
+	        freeze: Object.freeze,
+	        defineProperty: Object.defineProperty,
+	        keys: Object.keys,
+	        getPrototypeOf: Object.getPrototypeOf,
+	        isArray: Array.isArray,
+	        isES5: isES5,
+	        propertyIsWritable: function(obj, prop) {
+	            var descriptor = Object.getOwnPropertyDescriptor(obj, prop);
+	            return !!(!descriptor || descriptor.writable || descriptor.set);
+	        }
+	    };
+	} else {
+	    var has = {}.hasOwnProperty;
+	    var str = {}.toString;
+	    var proto = {}.constructor.prototype;
+
+	    var ObjectKeys = function (o) {
+	        var ret = [];
+	        for (var key in o) {
+	            if (has.call(o, key)) {
+	                ret.push(key);
+	            }
+	        }
+	        return ret;
+	    }
+
+	    var ObjectDefineProperty = function (o, key, desc) {
+	        o[key] = desc.value;
+	        return o;
+	    }
+
+	    var ObjectFreeze = function (obj) {
+	        return obj;
+	    }
+
+	    var ObjectGetPrototypeOf = function (obj) {
+	        try {
+	            return Object(obj).constructor.prototype;
+	        }
+	        catch (e) {
+	            return proto;
+	        }
+	    }
+
+	    var ArrayIsArray = function (obj) {
+	        try {
+	            return str.call(obj) === "[object Array]";
+	        }
+	        catch(e) {
+	            return false;
+	        }
+	    }
+
+	    module.exports = {
+	        isArray: ArrayIsArray,
+	        keys: ObjectKeys,
+	        defineProperty: ObjectDefineProperty,
+	        freeze: ObjectFreeze,
+	        getPrototypeOf: ObjectGetPrototypeOf,
+	        isES5: isES5,
+	        propertyIsWritable: function() {
+	            return true;
+	        }
+	    };
+	}
+
+
+/***/ },
+/* 157 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -20516,7 +20818,7 @@
 	var schedule;
 	var _MutationObserver;
 	if (typeof process === "object" && typeof process.version === "string") {
-	    schedule = function Promise$_Scheduler(fn) {
+	    schedule = function (fn) {
 	        process.nextTick(fn);
 	    };
 	}
@@ -20526,18 +20828,16 @@
 	         (_MutationObserver = WebKitMutationObserver))) {
 	    schedule = (function() {
 	        var div = document.createElement("div");
-	        var queuedFn = void 0;
-	        var observer = new _MutationObserver(
-	            function Promise$_Scheduler() {
-	                var fn = queuedFn;
-	                queuedFn = void 0;
-	                fn();
-	            }
-	       );
+	        var queuedFn;
+	        var observer = new _MutationObserver(function() {
+	            var fn = queuedFn;
+	            queuedFn = undefined;
+	            fn();
+	        });
 	        observer.observe(div, {
 	            attributes: true
 	        });
-	        return function Promise$_Scheduler(fn) {
+	        return function(fn) {
 	            queuedFn = fn;
 	            div.classList.toggle("foo");
 	        };
@@ -20545,17 +20845,21 @@
 	    })();
 	}
 	else if (typeof setTimeout !== "undefined") {
-	    schedule = function Promise$_Scheduler(fn) {
+	    schedule = function (fn) {
 	        setTimeout(fn, 0);
 	    };
 	}
-	else throw new Error("no async scheduler available");
+	else {
+	    schedule = function() {
+	        throw new Error("No async scheduler available\u000a\u000a    See http://goo.gl/m3OTXk\u000a");
+	    };
+	}
 	module.exports = schedule;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(85)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(97)))
 
 /***/ },
-/* 145 */
+/* 158 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -20596,12 +20900,11 @@
 	    this._makeCapacity();
 	}
 
-	Queue.prototype._willBeOverCapacity =
-	function Queue$_willBeOverCapacity(size) {
+	Queue.prototype._willBeOverCapacity = function (size) {
 	    return this._capacity < size;
 	};
 
-	Queue.prototype._pushOne = function Queue$_pushOne(arg) {
+	Queue.prototype._pushOne = function (arg) {
 	    var length = this.length();
 	    this._checkCapacity(length + 1);
 	    var i = (this._front + length) & (this._capacity - 1);
@@ -20609,7 +20912,24 @@
 	    this._length = length + 1;
 	};
 
-	Queue.prototype.push = function Queue$push(fn, receiver, arg) {
+	Queue.prototype._unshiftOne = function(value) {
+	    var capacity = this._capacity;
+	    this._checkCapacity(this.length() + 1);
+	    var front = this._front;
+	    var i = (((( front - 1 ) &
+	                    ( capacity - 1) ) ^ capacity ) - capacity );
+	    this[i] = value;
+	    this._front = i;
+	    this._length = this.length() + 1;
+	};
+
+	Queue.prototype.unshift = function(fn, receiver, arg) {
+	    this._unshiftOne(arg);
+	    this._unshiftOne(receiver);
+	    this._unshiftOne(fn);
+	};
+
+	Queue.prototype.push = function (fn, receiver, arg) {
 	    var length = this.length() + 3;
 	    if (this._willBeOverCapacity(length)) {
 	        this._pushOne(fn);
@@ -20626,34 +20946,34 @@
 	    this._length = length;
 	};
 
-	Queue.prototype.shift = function Queue$shift() {
+	Queue.prototype.shift = function () {
 	    var front = this._front,
 	        ret = this[front];
 
-	    this[front] = void 0;
+	    this[front] = undefined;
 	    this._front = (front + 1) & (this._capacity - 1);
 	    this._length--;
 	    return ret;
 	};
 
-	Queue.prototype.length = function Queue$length() {
+	Queue.prototype.length = function () {
 	    return this._length;
 	};
 
-	Queue.prototype._makeCapacity = function Queue$_makeCapacity() {
+	Queue.prototype._makeCapacity = function () {
 	    var len = this._capacity;
 	    for (var i = 0; i < len; ++i) {
-	        this[i] = void 0;
+	        this[i] = undefined;
 	    }
 	};
 
-	Queue.prototype._checkCapacity = function Queue$_checkCapacity(size) {
+	Queue.prototype._checkCapacity = function (size) {
 	    if (this._capacity < size) {
 	        this._resizeTo(this._capacity << 3);
 	    }
 	};
 
-	Queue.prototype._resizeTo = function Queue$_resizeTo(capacity) {
+	Queue.prototype._resizeTo = function (capacity) {
 	    var oldFront = this._front;
 	    var oldCapacity = this._capacity;
 	    var oldQueue = new Array(oldCapacity);
@@ -20678,102 +20998,7 @@
 
 
 /***/ },
-/* 146 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * The MIT License (MIT)
-	 * 
-	 * Copyright (c) 2014 Petka Antonov
-	 * 
-	 * Permission is hereby granted, free of charge, to any person obtaining a copy
-	 * of this software and associated documentation files (the "Software"), to deal
-	 * in the Software without restriction, including without limitation the rights
-	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	 * copies of the Software, and to permit persons to whom the Software is
-	 * furnished to do so, subject to the following conditions:</p>
-	 * 
-	 * The above copyright notice and this permission notice shall be included in
-	 * all copies or substantial portions of the Software.
-	 * 
-	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	 * THE SOFTWARE.
-	 * 
-	 */
-	var isES5 = (function(){
-	    "use strict";
-	    return this === void 0;
-	})();
-
-	if (isES5) {
-	    module.exports = {
-	        freeze: Object.freeze,
-	        defineProperty: Object.defineProperty,
-	        keys: Object.keys,
-	        getPrototypeOf: Object.getPrototypeOf,
-	        isArray: Array.isArray,
-	        isES5: isES5
-	    };
-	} else {
-	    var has = {}.hasOwnProperty;
-	    var str = {}.toString;
-	    var proto = {}.constructor.prototype;
-
-	    var ObjectKeys = function ObjectKeys(o) {
-	        var ret = [];
-	        for (var key in o) {
-	            if (has.call(o, key)) {
-	                ret.push(key);
-	            }
-	        }
-	        return ret;
-	    }
-
-	    var ObjectDefineProperty = function ObjectDefineProperty(o, key, desc) {
-	        o[key] = desc.value;
-	        return o;
-	    }
-
-	    var ObjectFreeze = function ObjectFreeze(obj) {
-	        return obj;
-	    }
-
-	    var ObjectGetPrototypeOf = function ObjectGetPrototypeOf(obj) {
-	        try {
-	            return Object(obj).constructor.prototype;
-	        }
-	        catch (e) {
-	            return proto;
-	        }
-	    }
-
-	    var ArrayIsArray = function ArrayIsArray(obj) {
-	        try {
-	            return str.call(obj) === "[object Array]";
-	        }
-	        catch(e) {
-	            return false;
-	        }
-	    }
-
-	    module.exports = {
-	        isArray: ArrayIsArray,
-	        keys: ObjectKeys,
-	        defineProperty: ObjectDefineProperty,
-	        freeze: ObjectFreeze,
-	        getPrototypeOf: ObjectGetPrototypeOf,
-	        isES5: isES5
-	    };
-	}
-
-
-/***/ },
-/* 147 */
+/* 159 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;//     uuid.js
@@ -21024,7 +21249,7171 @@
 
 
 /***/ },
-/* 148 */
+/* 160 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(module, global) {/**
+	 * @license
+	 * Lo-Dash 2.4.1 (Custom Build) <http://lodash.com/>
+	 * Build: `lodash -o ./dist/lodash.compat.js`
+	 * Copyright 2012-2013 The Dojo Foundation <http://dojofoundation.org/>
+	 * Based on Underscore.js 1.5.2 <http://underscorejs.org/LICENSE>
+	 * Copyright 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+	 * Available under MIT license <http://lodash.com/license>
+	 */
+	;(function() {
+
+	  /** Used as a safe reference for `undefined` in pre ES5 environments */
+	  var undefined;
+
+	  /** Used to pool arrays and objects used internally */
+	  var arrayPool = [],
+	      objectPool = [];
+
+	  /** Used to generate unique IDs */
+	  var idCounter = 0;
+
+	  /** Used internally to indicate various things */
+	  var indicatorObject = {};
+
+	  /** Used to prefix keys to avoid issues with `__proto__` and properties on `Object.prototype` */
+	  var keyPrefix = +new Date + '';
+
+	  /** Used as the size when optimizations are enabled for large arrays */
+	  var largeArraySize = 75;
+
+	  /** Used as the max size of the `arrayPool` and `objectPool` */
+	  var maxPoolSize = 40;
+
+	  /** Used to detect and test whitespace */
+	  var whitespace = (
+	    // whitespace
+	    ' \t\x0B\f\xA0\ufeff' +
+
+	    // line terminators
+	    '\n\r\u2028\u2029' +
+
+	    // unicode category "Zs" space separators
+	    '\u1680\u180e\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u202f\u205f\u3000'
+	  );
+
+	  /** Used to match empty string literals in compiled template source */
+	  var reEmptyStringLeading = /\b__p \+= '';/g,
+	      reEmptyStringMiddle = /\b(__p \+=) '' \+/g,
+	      reEmptyStringTrailing = /(__e\(.*?\)|\b__t\)) \+\n'';/g;
+
+	  /**
+	   * Used to match ES6 template delimiters
+	   * http://people.mozilla.org/~jorendorff/es6-draft.html#sec-literals-string-literals
+	   */
+	  var reEsTemplate = /\$\{([^\\}]*(?:\\.[^\\}]*)*)\}/g;
+
+	  /** Used to match regexp flags from their coerced string values */
+	  var reFlags = /\w*$/;
+
+	  /** Used to detected named functions */
+	  var reFuncName = /^\s*function[ \n\r\t]+\w/;
+
+	  /** Used to match "interpolate" template delimiters */
+	  var reInterpolate = /<%=([\s\S]+?)%>/g;
+
+	  /** Used to match leading whitespace and zeros to be removed */
+	  var reLeadingSpacesAndZeros = RegExp('^[' + whitespace + ']*0+(?=.$)');
+
+	  /** Used to ensure capturing order of template delimiters */
+	  var reNoMatch = /($^)/;
+
+	  /** Used to detect functions containing a `this` reference */
+	  var reThis = /\bthis\b/;
+
+	  /** Used to match unescaped characters in compiled string literals */
+	  var reUnescapedString = /['\n\r\t\u2028\u2029\\]/g;
+
+	  /** Used to assign default `context` object properties */
+	  var contextProps = [
+	    'Array', 'Boolean', 'Date', 'Error', 'Function', 'Math', 'Number', 'Object',
+	    'RegExp', 'String', '_', 'attachEvent', 'clearTimeout', 'isFinite', 'isNaN',
+	    'parseInt', 'setTimeout'
+	  ];
+
+	  /** Used to fix the JScript [[DontEnum]] bug */
+	  var shadowedProps = [
+	    'constructor', 'hasOwnProperty', 'isPrototypeOf', 'propertyIsEnumerable',
+	    'toLocaleString', 'toString', 'valueOf'
+	  ];
+
+	  /** Used to make template sourceURLs easier to identify */
+	  var templateCounter = 0;
+
+	  /** `Object#toString` result shortcuts */
+	  var argsClass = '[object Arguments]',
+	      arrayClass = '[object Array]',
+	      boolClass = '[object Boolean]',
+	      dateClass = '[object Date]',
+	      errorClass = '[object Error]',
+	      funcClass = '[object Function]',
+	      numberClass = '[object Number]',
+	      objectClass = '[object Object]',
+	      regexpClass = '[object RegExp]',
+	      stringClass = '[object String]';
+
+	  /** Used to identify object classifications that `_.clone` supports */
+	  var cloneableClasses = {};
+	  cloneableClasses[funcClass] = false;
+	  cloneableClasses[argsClass] = cloneableClasses[arrayClass] =
+	  cloneableClasses[boolClass] = cloneableClasses[dateClass] =
+	  cloneableClasses[numberClass] = cloneableClasses[objectClass] =
+	  cloneableClasses[regexpClass] = cloneableClasses[stringClass] = true;
+
+	  /** Used as an internal `_.debounce` options object */
+	  var debounceOptions = {
+	    'leading': false,
+	    'maxWait': 0,
+	    'trailing': false
+	  };
+
+	  /** Used as the property descriptor for `__bindData__` */
+	  var descriptor = {
+	    'configurable': false,
+	    'enumerable': false,
+	    'value': null,
+	    'writable': false
+	  };
+
+	  /** Used as the data object for `iteratorTemplate` */
+	  var iteratorData = {
+	    'args': '',
+	    'array': null,
+	    'bottom': '',
+	    'firstArg': '',
+	    'init': '',
+	    'keys': null,
+	    'loop': '',
+	    'shadowedProps': null,
+	    'support': null,
+	    'top': '',
+	    'useHas': false
+	  };
+
+	  /** Used to determine if values are of the language type Object */
+	  var objectTypes = {
+	    'boolean': false,
+	    'function': true,
+	    'object': true,
+	    'number': false,
+	    'string': false,
+	    'undefined': false
+	  };
+
+	  /** Used to escape characters for inclusion in compiled string literals */
+	  var stringEscapes = {
+	    '\\': '\\',
+	    "'": "'",
+	    '\n': 'n',
+	    '\r': 'r',
+	    '\t': 't',
+	    '\u2028': 'u2028',
+	    '\u2029': 'u2029'
+	  };
+
+	  /** Used as a reference to the global object */
+	  var root = (objectTypes[typeof window] && window) || this;
+
+	  /** Detect free variable `exports` */
+	  var freeExports = objectTypes[typeof exports] && exports && !exports.nodeType && exports;
+
+	  /** Detect free variable `module` */
+	  var freeModule = objectTypes[typeof module] && module && !module.nodeType && module;
+
+	  /** Detect the popular CommonJS extension `module.exports` */
+	  var moduleExports = freeModule && freeModule.exports === freeExports && freeExports;
+
+	  /** Detect free variable `global` from Node.js or Browserified code and use it as `root` */
+	  var freeGlobal = objectTypes[typeof global] && global;
+	  if (freeGlobal && (freeGlobal.global === freeGlobal || freeGlobal.window === freeGlobal)) {
+	    root = freeGlobal;
+	  }
+
+	  /*--------------------------------------------------------------------------*/
+
+	  /**
+	   * The base implementation of `_.indexOf` without support for binary searches
+	   * or `fromIndex` constraints.
+	   *
+	   * @private
+	   * @param {Array} array The array to search.
+	   * @param {*} value The value to search for.
+	   * @param {number} [fromIndex=0] The index to search from.
+	   * @returns {number} Returns the index of the matched value or `-1`.
+	   */
+	  function baseIndexOf(array, value, fromIndex) {
+	    var index = (fromIndex || 0) - 1,
+	        length = array ? array.length : 0;
+
+	    while (++index < length) {
+	      if (array[index] === value) {
+	        return index;
+	      }
+	    }
+	    return -1;
+	  }
+
+	  /**
+	   * An implementation of `_.contains` for cache objects that mimics the return
+	   * signature of `_.indexOf` by returning `0` if the value is found, else `-1`.
+	   *
+	   * @private
+	   * @param {Object} cache The cache object to inspect.
+	   * @param {*} value The value to search for.
+	   * @returns {number} Returns `0` if `value` is found, else `-1`.
+	   */
+	  function cacheIndexOf(cache, value) {
+	    var type = typeof value;
+	    cache = cache.cache;
+
+	    if (type == 'boolean' || value == null) {
+	      return cache[value] ? 0 : -1;
+	    }
+	    if (type != 'number' && type != 'string') {
+	      type = 'object';
+	    }
+	    var key = type == 'number' ? value : keyPrefix + value;
+	    cache = (cache = cache[type]) && cache[key];
+
+	    return type == 'object'
+	      ? (cache && baseIndexOf(cache, value) > -1 ? 0 : -1)
+	      : (cache ? 0 : -1);
+	  }
+
+	  /**
+	   * Adds a given value to the corresponding cache object.
+	   *
+	   * @private
+	   * @param {*} value The value to add to the cache.
+	   */
+	  function cachePush(value) {
+	    var cache = this.cache,
+	        type = typeof value;
+
+	    if (type == 'boolean' || value == null) {
+	      cache[value] = true;
+	    } else {
+	      if (type != 'number' && type != 'string') {
+	        type = 'object';
+	      }
+	      var key = type == 'number' ? value : keyPrefix + value,
+	          typeCache = cache[type] || (cache[type] = {});
+
+	      if (type == 'object') {
+	        (typeCache[key] || (typeCache[key] = [])).push(value);
+	      } else {
+	        typeCache[key] = true;
+	      }
+	    }
+	  }
+
+	  /**
+	   * Used by `_.max` and `_.min` as the default callback when a given
+	   * collection is a string value.
+	   *
+	   * @private
+	   * @param {string} value The character to inspect.
+	   * @returns {number} Returns the code unit of given character.
+	   */
+	  function charAtCallback(value) {
+	    return value.charCodeAt(0);
+	  }
+
+	  /**
+	   * Used by `sortBy` to compare transformed `collection` elements, stable sorting
+	   * them in ascending order.
+	   *
+	   * @private
+	   * @param {Object} a The object to compare to `b`.
+	   * @param {Object} b The object to compare to `a`.
+	   * @returns {number} Returns the sort order indicator of `1` or `-1`.
+	   */
+	  function compareAscending(a, b) {
+	    var ac = a.criteria,
+	        bc = b.criteria,
+	        index = -1,
+	        length = ac.length;
+
+	    while (++index < length) {
+	      var value = ac[index],
+	          other = bc[index];
+
+	      if (value !== other) {
+	        if (value > other || typeof value == 'undefined') {
+	          return 1;
+	        }
+	        if (value < other || typeof other == 'undefined') {
+	          return -1;
+	        }
+	      }
+	    }
+	    // Fixes an `Array#sort` bug in the JS engine embedded in Adobe applications
+	    // that causes it, under certain circumstances, to return the same value for
+	    // `a` and `b`. See https://github.com/jashkenas/underscore/pull/1247
+	    //
+	    // This also ensures a stable sort in V8 and other engines.
+	    // See http://code.google.com/p/v8/issues/detail?id=90
+	    return a.index - b.index;
+	  }
+
+	  /**
+	   * Creates a cache object to optimize linear searches of large arrays.
+	   *
+	   * @private
+	   * @param {Array} [array=[]] The array to search.
+	   * @returns {null|Object} Returns the cache object or `null` if caching should not be used.
+	   */
+	  function createCache(array) {
+	    var index = -1,
+	        length = array.length,
+	        first = array[0],
+	        mid = array[(length / 2) | 0],
+	        last = array[length - 1];
+
+	    if (first && typeof first == 'object' &&
+	        mid && typeof mid == 'object' && last && typeof last == 'object') {
+	      return false;
+	    }
+	    var cache = getObject();
+	    cache['false'] = cache['null'] = cache['true'] = cache['undefined'] = false;
+
+	    var result = getObject();
+	    result.array = array;
+	    result.cache = cache;
+	    result.push = cachePush;
+
+	    while (++index < length) {
+	      result.push(array[index]);
+	    }
+	    return result;
+	  }
+
+	  /**
+	   * Used by `template` to escape characters for inclusion in compiled
+	   * string literals.
+	   *
+	   * @private
+	   * @param {string} match The matched character to escape.
+	   * @returns {string} Returns the escaped character.
+	   */
+	  function escapeStringChar(match) {
+	    return '\\' + stringEscapes[match];
+	  }
+
+	  /**
+	   * Gets an array from the array pool or creates a new one if the pool is empty.
+	   *
+	   * @private
+	   * @returns {Array} The array from the pool.
+	   */
+	  function getArray() {
+	    return arrayPool.pop() || [];
+	  }
+
+	  /**
+	   * Gets an object from the object pool or creates a new one if the pool is empty.
+	   *
+	   * @private
+	   * @returns {Object} The object from the pool.
+	   */
+	  function getObject() {
+	    return objectPool.pop() || {
+	      'array': null,
+	      'cache': null,
+	      'criteria': null,
+	      'false': false,
+	      'index': 0,
+	      'null': false,
+	      'number': null,
+	      'object': null,
+	      'push': null,
+	      'string': null,
+	      'true': false,
+	      'undefined': false,
+	      'value': null
+	    };
+	  }
+
+	  /**
+	   * Checks if `value` is a DOM node in IE < 9.
+	   *
+	   * @private
+	   * @param {*} value The value to check.
+	   * @returns {boolean} Returns `true` if the `value` is a DOM node, else `false`.
+	   */
+	  function isNode(value) {
+	    // IE < 9 presents DOM nodes as `Object` objects except they have `toString`
+	    // methods that are `typeof` "string" and still can coerce nodes to strings
+	    return typeof value.toString != 'function' && typeof (value + '') == 'string';
+	  }
+
+	  /**
+	   * Releases the given array back to the array pool.
+	   *
+	   * @private
+	   * @param {Array} [array] The array to release.
+	   */
+	  function releaseArray(array) {
+	    array.length = 0;
+	    if (arrayPool.length < maxPoolSize) {
+	      arrayPool.push(array);
+	    }
+	  }
+
+	  /**
+	   * Releases the given object back to the object pool.
+	   *
+	   * @private
+	   * @param {Object} [object] The object to release.
+	   */
+	  function releaseObject(object) {
+	    var cache = object.cache;
+	    if (cache) {
+	      releaseObject(cache);
+	    }
+	    object.array = object.cache = object.criteria = object.object = object.number = object.string = object.value = null;
+	    if (objectPool.length < maxPoolSize) {
+	      objectPool.push(object);
+	    }
+	  }
+
+	  /**
+	   * Slices the `collection` from the `start` index up to, but not including,
+	   * the `end` index.
+	   *
+	   * Note: This function is used instead of `Array#slice` to support node lists
+	   * in IE < 9 and to ensure dense arrays are returned.
+	   *
+	   * @private
+	   * @param {Array|Object|string} collection The collection to slice.
+	   * @param {number} start The start index.
+	   * @param {number} end The end index.
+	   * @returns {Array} Returns the new array.
+	   */
+	  function slice(array, start, end) {
+	    start || (start = 0);
+	    if (typeof end == 'undefined') {
+	      end = array ? array.length : 0;
+	    }
+	    var index = -1,
+	        length = end - start || 0,
+	        result = Array(length < 0 ? 0 : length);
+
+	    while (++index < length) {
+	      result[index] = array[start + index];
+	    }
+	    return result;
+	  }
+
+	  /*--------------------------------------------------------------------------*/
+
+	  /**
+	   * Create a new `lodash` function using the given context object.
+	   *
+	   * @static
+	   * @memberOf _
+	   * @category Utilities
+	   * @param {Object} [context=root] The context object.
+	   * @returns {Function} Returns the `lodash` function.
+	   */
+	  function runInContext(context) {
+	    // Avoid issues with some ES3 environments that attempt to use values, named
+	    // after built-in constructors like `Object`, for the creation of literals.
+	    // ES5 clears this up by stating that literals must use built-in constructors.
+	    // See http://es5.github.io/#x11.1.5.
+	    context = context ? _.defaults(root.Object(), context, _.pick(root, contextProps)) : root;
+
+	    /** Native constructor references */
+	    var Array = context.Array,
+	        Boolean = context.Boolean,
+	        Date = context.Date,
+	        Error = context.Error,
+	        Function = context.Function,
+	        Math = context.Math,
+	        Number = context.Number,
+	        Object = context.Object,
+	        RegExp = context.RegExp,
+	        String = context.String,
+	        TypeError = context.TypeError;
+
+	    /**
+	     * Used for `Array` method references.
+	     *
+	     * Normally `Array.prototype` would suffice, however, using an array literal
+	     * avoids issues in Narwhal.
+	     */
+	    var arrayRef = [];
+
+	    /** Used for native method references */
+	    var errorProto = Error.prototype,
+	        objectProto = Object.prototype,
+	        stringProto = String.prototype;
+
+	    /** Used to restore the original `_` reference in `noConflict` */
+	    var oldDash = context._;
+
+	    /** Used to resolve the internal [[Class]] of values */
+	    var toString = objectProto.toString;
+
+	    /** Used to detect if a method is native */
+	    var reNative = RegExp('^' +
+	      String(toString)
+	        .replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+	        .replace(/toString| for [^\]]+/g, '.*?') + '$'
+	    );
+
+	    /** Native method shortcuts */
+	    var ceil = Math.ceil,
+	        clearTimeout = context.clearTimeout,
+	        floor = Math.floor,
+	        fnToString = Function.prototype.toString,
+	        getPrototypeOf = isNative(getPrototypeOf = Object.getPrototypeOf) && getPrototypeOf,
+	        hasOwnProperty = objectProto.hasOwnProperty,
+	        push = arrayRef.push,
+	        propertyIsEnumerable = objectProto.propertyIsEnumerable,
+	        setTimeout = context.setTimeout,
+	        splice = arrayRef.splice,
+	        unshift = arrayRef.unshift;
+
+	    /** Used to set meta data on functions */
+	    var defineProperty = (function() {
+	      // IE 8 only accepts DOM elements
+	      try {
+	        var o = {},
+	            func = isNative(func = Object.defineProperty) && func,
+	            result = func(o, o, o) && func;
+	      } catch(e) { }
+	      return result;
+	    }());
+
+	    /* Native method shortcuts for methods with the same name as other `lodash` methods */
+	    var nativeCreate = isNative(nativeCreate = Object.create) && nativeCreate,
+	        nativeIsArray = isNative(nativeIsArray = Array.isArray) && nativeIsArray,
+	        nativeIsFinite = context.isFinite,
+	        nativeIsNaN = context.isNaN,
+	        nativeKeys = isNative(nativeKeys = Object.keys) && nativeKeys,
+	        nativeMax = Math.max,
+	        nativeMin = Math.min,
+	        nativeParseInt = context.parseInt,
+	        nativeRandom = Math.random;
+
+	    /** Used to lookup a built-in constructor by [[Class]] */
+	    var ctorByClass = {};
+	    ctorByClass[arrayClass] = Array;
+	    ctorByClass[boolClass] = Boolean;
+	    ctorByClass[dateClass] = Date;
+	    ctorByClass[funcClass] = Function;
+	    ctorByClass[objectClass] = Object;
+	    ctorByClass[numberClass] = Number;
+	    ctorByClass[regexpClass] = RegExp;
+	    ctorByClass[stringClass] = String;
+
+	    /** Used to avoid iterating non-enumerable properties in IE < 9 */
+	    var nonEnumProps = {};
+	    nonEnumProps[arrayClass] = nonEnumProps[dateClass] = nonEnumProps[numberClass] = { 'constructor': true, 'toLocaleString': true, 'toString': true, 'valueOf': true };
+	    nonEnumProps[boolClass] = nonEnumProps[stringClass] = { 'constructor': true, 'toString': true, 'valueOf': true };
+	    nonEnumProps[errorClass] = nonEnumProps[funcClass] = nonEnumProps[regexpClass] = { 'constructor': true, 'toString': true };
+	    nonEnumProps[objectClass] = { 'constructor': true };
+
+	    (function() {
+	      var length = shadowedProps.length;
+	      while (length--) {
+	        var key = shadowedProps[length];
+	        for (var className in nonEnumProps) {
+	          if (hasOwnProperty.call(nonEnumProps, className) && !hasOwnProperty.call(nonEnumProps[className], key)) {
+	            nonEnumProps[className][key] = false;
+	          }
+	        }
+	      }
+	    }());
+
+	    /*--------------------------------------------------------------------------*/
+
+	    /**
+	     * Creates a `lodash` object which wraps the given value to enable intuitive
+	     * method chaining.
+	     *
+	     * In addition to Lo-Dash methods, wrappers also have the following `Array` methods:
+	     * `concat`, `join`, `pop`, `push`, `reverse`, `shift`, `slice`, `sort`, `splice`,
+	     * and `unshift`
+	     *
+	     * Chaining is supported in custom builds as long as the `value` method is
+	     * implicitly or explicitly included in the build.
+	     *
+	     * The chainable wrapper functions are:
+	     * `after`, `assign`, `bind`, `bindAll`, `bindKey`, `chain`, `compact`,
+	     * `compose`, `concat`, `countBy`, `create`, `createCallback`, `curry`,
+	     * `debounce`, `defaults`, `defer`, `delay`, `difference`, `filter`, `flatten`,
+	     * `forEach`, `forEachRight`, `forIn`, `forInRight`, `forOwn`, `forOwnRight`,
+	     * `functions`, `groupBy`, `indexBy`, `initial`, `intersection`, `invert`,
+	     * `invoke`, `keys`, `map`, `max`, `memoize`, `merge`, `min`, `object`, `omit`,
+	     * `once`, `pairs`, `partial`, `partialRight`, `pick`, `pluck`, `pull`, `push`,
+	     * `range`, `reject`, `remove`, `rest`, `reverse`, `shuffle`, `slice`, `sort`,
+	     * `sortBy`, `splice`, `tap`, `throttle`, `times`, `toArray`, `transform`,
+	     * `union`, `uniq`, `unshift`, `unzip`, `values`, `where`, `without`, `wrap`,
+	     * and `zip`
+	     *
+	     * The non-chainable wrapper functions are:
+	     * `clone`, `cloneDeep`, `contains`, `escape`, `every`, `find`, `findIndex`,
+	     * `findKey`, `findLast`, `findLastIndex`, `findLastKey`, `has`, `identity`,
+	     * `indexOf`, `isArguments`, `isArray`, `isBoolean`, `isDate`, `isElement`,
+	     * `isEmpty`, `isEqual`, `isFinite`, `isFunction`, `isNaN`, `isNull`, `isNumber`,
+	     * `isObject`, `isPlainObject`, `isRegExp`, `isString`, `isUndefined`, `join`,
+	     * `lastIndexOf`, `mixin`, `noConflict`, `parseInt`, `pop`, `random`, `reduce`,
+	     * `reduceRight`, `result`, `shift`, `size`, `some`, `sortedIndex`, `runInContext`,
+	     * `template`, `unescape`, `uniqueId`, and `value`
+	     *
+	     * The wrapper functions `first` and `last` return wrapped values when `n` is
+	     * provided, otherwise they return unwrapped values.
+	     *
+	     * Explicit chaining can be enabled by using the `_.chain` method.
+	     *
+	     * @name _
+	     * @constructor
+	     * @category Chaining
+	     * @param {*} value The value to wrap in a `lodash` instance.
+	     * @returns {Object} Returns a `lodash` instance.
+	     * @example
+	     *
+	     * var wrapped = _([1, 2, 3]);
+	     *
+	     * // returns an unwrapped value
+	     * wrapped.reduce(function(sum, num) {
+	     *   return sum + num;
+	     * });
+	     * // => 6
+	     *
+	     * // returns a wrapped value
+	     * var squares = wrapped.map(function(num) {
+	     *   return num * num;
+	     * });
+	     *
+	     * _.isArray(squares);
+	     * // => false
+	     *
+	     * _.isArray(squares.value());
+	     * // => true
+	     */
+	    function lodash(value) {
+	      // don't wrap if already wrapped, even if wrapped by a different `lodash` constructor
+	      return (value && typeof value == 'object' && !isArray(value) && hasOwnProperty.call(value, '__wrapped__'))
+	       ? value
+	       : new lodashWrapper(value);
+	    }
+
+	    /**
+	     * A fast path for creating `lodash` wrapper objects.
+	     *
+	     * @private
+	     * @param {*} value The value to wrap in a `lodash` instance.
+	     * @param {boolean} chainAll A flag to enable chaining for all methods
+	     * @returns {Object} Returns a `lodash` instance.
+	     */
+	    function lodashWrapper(value, chainAll) {
+	      this.__chain__ = !!chainAll;
+	      this.__wrapped__ = value;
+	    }
+	    // ensure `new lodashWrapper` is an instance of `lodash`
+	    lodashWrapper.prototype = lodash.prototype;
+
+	    /**
+	     * An object used to flag environments features.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @type Object
+	     */
+	    var support = lodash.support = {};
+
+	    (function() {
+	      var ctor = function() { this.x = 1; },
+	          object = { '0': 1, 'length': 1 },
+	          props = [];
+
+	      ctor.prototype = { 'valueOf': 1, 'y': 1 };
+	      for (var key in new ctor) { props.push(key); }
+	      for (key in arguments) { }
+
+	      /**
+	       * Detect if an `arguments` object's [[Class]] is resolvable (all but Firefox < 4, IE < 9).
+	       *
+	       * @memberOf _.support
+	       * @type boolean
+	       */
+	      support.argsClass = toString.call(arguments) == argsClass;
+
+	      /**
+	       * Detect if `arguments` objects are `Object` objects (all but Narwhal and Opera < 10.5).
+	       *
+	       * @memberOf _.support
+	       * @type boolean
+	       */
+	      support.argsObject = arguments.constructor == Object && !(arguments instanceof Array);
+
+	      /**
+	       * Detect if `name` or `message` properties of `Error.prototype` are
+	       * enumerable by default. (IE < 9, Safari < 5.1)
+	       *
+	       * @memberOf _.support
+	       * @type boolean
+	       */
+	      support.enumErrorProps = propertyIsEnumerable.call(errorProto, 'message') || propertyIsEnumerable.call(errorProto, 'name');
+
+	      /**
+	       * Detect if `prototype` properties are enumerable by default.
+	       *
+	       * Firefox < 3.6, Opera > 9.50 - Opera < 11.60, and Safari < 5.1
+	       * (if the prototype or a property on the prototype has been set)
+	       * incorrectly sets a function's `prototype` property [[Enumerable]]
+	       * value to `true`.
+	       *
+	       * @memberOf _.support
+	       * @type boolean
+	       */
+	      support.enumPrototypes = propertyIsEnumerable.call(ctor, 'prototype');
+
+	      /**
+	       * Detect if functions can be decompiled by `Function#toString`
+	       * (all but PS3 and older Opera mobile browsers & avoided in Windows 8 apps).
+	       *
+	       * @memberOf _.support
+	       * @type boolean
+	       */
+	      support.funcDecomp = !isNative(context.WinRTError) && reThis.test(runInContext);
+
+	      /**
+	       * Detect if `Function#name` is supported (all but IE).
+	       *
+	       * @memberOf _.support
+	       * @type boolean
+	       */
+	      support.funcNames = typeof Function.name == 'string';
+
+	      /**
+	       * Detect if `arguments` object indexes are non-enumerable
+	       * (Firefox < 4, IE < 9, PhantomJS, Safari < 5.1).
+	       *
+	       * @memberOf _.support
+	       * @type boolean
+	       */
+	      support.nonEnumArgs = key != 0;
+
+	      /**
+	       * Detect if properties shadowing those on `Object.prototype` are non-enumerable.
+	       *
+	       * In IE < 9 an objects own properties, shadowing non-enumerable ones, are
+	       * made non-enumerable as well (a.k.a the JScript [[DontEnum]] bug).
+	       *
+	       * @memberOf _.support
+	       * @type boolean
+	       */
+	      support.nonEnumShadows = !/valueOf/.test(props);
+
+	      /**
+	       * Detect if own properties are iterated after inherited properties (all but IE < 9).
+	       *
+	       * @memberOf _.support
+	       * @type boolean
+	       */
+	      support.ownLast = props[0] != 'x';
+
+	      /**
+	       * Detect if `Array#shift` and `Array#splice` augment array-like objects correctly.
+	       *
+	       * Firefox < 10, IE compatibility mode, and IE < 9 have buggy Array `shift()`
+	       * and `splice()` functions that fail to remove the last element, `value[0]`,
+	       * of array-like objects even though the `length` property is set to `0`.
+	       * The `shift()` method is buggy in IE 8 compatibility mode, while `splice()`
+	       * is buggy regardless of mode in IE < 9 and buggy in compatibility mode in IE 9.
+	       *
+	       * @memberOf _.support
+	       * @type boolean
+	       */
+	      support.spliceObjects = (arrayRef.splice.call(object, 0, 1), !object[0]);
+
+	      /**
+	       * Detect lack of support for accessing string characters by index.
+	       *
+	       * IE < 8 can't access characters by index and IE 8 can only access
+	       * characters by index on string literals.
+	       *
+	       * @memberOf _.support
+	       * @type boolean
+	       */
+	      support.unindexedChars = ('x'[0] + Object('x')[0]) != 'xx';
+
+	      /**
+	       * Detect if a DOM node's [[Class]] is resolvable (all but IE < 9)
+	       * and that the JS engine errors when attempting to coerce an object to
+	       * a string without a `toString` function.
+	       *
+	       * @memberOf _.support
+	       * @type boolean
+	       */
+	      try {
+	        support.nodeClass = !(toString.call(document) == objectClass && !({ 'toString': 0 } + ''));
+	      } catch(e) {
+	        support.nodeClass = true;
+	      }
+	    }(1));
+
+	    /**
+	     * By default, the template delimiters used by Lo-Dash are similar to those in
+	     * embedded Ruby (ERB). Change the following template settings to use alternative
+	     * delimiters.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @type Object
+	     */
+	    lodash.templateSettings = {
+
+	      /**
+	       * Used to detect `data` property values to be HTML-escaped.
+	       *
+	       * @memberOf _.templateSettings
+	       * @type RegExp
+	       */
+	      'escape': /<%-([\s\S]+?)%>/g,
+
+	      /**
+	       * Used to detect code to be evaluated.
+	       *
+	       * @memberOf _.templateSettings
+	       * @type RegExp
+	       */
+	      'evaluate': /<%([\s\S]+?)%>/g,
+
+	      /**
+	       * Used to detect `data` property values to inject.
+	       *
+	       * @memberOf _.templateSettings
+	       * @type RegExp
+	       */
+	      'interpolate': reInterpolate,
+
+	      /**
+	       * Used to reference the data object in the template text.
+	       *
+	       * @memberOf _.templateSettings
+	       * @type string
+	       */
+	      'variable': '',
+
+	      /**
+	       * Used to import variables into the compiled template.
+	       *
+	       * @memberOf _.templateSettings
+	       * @type Object
+	       */
+	      'imports': {
+
+	        /**
+	         * A reference to the `lodash` function.
+	         *
+	         * @memberOf _.templateSettings.imports
+	         * @type Function
+	         */
+	        '_': lodash
+	      }
+	    };
+
+	    /*--------------------------------------------------------------------------*/
+
+	    /**
+	     * The template used to create iterator functions.
+	     *
+	     * @private
+	     * @param {Object} data The data object used to populate the text.
+	     * @returns {string} Returns the interpolated text.
+	     */
+	    var iteratorTemplate = function(obj) {
+
+	      var __p = 'var index, iterable = ' +
+	      (obj.firstArg) +
+	      ', result = ' +
+	      (obj.init) +
+	      ';\nif (!iterable) return result;\n' +
+	      (obj.top) +
+	      ';';
+	       if (obj.array) {
+	      __p += '\nvar length = iterable.length; index = -1;\nif (' +
+	      (obj.array) +
+	      ') {  ';
+	       if (support.unindexedChars) {
+	      __p += '\n  if (isString(iterable)) {\n    iterable = iterable.split(\'\')\n  }  ';
+	       }
+	      __p += '\n  while (++index < length) {\n    ' +
+	      (obj.loop) +
+	      ';\n  }\n}\nelse {  ';
+	       } else if (support.nonEnumArgs) {
+	      __p += '\n  var length = iterable.length; index = -1;\n  if (length && isArguments(iterable)) {\n    while (++index < length) {\n      index += \'\';\n      ' +
+	      (obj.loop) +
+	      ';\n    }\n  } else {  ';
+	       }
+
+	       if (support.enumPrototypes) {
+	      __p += '\n  var skipProto = typeof iterable == \'function\';\n  ';
+	       }
+
+	       if (support.enumErrorProps) {
+	      __p += '\n  var skipErrorProps = iterable === errorProto || iterable instanceof Error;\n  ';
+	       }
+
+	          var conditions = [];    if (support.enumPrototypes) { conditions.push('!(skipProto && index == "prototype")'); }    if (support.enumErrorProps)  { conditions.push('!(skipErrorProps && (index == "message" || index == "name"))'); }
+
+	       if (obj.useHas && obj.keys) {
+	      __p += '\n  var ownIndex = -1,\n      ownProps = objectTypes[typeof iterable] && keys(iterable),\n      length = ownProps ? ownProps.length : 0;\n\n  while (++ownIndex < length) {\n    index = ownProps[ownIndex];\n';
+	          if (conditions.length) {
+	      __p += '    if (' +
+	      (conditions.join(' && ')) +
+	      ') {\n  ';
+	       }
+	      __p +=
+	      (obj.loop) +
+	      ';    ';
+	       if (conditions.length) {
+	      __p += '\n    }';
+	       }
+	      __p += '\n  }  ';
+	       } else {
+	      __p += '\n  for (index in iterable) {\n';
+	          if (obj.useHas) { conditions.push("hasOwnProperty.call(iterable, index)"); }    if (conditions.length) {
+	      __p += '    if (' +
+	      (conditions.join(' && ')) +
+	      ') {\n  ';
+	       }
+	      __p +=
+	      (obj.loop) +
+	      ';    ';
+	       if (conditions.length) {
+	      __p += '\n    }';
+	       }
+	      __p += '\n  }    ';
+	       if (support.nonEnumShadows) {
+	      __p += '\n\n  if (iterable !== objectProto) {\n    var ctor = iterable.constructor,\n        isProto = iterable === (ctor && ctor.prototype),\n        className = iterable === stringProto ? stringClass : iterable === errorProto ? errorClass : toString.call(iterable),\n        nonEnum = nonEnumProps[className];\n      ';
+	       for (k = 0; k < 7; k++) {
+	      __p += '\n    index = \'' +
+	      (obj.shadowedProps[k]) +
+	      '\';\n    if ((!(isProto && nonEnum[index]) && hasOwnProperty.call(iterable, index))';
+	              if (!obj.useHas) {
+	      __p += ' || (!nonEnum[index] && iterable[index] !== objectProto[index])';
+	       }
+	      __p += ') {\n      ' +
+	      (obj.loop) +
+	      ';\n    }      ';
+	       }
+	      __p += '\n  }    ';
+	       }
+
+	       }
+
+	       if (obj.array || support.nonEnumArgs) {
+	      __p += '\n}';
+	       }
+	      __p +=
+	      (obj.bottom) +
+	      ';\nreturn result';
+
+	      return __p
+	    };
+
+	    /*--------------------------------------------------------------------------*/
+
+	    /**
+	     * The base implementation of `_.bind` that creates the bound function and
+	     * sets its meta data.
+	     *
+	     * @private
+	     * @param {Array} bindData The bind data array.
+	     * @returns {Function} Returns the new bound function.
+	     */
+	    function baseBind(bindData) {
+	      var func = bindData[0],
+	          partialArgs = bindData[2],
+	          thisArg = bindData[4];
+
+	      function bound() {
+	        // `Function#bind` spec
+	        // http://es5.github.io/#x15.3.4.5
+	        if (partialArgs) {
+	          // avoid `arguments` object deoptimizations by using `slice` instead
+	          // of `Array.prototype.slice.call` and not assigning `arguments` to a
+	          // variable as a ternary expression
+	          var args = slice(partialArgs);
+	          push.apply(args, arguments);
+	        }
+	        // mimic the constructor's `return` behavior
+	        // http://es5.github.io/#x13.2.2
+	        if (this instanceof bound) {
+	          // ensure `new bound` is an instance of `func`
+	          var thisBinding = baseCreate(func.prototype),
+	              result = func.apply(thisBinding, args || arguments);
+	          return isObject(result) ? result : thisBinding;
+	        }
+	        return func.apply(thisArg, args || arguments);
+	      }
+	      setBindData(bound, bindData);
+	      return bound;
+	    }
+
+	    /**
+	     * The base implementation of `_.clone` without argument juggling or support
+	     * for `thisArg` binding.
+	     *
+	     * @private
+	     * @param {*} value The value to clone.
+	     * @param {boolean} [isDeep=false] Specify a deep clone.
+	     * @param {Function} [callback] The function to customize cloning values.
+	     * @param {Array} [stackA=[]] Tracks traversed source objects.
+	     * @param {Array} [stackB=[]] Associates clones with source counterparts.
+	     * @returns {*} Returns the cloned value.
+	     */
+	    function baseClone(value, isDeep, callback, stackA, stackB) {
+	      if (callback) {
+	        var result = callback(value);
+	        if (typeof result != 'undefined') {
+	          return result;
+	        }
+	      }
+	      // inspect [[Class]]
+	      var isObj = isObject(value);
+	      if (isObj) {
+	        var className = toString.call(value);
+	        if (!cloneableClasses[className] || (!support.nodeClass && isNode(value))) {
+	          return value;
+	        }
+	        var ctor = ctorByClass[className];
+	        switch (className) {
+	          case boolClass:
+	          case dateClass:
+	            return new ctor(+value);
+
+	          case numberClass:
+	          case stringClass:
+	            return new ctor(value);
+
+	          case regexpClass:
+	            result = ctor(value.source, reFlags.exec(value));
+	            result.lastIndex = value.lastIndex;
+	            return result;
+	        }
+	      } else {
+	        return value;
+	      }
+	      var isArr = isArray(value);
+	      if (isDeep) {
+	        // check for circular references and return corresponding clone
+	        var initedStack = !stackA;
+	        stackA || (stackA = getArray());
+	        stackB || (stackB = getArray());
+
+	        var length = stackA.length;
+	        while (length--) {
+	          if (stackA[length] == value) {
+	            return stackB[length];
+	          }
+	        }
+	        result = isArr ? ctor(value.length) : {};
+	      }
+	      else {
+	        result = isArr ? slice(value) : assign({}, value);
+	      }
+	      // add array properties assigned by `RegExp#exec`
+	      if (isArr) {
+	        if (hasOwnProperty.call(value, 'index')) {
+	          result.index = value.index;
+	        }
+	        if (hasOwnProperty.call(value, 'input')) {
+	          result.input = value.input;
+	        }
+	      }
+	      // exit for shallow clone
+	      if (!isDeep) {
+	        return result;
+	      }
+	      // add the source value to the stack of traversed objects
+	      // and associate it with its clone
+	      stackA.push(value);
+	      stackB.push(result);
+
+	      // recursively populate clone (susceptible to call stack limits)
+	      (isArr ? baseEach : forOwn)(value, function(objValue, key) {
+	        result[key] = baseClone(objValue, isDeep, callback, stackA, stackB);
+	      });
+
+	      if (initedStack) {
+	        releaseArray(stackA);
+	        releaseArray(stackB);
+	      }
+	      return result;
+	    }
+
+	    /**
+	     * The base implementation of `_.create` without support for assigning
+	     * properties to the created object.
+	     *
+	     * @private
+	     * @param {Object} prototype The object to inherit from.
+	     * @returns {Object} Returns the new object.
+	     */
+	    function baseCreate(prototype, properties) {
+	      return isObject(prototype) ? nativeCreate(prototype) : {};
+	    }
+	    // fallback for browsers without `Object.create`
+	    if (!nativeCreate) {
+	      baseCreate = (function() {
+	        function Object() {}
+	        return function(prototype) {
+	          if (isObject(prototype)) {
+	            Object.prototype = prototype;
+	            var result = new Object;
+	            Object.prototype = null;
+	          }
+	          return result || context.Object();
+	        };
+	      }());
+	    }
+
+	    /**
+	     * The base implementation of `_.createCallback` without support for creating
+	     * "_.pluck" or "_.where" style callbacks.
+	     *
+	     * @private
+	     * @param {*} [func=identity] The value to convert to a callback.
+	     * @param {*} [thisArg] The `this` binding of the created callback.
+	     * @param {number} [argCount] The number of arguments the callback accepts.
+	     * @returns {Function} Returns a callback function.
+	     */
+	    function baseCreateCallback(func, thisArg, argCount) {
+	      if (typeof func != 'function') {
+	        return identity;
+	      }
+	      // exit early for no `thisArg` or already bound by `Function#bind`
+	      if (typeof thisArg == 'undefined' || !('prototype' in func)) {
+	        return func;
+	      }
+	      var bindData = func.__bindData__;
+	      if (typeof bindData == 'undefined') {
+	        if (support.funcNames) {
+	          bindData = !func.name;
+	        }
+	        bindData = bindData || !support.funcDecomp;
+	        if (!bindData) {
+	          var source = fnToString.call(func);
+	          if (!support.funcNames) {
+	            bindData = !reFuncName.test(source);
+	          }
+	          if (!bindData) {
+	            // checks if `func` references the `this` keyword and stores the result
+	            bindData = reThis.test(source);
+	            setBindData(func, bindData);
+	          }
+	        }
+	      }
+	      // exit early if there are no `this` references or `func` is bound
+	      if (bindData === false || (bindData !== true && bindData[1] & 1)) {
+	        return func;
+	      }
+	      switch (argCount) {
+	        case 1: return function(value) {
+	          return func.call(thisArg, value);
+	        };
+	        case 2: return function(a, b) {
+	          return func.call(thisArg, a, b);
+	        };
+	        case 3: return function(value, index, collection) {
+	          return func.call(thisArg, value, index, collection);
+	        };
+	        case 4: return function(accumulator, value, index, collection) {
+	          return func.call(thisArg, accumulator, value, index, collection);
+	        };
+	      }
+	      return bind(func, thisArg);
+	    }
+
+	    /**
+	     * The base implementation of `createWrapper` that creates the wrapper and
+	     * sets its meta data.
+	     *
+	     * @private
+	     * @param {Array} bindData The bind data array.
+	     * @returns {Function} Returns the new function.
+	     */
+	    function baseCreateWrapper(bindData) {
+	      var func = bindData[0],
+	          bitmask = bindData[1],
+	          partialArgs = bindData[2],
+	          partialRightArgs = bindData[3],
+	          thisArg = bindData[4],
+	          arity = bindData[5];
+
+	      var isBind = bitmask & 1,
+	          isBindKey = bitmask & 2,
+	          isCurry = bitmask & 4,
+	          isCurryBound = bitmask & 8,
+	          key = func;
+
+	      function bound() {
+	        var thisBinding = isBind ? thisArg : this;
+	        if (partialArgs) {
+	          var args = slice(partialArgs);
+	          push.apply(args, arguments);
+	        }
+	        if (partialRightArgs || isCurry) {
+	          args || (args = slice(arguments));
+	          if (partialRightArgs) {
+	            push.apply(args, partialRightArgs);
+	          }
+	          if (isCurry && args.length < arity) {
+	            bitmask |= 16 & ~32;
+	            return baseCreateWrapper([func, (isCurryBound ? bitmask : bitmask & ~3), args, null, thisArg, arity]);
+	          }
+	        }
+	        args || (args = arguments);
+	        if (isBindKey) {
+	          func = thisBinding[key];
+	        }
+	        if (this instanceof bound) {
+	          thisBinding = baseCreate(func.prototype);
+	          var result = func.apply(thisBinding, args);
+	          return isObject(result) ? result : thisBinding;
+	        }
+	        return func.apply(thisBinding, args);
+	      }
+	      setBindData(bound, bindData);
+	      return bound;
+	    }
+
+	    /**
+	     * The base implementation of `_.difference` that accepts a single array
+	     * of values to exclude.
+	     *
+	     * @private
+	     * @param {Array} array The array to process.
+	     * @param {Array} [values] The array of values to exclude.
+	     * @returns {Array} Returns a new array of filtered values.
+	     */
+	    function baseDifference(array, values) {
+	      var index = -1,
+	          indexOf = getIndexOf(),
+	          length = array ? array.length : 0,
+	          isLarge = length >= largeArraySize && indexOf === baseIndexOf,
+	          result = [];
+
+	      if (isLarge) {
+	        var cache = createCache(values);
+	        if (cache) {
+	          indexOf = cacheIndexOf;
+	          values = cache;
+	        } else {
+	          isLarge = false;
+	        }
+	      }
+	      while (++index < length) {
+	        var value = array[index];
+	        if (indexOf(values, value) < 0) {
+	          result.push(value);
+	        }
+	      }
+	      if (isLarge) {
+	        releaseObject(values);
+	      }
+	      return result;
+	    }
+
+	    /**
+	     * The base implementation of `_.flatten` without support for callback
+	     * shorthands or `thisArg` binding.
+	     *
+	     * @private
+	     * @param {Array} array The array to flatten.
+	     * @param {boolean} [isShallow=false] A flag to restrict flattening to a single level.
+	     * @param {boolean} [isStrict=false] A flag to restrict flattening to arrays and `arguments` objects.
+	     * @param {number} [fromIndex=0] The index to start from.
+	     * @returns {Array} Returns a new flattened array.
+	     */
+	    function baseFlatten(array, isShallow, isStrict, fromIndex) {
+	      var index = (fromIndex || 0) - 1,
+	          length = array ? array.length : 0,
+	          result = [];
+
+	      while (++index < length) {
+	        var value = array[index];
+
+	        if (value && typeof value == 'object' && typeof value.length == 'number'
+	            && (isArray(value) || isArguments(value))) {
+	          // recursively flatten arrays (susceptible to call stack limits)
+	          if (!isShallow) {
+	            value = baseFlatten(value, isShallow, isStrict);
+	          }
+	          var valIndex = -1,
+	              valLength = value.length,
+	              resIndex = result.length;
+
+	          result.length += valLength;
+	          while (++valIndex < valLength) {
+	            result[resIndex++] = value[valIndex];
+	          }
+	        } else if (!isStrict) {
+	          result.push(value);
+	        }
+	      }
+	      return result;
+	    }
+
+	    /**
+	     * The base implementation of `_.isEqual`, without support for `thisArg` binding,
+	     * that allows partial "_.where" style comparisons.
+	     *
+	     * @private
+	     * @param {*} a The value to compare.
+	     * @param {*} b The other value to compare.
+	     * @param {Function} [callback] The function to customize comparing values.
+	     * @param {Function} [isWhere=false] A flag to indicate performing partial comparisons.
+	     * @param {Array} [stackA=[]] Tracks traversed `a` objects.
+	     * @param {Array} [stackB=[]] Tracks traversed `b` objects.
+	     * @returns {boolean} Returns `true` if the values are equivalent, else `false`.
+	     */
+	    function baseIsEqual(a, b, callback, isWhere, stackA, stackB) {
+	      // used to indicate that when comparing objects, `a` has at least the properties of `b`
+	      if (callback) {
+	        var result = callback(a, b);
+	        if (typeof result != 'undefined') {
+	          return !!result;
+	        }
+	      }
+	      // exit early for identical values
+	      if (a === b) {
+	        // treat `+0` vs. `-0` as not equal
+	        return a !== 0 || (1 / a == 1 / b);
+	      }
+	      var type = typeof a,
+	          otherType = typeof b;
+
+	      // exit early for unlike primitive values
+	      if (a === a &&
+	          !(a && objectTypes[type]) &&
+	          !(b && objectTypes[otherType])) {
+	        return false;
+	      }
+	      // exit early for `null` and `undefined` avoiding ES3's Function#call behavior
+	      // http://es5.github.io/#x15.3.4.4
+	      if (a == null || b == null) {
+	        return a === b;
+	      }
+	      // compare [[Class]] names
+	      var className = toString.call(a),
+	          otherClass = toString.call(b);
+
+	      if (className == argsClass) {
+	        className = objectClass;
+	      }
+	      if (otherClass == argsClass) {
+	        otherClass = objectClass;
+	      }
+	      if (className != otherClass) {
+	        return false;
+	      }
+	      switch (className) {
+	        case boolClass:
+	        case dateClass:
+	          // coerce dates and booleans to numbers, dates to milliseconds and booleans
+	          // to `1` or `0` treating invalid dates coerced to `NaN` as not equal
+	          return +a == +b;
+
+	        case numberClass:
+	          // treat `NaN` vs. `NaN` as equal
+	          return (a != +a)
+	            ? b != +b
+	            // but treat `+0` vs. `-0` as not equal
+	            : (a == 0 ? (1 / a == 1 / b) : a == +b);
+
+	        case regexpClass:
+	        case stringClass:
+	          // coerce regexes to strings (http://es5.github.io/#x15.10.6.4)
+	          // treat string primitives and their corresponding object instances as equal
+	          return a == String(b);
+	      }
+	      var isArr = className == arrayClass;
+	      if (!isArr) {
+	        // unwrap any `lodash` wrapped values
+	        var aWrapped = hasOwnProperty.call(a, '__wrapped__'),
+	            bWrapped = hasOwnProperty.call(b, '__wrapped__');
+
+	        if (aWrapped || bWrapped) {
+	          return baseIsEqual(aWrapped ? a.__wrapped__ : a, bWrapped ? b.__wrapped__ : b, callback, isWhere, stackA, stackB);
+	        }
+	        // exit for functions and DOM nodes
+	        if (className != objectClass || (!support.nodeClass && (isNode(a) || isNode(b)))) {
+	          return false;
+	        }
+	        // in older versions of Opera, `arguments` objects have `Array` constructors
+	        var ctorA = !support.argsObject && isArguments(a) ? Object : a.constructor,
+	            ctorB = !support.argsObject && isArguments(b) ? Object : b.constructor;
+
+	        // non `Object` object instances with different constructors are not equal
+	        if (ctorA != ctorB &&
+	              !(isFunction(ctorA) && ctorA instanceof ctorA && isFunction(ctorB) && ctorB instanceof ctorB) &&
+	              ('constructor' in a && 'constructor' in b)
+	            ) {
+	          return false;
+	        }
+	      }
+	      // assume cyclic structures are equal
+	      // the algorithm for detecting cyclic structures is adapted from ES 5.1
+	      // section 15.12.3, abstract operation `JO` (http://es5.github.io/#x15.12.3)
+	      var initedStack = !stackA;
+	      stackA || (stackA = getArray());
+	      stackB || (stackB = getArray());
+
+	      var length = stackA.length;
+	      while (length--) {
+	        if (stackA[length] == a) {
+	          return stackB[length] == b;
+	        }
+	      }
+	      var size = 0;
+	      result = true;
+
+	      // add `a` and `b` to the stack of traversed objects
+	      stackA.push(a);
+	      stackB.push(b);
+
+	      // recursively compare objects and arrays (susceptible to call stack limits)
+	      if (isArr) {
+	        // compare lengths to determine if a deep comparison is necessary
+	        length = a.length;
+	        size = b.length;
+	        result = size == length;
+
+	        if (result || isWhere) {
+	          // deep compare the contents, ignoring non-numeric properties
+	          while (size--) {
+	            var index = length,
+	                value = b[size];
+
+	            if (isWhere) {
+	              while (index--) {
+	                if ((result = baseIsEqual(a[index], value, callback, isWhere, stackA, stackB))) {
+	                  break;
+	                }
+	              }
+	            } else if (!(result = baseIsEqual(a[size], value, callback, isWhere, stackA, stackB))) {
+	              break;
+	            }
+	          }
+	        }
+	      }
+	      else {
+	        // deep compare objects using `forIn`, instead of `forOwn`, to avoid `Object.keys`
+	        // which, in this case, is more costly
+	        forIn(b, function(value, key, b) {
+	          if (hasOwnProperty.call(b, key)) {
+	            // count the number of properties.
+	            size++;
+	            // deep compare each property value.
+	            return (result = hasOwnProperty.call(a, key) && baseIsEqual(a[key], value, callback, isWhere, stackA, stackB));
+	          }
+	        });
+
+	        if (result && !isWhere) {
+	          // ensure both objects have the same number of properties
+	          forIn(a, function(value, key, a) {
+	            if (hasOwnProperty.call(a, key)) {
+	              // `size` will be `-1` if `a` has more properties than `b`
+	              return (result = --size > -1);
+	            }
+	          });
+	        }
+	      }
+	      stackA.pop();
+	      stackB.pop();
+
+	      if (initedStack) {
+	        releaseArray(stackA);
+	        releaseArray(stackB);
+	      }
+	      return result;
+	    }
+
+	    /**
+	     * The base implementation of `_.merge` without argument juggling or support
+	     * for `thisArg` binding.
+	     *
+	     * @private
+	     * @param {Object} object The destination object.
+	     * @param {Object} source The source object.
+	     * @param {Function} [callback] The function to customize merging properties.
+	     * @param {Array} [stackA=[]] Tracks traversed source objects.
+	     * @param {Array} [stackB=[]] Associates values with source counterparts.
+	     */
+	    function baseMerge(object, source, callback, stackA, stackB) {
+	      (isArray(source) ? forEach : forOwn)(source, function(source, key) {
+	        var found,
+	            isArr,
+	            result = source,
+	            value = object[key];
+
+	        if (source && ((isArr = isArray(source)) || isPlainObject(source))) {
+	          // avoid merging previously merged cyclic sources
+	          var stackLength = stackA.length;
+	          while (stackLength--) {
+	            if ((found = stackA[stackLength] == source)) {
+	              value = stackB[stackLength];
+	              break;
+	            }
+	          }
+	          if (!found) {
+	            var isShallow;
+	            if (callback) {
+	              result = callback(value, source);
+	              if ((isShallow = typeof result != 'undefined')) {
+	                value = result;
+	              }
+	            }
+	            if (!isShallow) {
+	              value = isArr
+	                ? (isArray(value) ? value : [])
+	                : (isPlainObject(value) ? value : {});
+	            }
+	            // add `source` and associated `value` to the stack of traversed objects
+	            stackA.push(source);
+	            stackB.push(value);
+
+	            // recursively merge objects and arrays (susceptible to call stack limits)
+	            if (!isShallow) {
+	              baseMerge(value, source, callback, stackA, stackB);
+	            }
+	          }
+	        }
+	        else {
+	          if (callback) {
+	            result = callback(value, source);
+	            if (typeof result == 'undefined') {
+	              result = source;
+	            }
+	          }
+	          if (typeof result != 'undefined') {
+	            value = result;
+	          }
+	        }
+	        object[key] = value;
+	      });
+	    }
+
+	    /**
+	     * The base implementation of `_.random` without argument juggling or support
+	     * for returning floating-point numbers.
+	     *
+	     * @private
+	     * @param {number} min The minimum possible value.
+	     * @param {number} max The maximum possible value.
+	     * @returns {number} Returns a random number.
+	     */
+	    function baseRandom(min, max) {
+	      return min + floor(nativeRandom() * (max - min + 1));
+	    }
+
+	    /**
+	     * The base implementation of `_.uniq` without support for callback shorthands
+	     * or `thisArg` binding.
+	     *
+	     * @private
+	     * @param {Array} array The array to process.
+	     * @param {boolean} [isSorted=false] A flag to indicate that `array` is sorted.
+	     * @param {Function} [callback] The function called per iteration.
+	     * @returns {Array} Returns a duplicate-value-free array.
+	     */
+	    function baseUniq(array, isSorted, callback) {
+	      var index = -1,
+	          indexOf = getIndexOf(),
+	          length = array ? array.length : 0,
+	          result = [];
+
+	      var isLarge = !isSorted && length >= largeArraySize && indexOf === baseIndexOf,
+	          seen = (callback || isLarge) ? getArray() : result;
+
+	      if (isLarge) {
+	        var cache = createCache(seen);
+	        indexOf = cacheIndexOf;
+	        seen = cache;
+	      }
+	      while (++index < length) {
+	        var value = array[index],
+	            computed = callback ? callback(value, index, array) : value;
+
+	        if (isSorted
+	              ? !index || seen[seen.length - 1] !== computed
+	              : indexOf(seen, computed) < 0
+	            ) {
+	          if (callback || isLarge) {
+	            seen.push(computed);
+	          }
+	          result.push(value);
+	        }
+	      }
+	      if (isLarge) {
+	        releaseArray(seen.array);
+	        releaseObject(seen);
+	      } else if (callback) {
+	        releaseArray(seen);
+	      }
+	      return result;
+	    }
+
+	    /**
+	     * Creates a function that aggregates a collection, creating an object composed
+	     * of keys generated from the results of running each element of the collection
+	     * through a callback. The given `setter` function sets the keys and values
+	     * of the composed object.
+	     *
+	     * @private
+	     * @param {Function} setter The setter function.
+	     * @returns {Function} Returns the new aggregator function.
+	     */
+	    function createAggregator(setter) {
+	      return function(collection, callback, thisArg) {
+	        var result = {};
+	        callback = lodash.createCallback(callback, thisArg, 3);
+
+	        if (isArray(collection)) {
+	          var index = -1,
+	              length = collection.length;
+
+	          while (++index < length) {
+	            var value = collection[index];
+	            setter(result, value, callback(value, index, collection), collection);
+	          }
+	        } else {
+	          baseEach(collection, function(value, key, collection) {
+	            setter(result, value, callback(value, key, collection), collection);
+	          });
+	        }
+	        return result;
+	      };
+	    }
+
+	    /**
+	     * Creates a function that, when called, either curries or invokes `func`
+	     * with an optional `this` binding and partially applied arguments.
+	     *
+	     * @private
+	     * @param {Function|string} func The function or method name to reference.
+	     * @param {number} bitmask The bitmask of method flags to compose.
+	     *  The bitmask may be composed of the following flags:
+	     *  1 - `_.bind`
+	     *  2 - `_.bindKey`
+	     *  4 - `_.curry`
+	     *  8 - `_.curry` (bound)
+	     *  16 - `_.partial`
+	     *  32 - `_.partialRight`
+	     * @param {Array} [partialArgs] An array of arguments to prepend to those
+	     *  provided to the new function.
+	     * @param {Array} [partialRightArgs] An array of arguments to append to those
+	     *  provided to the new function.
+	     * @param {*} [thisArg] The `this` binding of `func`.
+	     * @param {number} [arity] The arity of `func`.
+	     * @returns {Function} Returns the new function.
+	     */
+	    function createWrapper(func, bitmask, partialArgs, partialRightArgs, thisArg, arity) {
+	      var isBind = bitmask & 1,
+	          isBindKey = bitmask & 2,
+	          isCurry = bitmask & 4,
+	          isCurryBound = bitmask & 8,
+	          isPartial = bitmask & 16,
+	          isPartialRight = bitmask & 32;
+
+	      if (!isBindKey && !isFunction(func)) {
+	        throw new TypeError;
+	      }
+	      if (isPartial && !partialArgs.length) {
+	        bitmask &= ~16;
+	        isPartial = partialArgs = false;
+	      }
+	      if (isPartialRight && !partialRightArgs.length) {
+	        bitmask &= ~32;
+	        isPartialRight = partialRightArgs = false;
+	      }
+	      var bindData = func && func.__bindData__;
+	      if (bindData && bindData !== true) {
+	        // clone `bindData`
+	        bindData = slice(bindData);
+	        if (bindData[2]) {
+	          bindData[2] = slice(bindData[2]);
+	        }
+	        if (bindData[3]) {
+	          bindData[3] = slice(bindData[3]);
+	        }
+	        // set `thisBinding` is not previously bound
+	        if (isBind && !(bindData[1] & 1)) {
+	          bindData[4] = thisArg;
+	        }
+	        // set if previously bound but not currently (subsequent curried functions)
+	        if (!isBind && bindData[1] & 1) {
+	          bitmask |= 8;
+	        }
+	        // set curried arity if not yet set
+	        if (isCurry && !(bindData[1] & 4)) {
+	          bindData[5] = arity;
+	        }
+	        // append partial left arguments
+	        if (isPartial) {
+	          push.apply(bindData[2] || (bindData[2] = []), partialArgs);
+	        }
+	        // append partial right arguments
+	        if (isPartialRight) {
+	          unshift.apply(bindData[3] || (bindData[3] = []), partialRightArgs);
+	        }
+	        // merge flags
+	        bindData[1] |= bitmask;
+	        return createWrapper.apply(null, bindData);
+	      }
+	      // fast path for `_.bind`
+	      var creater = (bitmask == 1 || bitmask === 17) ? baseBind : baseCreateWrapper;
+	      return creater([func, bitmask, partialArgs, partialRightArgs, thisArg, arity]);
+	    }
+
+	    /**
+	     * Creates compiled iteration functions.
+	     *
+	     * @private
+	     * @param {...Object} [options] The compile options object(s).
+	     * @param {string} [options.array] Code to determine if the iterable is an array or array-like.
+	     * @param {boolean} [options.useHas] Specify using `hasOwnProperty` checks in the object loop.
+	     * @param {Function} [options.keys] A reference to `_.keys` for use in own property iteration.
+	     * @param {string} [options.args] A comma separated string of iteration function arguments.
+	     * @param {string} [options.top] Code to execute before the iteration branches.
+	     * @param {string} [options.loop] Code to execute in the object loop.
+	     * @param {string} [options.bottom] Code to execute after the iteration branches.
+	     * @returns {Function} Returns the compiled function.
+	     */
+	    function createIterator() {
+	      // data properties
+	      iteratorData.shadowedProps = shadowedProps;
+
+	      // iterator options
+	      iteratorData.array = iteratorData.bottom = iteratorData.loop = iteratorData.top = '';
+	      iteratorData.init = 'iterable';
+	      iteratorData.useHas = true;
+
+	      // merge options into a template data object
+	      for (var object, index = 0; object = arguments[index]; index++) {
+	        for (var key in object) {
+	          iteratorData[key] = object[key];
+	        }
+	      }
+	      var args = iteratorData.args;
+	      iteratorData.firstArg = /^[^,]+/.exec(args)[0];
+
+	      // create the function factory
+	      var factory = Function(
+	          'baseCreateCallback, errorClass, errorProto, hasOwnProperty, ' +
+	          'indicatorObject, isArguments, isArray, isString, keys, objectProto, ' +
+	          'objectTypes, nonEnumProps, stringClass, stringProto, toString',
+	        'return function(' + args + ') {\n' + iteratorTemplate(iteratorData) + '\n}'
+	      );
+
+	      // return the compiled function
+	      return factory(
+	        baseCreateCallback, errorClass, errorProto, hasOwnProperty,
+	        indicatorObject, isArguments, isArray, isString, iteratorData.keys, objectProto,
+	        objectTypes, nonEnumProps, stringClass, stringProto, toString
+	      );
+	    }
+
+	    /**
+	     * Used by `escape` to convert characters to HTML entities.
+	     *
+	     * @private
+	     * @param {string} match The matched character to escape.
+	     * @returns {string} Returns the escaped character.
+	     */
+	    function escapeHtmlChar(match) {
+	      return htmlEscapes[match];
+	    }
+
+	    /**
+	     * Gets the appropriate "indexOf" function. If the `_.indexOf` method is
+	     * customized, this method returns the custom method, otherwise it returns
+	     * the `baseIndexOf` function.
+	     *
+	     * @private
+	     * @returns {Function} Returns the "indexOf" function.
+	     */
+	    function getIndexOf() {
+	      var result = (result = lodash.indexOf) === indexOf ? baseIndexOf : result;
+	      return result;
+	    }
+
+	    /**
+	     * Checks if `value` is a native function.
+	     *
+	     * @private
+	     * @param {*} value The value to check.
+	     * @returns {boolean} Returns `true` if the `value` is a native function, else `false`.
+	     */
+	    function isNative(value) {
+	      return typeof value == 'function' && reNative.test(value);
+	    }
+
+	    /**
+	     * Sets `this` binding data on a given function.
+	     *
+	     * @private
+	     * @param {Function} func The function to set data on.
+	     * @param {Array} value The data array to set.
+	     */
+	    var setBindData = !defineProperty ? noop : function(func, value) {
+	      descriptor.value = value;
+	      defineProperty(func, '__bindData__', descriptor);
+	    };
+
+	    /**
+	     * A fallback implementation of `isPlainObject` which checks if a given value
+	     * is an object created by the `Object` constructor, assuming objects created
+	     * by the `Object` constructor have no inherited enumerable properties and that
+	     * there are no `Object.prototype` extensions.
+	     *
+	     * @private
+	     * @param {*} value The value to check.
+	     * @returns {boolean} Returns `true` if `value` is a plain object, else `false`.
+	     */
+	    function shimIsPlainObject(value) {
+	      var ctor,
+	          result;
+
+	      // avoid non Object objects, `arguments` objects, and DOM elements
+	      if (!(value && toString.call(value) == objectClass) ||
+	          (ctor = value.constructor, isFunction(ctor) && !(ctor instanceof ctor)) ||
+	          (!support.argsClass && isArguments(value)) ||
+	          (!support.nodeClass && isNode(value))) {
+	        return false;
+	      }
+	      // IE < 9 iterates inherited properties before own properties. If the first
+	      // iterated property is an object's own property then there are no inherited
+	      // enumerable properties.
+	      if (support.ownLast) {
+	        forIn(value, function(value, key, object) {
+	          result = hasOwnProperty.call(object, key);
+	          return false;
+	        });
+	        return result !== false;
+	      }
+	      // In most environments an object's own properties are iterated before
+	      // its inherited properties. If the last iterated property is an object's
+	      // own property then there are no inherited enumerable properties.
+	      forIn(value, function(value, key) {
+	        result = key;
+	      });
+	      return typeof result == 'undefined' || hasOwnProperty.call(value, result);
+	    }
+
+	    /**
+	     * Used by `unescape` to convert HTML entities to characters.
+	     *
+	     * @private
+	     * @param {string} match The matched character to unescape.
+	     * @returns {string} Returns the unescaped character.
+	     */
+	    function unescapeHtmlChar(match) {
+	      return htmlUnescapes[match];
+	    }
+
+	    /*--------------------------------------------------------------------------*/
+
+	    /**
+	     * Checks if `value` is an `arguments` object.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Objects
+	     * @param {*} value The value to check.
+	     * @returns {boolean} Returns `true` if the `value` is an `arguments` object, else `false`.
+	     * @example
+	     *
+	     * (function() { return _.isArguments(arguments); })(1, 2, 3);
+	     * // => true
+	     *
+	     * _.isArguments([1, 2, 3]);
+	     * // => false
+	     */
+	    function isArguments(value) {
+	      return value && typeof value == 'object' && typeof value.length == 'number' &&
+	        toString.call(value) == argsClass || false;
+	    }
+	    // fallback for browsers that can't detect `arguments` objects by [[Class]]
+	    if (!support.argsClass) {
+	      isArguments = function(value) {
+	        return value && typeof value == 'object' && typeof value.length == 'number' &&
+	          hasOwnProperty.call(value, 'callee') && !propertyIsEnumerable.call(value, 'callee') || false;
+	      };
+	    }
+
+	    /**
+	     * Checks if `value` is an array.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @type Function
+	     * @category Objects
+	     * @param {*} value The value to check.
+	     * @returns {boolean} Returns `true` if the `value` is an array, else `false`.
+	     * @example
+	     *
+	     * (function() { return _.isArray(arguments); })();
+	     * // => false
+	     *
+	     * _.isArray([1, 2, 3]);
+	     * // => true
+	     */
+	    var isArray = nativeIsArray || function(value) {
+	      return value && typeof value == 'object' && typeof value.length == 'number' &&
+	        toString.call(value) == arrayClass || false;
+	    };
+
+	    /**
+	     * A fallback implementation of `Object.keys` which produces an array of the
+	     * given object's own enumerable property names.
+	     *
+	     * @private
+	     * @type Function
+	     * @param {Object} object The object to inspect.
+	     * @returns {Array} Returns an array of property names.
+	     */
+	    var shimKeys = createIterator({
+	      'args': 'object',
+	      'init': '[]',
+	      'top': 'if (!(objectTypes[typeof object])) return result',
+	      'loop': 'result.push(index)'
+	    });
+
+	    /**
+	     * Creates an array composed of the own enumerable property names of an object.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Objects
+	     * @param {Object} object The object to inspect.
+	     * @returns {Array} Returns an array of property names.
+	     * @example
+	     *
+	     * _.keys({ 'one': 1, 'two': 2, 'three': 3 });
+	     * // => ['one', 'two', 'three'] (property order is not guaranteed across environments)
+	     */
+	    var keys = !nativeKeys ? shimKeys : function(object) {
+	      if (!isObject(object)) {
+	        return [];
+	      }
+	      if ((support.enumPrototypes && typeof object == 'function') ||
+	          (support.nonEnumArgs && object.length && isArguments(object))) {
+	        return shimKeys(object);
+	      }
+	      return nativeKeys(object);
+	    };
+
+	    /** Reusable iterator options shared by `each`, `forIn`, and `forOwn` */
+	    var eachIteratorOptions = {
+	      'args': 'collection, callback, thisArg',
+	      'top': "callback = callback && typeof thisArg == 'undefined' ? callback : baseCreateCallback(callback, thisArg, 3)",
+	      'array': "typeof length == 'number'",
+	      'keys': keys,
+	      'loop': 'if (callback(iterable[index], index, collection) === false) return result'
+	    };
+
+	    /** Reusable iterator options for `assign` and `defaults` */
+	    var defaultsIteratorOptions = {
+	      'args': 'object, source, guard',
+	      'top':
+	        'var args = arguments,\n' +
+	        '    argsIndex = 0,\n' +
+	        "    argsLength = typeof guard == 'number' ? 2 : args.length;\n" +
+	        'while (++argsIndex < argsLength) {\n' +
+	        '  iterable = args[argsIndex];\n' +
+	        '  if (iterable && objectTypes[typeof iterable]) {',
+	      'keys': keys,
+	      'loop': "if (typeof result[index] == 'undefined') result[index] = iterable[index]",
+	      'bottom': '  }\n}'
+	    };
+
+	    /** Reusable iterator options for `forIn` and `forOwn` */
+	    var forOwnIteratorOptions = {
+	      'top': 'if (!objectTypes[typeof iterable]) return result;\n' + eachIteratorOptions.top,
+	      'array': false
+	    };
+
+	    /**
+	     * Used to convert characters to HTML entities:
+	     *
+	     * Though the `>` character is escaped for symmetry, characters like `>` and `/`
+	     * don't require escaping in HTML and have no special meaning unless they're part
+	     * of a tag or an unquoted attribute value.
+	     * http://mathiasbynens.be/notes/ambiguous-ampersands (under "semi-related fun fact")
+	     */
+	    var htmlEscapes = {
+	      '&': '&amp;',
+	      '<': '&lt;',
+	      '>': '&gt;',
+	      '"': '&quot;',
+	      "'": '&#39;'
+	    };
+
+	    /** Used to convert HTML entities to characters */
+	    var htmlUnescapes = invert(htmlEscapes);
+
+	    /** Used to match HTML entities and HTML characters */
+	    var reEscapedHtml = RegExp('(' + keys(htmlUnescapes).join('|') + ')', 'g'),
+	        reUnescapedHtml = RegExp('[' + keys(htmlEscapes).join('') + ']', 'g');
+
+	    /**
+	     * A function compiled to iterate `arguments` objects, arrays, objects, and
+	     * strings consistenly across environments, executing the callback for each
+	     * element in the collection. The callback is bound to `thisArg` and invoked
+	     * with three arguments; (value, index|key, collection). Callbacks may exit
+	     * iteration early by explicitly returning `false`.
+	     *
+	     * @private
+	     * @type Function
+	     * @param {Array|Object|string} collection The collection to iterate over.
+	     * @param {Function} [callback=identity] The function called per iteration.
+	     * @param {*} [thisArg] The `this` binding of `callback`.
+	     * @returns {Array|Object|string} Returns `collection`.
+	     */
+	    var baseEach = createIterator(eachIteratorOptions);
+
+	    /*--------------------------------------------------------------------------*/
+
+	    /**
+	     * Assigns own enumerable properties of source object(s) to the destination
+	     * object. Subsequent sources will overwrite property assignments of previous
+	     * sources. If a callback is provided it will be executed to produce the
+	     * assigned values. The callback is bound to `thisArg` and invoked with two
+	     * arguments; (objectValue, sourceValue).
+	     *
+	     * @static
+	     * @memberOf _
+	     * @type Function
+	     * @alias extend
+	     * @category Objects
+	     * @param {Object} object The destination object.
+	     * @param {...Object} [source] The source objects.
+	     * @param {Function} [callback] The function to customize assigning values.
+	     * @param {*} [thisArg] The `this` binding of `callback`.
+	     * @returns {Object} Returns the destination object.
+	     * @example
+	     *
+	     * _.assign({ 'name': 'fred' }, { 'employer': 'slate' });
+	     * // => { 'name': 'fred', 'employer': 'slate' }
+	     *
+	     * var defaults = _.partialRight(_.assign, function(a, b) {
+	     *   return typeof a == 'undefined' ? b : a;
+	     * });
+	     *
+	     * var object = { 'name': 'barney' };
+	     * defaults(object, { 'name': 'fred', 'employer': 'slate' });
+	     * // => { 'name': 'barney', 'employer': 'slate' }
+	     */
+	    var assign = createIterator(defaultsIteratorOptions, {
+	      'top':
+	        defaultsIteratorOptions.top.replace(';',
+	          ';\n' +
+	          "if (argsLength > 3 && typeof args[argsLength - 2] == 'function') {\n" +
+	          '  var callback = baseCreateCallback(args[--argsLength - 1], args[argsLength--], 2);\n' +
+	          "} else if (argsLength > 2 && typeof args[argsLength - 1] == 'function') {\n" +
+	          '  callback = args[--argsLength];\n' +
+	          '}'
+	        ),
+	      'loop': 'result[index] = callback ? callback(result[index], iterable[index]) : iterable[index]'
+	    });
+
+	    /**
+	     * Creates a clone of `value`. If `isDeep` is `true` nested objects will also
+	     * be cloned, otherwise they will be assigned by reference. If a callback
+	     * is provided it will be executed to produce the cloned values. If the
+	     * callback returns `undefined` cloning will be handled by the method instead.
+	     * The callback is bound to `thisArg` and invoked with one argument; (value).
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Objects
+	     * @param {*} value The value to clone.
+	     * @param {boolean} [isDeep=false] Specify a deep clone.
+	     * @param {Function} [callback] The function to customize cloning values.
+	     * @param {*} [thisArg] The `this` binding of `callback`.
+	     * @returns {*} Returns the cloned value.
+	     * @example
+	     *
+	     * var characters = [
+	     *   { 'name': 'barney', 'age': 36 },
+	     *   { 'name': 'fred',   'age': 40 }
+	     * ];
+	     *
+	     * var shallow = _.clone(characters);
+	     * shallow[0] === characters[0];
+	     * // => true
+	     *
+	     * var deep = _.clone(characters, true);
+	     * deep[0] === characters[0];
+	     * // => false
+	     *
+	     * _.mixin({
+	     *   'clone': _.partialRight(_.clone, function(value) {
+	     *     return _.isElement(value) ? value.cloneNode(false) : undefined;
+	     *   })
+	     * });
+	     *
+	     * var clone = _.clone(document.body);
+	     * clone.childNodes.length;
+	     * // => 0
+	     */
+	    function clone(value, isDeep, callback, thisArg) {
+	      // allows working with "Collections" methods without using their `index`
+	      // and `collection` arguments for `isDeep` and `callback`
+	      if (typeof isDeep != 'boolean' && isDeep != null) {
+	        thisArg = callback;
+	        callback = isDeep;
+	        isDeep = false;
+	      }
+	      return baseClone(value, isDeep, typeof callback == 'function' && baseCreateCallback(callback, thisArg, 1));
+	    }
+
+	    /**
+	     * Creates a deep clone of `value`. If a callback is provided it will be
+	     * executed to produce the cloned values. If the callback returns `undefined`
+	     * cloning will be handled by the method instead. The callback is bound to
+	     * `thisArg` and invoked with one argument; (value).
+	     *
+	     * Note: This method is loosely based on the structured clone algorithm. Functions
+	     * and DOM nodes are **not** cloned. The enumerable properties of `arguments` objects and
+	     * objects created by constructors other than `Object` are cloned to plain `Object` objects.
+	     * See http://www.w3.org/TR/html5/infrastructure.html#internal-structured-cloning-algorithm.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Objects
+	     * @param {*} value The value to deep clone.
+	     * @param {Function} [callback] The function to customize cloning values.
+	     * @param {*} [thisArg] The `this` binding of `callback`.
+	     * @returns {*} Returns the deep cloned value.
+	     * @example
+	     *
+	     * var characters = [
+	     *   { 'name': 'barney', 'age': 36 },
+	     *   { 'name': 'fred',   'age': 40 }
+	     * ];
+	     *
+	     * var deep = _.cloneDeep(characters);
+	     * deep[0] === characters[0];
+	     * // => false
+	     *
+	     * var view = {
+	     *   'label': 'docs',
+	     *   'node': element
+	     * };
+	     *
+	     * var clone = _.cloneDeep(view, function(value) {
+	     *   return _.isElement(value) ? value.cloneNode(true) : undefined;
+	     * });
+	     *
+	     * clone.node == view.node;
+	     * // => false
+	     */
+	    function cloneDeep(value, callback, thisArg) {
+	      return baseClone(value, true, typeof callback == 'function' && baseCreateCallback(callback, thisArg, 1));
+	    }
+
+	    /**
+	     * Creates an object that inherits from the given `prototype` object. If a
+	     * `properties` object is provided its own enumerable properties are assigned
+	     * to the created object.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Objects
+	     * @param {Object} prototype The object to inherit from.
+	     * @param {Object} [properties] The properties to assign to the object.
+	     * @returns {Object} Returns the new object.
+	     * @example
+	     *
+	     * function Shape() {
+	     *   this.x = 0;
+	     *   this.y = 0;
+	     * }
+	     *
+	     * function Circle() {
+	     *   Shape.call(this);
+	     * }
+	     *
+	     * Circle.prototype = _.create(Shape.prototype, { 'constructor': Circle });
+	     *
+	     * var circle = new Circle;
+	     * circle instanceof Circle;
+	     * // => true
+	     *
+	     * circle instanceof Shape;
+	     * // => true
+	     */
+	    function create(prototype, properties) {
+	      var result = baseCreate(prototype);
+	      return properties ? assign(result, properties) : result;
+	    }
+
+	    /**
+	     * Assigns own enumerable properties of source object(s) to the destination
+	     * object for all destination properties that resolve to `undefined`. Once a
+	     * property is set, additional defaults of the same property will be ignored.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @type Function
+	     * @category Objects
+	     * @param {Object} object The destination object.
+	     * @param {...Object} [source] The source objects.
+	     * @param- {Object} [guard] Allows working with `_.reduce` without using its
+	     *  `key` and `object` arguments as sources.
+	     * @returns {Object} Returns the destination object.
+	     * @example
+	     *
+	     * var object = { 'name': 'barney' };
+	     * _.defaults(object, { 'name': 'fred', 'employer': 'slate' });
+	     * // => { 'name': 'barney', 'employer': 'slate' }
+	     */
+	    var defaults = createIterator(defaultsIteratorOptions);
+
+	    /**
+	     * This method is like `_.findIndex` except that it returns the key of the
+	     * first element that passes the callback check, instead of the element itself.
+	     *
+	     * If a property name is provided for `callback` the created "_.pluck" style
+	     * callback will return the property value of the given element.
+	     *
+	     * If an object is provided for `callback` the created "_.where" style callback
+	     * will return `true` for elements that have the properties of the given object,
+	     * else `false`.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Objects
+	     * @param {Object} object The object to search.
+	     * @param {Function|Object|string} [callback=identity] The function called per
+	     *  iteration. If a property name or object is provided it will be used to
+	     *  create a "_.pluck" or "_.where" style callback, respectively.
+	     * @param {*} [thisArg] The `this` binding of `callback`.
+	     * @returns {string|undefined} Returns the key of the found element, else `undefined`.
+	     * @example
+	     *
+	     * var characters = {
+	     *   'barney': {  'age': 36, 'blocked': false },
+	     *   'fred': {    'age': 40, 'blocked': true },
+	     *   'pebbles': { 'age': 1,  'blocked': false }
+	     * };
+	     *
+	     * _.findKey(characters, function(chr) {
+	     *   return chr.age < 40;
+	     * });
+	     * // => 'barney' (property order is not guaranteed across environments)
+	     *
+	     * // using "_.where" callback shorthand
+	     * _.findKey(characters, { 'age': 1 });
+	     * // => 'pebbles'
+	     *
+	     * // using "_.pluck" callback shorthand
+	     * _.findKey(characters, 'blocked');
+	     * // => 'fred'
+	     */
+	    function findKey(object, callback, thisArg) {
+	      var result;
+	      callback = lodash.createCallback(callback, thisArg, 3);
+	      forOwn(object, function(value, key, object) {
+	        if (callback(value, key, object)) {
+	          result = key;
+	          return false;
+	        }
+	      });
+	      return result;
+	    }
+
+	    /**
+	     * This method is like `_.findKey` except that it iterates over elements
+	     * of a `collection` in the opposite order.
+	     *
+	     * If a property name is provided for `callback` the created "_.pluck" style
+	     * callback will return the property value of the given element.
+	     *
+	     * If an object is provided for `callback` the created "_.where" style callback
+	     * will return `true` for elements that have the properties of the given object,
+	     * else `false`.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Objects
+	     * @param {Object} object The object to search.
+	     * @param {Function|Object|string} [callback=identity] The function called per
+	     *  iteration. If a property name or object is provided it will be used to
+	     *  create a "_.pluck" or "_.where" style callback, respectively.
+	     * @param {*} [thisArg] The `this` binding of `callback`.
+	     * @returns {string|undefined} Returns the key of the found element, else `undefined`.
+	     * @example
+	     *
+	     * var characters = {
+	     *   'barney': {  'age': 36, 'blocked': true },
+	     *   'fred': {    'age': 40, 'blocked': false },
+	     *   'pebbles': { 'age': 1,  'blocked': true }
+	     * };
+	     *
+	     * _.findLastKey(characters, function(chr) {
+	     *   return chr.age < 40;
+	     * });
+	     * // => returns `pebbles`, assuming `_.findKey` returns `barney`
+	     *
+	     * // using "_.where" callback shorthand
+	     * _.findLastKey(characters, { 'age': 40 });
+	     * // => 'fred'
+	     *
+	     * // using "_.pluck" callback shorthand
+	     * _.findLastKey(characters, 'blocked');
+	     * // => 'pebbles'
+	     */
+	    function findLastKey(object, callback, thisArg) {
+	      var result;
+	      callback = lodash.createCallback(callback, thisArg, 3);
+	      forOwnRight(object, function(value, key, object) {
+	        if (callback(value, key, object)) {
+	          result = key;
+	          return false;
+	        }
+	      });
+	      return result;
+	    }
+
+	    /**
+	     * Iterates over own and inherited enumerable properties of an object,
+	     * executing the callback for each property. The callback is bound to `thisArg`
+	     * and invoked with three arguments; (value, key, object). Callbacks may exit
+	     * iteration early by explicitly returning `false`.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @type Function
+	     * @category Objects
+	     * @param {Object} object The object to iterate over.
+	     * @param {Function} [callback=identity] The function called per iteration.
+	     * @param {*} [thisArg] The `this` binding of `callback`.
+	     * @returns {Object} Returns `object`.
+	     * @example
+	     *
+	     * function Shape() {
+	     *   this.x = 0;
+	     *   this.y = 0;
+	     * }
+	     *
+	     * Shape.prototype.move = function(x, y) {
+	     *   this.x += x;
+	     *   this.y += y;
+	     * };
+	     *
+	     * _.forIn(new Shape, function(value, key) {
+	     *   console.log(key);
+	     * });
+	     * // => logs 'x', 'y', and 'move' (property order is not guaranteed across environments)
+	     */
+	    var forIn = createIterator(eachIteratorOptions, forOwnIteratorOptions, {
+	      'useHas': false
+	    });
+
+	    /**
+	     * This method is like `_.forIn` except that it iterates over elements
+	     * of a `collection` in the opposite order.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Objects
+	     * @param {Object} object The object to iterate over.
+	     * @param {Function} [callback=identity] The function called per iteration.
+	     * @param {*} [thisArg] The `this` binding of `callback`.
+	     * @returns {Object} Returns `object`.
+	     * @example
+	     *
+	     * function Shape() {
+	     *   this.x = 0;
+	     *   this.y = 0;
+	     * }
+	     *
+	     * Shape.prototype.move = function(x, y) {
+	     *   this.x += x;
+	     *   this.y += y;
+	     * };
+	     *
+	     * _.forInRight(new Shape, function(value, key) {
+	     *   console.log(key);
+	     * });
+	     * // => logs 'move', 'y', and 'x' assuming `_.forIn ` logs 'x', 'y', and 'move'
+	     */
+	    function forInRight(object, callback, thisArg) {
+	      var pairs = [];
+
+	      forIn(object, function(value, key) {
+	        pairs.push(key, value);
+	      });
+
+	      var length = pairs.length;
+	      callback = baseCreateCallback(callback, thisArg, 3);
+	      while (length--) {
+	        if (callback(pairs[length--], pairs[length], object) === false) {
+	          break;
+	        }
+	      }
+	      return object;
+	    }
+
+	    /**
+	     * Iterates over own enumerable properties of an object, executing the callback
+	     * for each property. The callback is bound to `thisArg` and invoked with three
+	     * arguments; (value, key, object). Callbacks may exit iteration early by
+	     * explicitly returning `false`.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @type Function
+	     * @category Objects
+	     * @param {Object} object The object to iterate over.
+	     * @param {Function} [callback=identity] The function called per iteration.
+	     * @param {*} [thisArg] The `this` binding of `callback`.
+	     * @returns {Object} Returns `object`.
+	     * @example
+	     *
+	     * _.forOwn({ '0': 'zero', '1': 'one', 'length': 2 }, function(num, key) {
+	     *   console.log(key);
+	     * });
+	     * // => logs '0', '1', and 'length' (property order is not guaranteed across environments)
+	     */
+	    var forOwn = createIterator(eachIteratorOptions, forOwnIteratorOptions);
+
+	    /**
+	     * This method is like `_.forOwn` except that it iterates over elements
+	     * of a `collection` in the opposite order.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Objects
+	     * @param {Object} object The object to iterate over.
+	     * @param {Function} [callback=identity] The function called per iteration.
+	     * @param {*} [thisArg] The `this` binding of `callback`.
+	     * @returns {Object} Returns `object`.
+	     * @example
+	     *
+	     * _.forOwnRight({ '0': 'zero', '1': 'one', 'length': 2 }, function(num, key) {
+	     *   console.log(key);
+	     * });
+	     * // => logs 'length', '1', and '0' assuming `_.forOwn` logs '0', '1', and 'length'
+	     */
+	    function forOwnRight(object, callback, thisArg) {
+	      var props = keys(object),
+	          length = props.length;
+
+	      callback = baseCreateCallback(callback, thisArg, 3);
+	      while (length--) {
+	        var key = props[length];
+	        if (callback(object[key], key, object) === false) {
+	          break;
+	        }
+	      }
+	      return object;
+	    }
+
+	    /**
+	     * Creates a sorted array of property names of all enumerable properties,
+	     * own and inherited, of `object` that have function values.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @alias methods
+	     * @category Objects
+	     * @param {Object} object The object to inspect.
+	     * @returns {Array} Returns an array of property names that have function values.
+	     * @example
+	     *
+	     * _.functions(_);
+	     * // => ['all', 'any', 'bind', 'bindAll', 'clone', 'compact', 'compose', ...]
+	     */
+	    function functions(object) {
+	      var result = [];
+	      forIn(object, function(value, key) {
+	        if (isFunction(value)) {
+	          result.push(key);
+	        }
+	      });
+	      return result.sort();
+	    }
+
+	    /**
+	     * Checks if the specified property name exists as a direct property of `object`,
+	     * instead of an inherited property.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Objects
+	     * @param {Object} object The object to inspect.
+	     * @param {string} key The name of the property to check.
+	     * @returns {boolean} Returns `true` if key is a direct property, else `false`.
+	     * @example
+	     *
+	     * _.has({ 'a': 1, 'b': 2, 'c': 3 }, 'b');
+	     * // => true
+	     */
+	    function has(object, key) {
+	      return object ? hasOwnProperty.call(object, key) : false;
+	    }
+
+	    /**
+	     * Creates an object composed of the inverted keys and values of the given object.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Objects
+	     * @param {Object} object The object to invert.
+	     * @returns {Object} Returns the created inverted object.
+	     * @example
+	     *
+	     * _.invert({ 'first': 'fred', 'second': 'barney' });
+	     * // => { 'fred': 'first', 'barney': 'second' }
+	     */
+	    function invert(object) {
+	      var index = -1,
+	          props = keys(object),
+	          length = props.length,
+	          result = {};
+
+	      while (++index < length) {
+	        var key = props[index];
+	        result[object[key]] = key;
+	      }
+	      return result;
+	    }
+
+	    /**
+	     * Checks if `value` is a boolean value.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Objects
+	     * @param {*} value The value to check.
+	     * @returns {boolean} Returns `true` if the `value` is a boolean value, else `false`.
+	     * @example
+	     *
+	     * _.isBoolean(null);
+	     * // => false
+	     */
+	    function isBoolean(value) {
+	      return value === true || value === false ||
+	        value && typeof value == 'object' && toString.call(value) == boolClass || false;
+	    }
+
+	    /**
+	     * Checks if `value` is a date.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Objects
+	     * @param {*} value The value to check.
+	     * @returns {boolean} Returns `true` if the `value` is a date, else `false`.
+	     * @example
+	     *
+	     * _.isDate(new Date);
+	     * // => true
+	     */
+	    function isDate(value) {
+	      return value && typeof value == 'object' && toString.call(value) == dateClass || false;
+	    }
+
+	    /**
+	     * Checks if `value` is a DOM element.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Objects
+	     * @param {*} value The value to check.
+	     * @returns {boolean} Returns `true` if the `value` is a DOM element, else `false`.
+	     * @example
+	     *
+	     * _.isElement(document.body);
+	     * // => true
+	     */
+	    function isElement(value) {
+	      return value && value.nodeType === 1 || false;
+	    }
+
+	    /**
+	     * Checks if `value` is empty. Arrays, strings, or `arguments` objects with a
+	     * length of `0` and objects with no own enumerable properties are considered
+	     * "empty".
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Objects
+	     * @param {Array|Object|string} value The value to inspect.
+	     * @returns {boolean} Returns `true` if the `value` is empty, else `false`.
+	     * @example
+	     *
+	     * _.isEmpty([1, 2, 3]);
+	     * // => false
+	     *
+	     * _.isEmpty({});
+	     * // => true
+	     *
+	     * _.isEmpty('');
+	     * // => true
+	     */
+	    function isEmpty(value) {
+	      var result = true;
+	      if (!value) {
+	        return result;
+	      }
+	      var className = toString.call(value),
+	          length = value.length;
+
+	      if ((className == arrayClass || className == stringClass ||
+	          (support.argsClass ? className == argsClass : isArguments(value))) ||
+	          (className == objectClass && typeof length == 'number' && isFunction(value.splice))) {
+	        return !length;
+	      }
+	      forOwn(value, function() {
+	        return (result = false);
+	      });
+	      return result;
+	    }
+
+	    /**
+	     * Performs a deep comparison between two values to determine if they are
+	     * equivalent to each other. If a callback is provided it will be executed
+	     * to compare values. If the callback returns `undefined` comparisons will
+	     * be handled by the method instead. The callback is bound to `thisArg` and
+	     * invoked with two arguments; (a, b).
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Objects
+	     * @param {*} a The value to compare.
+	     * @param {*} b The other value to compare.
+	     * @param {Function} [callback] The function to customize comparing values.
+	     * @param {*} [thisArg] The `this` binding of `callback`.
+	     * @returns {boolean} Returns `true` if the values are equivalent, else `false`.
+	     * @example
+	     *
+	     * var object = { 'name': 'fred' };
+	     * var copy = { 'name': 'fred' };
+	     *
+	     * object == copy;
+	     * // => false
+	     *
+	     * _.isEqual(object, copy);
+	     * // => true
+	     *
+	     * var words = ['hello', 'goodbye'];
+	     * var otherWords = ['hi', 'goodbye'];
+	     *
+	     * _.isEqual(words, otherWords, function(a, b) {
+	     *   var reGreet = /^(?:hello|hi)$/i,
+	     *       aGreet = _.isString(a) && reGreet.test(a),
+	     *       bGreet = _.isString(b) && reGreet.test(b);
+	     *
+	     *   return (aGreet || bGreet) ? (aGreet == bGreet) : undefined;
+	     * });
+	     * // => true
+	     */
+	    function isEqual(a, b, callback, thisArg) {
+	      return baseIsEqual(a, b, typeof callback == 'function' && baseCreateCallback(callback, thisArg, 2));
+	    }
+
+	    /**
+	     * Checks if `value` is, or can be coerced to, a finite number.
+	     *
+	     * Note: This is not the same as native `isFinite` which will return true for
+	     * booleans and empty strings. See http://es5.github.io/#x15.1.2.5.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Objects
+	     * @param {*} value The value to check.
+	     * @returns {boolean} Returns `true` if the `value` is finite, else `false`.
+	     * @example
+	     *
+	     * _.isFinite(-101);
+	     * // => true
+	     *
+	     * _.isFinite('10');
+	     * // => true
+	     *
+	     * _.isFinite(true);
+	     * // => false
+	     *
+	     * _.isFinite('');
+	     * // => false
+	     *
+	     * _.isFinite(Infinity);
+	     * // => false
+	     */
+	    function isFinite(value) {
+	      return nativeIsFinite(value) && !nativeIsNaN(parseFloat(value));
+	    }
+
+	    /**
+	     * Checks if `value` is a function.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Objects
+	     * @param {*} value The value to check.
+	     * @returns {boolean} Returns `true` if the `value` is a function, else `false`.
+	     * @example
+	     *
+	     * _.isFunction(_);
+	     * // => true
+	     */
+	    function isFunction(value) {
+	      return typeof value == 'function';
+	    }
+	    // fallback for older versions of Chrome and Safari
+	    if (isFunction(/x/)) {
+	      isFunction = function(value) {
+	        return typeof value == 'function' && toString.call(value) == funcClass;
+	      };
+	    }
+
+	    /**
+	     * Checks if `value` is the language type of Object.
+	     * (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Objects
+	     * @param {*} value The value to check.
+	     * @returns {boolean} Returns `true` if the `value` is an object, else `false`.
+	     * @example
+	     *
+	     * _.isObject({});
+	     * // => true
+	     *
+	     * _.isObject([1, 2, 3]);
+	     * // => true
+	     *
+	     * _.isObject(1);
+	     * // => false
+	     */
+	    function isObject(value) {
+	      // check if the value is the ECMAScript language type of Object
+	      // http://es5.github.io/#x8
+	      // and avoid a V8 bug
+	      // http://code.google.com/p/v8/issues/detail?id=2291
+	      return !!(value && objectTypes[typeof value]);
+	    }
+
+	    /**
+	     * Checks if `value` is `NaN`.
+	     *
+	     * Note: This is not the same as native `isNaN` which will return `true` for
+	     * `undefined` and other non-numeric values. See http://es5.github.io/#x15.1.2.4.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Objects
+	     * @param {*} value The value to check.
+	     * @returns {boolean} Returns `true` if the `value` is `NaN`, else `false`.
+	     * @example
+	     *
+	     * _.isNaN(NaN);
+	     * // => true
+	     *
+	     * _.isNaN(new Number(NaN));
+	     * // => true
+	     *
+	     * isNaN(undefined);
+	     * // => true
+	     *
+	     * _.isNaN(undefined);
+	     * // => false
+	     */
+	    function isNaN(value) {
+	      // `NaN` as a primitive is the only value that is not equal to itself
+	      // (perform the [[Class]] check first to avoid errors with some host objects in IE)
+	      return isNumber(value) && value != +value;
+	    }
+
+	    /**
+	     * Checks if `value` is `null`.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Objects
+	     * @param {*} value The value to check.
+	     * @returns {boolean} Returns `true` if the `value` is `null`, else `false`.
+	     * @example
+	     *
+	     * _.isNull(null);
+	     * // => true
+	     *
+	     * _.isNull(undefined);
+	     * // => false
+	     */
+	    function isNull(value) {
+	      return value === null;
+	    }
+
+	    /**
+	     * Checks if `value` is a number.
+	     *
+	     * Note: `NaN` is considered a number. See http://es5.github.io/#x8.5.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Objects
+	     * @param {*} value The value to check.
+	     * @returns {boolean} Returns `true` if the `value` is a number, else `false`.
+	     * @example
+	     *
+	     * _.isNumber(8.4 * 5);
+	     * // => true
+	     */
+	    function isNumber(value) {
+	      return typeof value == 'number' ||
+	        value && typeof value == 'object' && toString.call(value) == numberClass || false;
+	    }
+
+	    /**
+	     * Checks if `value` is an object created by the `Object` constructor.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Objects
+	     * @param {*} value The value to check.
+	     * @returns {boolean} Returns `true` if `value` is a plain object, else `false`.
+	     * @example
+	     *
+	     * function Shape() {
+	     *   this.x = 0;
+	     *   this.y = 0;
+	     * }
+	     *
+	     * _.isPlainObject(new Shape);
+	     * // => false
+	     *
+	     * _.isPlainObject([1, 2, 3]);
+	     * // => false
+	     *
+	     * _.isPlainObject({ 'x': 0, 'y': 0 });
+	     * // => true
+	     */
+	    var isPlainObject = !getPrototypeOf ? shimIsPlainObject : function(value) {
+	      if (!(value && toString.call(value) == objectClass) || (!support.argsClass && isArguments(value))) {
+	        return false;
+	      }
+	      var valueOf = value.valueOf,
+	          objProto = isNative(valueOf) && (objProto = getPrototypeOf(valueOf)) && getPrototypeOf(objProto);
+
+	      return objProto
+	        ? (value == objProto || getPrototypeOf(value) == objProto)
+	        : shimIsPlainObject(value);
+	    };
+
+	    /**
+	     * Checks if `value` is a regular expression.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Objects
+	     * @param {*} value The value to check.
+	     * @returns {boolean} Returns `true` if the `value` is a regular expression, else `false`.
+	     * @example
+	     *
+	     * _.isRegExp(/fred/);
+	     * // => true
+	     */
+	    function isRegExp(value) {
+	      return value && objectTypes[typeof value] && toString.call(value) == regexpClass || false;
+	    }
+
+	    /**
+	     * Checks if `value` is a string.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Objects
+	     * @param {*} value The value to check.
+	     * @returns {boolean} Returns `true` if the `value` is a string, else `false`.
+	     * @example
+	     *
+	     * _.isString('fred');
+	     * // => true
+	     */
+	    function isString(value) {
+	      return typeof value == 'string' ||
+	        value && typeof value == 'object' && toString.call(value) == stringClass || false;
+	    }
+
+	    /**
+	     * Checks if `value` is `undefined`.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Objects
+	     * @param {*} value The value to check.
+	     * @returns {boolean} Returns `true` if the `value` is `undefined`, else `false`.
+	     * @example
+	     *
+	     * _.isUndefined(void 0);
+	     * // => true
+	     */
+	    function isUndefined(value) {
+	      return typeof value == 'undefined';
+	    }
+
+	    /**
+	     * Creates an object with the same keys as `object` and values generated by
+	     * running each own enumerable property of `object` through the callback.
+	     * The callback is bound to `thisArg` and invoked with three arguments;
+	     * (value, key, object).
+	     *
+	     * If a property name is provided for `callback` the created "_.pluck" style
+	     * callback will return the property value of the given element.
+	     *
+	     * If an object is provided for `callback` the created "_.where" style callback
+	     * will return `true` for elements that have the properties of the given object,
+	     * else `false`.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Objects
+	     * @param {Object} object The object to iterate over.
+	     * @param {Function|Object|string} [callback=identity] The function called
+	     *  per iteration. If a property name or object is provided it will be used
+	     *  to create a "_.pluck" or "_.where" style callback, respectively.
+	     * @param {*} [thisArg] The `this` binding of `callback`.
+	     * @returns {Array} Returns a new object with values of the results of each `callback` execution.
+	     * @example
+	     *
+	     * _.mapValues({ 'a': 1, 'b': 2, 'c': 3} , function(num) { return num * 3; });
+	     * // => { 'a': 3, 'b': 6, 'c': 9 }
+	     *
+	     * var characters = {
+	     *   'fred': { 'name': 'fred', 'age': 40 },
+	     *   'pebbles': { 'name': 'pebbles', 'age': 1 }
+	     * };
+	     *
+	     * // using "_.pluck" callback shorthand
+	     * _.mapValues(characters, 'age');
+	     * // => { 'fred': 40, 'pebbles': 1 }
+	     */
+	    function mapValues(object, callback, thisArg) {
+	      var result = {};
+	      callback = lodash.createCallback(callback, thisArg, 3);
+
+	      forOwn(object, function(value, key, object) {
+	        result[key] = callback(value, key, object);
+	      });
+	      return result;
+	    }
+
+	    /**
+	     * Recursively merges own enumerable properties of the source object(s), that
+	     * don't resolve to `undefined` into the destination object. Subsequent sources
+	     * will overwrite property assignments of previous sources. If a callback is
+	     * provided it will be executed to produce the merged values of the destination
+	     * and source properties. If the callback returns `undefined` merging will
+	     * be handled by the method instead. The callback is bound to `thisArg` and
+	     * invoked with two arguments; (objectValue, sourceValue).
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Objects
+	     * @param {Object} object The destination object.
+	     * @param {...Object} [source] The source objects.
+	     * @param {Function} [callback] The function to customize merging properties.
+	     * @param {*} [thisArg] The `this` binding of `callback`.
+	     * @returns {Object} Returns the destination object.
+	     * @example
+	     *
+	     * var names = {
+	     *   'characters': [
+	     *     { 'name': 'barney' },
+	     *     { 'name': 'fred' }
+	     *   ]
+	     * };
+	     *
+	     * var ages = {
+	     *   'characters': [
+	     *     { 'age': 36 },
+	     *     { 'age': 40 }
+	     *   ]
+	     * };
+	     *
+	     * _.merge(names, ages);
+	     * // => { 'characters': [{ 'name': 'barney', 'age': 36 }, { 'name': 'fred', 'age': 40 }] }
+	     *
+	     * var food = {
+	     *   'fruits': ['apple'],
+	     *   'vegetables': ['beet']
+	     * };
+	     *
+	     * var otherFood = {
+	     *   'fruits': ['banana'],
+	     *   'vegetables': ['carrot']
+	     * };
+	     *
+	     * _.merge(food, otherFood, function(a, b) {
+	     *   return _.isArray(a) ? a.concat(b) : undefined;
+	     * });
+	     * // => { 'fruits': ['apple', 'banana'], 'vegetables': ['beet', 'carrot] }
+	     */
+	    function merge(object) {
+	      var args = arguments,
+	          length = 2;
+
+	      if (!isObject(object)) {
+	        return object;
+	      }
+	      // allows working with `_.reduce` and `_.reduceRight` without using
+	      // their `index` and `collection` arguments
+	      if (typeof args[2] != 'number') {
+	        length = args.length;
+	      }
+	      if (length > 3 && typeof args[length - 2] == 'function') {
+	        var callback = baseCreateCallback(args[--length - 1], args[length--], 2);
+	      } else if (length > 2 && typeof args[length - 1] == 'function') {
+	        callback = args[--length];
+	      }
+	      var sources = slice(arguments, 1, length),
+	          index = -1,
+	          stackA = getArray(),
+	          stackB = getArray();
+
+	      while (++index < length) {
+	        baseMerge(object, sources[index], callback, stackA, stackB);
+	      }
+	      releaseArray(stackA);
+	      releaseArray(stackB);
+	      return object;
+	    }
+
+	    /**
+	     * Creates a shallow clone of `object` excluding the specified properties.
+	     * Property names may be specified as individual arguments or as arrays of
+	     * property names. If a callback is provided it will be executed for each
+	     * property of `object` omitting the properties the callback returns truey
+	     * for. The callback is bound to `thisArg` and invoked with three arguments;
+	     * (value, key, object).
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Objects
+	     * @param {Object} object The source object.
+	     * @param {Function|...string|string[]} [callback] The properties to omit or the
+	     *  function called per iteration.
+	     * @param {*} [thisArg] The `this` binding of `callback`.
+	     * @returns {Object} Returns an object without the omitted properties.
+	     * @example
+	     *
+	     * _.omit({ 'name': 'fred', 'age': 40 }, 'age');
+	     * // => { 'name': 'fred' }
+	     *
+	     * _.omit({ 'name': 'fred', 'age': 40 }, function(value) {
+	     *   return typeof value == 'number';
+	     * });
+	     * // => { 'name': 'fred' }
+	     */
+	    function omit(object, callback, thisArg) {
+	      var result = {};
+	      if (typeof callback != 'function') {
+	        var props = [];
+	        forIn(object, function(value, key) {
+	          props.push(key);
+	        });
+	        props = baseDifference(props, baseFlatten(arguments, true, false, 1));
+
+	        var index = -1,
+	            length = props.length;
+
+	        while (++index < length) {
+	          var key = props[index];
+	          result[key] = object[key];
+	        }
+	      } else {
+	        callback = lodash.createCallback(callback, thisArg, 3);
+	        forIn(object, function(value, key, object) {
+	          if (!callback(value, key, object)) {
+	            result[key] = value;
+	          }
+	        });
+	      }
+	      return result;
+	    }
+
+	    /**
+	     * Creates a two dimensional array of an object's key-value pairs,
+	     * i.e. `[[key1, value1], [key2, value2]]`.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Objects
+	     * @param {Object} object The object to inspect.
+	     * @returns {Array} Returns new array of key-value pairs.
+	     * @example
+	     *
+	     * _.pairs({ 'barney': 36, 'fred': 40 });
+	     * // => [['barney', 36], ['fred', 40]] (property order is not guaranteed across environments)
+	     */
+	    function pairs(object) {
+	      var index = -1,
+	          props = keys(object),
+	          length = props.length,
+	          result = Array(length);
+
+	      while (++index < length) {
+	        var key = props[index];
+	        result[index] = [key, object[key]];
+	      }
+	      return result;
+	    }
+
+	    /**
+	     * Creates a shallow clone of `object` composed of the specified properties.
+	     * Property names may be specified as individual arguments or as arrays of
+	     * property names. If a callback is provided it will be executed for each
+	     * property of `object` picking the properties the callback returns truey
+	     * for. The callback is bound to `thisArg` and invoked with three arguments;
+	     * (value, key, object).
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Objects
+	     * @param {Object} object The source object.
+	     * @param {Function|...string|string[]} [callback] The function called per
+	     *  iteration or property names to pick, specified as individual property
+	     *  names or arrays of property names.
+	     * @param {*} [thisArg] The `this` binding of `callback`.
+	     * @returns {Object} Returns an object composed of the picked properties.
+	     * @example
+	     *
+	     * _.pick({ 'name': 'fred', '_userid': 'fred1' }, 'name');
+	     * // => { 'name': 'fred' }
+	     *
+	     * _.pick({ 'name': 'fred', '_userid': 'fred1' }, function(value, key) {
+	     *   return key.charAt(0) != '_';
+	     * });
+	     * // => { 'name': 'fred' }
+	     */
+	    function pick(object, callback, thisArg) {
+	      var result = {};
+	      if (typeof callback != 'function') {
+	        var index = -1,
+	            props = baseFlatten(arguments, true, false, 1),
+	            length = isObject(object) ? props.length : 0;
+
+	        while (++index < length) {
+	          var key = props[index];
+	          if (key in object) {
+	            result[key] = object[key];
+	          }
+	        }
+	      } else {
+	        callback = lodash.createCallback(callback, thisArg, 3);
+	        forIn(object, function(value, key, object) {
+	          if (callback(value, key, object)) {
+	            result[key] = value;
+	          }
+	        });
+	      }
+	      return result;
+	    }
+
+	    /**
+	     * An alternative to `_.reduce` this method transforms `object` to a new
+	     * `accumulator` object which is the result of running each of its own
+	     * enumerable properties through a callback, with each callback execution
+	     * potentially mutating the `accumulator` object. The callback is bound to
+	     * `thisArg` and invoked with four arguments; (accumulator, value, key, object).
+	     * Callbacks may exit iteration early by explicitly returning `false`.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Objects
+	     * @param {Array|Object} object The object to iterate over.
+	     * @param {Function} [callback=identity] The function called per iteration.
+	     * @param {*} [accumulator] The custom accumulator value.
+	     * @param {*} [thisArg] The `this` binding of `callback`.
+	     * @returns {*} Returns the accumulated value.
+	     * @example
+	     *
+	     * var squares = _.transform([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], function(result, num) {
+	     *   num *= num;
+	     *   if (num % 2) {
+	     *     return result.push(num) < 3;
+	     *   }
+	     * });
+	     * // => [1, 9, 25]
+	     *
+	     * var mapped = _.transform({ 'a': 1, 'b': 2, 'c': 3 }, function(result, num, key) {
+	     *   result[key] = num * 3;
+	     * });
+	     * // => { 'a': 3, 'b': 6, 'c': 9 }
+	     */
+	    function transform(object, callback, accumulator, thisArg) {
+	      var isArr = isArray(object);
+	      if (accumulator == null) {
+	        if (isArr) {
+	          accumulator = [];
+	        } else {
+	          var ctor = object && object.constructor,
+	              proto = ctor && ctor.prototype;
+
+	          accumulator = baseCreate(proto);
+	        }
+	      }
+	      if (callback) {
+	        callback = lodash.createCallback(callback, thisArg, 4);
+	        (isArr ? baseEach : forOwn)(object, function(value, index, object) {
+	          return callback(accumulator, value, index, object);
+	        });
+	      }
+	      return accumulator;
+	    }
+
+	    /**
+	     * Creates an array composed of the own enumerable property values of `object`.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Objects
+	     * @param {Object} object The object to inspect.
+	     * @returns {Array} Returns an array of property values.
+	     * @example
+	     *
+	     * _.values({ 'one': 1, 'two': 2, 'three': 3 });
+	     * // => [1, 2, 3] (property order is not guaranteed across environments)
+	     */
+	    function values(object) {
+	      var index = -1,
+	          props = keys(object),
+	          length = props.length,
+	          result = Array(length);
+
+	      while (++index < length) {
+	        result[index] = object[props[index]];
+	      }
+	      return result;
+	    }
+
+	    /*--------------------------------------------------------------------------*/
+
+	    /**
+	     * Creates an array of elements from the specified indexes, or keys, of the
+	     * `collection`. Indexes may be specified as individual arguments or as arrays
+	     * of indexes.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Collections
+	     * @param {Array|Object|string} collection The collection to iterate over.
+	     * @param {...(number|number[]|string|string[])} [index] The indexes of `collection`
+	     *   to retrieve, specified as individual indexes or arrays of indexes.
+	     * @returns {Array} Returns a new array of elements corresponding to the
+	     *  provided indexes.
+	     * @example
+	     *
+	     * _.at(['a', 'b', 'c', 'd', 'e'], [0, 2, 4]);
+	     * // => ['a', 'c', 'e']
+	     *
+	     * _.at(['fred', 'barney', 'pebbles'], 0, 2);
+	     * // => ['fred', 'pebbles']
+	     */
+	    function at(collection) {
+	      var args = arguments,
+	          index = -1,
+	          props = baseFlatten(args, true, false, 1),
+	          length = (args[2] && args[2][args[1]] === collection) ? 1 : props.length,
+	          result = Array(length);
+
+	      if (support.unindexedChars && isString(collection)) {
+	        collection = collection.split('');
+	      }
+	      while(++index < length) {
+	        result[index] = collection[props[index]];
+	      }
+	      return result;
+	    }
+
+	    /**
+	     * Checks if a given value is present in a collection using strict equality
+	     * for comparisons, i.e. `===`. If `fromIndex` is negative, it is used as the
+	     * offset from the end of the collection.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @alias include
+	     * @category Collections
+	     * @param {Array|Object|string} collection The collection to iterate over.
+	     * @param {*} target The value to check for.
+	     * @param {number} [fromIndex=0] The index to search from.
+	     * @returns {boolean} Returns `true` if the `target` element is found, else `false`.
+	     * @example
+	     *
+	     * _.contains([1, 2, 3], 1);
+	     * // => true
+	     *
+	     * _.contains([1, 2, 3], 1, 2);
+	     * // => false
+	     *
+	     * _.contains({ 'name': 'fred', 'age': 40 }, 'fred');
+	     * // => true
+	     *
+	     * _.contains('pebbles', 'eb');
+	     * // => true
+	     */
+	    function contains(collection, target, fromIndex) {
+	      var index = -1,
+	          indexOf = getIndexOf(),
+	          length = collection ? collection.length : 0,
+	          result = false;
+
+	      fromIndex = (fromIndex < 0 ? nativeMax(0, length + fromIndex) : fromIndex) || 0;
+	      if (isArray(collection)) {
+	        result = indexOf(collection, target, fromIndex) > -1;
+	      } else if (typeof length == 'number') {
+	        result = (isString(collection) ? collection.indexOf(target, fromIndex) : indexOf(collection, target, fromIndex)) > -1;
+	      } else {
+	        baseEach(collection, function(value) {
+	          if (++index >= fromIndex) {
+	            return !(result = value === target);
+	          }
+	        });
+	      }
+	      return result;
+	    }
+
+	    /**
+	     * Creates an object composed of keys generated from the results of running
+	     * each element of `collection` through the callback. The corresponding value
+	     * of each key is the number of times the key was returned by the callback.
+	     * The callback is bound to `thisArg` and invoked with three arguments;
+	     * (value, index|key, collection).
+	     *
+	     * If a property name is provided for `callback` the created "_.pluck" style
+	     * callback will return the property value of the given element.
+	     *
+	     * If an object is provided for `callback` the created "_.where" style callback
+	     * will return `true` for elements that have the properties of the given object,
+	     * else `false`.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Collections
+	     * @param {Array|Object|string} collection The collection to iterate over.
+	     * @param {Function|Object|string} [callback=identity] The function called
+	     *  per iteration. If a property name or object is provided it will be used
+	     *  to create a "_.pluck" or "_.where" style callback, respectively.
+	     * @param {*} [thisArg] The `this` binding of `callback`.
+	     * @returns {Object} Returns the composed aggregate object.
+	     * @example
+	     *
+	     * _.countBy([4.3, 6.1, 6.4], function(num) { return Math.floor(num); });
+	     * // => { '4': 1, '6': 2 }
+	     *
+	     * _.countBy([4.3, 6.1, 6.4], function(num) { return this.floor(num); }, Math);
+	     * // => { '4': 1, '6': 2 }
+	     *
+	     * _.countBy(['one', 'two', 'three'], 'length');
+	     * // => { '3': 2, '5': 1 }
+	     */
+	    var countBy = createAggregator(function(result, value, key) {
+	      (hasOwnProperty.call(result, key) ? result[key]++ : result[key] = 1);
+	    });
+
+	    /**
+	     * Checks if the given callback returns truey value for **all** elements of
+	     * a collection. The callback is bound to `thisArg` and invoked with three
+	     * arguments; (value, index|key, collection).
+	     *
+	     * If a property name is provided for `callback` the created "_.pluck" style
+	     * callback will return the property value of the given element.
+	     *
+	     * If an object is provided for `callback` the created "_.where" style callback
+	     * will return `true` for elements that have the properties of the given object,
+	     * else `false`.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @alias all
+	     * @category Collections
+	     * @param {Array|Object|string} collection The collection to iterate over.
+	     * @param {Function|Object|string} [callback=identity] The function called
+	     *  per iteration. If a property name or object is provided it will be used
+	     *  to create a "_.pluck" or "_.where" style callback, respectively.
+	     * @param {*} [thisArg] The `this` binding of `callback`.
+	     * @returns {boolean} Returns `true` if all elements passed the callback check,
+	     *  else `false`.
+	     * @example
+	     *
+	     * _.every([true, 1, null, 'yes']);
+	     * // => false
+	     *
+	     * var characters = [
+	     *   { 'name': 'barney', 'age': 36 },
+	     *   { 'name': 'fred',   'age': 40 }
+	     * ];
+	     *
+	     * // using "_.pluck" callback shorthand
+	     * _.every(characters, 'age');
+	     * // => true
+	     *
+	     * // using "_.where" callback shorthand
+	     * _.every(characters, { 'age': 36 });
+	     * // => false
+	     */
+	    function every(collection, callback, thisArg) {
+	      var result = true;
+	      callback = lodash.createCallback(callback, thisArg, 3);
+
+	      if (isArray(collection)) {
+	        var index = -1,
+	            length = collection.length;
+
+	        while (++index < length) {
+	          if (!(result = !!callback(collection[index], index, collection))) {
+	            break;
+	          }
+	        }
+	      } else {
+	        baseEach(collection, function(value, index, collection) {
+	          return (result = !!callback(value, index, collection));
+	        });
+	      }
+	      return result;
+	    }
+
+	    /**
+	     * Iterates over elements of a collection, returning an array of all elements
+	     * the callback returns truey for. The callback is bound to `thisArg` and
+	     * invoked with three arguments; (value, index|key, collection).
+	     *
+	     * If a property name is provided for `callback` the created "_.pluck" style
+	     * callback will return the property value of the given element.
+	     *
+	     * If an object is provided for `callback` the created "_.where" style callback
+	     * will return `true` for elements that have the properties of the given object,
+	     * else `false`.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @alias select
+	     * @category Collections
+	     * @param {Array|Object|string} collection The collection to iterate over.
+	     * @param {Function|Object|string} [callback=identity] The function called
+	     *  per iteration. If a property name or object is provided it will be used
+	     *  to create a "_.pluck" or "_.where" style callback, respectively.
+	     * @param {*} [thisArg] The `this` binding of `callback`.
+	     * @returns {Array} Returns a new array of elements that passed the callback check.
+	     * @example
+	     *
+	     * var evens = _.filter([1, 2, 3, 4, 5, 6], function(num) { return num % 2 == 0; });
+	     * // => [2, 4, 6]
+	     *
+	     * var characters = [
+	     *   { 'name': 'barney', 'age': 36, 'blocked': false },
+	     *   { 'name': 'fred',   'age': 40, 'blocked': true }
+	     * ];
+	     *
+	     * // using "_.pluck" callback shorthand
+	     * _.filter(characters, 'blocked');
+	     * // => [{ 'name': 'fred', 'age': 40, 'blocked': true }]
+	     *
+	     * // using "_.where" callback shorthand
+	     * _.filter(characters, { 'age': 36 });
+	     * // => [{ 'name': 'barney', 'age': 36, 'blocked': false }]
+	     */
+	    function filter(collection, callback, thisArg) {
+	      var result = [];
+	      callback = lodash.createCallback(callback, thisArg, 3);
+
+	      if (isArray(collection)) {
+	        var index = -1,
+	            length = collection.length;
+
+	        while (++index < length) {
+	          var value = collection[index];
+	          if (callback(value, index, collection)) {
+	            result.push(value);
+	          }
+	        }
+	      } else {
+	        baseEach(collection, function(value, index, collection) {
+	          if (callback(value, index, collection)) {
+	            result.push(value);
+	          }
+	        });
+	      }
+	      return result;
+	    }
+
+	    /**
+	     * Iterates over elements of a collection, returning the first element that
+	     * the callback returns truey for. The callback is bound to `thisArg` and
+	     * invoked with three arguments; (value, index|key, collection).
+	     *
+	     * If a property name is provided for `callback` the created "_.pluck" style
+	     * callback will return the property value of the given element.
+	     *
+	     * If an object is provided for `callback` the created "_.where" style callback
+	     * will return `true` for elements that have the properties of the given object,
+	     * else `false`.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @alias detect, findWhere
+	     * @category Collections
+	     * @param {Array|Object|string} collection The collection to iterate over.
+	     * @param {Function|Object|string} [callback=identity] The function called
+	     *  per iteration. If a property name or object is provided it will be used
+	     *  to create a "_.pluck" or "_.where" style callback, respectively.
+	     * @param {*} [thisArg] The `this` binding of `callback`.
+	     * @returns {*} Returns the found element, else `undefined`.
+	     * @example
+	     *
+	     * var characters = [
+	     *   { 'name': 'barney',  'age': 36, 'blocked': false },
+	     *   { 'name': 'fred',    'age': 40, 'blocked': true },
+	     *   { 'name': 'pebbles', 'age': 1,  'blocked': false }
+	     * ];
+	     *
+	     * _.find(characters, function(chr) {
+	     *   return chr.age < 40;
+	     * });
+	     * // => { 'name': 'barney', 'age': 36, 'blocked': false }
+	     *
+	     * // using "_.where" callback shorthand
+	     * _.find(characters, { 'age': 1 });
+	     * // =>  { 'name': 'pebbles', 'age': 1, 'blocked': false }
+	     *
+	     * // using "_.pluck" callback shorthand
+	     * _.find(characters, 'blocked');
+	     * // => { 'name': 'fred', 'age': 40, 'blocked': true }
+	     */
+	    function find(collection, callback, thisArg) {
+	      callback = lodash.createCallback(callback, thisArg, 3);
+
+	      if (isArray(collection)) {
+	        var index = -1,
+	            length = collection.length;
+
+	        while (++index < length) {
+	          var value = collection[index];
+	          if (callback(value, index, collection)) {
+	            return value;
+	          }
+	        }
+	      } else {
+	        var result;
+	        baseEach(collection, function(value, index, collection) {
+	          if (callback(value, index, collection)) {
+	            result = value;
+	            return false;
+	          }
+	        });
+	        return result;
+	      }
+	    }
+
+	    /**
+	     * This method is like `_.find` except that it iterates over elements
+	     * of a `collection` from right to left.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Collections
+	     * @param {Array|Object|string} collection The collection to iterate over.
+	     * @param {Function|Object|string} [callback=identity] The function called
+	     *  per iteration. If a property name or object is provided it will be used
+	     *  to create a "_.pluck" or "_.where" style callback, respectively.
+	     * @param {*} [thisArg] The `this` binding of `callback`.
+	     * @returns {*} Returns the found element, else `undefined`.
+	     * @example
+	     *
+	     * _.findLast([1, 2, 3, 4], function(num) {
+	     *   return num % 2 == 1;
+	     * });
+	     * // => 3
+	     */
+	    function findLast(collection, callback, thisArg) {
+	      var result;
+	      callback = lodash.createCallback(callback, thisArg, 3);
+	      forEachRight(collection, function(value, index, collection) {
+	        if (callback(value, index, collection)) {
+	          result = value;
+	          return false;
+	        }
+	      });
+	      return result;
+	    }
+
+	    /**
+	     * Iterates over elements of a collection, executing the callback for each
+	     * element. The callback is bound to `thisArg` and invoked with three arguments;
+	     * (value, index|key, collection). Callbacks may exit iteration early by
+	     * explicitly returning `false`.
+	     *
+	     * Note: As with other "Collections" methods, objects with a `length` property
+	     * are iterated like arrays. To avoid this behavior `_.forIn` or `_.forOwn`
+	     * may be used for object iteration.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @alias each
+	     * @category Collections
+	     * @param {Array|Object|string} collection The collection to iterate over.
+	     * @param {Function} [callback=identity] The function called per iteration.
+	     * @param {*} [thisArg] The `this` binding of `callback`.
+	     * @returns {Array|Object|string} Returns `collection`.
+	     * @example
+	     *
+	     * _([1, 2, 3]).forEach(function(num) { console.log(num); }).join(',');
+	     * // => logs each number and returns '1,2,3'
+	     *
+	     * _.forEach({ 'one': 1, 'two': 2, 'three': 3 }, function(num) { console.log(num); });
+	     * // => logs each number and returns the object (property order is not guaranteed across environments)
+	     */
+	    function forEach(collection, callback, thisArg) {
+	      if (callback && typeof thisArg == 'undefined' && isArray(collection)) {
+	        var index = -1,
+	            length = collection.length;
+
+	        while (++index < length) {
+	          if (callback(collection[index], index, collection) === false) {
+	            break;
+	          }
+	        }
+	      } else {
+	        baseEach(collection, callback, thisArg);
+	      }
+	      return collection;
+	    }
+
+	    /**
+	     * This method is like `_.forEach` except that it iterates over elements
+	     * of a `collection` from right to left.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @alias eachRight
+	     * @category Collections
+	     * @param {Array|Object|string} collection The collection to iterate over.
+	     * @param {Function} [callback=identity] The function called per iteration.
+	     * @param {*} [thisArg] The `this` binding of `callback`.
+	     * @returns {Array|Object|string} Returns `collection`.
+	     * @example
+	     *
+	     * _([1, 2, 3]).forEachRight(function(num) { console.log(num); }).join(',');
+	     * // => logs each number from right to left and returns '3,2,1'
+	     */
+	    function forEachRight(collection, callback, thisArg) {
+	      var iterable = collection,
+	          length = collection ? collection.length : 0;
+
+	      callback = callback && typeof thisArg == 'undefined' ? callback : baseCreateCallback(callback, thisArg, 3);
+	      if (isArray(collection)) {
+	        while (length--) {
+	          if (callback(collection[length], length, collection) === false) {
+	            break;
+	          }
+	        }
+	      } else {
+	        if (typeof length != 'number') {
+	          var props = keys(collection);
+	          length = props.length;
+	        } else if (support.unindexedChars && isString(collection)) {
+	          iterable = collection.split('');
+	        }
+	        baseEach(collection, function(value, key, collection) {
+	          key = props ? props[--length] : --length;
+	          return callback(iterable[key], key, collection);
+	        });
+	      }
+	      return collection;
+	    }
+
+	    /**
+	     * Creates an object composed of keys generated from the results of running
+	     * each element of a collection through the callback. The corresponding value
+	     * of each key is an array of the elements responsible for generating the key.
+	     * The callback is bound to `thisArg` and invoked with three arguments;
+	     * (value, index|key, collection).
+	     *
+	     * If a property name is provided for `callback` the created "_.pluck" style
+	     * callback will return the property value of the given element.
+	     *
+	     * If an object is provided for `callback` the created "_.where" style callback
+	     * will return `true` for elements that have the properties of the given object,
+	     * else `false`
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Collections
+	     * @param {Array|Object|string} collection The collection to iterate over.
+	     * @param {Function|Object|string} [callback=identity] The function called
+	     *  per iteration. If a property name or object is provided it will be used
+	     *  to create a "_.pluck" or "_.where" style callback, respectively.
+	     * @param {*} [thisArg] The `this` binding of `callback`.
+	     * @returns {Object} Returns the composed aggregate object.
+	     * @example
+	     *
+	     * _.groupBy([4.2, 6.1, 6.4], function(num) { return Math.floor(num); });
+	     * // => { '4': [4.2], '6': [6.1, 6.4] }
+	     *
+	     * _.groupBy([4.2, 6.1, 6.4], function(num) { return this.floor(num); }, Math);
+	     * // => { '4': [4.2], '6': [6.1, 6.4] }
+	     *
+	     * // using "_.pluck" callback shorthand
+	     * _.groupBy(['one', 'two', 'three'], 'length');
+	     * // => { '3': ['one', 'two'], '5': ['three'] }
+	     */
+	    var groupBy = createAggregator(function(result, value, key) {
+	      (hasOwnProperty.call(result, key) ? result[key] : result[key] = []).push(value);
+	    });
+
+	    /**
+	     * Creates an object composed of keys generated from the results of running
+	     * each element of the collection through the given callback. The corresponding
+	     * value of each key is the last element responsible for generating the key.
+	     * The callback is bound to `thisArg` and invoked with three arguments;
+	     * (value, index|key, collection).
+	     *
+	     * If a property name is provided for `callback` the created "_.pluck" style
+	     * callback will return the property value of the given element.
+	     *
+	     * If an object is provided for `callback` the created "_.where" style callback
+	     * will return `true` for elements that have the properties of the given object,
+	     * else `false`.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Collections
+	     * @param {Array|Object|string} collection The collection to iterate over.
+	     * @param {Function|Object|string} [callback=identity] The function called
+	     *  per iteration. If a property name or object is provided it will be used
+	     *  to create a "_.pluck" or "_.where" style callback, respectively.
+	     * @param {*} [thisArg] The `this` binding of `callback`.
+	     * @returns {Object} Returns the composed aggregate object.
+	     * @example
+	     *
+	     * var keys = [
+	     *   { 'dir': 'left', 'code': 97 },
+	     *   { 'dir': 'right', 'code': 100 }
+	     * ];
+	     *
+	     * _.indexBy(keys, 'dir');
+	     * // => { 'left': { 'dir': 'left', 'code': 97 }, 'right': { 'dir': 'right', 'code': 100 } }
+	     *
+	     * _.indexBy(keys, function(key) { return String.fromCharCode(key.code); });
+	     * // => { 'a': { 'dir': 'left', 'code': 97 }, 'd': { 'dir': 'right', 'code': 100 } }
+	     *
+	     * _.indexBy(characters, function(key) { this.fromCharCode(key.code); }, String);
+	     * // => { 'a': { 'dir': 'left', 'code': 97 }, 'd': { 'dir': 'right', 'code': 100 } }
+	     */
+	    var indexBy = createAggregator(function(result, value, key) {
+	      result[key] = value;
+	    });
+
+	    /**
+	     * Invokes the method named by `methodName` on each element in the `collection`
+	     * returning an array of the results of each invoked method. Additional arguments
+	     * will be provided to each invoked method. If `methodName` is a function it
+	     * will be invoked for, and `this` bound to, each element in the `collection`.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Collections
+	     * @param {Array|Object|string} collection The collection to iterate over.
+	     * @param {Function|string} methodName The name of the method to invoke or
+	     *  the function invoked per iteration.
+	     * @param {...*} [arg] Arguments to invoke the method with.
+	     * @returns {Array} Returns a new array of the results of each invoked method.
+	     * @example
+	     *
+	     * _.invoke([[5, 1, 7], [3, 2, 1]], 'sort');
+	     * // => [[1, 5, 7], [1, 2, 3]]
+	     *
+	     * _.invoke([123, 456], String.prototype.split, '');
+	     * // => [['1', '2', '3'], ['4', '5', '6']]
+	     */
+	    function invoke(collection, methodName) {
+	      var args = slice(arguments, 2),
+	          index = -1,
+	          isFunc = typeof methodName == 'function',
+	          length = collection ? collection.length : 0,
+	          result = Array(typeof length == 'number' ? length : 0);
+
+	      forEach(collection, function(value) {
+	        result[++index] = (isFunc ? methodName : value[methodName]).apply(value, args);
+	      });
+	      return result;
+	    }
+
+	    /**
+	     * Creates an array of values by running each element in the collection
+	     * through the callback. The callback is bound to `thisArg` and invoked with
+	     * three arguments; (value, index|key, collection).
+	     *
+	     * If a property name is provided for `callback` the created "_.pluck" style
+	     * callback will return the property value of the given element.
+	     *
+	     * If an object is provided for `callback` the created "_.where" style callback
+	     * will return `true` for elements that have the properties of the given object,
+	     * else `false`.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @alias collect
+	     * @category Collections
+	     * @param {Array|Object|string} collection The collection to iterate over.
+	     * @param {Function|Object|string} [callback=identity] The function called
+	     *  per iteration. If a property name or object is provided it will be used
+	     *  to create a "_.pluck" or "_.where" style callback, respectively.
+	     * @param {*} [thisArg] The `this` binding of `callback`.
+	     * @returns {Array} Returns a new array of the results of each `callback` execution.
+	     * @example
+	     *
+	     * _.map([1, 2, 3], function(num) { return num * 3; });
+	     * // => [3, 6, 9]
+	     *
+	     * _.map({ 'one': 1, 'two': 2, 'three': 3 }, function(num) { return num * 3; });
+	     * // => [3, 6, 9] (property order is not guaranteed across environments)
+	     *
+	     * var characters = [
+	     *   { 'name': 'barney', 'age': 36 },
+	     *   { 'name': 'fred',   'age': 40 }
+	     * ];
+	     *
+	     * // using "_.pluck" callback shorthand
+	     * _.map(characters, 'name');
+	     * // => ['barney', 'fred']
+	     */
+	    function map(collection, callback, thisArg) {
+	      var index = -1,
+	          length = collection ? collection.length : 0,
+	          result = Array(typeof length == 'number' ? length : 0);
+
+	      callback = lodash.createCallback(callback, thisArg, 3);
+	      if (isArray(collection)) {
+	        while (++index < length) {
+	          result[index] = callback(collection[index], index, collection);
+	        }
+	      } else {
+	        baseEach(collection, function(value, key, collection) {
+	          result[++index] = callback(value, key, collection);
+	        });
+	      }
+	      return result;
+	    }
+
+	    /**
+	     * Retrieves the maximum value of a collection. If the collection is empty or
+	     * falsey `-Infinity` is returned. If a callback is provided it will be executed
+	     * for each value in the collection to generate the criterion by which the value
+	     * is ranked. The callback is bound to `thisArg` and invoked with three
+	     * arguments; (value, index, collection).
+	     *
+	     * If a property name is provided for `callback` the created "_.pluck" style
+	     * callback will return the property value of the given element.
+	     *
+	     * If an object is provided for `callback` the created "_.where" style callback
+	     * will return `true` for elements that have the properties of the given object,
+	     * else `false`.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Collections
+	     * @param {Array|Object|string} collection The collection to iterate over.
+	     * @param {Function|Object|string} [callback=identity] The function called
+	     *  per iteration. If a property name or object is provided it will be used
+	     *  to create a "_.pluck" or "_.where" style callback, respectively.
+	     * @param {*} [thisArg] The `this` binding of `callback`.
+	     * @returns {*} Returns the maximum value.
+	     * @example
+	     *
+	     * _.max([4, 2, 8, 6]);
+	     * // => 8
+	     *
+	     * var characters = [
+	     *   { 'name': 'barney', 'age': 36 },
+	     *   { 'name': 'fred',   'age': 40 }
+	     * ];
+	     *
+	     * _.max(characters, function(chr) { return chr.age; });
+	     * // => { 'name': 'fred', 'age': 40 };
+	     *
+	     * // using "_.pluck" callback shorthand
+	     * _.max(characters, 'age');
+	     * // => { 'name': 'fred', 'age': 40 };
+	     */
+	    function max(collection, callback, thisArg) {
+	      var computed = -Infinity,
+	          result = computed;
+
+	      // allows working with functions like `_.map` without using
+	      // their `index` argument as a callback
+	      if (typeof callback != 'function' && thisArg && thisArg[callback] === collection) {
+	        callback = null;
+	      }
+	      if (callback == null && isArray(collection)) {
+	        var index = -1,
+	            length = collection.length;
+
+	        while (++index < length) {
+	          var value = collection[index];
+	          if (value > result) {
+	            result = value;
+	          }
+	        }
+	      } else {
+	        callback = (callback == null && isString(collection))
+	          ? charAtCallback
+	          : lodash.createCallback(callback, thisArg, 3);
+
+	        baseEach(collection, function(value, index, collection) {
+	          var current = callback(value, index, collection);
+	          if (current > computed) {
+	            computed = current;
+	            result = value;
+	          }
+	        });
+	      }
+	      return result;
+	    }
+
+	    /**
+	     * Retrieves the minimum value of a collection. If the collection is empty or
+	     * falsey `Infinity` is returned. If a callback is provided it will be executed
+	     * for each value in the collection to generate the criterion by which the value
+	     * is ranked. The callback is bound to `thisArg` and invoked with three
+	     * arguments; (value, index, collection).
+	     *
+	     * If a property name is provided for `callback` the created "_.pluck" style
+	     * callback will return the property value of the given element.
+	     *
+	     * If an object is provided for `callback` the created "_.where" style callback
+	     * will return `true` for elements that have the properties of the given object,
+	     * else `false`.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Collections
+	     * @param {Array|Object|string} collection The collection to iterate over.
+	     * @param {Function|Object|string} [callback=identity] The function called
+	     *  per iteration. If a property name or object is provided it will be used
+	     *  to create a "_.pluck" or "_.where" style callback, respectively.
+	     * @param {*} [thisArg] The `this` binding of `callback`.
+	     * @returns {*} Returns the minimum value.
+	     * @example
+	     *
+	     * _.min([4, 2, 8, 6]);
+	     * // => 2
+	     *
+	     * var characters = [
+	     *   { 'name': 'barney', 'age': 36 },
+	     *   { 'name': 'fred',   'age': 40 }
+	     * ];
+	     *
+	     * _.min(characters, function(chr) { return chr.age; });
+	     * // => { 'name': 'barney', 'age': 36 };
+	     *
+	     * // using "_.pluck" callback shorthand
+	     * _.min(characters, 'age');
+	     * // => { 'name': 'barney', 'age': 36 };
+	     */
+	    function min(collection, callback, thisArg) {
+	      var computed = Infinity,
+	          result = computed;
+
+	      // allows working with functions like `_.map` without using
+	      // their `index` argument as a callback
+	      if (typeof callback != 'function' && thisArg && thisArg[callback] === collection) {
+	        callback = null;
+	      }
+	      if (callback == null && isArray(collection)) {
+	        var index = -1,
+	            length = collection.length;
+
+	        while (++index < length) {
+	          var value = collection[index];
+	          if (value < result) {
+	            result = value;
+	          }
+	        }
+	      } else {
+	        callback = (callback == null && isString(collection))
+	          ? charAtCallback
+	          : lodash.createCallback(callback, thisArg, 3);
+
+	        baseEach(collection, function(value, index, collection) {
+	          var current = callback(value, index, collection);
+	          if (current < computed) {
+	            computed = current;
+	            result = value;
+	          }
+	        });
+	      }
+	      return result;
+	    }
+
+	    /**
+	     * Retrieves the value of a specified property from all elements in the collection.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @type Function
+	     * @category Collections
+	     * @param {Array|Object|string} collection The collection to iterate over.
+	     * @param {string} property The name of the property to pluck.
+	     * @returns {Array} Returns a new array of property values.
+	     * @example
+	     *
+	     * var characters = [
+	     *   { 'name': 'barney', 'age': 36 },
+	     *   { 'name': 'fred',   'age': 40 }
+	     * ];
+	     *
+	     * _.pluck(characters, 'name');
+	     * // => ['barney', 'fred']
+	     */
+	    var pluck = map;
+
+	    /**
+	     * Reduces a collection to a value which is the accumulated result of running
+	     * each element in the collection through the callback, where each successive
+	     * callback execution consumes the return value of the previous execution. If
+	     * `accumulator` is not provided the first element of the collection will be
+	     * used as the initial `accumulator` value. The callback is bound to `thisArg`
+	     * and invoked with four arguments; (accumulator, value, index|key, collection).
+	     *
+	     * @static
+	     * @memberOf _
+	     * @alias foldl, inject
+	     * @category Collections
+	     * @param {Array|Object|string} collection The collection to iterate over.
+	     * @param {Function} [callback=identity] The function called per iteration.
+	     * @param {*} [accumulator] Initial value of the accumulator.
+	     * @param {*} [thisArg] The `this` binding of `callback`.
+	     * @returns {*} Returns the accumulated value.
+	     * @example
+	     *
+	     * var sum = _.reduce([1, 2, 3], function(sum, num) {
+	     *   return sum + num;
+	     * });
+	     * // => 6
+	     *
+	     * var mapped = _.reduce({ 'a': 1, 'b': 2, 'c': 3 }, function(result, num, key) {
+	     *   result[key] = num * 3;
+	     *   return result;
+	     * }, {});
+	     * // => { 'a': 3, 'b': 6, 'c': 9 }
+	     */
+	    function reduce(collection, callback, accumulator, thisArg) {
+	      var noaccum = arguments.length < 3;
+	      callback = lodash.createCallback(callback, thisArg, 4);
+
+	      if (isArray(collection)) {
+	        var index = -1,
+	            length = collection.length;
+
+	        if (noaccum) {
+	          accumulator = collection[++index];
+	        }
+	        while (++index < length) {
+	          accumulator = callback(accumulator, collection[index], index, collection);
+	        }
+	      } else {
+	        baseEach(collection, function(value, index, collection) {
+	          accumulator = noaccum
+	            ? (noaccum = false, value)
+	            : callback(accumulator, value, index, collection)
+	        });
+	      }
+	      return accumulator;
+	    }
+
+	    /**
+	     * This method is like `_.reduce` except that it iterates over elements
+	     * of a `collection` from right to left.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @alias foldr
+	     * @category Collections
+	     * @param {Array|Object|string} collection The collection to iterate over.
+	     * @param {Function} [callback=identity] The function called per iteration.
+	     * @param {*} [accumulator] Initial value of the accumulator.
+	     * @param {*} [thisArg] The `this` binding of `callback`.
+	     * @returns {*} Returns the accumulated value.
+	     * @example
+	     *
+	     * var list = [[0, 1], [2, 3], [4, 5]];
+	     * var flat = _.reduceRight(list, function(a, b) { return a.concat(b); }, []);
+	     * // => [4, 5, 2, 3, 0, 1]
+	     */
+	    function reduceRight(collection, callback, accumulator, thisArg) {
+	      var noaccum = arguments.length < 3;
+	      callback = lodash.createCallback(callback, thisArg, 4);
+	      forEachRight(collection, function(value, index, collection) {
+	        accumulator = noaccum
+	          ? (noaccum = false, value)
+	          : callback(accumulator, value, index, collection);
+	      });
+	      return accumulator;
+	    }
+
+	    /**
+	     * The opposite of `_.filter` this method returns the elements of a
+	     * collection that the callback does **not** return truey for.
+	     *
+	     * If a property name is provided for `callback` the created "_.pluck" style
+	     * callback will return the property value of the given element.
+	     *
+	     * If an object is provided for `callback` the created "_.where" style callback
+	     * will return `true` for elements that have the properties of the given object,
+	     * else `false`.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Collections
+	     * @param {Array|Object|string} collection The collection to iterate over.
+	     * @param {Function|Object|string} [callback=identity] The function called
+	     *  per iteration. If a property name or object is provided it will be used
+	     *  to create a "_.pluck" or "_.where" style callback, respectively.
+	     * @param {*} [thisArg] The `this` binding of `callback`.
+	     * @returns {Array} Returns a new array of elements that failed the callback check.
+	     * @example
+	     *
+	     * var odds = _.reject([1, 2, 3, 4, 5, 6], function(num) { return num % 2 == 0; });
+	     * // => [1, 3, 5]
+	     *
+	     * var characters = [
+	     *   { 'name': 'barney', 'age': 36, 'blocked': false },
+	     *   { 'name': 'fred',   'age': 40, 'blocked': true }
+	     * ];
+	     *
+	     * // using "_.pluck" callback shorthand
+	     * _.reject(characters, 'blocked');
+	     * // => [{ 'name': 'barney', 'age': 36, 'blocked': false }]
+	     *
+	     * // using "_.where" callback shorthand
+	     * _.reject(characters, { 'age': 36 });
+	     * // => [{ 'name': 'fred', 'age': 40, 'blocked': true }]
+	     */
+	    function reject(collection, callback, thisArg) {
+	      callback = lodash.createCallback(callback, thisArg, 3);
+	      return filter(collection, function(value, index, collection) {
+	        return !callback(value, index, collection);
+	      });
+	    }
+
+	    /**
+	     * Retrieves a random element or `n` random elements from a collection.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Collections
+	     * @param {Array|Object|string} collection The collection to sample.
+	     * @param {number} [n] The number of elements to sample.
+	     * @param- {Object} [guard] Allows working with functions like `_.map`
+	     *  without using their `index` arguments as `n`.
+	     * @returns {Array} Returns the random sample(s) of `collection`.
+	     * @example
+	     *
+	     * _.sample([1, 2, 3, 4]);
+	     * // => 2
+	     *
+	     * _.sample([1, 2, 3, 4], 2);
+	     * // => [3, 1]
+	     */
+	    function sample(collection, n, guard) {
+	      if (collection && typeof collection.length != 'number') {
+	        collection = values(collection);
+	      } else if (support.unindexedChars && isString(collection)) {
+	        collection = collection.split('');
+	      }
+	      if (n == null || guard) {
+	        return collection ? collection[baseRandom(0, collection.length - 1)] : undefined;
+	      }
+	      var result = shuffle(collection);
+	      result.length = nativeMin(nativeMax(0, n), result.length);
+	      return result;
+	    }
+
+	    /**
+	     * Creates an array of shuffled values, using a version of the Fisher-Yates
+	     * shuffle. See http://en.wikipedia.org/wiki/Fisher-Yates_shuffle.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Collections
+	     * @param {Array|Object|string} collection The collection to shuffle.
+	     * @returns {Array} Returns a new shuffled collection.
+	     * @example
+	     *
+	     * _.shuffle([1, 2, 3, 4, 5, 6]);
+	     * // => [4, 1, 6, 3, 5, 2]
+	     */
+	    function shuffle(collection) {
+	      var index = -1,
+	          length = collection ? collection.length : 0,
+	          result = Array(typeof length == 'number' ? length : 0);
+
+	      forEach(collection, function(value) {
+	        var rand = baseRandom(0, ++index);
+	        result[index] = result[rand];
+	        result[rand] = value;
+	      });
+	      return result;
+	    }
+
+	    /**
+	     * Gets the size of the `collection` by returning `collection.length` for arrays
+	     * and array-like objects or the number of own enumerable properties for objects.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Collections
+	     * @param {Array|Object|string} collection The collection to inspect.
+	     * @returns {number} Returns `collection.length` or number of own enumerable properties.
+	     * @example
+	     *
+	     * _.size([1, 2]);
+	     * // => 2
+	     *
+	     * _.size({ 'one': 1, 'two': 2, 'three': 3 });
+	     * // => 3
+	     *
+	     * _.size('pebbles');
+	     * // => 7
+	     */
+	    function size(collection) {
+	      var length = collection ? collection.length : 0;
+	      return typeof length == 'number' ? length : keys(collection).length;
+	    }
+
+	    /**
+	     * Checks if the callback returns a truey value for **any** element of a
+	     * collection. The function returns as soon as it finds a passing value and
+	     * does not iterate over the entire collection. The callback is bound to
+	     * `thisArg` and invoked with three arguments; (value, index|key, collection).
+	     *
+	     * If a property name is provided for `callback` the created "_.pluck" style
+	     * callback will return the property value of the given element.
+	     *
+	     * If an object is provided for `callback` the created "_.where" style callback
+	     * will return `true` for elements that have the properties of the given object,
+	     * else `false`.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @alias any
+	     * @category Collections
+	     * @param {Array|Object|string} collection The collection to iterate over.
+	     * @param {Function|Object|string} [callback=identity] The function called
+	     *  per iteration. If a property name or object is provided it will be used
+	     *  to create a "_.pluck" or "_.where" style callback, respectively.
+	     * @param {*} [thisArg] The `this` binding of `callback`.
+	     * @returns {boolean} Returns `true` if any element passed the callback check,
+	     *  else `false`.
+	     * @example
+	     *
+	     * _.some([null, 0, 'yes', false], Boolean);
+	     * // => true
+	     *
+	     * var characters = [
+	     *   { 'name': 'barney', 'age': 36, 'blocked': false },
+	     *   { 'name': 'fred',   'age': 40, 'blocked': true }
+	     * ];
+	     *
+	     * // using "_.pluck" callback shorthand
+	     * _.some(characters, 'blocked');
+	     * // => true
+	     *
+	     * // using "_.where" callback shorthand
+	     * _.some(characters, { 'age': 1 });
+	     * // => false
+	     */
+	    function some(collection, callback, thisArg) {
+	      var result;
+	      callback = lodash.createCallback(callback, thisArg, 3);
+
+	      if (isArray(collection)) {
+	        var index = -1,
+	            length = collection.length;
+
+	        while (++index < length) {
+	          if ((result = callback(collection[index], index, collection))) {
+	            break;
+	          }
+	        }
+	      } else {
+	        baseEach(collection, function(value, index, collection) {
+	          return !(result = callback(value, index, collection));
+	        });
+	      }
+	      return !!result;
+	    }
+
+	    /**
+	     * Creates an array of elements, sorted in ascending order by the results of
+	     * running each element in a collection through the callback. This method
+	     * performs a stable sort, that is, it will preserve the original sort order
+	     * of equal elements. The callback is bound to `thisArg` and invoked with
+	     * three arguments; (value, index|key, collection).
+	     *
+	     * If a property name is provided for `callback` the created "_.pluck" style
+	     * callback will return the property value of the given element.
+	     *
+	     * If an array of property names is provided for `callback` the collection
+	     * will be sorted by each property value.
+	     *
+	     * If an object is provided for `callback` the created "_.where" style callback
+	     * will return `true` for elements that have the properties of the given object,
+	     * else `false`.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Collections
+	     * @param {Array|Object|string} collection The collection to iterate over.
+	     * @param {Array|Function|Object|string} [callback=identity] The function called
+	     *  per iteration. If a property name or object is provided it will be used
+	     *  to create a "_.pluck" or "_.where" style callback, respectively.
+	     * @param {*} [thisArg] The `this` binding of `callback`.
+	     * @returns {Array} Returns a new array of sorted elements.
+	     * @example
+	     *
+	     * _.sortBy([1, 2, 3], function(num) { return Math.sin(num); });
+	     * // => [3, 1, 2]
+	     *
+	     * _.sortBy([1, 2, 3], function(num) { return this.sin(num); }, Math);
+	     * // => [3, 1, 2]
+	     *
+	     * var characters = [
+	     *   { 'name': 'barney',  'age': 36 },
+	     *   { 'name': 'fred',    'age': 40 },
+	     *   { 'name': 'barney',  'age': 26 },
+	     *   { 'name': 'fred',    'age': 30 }
+	     * ];
+	     *
+	     * // using "_.pluck" callback shorthand
+	     * _.map(_.sortBy(characters, 'age'), _.values);
+	     * // => [['barney', 26], ['fred', 30], ['barney', 36], ['fred', 40]]
+	     *
+	     * // sorting by multiple properties
+	     * _.map(_.sortBy(characters, ['name', 'age']), _.values);
+	     * // = > [['barney', 26], ['barney', 36], ['fred', 30], ['fred', 40]]
+	     */
+	    function sortBy(collection, callback, thisArg) {
+	      var index = -1,
+	          isArr = isArray(callback),
+	          length = collection ? collection.length : 0,
+	          result = Array(typeof length == 'number' ? length : 0);
+
+	      if (!isArr) {
+	        callback = lodash.createCallback(callback, thisArg, 3);
+	      }
+	      forEach(collection, function(value, key, collection) {
+	        var object = result[++index] = getObject();
+	        if (isArr) {
+	          object.criteria = map(callback, function(key) { return value[key]; });
+	        } else {
+	          (object.criteria = getArray())[0] = callback(value, key, collection);
+	        }
+	        object.index = index;
+	        object.value = value;
+	      });
+
+	      length = result.length;
+	      result.sort(compareAscending);
+	      while (length--) {
+	        var object = result[length];
+	        result[length] = object.value;
+	        if (!isArr) {
+	          releaseArray(object.criteria);
+	        }
+	        releaseObject(object);
+	      }
+	      return result;
+	    }
+
+	    /**
+	     * Converts the `collection` to an array.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Collections
+	     * @param {Array|Object|string} collection The collection to convert.
+	     * @returns {Array} Returns the new converted array.
+	     * @example
+	     *
+	     * (function() { return _.toArray(arguments).slice(1); })(1, 2, 3, 4);
+	     * // => [2, 3, 4]
+	     */
+	    function toArray(collection) {
+	      if (collection && typeof collection.length == 'number') {
+	        return (support.unindexedChars && isString(collection))
+	          ? collection.split('')
+	          : slice(collection);
+	      }
+	      return values(collection);
+	    }
+
+	    /**
+	     * Performs a deep comparison of each element in a `collection` to the given
+	     * `properties` object, returning an array of all elements that have equivalent
+	     * property values.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @type Function
+	     * @category Collections
+	     * @param {Array|Object|string} collection The collection to iterate over.
+	     * @param {Object} props The object of property values to filter by.
+	     * @returns {Array} Returns a new array of elements that have the given properties.
+	     * @example
+	     *
+	     * var characters = [
+	     *   { 'name': 'barney', 'age': 36, 'pets': ['hoppy'] },
+	     *   { 'name': 'fred',   'age': 40, 'pets': ['baby puss', 'dino'] }
+	     * ];
+	     *
+	     * _.where(characters, { 'age': 36 });
+	     * // => [{ 'name': 'barney', 'age': 36, 'pets': ['hoppy'] }]
+	     *
+	     * _.where(characters, { 'pets': ['dino'] });
+	     * // => [{ 'name': 'fred', 'age': 40, 'pets': ['baby puss', 'dino'] }]
+	     */
+	    var where = filter;
+
+	    /*--------------------------------------------------------------------------*/
+
+	    /**
+	     * Creates an array with all falsey values removed. The values `false`, `null`,
+	     * `0`, `""`, `undefined`, and `NaN` are all falsey.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Arrays
+	     * @param {Array} array The array to compact.
+	     * @returns {Array} Returns a new array of filtered values.
+	     * @example
+	     *
+	     * _.compact([0, 1, false, 2, '', 3]);
+	     * // => [1, 2, 3]
+	     */
+	    function compact(array) {
+	      var index = -1,
+	          length = array ? array.length : 0,
+	          result = [];
+
+	      while (++index < length) {
+	        var value = array[index];
+	        if (value) {
+	          result.push(value);
+	        }
+	      }
+	      return result;
+	    }
+
+	    /**
+	     * Creates an array excluding all values of the provided arrays using strict
+	     * equality for comparisons, i.e. `===`.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Arrays
+	     * @param {Array} array The array to process.
+	     * @param {...Array} [values] The arrays of values to exclude.
+	     * @returns {Array} Returns a new array of filtered values.
+	     * @example
+	     *
+	     * _.difference([1, 2, 3, 4, 5], [5, 2, 10]);
+	     * // => [1, 3, 4]
+	     */
+	    function difference(array) {
+	      return baseDifference(array, baseFlatten(arguments, true, true, 1));
+	    }
+
+	    /**
+	     * This method is like `_.find` except that it returns the index of the first
+	     * element that passes the callback check, instead of the element itself.
+	     *
+	     * If a property name is provided for `callback` the created "_.pluck" style
+	     * callback will return the property value of the given element.
+	     *
+	     * If an object is provided for `callback` the created "_.where" style callback
+	     * will return `true` for elements that have the properties of the given object,
+	     * else `false`.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Arrays
+	     * @param {Array} array The array to search.
+	     * @param {Function|Object|string} [callback=identity] The function called
+	     *  per iteration. If a property name or object is provided it will be used
+	     *  to create a "_.pluck" or "_.where" style callback, respectively.
+	     * @param {*} [thisArg] The `this` binding of `callback`.
+	     * @returns {number} Returns the index of the found element, else `-1`.
+	     * @example
+	     *
+	     * var characters = [
+	     *   { 'name': 'barney',  'age': 36, 'blocked': false },
+	     *   { 'name': 'fred',    'age': 40, 'blocked': true },
+	     *   { 'name': 'pebbles', 'age': 1,  'blocked': false }
+	     * ];
+	     *
+	     * _.findIndex(characters, function(chr) {
+	     *   return chr.age < 20;
+	     * });
+	     * // => 2
+	     *
+	     * // using "_.where" callback shorthand
+	     * _.findIndex(characters, { 'age': 36 });
+	     * // => 0
+	     *
+	     * // using "_.pluck" callback shorthand
+	     * _.findIndex(characters, 'blocked');
+	     * // => 1
+	     */
+	    function findIndex(array, callback, thisArg) {
+	      var index = -1,
+	          length = array ? array.length : 0;
+
+	      callback = lodash.createCallback(callback, thisArg, 3);
+	      while (++index < length) {
+	        if (callback(array[index], index, array)) {
+	          return index;
+	        }
+	      }
+	      return -1;
+	    }
+
+	    /**
+	     * This method is like `_.findIndex` except that it iterates over elements
+	     * of a `collection` from right to left.
+	     *
+	     * If a property name is provided for `callback` the created "_.pluck" style
+	     * callback will return the property value of the given element.
+	     *
+	     * If an object is provided for `callback` the created "_.where" style callback
+	     * will return `true` for elements that have the properties of the given object,
+	     * else `false`.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Arrays
+	     * @param {Array} array The array to search.
+	     * @param {Function|Object|string} [callback=identity] The function called
+	     *  per iteration. If a property name or object is provided it will be used
+	     *  to create a "_.pluck" or "_.where" style callback, respectively.
+	     * @param {*} [thisArg] The `this` binding of `callback`.
+	     * @returns {number} Returns the index of the found element, else `-1`.
+	     * @example
+	     *
+	     * var characters = [
+	     *   { 'name': 'barney',  'age': 36, 'blocked': true },
+	     *   { 'name': 'fred',    'age': 40, 'blocked': false },
+	     *   { 'name': 'pebbles', 'age': 1,  'blocked': true }
+	     * ];
+	     *
+	     * _.findLastIndex(characters, function(chr) {
+	     *   return chr.age > 30;
+	     * });
+	     * // => 1
+	     *
+	     * // using "_.where" callback shorthand
+	     * _.findLastIndex(characters, { 'age': 36 });
+	     * // => 0
+	     *
+	     * // using "_.pluck" callback shorthand
+	     * _.findLastIndex(characters, 'blocked');
+	     * // => 2
+	     */
+	    function findLastIndex(array, callback, thisArg) {
+	      var length = array ? array.length : 0;
+	      callback = lodash.createCallback(callback, thisArg, 3);
+	      while (length--) {
+	        if (callback(array[length], length, array)) {
+	          return length;
+	        }
+	      }
+	      return -1;
+	    }
+
+	    /**
+	     * Gets the first element or first `n` elements of an array. If a callback
+	     * is provided elements at the beginning of the array are returned as long
+	     * as the callback returns truey. The callback is bound to `thisArg` and
+	     * invoked with three arguments; (value, index, array).
+	     *
+	     * If a property name is provided for `callback` the created "_.pluck" style
+	     * callback will return the property value of the given element.
+	     *
+	     * If an object is provided for `callback` the created "_.where" style callback
+	     * will return `true` for elements that have the properties of the given object,
+	     * else `false`.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @alias head, take
+	     * @category Arrays
+	     * @param {Array} array The array to query.
+	     * @param {Function|Object|number|string} [callback] The function called
+	     *  per element or the number of elements to return. If a property name or
+	     *  object is provided it will be used to create a "_.pluck" or "_.where"
+	     *  style callback, respectively.
+	     * @param {*} [thisArg] The `this` binding of `callback`.
+	     * @returns {*} Returns the first element(s) of `array`.
+	     * @example
+	     *
+	     * _.first([1, 2, 3]);
+	     * // => 1
+	     *
+	     * _.first([1, 2, 3], 2);
+	     * // => [1, 2]
+	     *
+	     * _.first([1, 2, 3], function(num) {
+	     *   return num < 3;
+	     * });
+	     * // => [1, 2]
+	     *
+	     * var characters = [
+	     *   { 'name': 'barney',  'blocked': true,  'employer': 'slate' },
+	     *   { 'name': 'fred',    'blocked': false, 'employer': 'slate' },
+	     *   { 'name': 'pebbles', 'blocked': true,  'employer': 'na' }
+	     * ];
+	     *
+	     * // using "_.pluck" callback shorthand
+	     * _.first(characters, 'blocked');
+	     * // => [{ 'name': 'barney', 'blocked': true, 'employer': 'slate' }]
+	     *
+	     * // using "_.where" callback shorthand
+	     * _.pluck(_.first(characters, { 'employer': 'slate' }), 'name');
+	     * // => ['barney', 'fred']
+	     */
+	    function first(array, callback, thisArg) {
+	      var n = 0,
+	          length = array ? array.length : 0;
+
+	      if (typeof callback != 'number' && callback != null) {
+	        var index = -1;
+	        callback = lodash.createCallback(callback, thisArg, 3);
+	        while (++index < length && callback(array[index], index, array)) {
+	          n++;
+	        }
+	      } else {
+	        n = callback;
+	        if (n == null || thisArg) {
+	          return array ? array[0] : undefined;
+	        }
+	      }
+	      return slice(array, 0, nativeMin(nativeMax(0, n), length));
+	    }
+
+	    /**
+	     * Flattens a nested array (the nesting can be to any depth). If `isShallow`
+	     * is truey, the array will only be flattened a single level. If a callback
+	     * is provided each element of the array is passed through the callback before
+	     * flattening. The callback is bound to `thisArg` and invoked with three
+	     * arguments; (value, index, array).
+	     *
+	     * If a property name is provided for `callback` the created "_.pluck" style
+	     * callback will return the property value of the given element.
+	     *
+	     * If an object is provided for `callback` the created "_.where" style callback
+	     * will return `true` for elements that have the properties of the given object,
+	     * else `false`.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Arrays
+	     * @param {Array} array The array to flatten.
+	     * @param {boolean} [isShallow=false] A flag to restrict flattening to a single level.
+	     * @param {Function|Object|string} [callback=identity] The function called
+	     *  per iteration. If a property name or object is provided it will be used
+	     *  to create a "_.pluck" or "_.where" style callback, respectively.
+	     * @param {*} [thisArg] The `this` binding of `callback`.
+	     * @returns {Array} Returns a new flattened array.
+	     * @example
+	     *
+	     * _.flatten([1, [2], [3, [[4]]]]);
+	     * // => [1, 2, 3, 4];
+	     *
+	     * _.flatten([1, [2], [3, [[4]]]], true);
+	     * // => [1, 2, 3, [[4]]];
+	     *
+	     * var characters = [
+	     *   { 'name': 'barney', 'age': 30, 'pets': ['hoppy'] },
+	     *   { 'name': 'fred',   'age': 40, 'pets': ['baby puss', 'dino'] }
+	     * ];
+	     *
+	     * // using "_.pluck" callback shorthand
+	     * _.flatten(characters, 'pets');
+	     * // => ['hoppy', 'baby puss', 'dino']
+	     */
+	    function flatten(array, isShallow, callback, thisArg) {
+	      // juggle arguments
+	      if (typeof isShallow != 'boolean' && isShallow != null) {
+	        thisArg = callback;
+	        callback = (typeof isShallow != 'function' && thisArg && thisArg[isShallow] === array) ? null : isShallow;
+	        isShallow = false;
+	      }
+	      if (callback != null) {
+	        array = map(array, callback, thisArg);
+	      }
+	      return baseFlatten(array, isShallow);
+	    }
+
+	    /**
+	     * Gets the index at which the first occurrence of `value` is found using
+	     * strict equality for comparisons, i.e. `===`. If the array is already sorted
+	     * providing `true` for `fromIndex` will run a faster binary search.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Arrays
+	     * @param {Array} array The array to search.
+	     * @param {*} value The value to search for.
+	     * @param {boolean|number} [fromIndex=0] The index to search from or `true`
+	     *  to perform a binary search on a sorted array.
+	     * @returns {number} Returns the index of the matched value or `-1`.
+	     * @example
+	     *
+	     * _.indexOf([1, 2, 3, 1, 2, 3], 2);
+	     * // => 1
+	     *
+	     * _.indexOf([1, 2, 3, 1, 2, 3], 2, 3);
+	     * // => 4
+	     *
+	     * _.indexOf([1, 1, 2, 2, 3, 3], 2, true);
+	     * // => 2
+	     */
+	    function indexOf(array, value, fromIndex) {
+	      if (typeof fromIndex == 'number') {
+	        var length = array ? array.length : 0;
+	        fromIndex = (fromIndex < 0 ? nativeMax(0, length + fromIndex) : fromIndex || 0);
+	      } else if (fromIndex) {
+	        var index = sortedIndex(array, value);
+	        return array[index] === value ? index : -1;
+	      }
+	      return baseIndexOf(array, value, fromIndex);
+	    }
+
+	    /**
+	     * Gets all but the last element or last `n` elements of an array. If a
+	     * callback is provided elements at the end of the array are excluded from
+	     * the result as long as the callback returns truey. The callback is bound
+	     * to `thisArg` and invoked with three arguments; (value, index, array).
+	     *
+	     * If a property name is provided for `callback` the created "_.pluck" style
+	     * callback will return the property value of the given element.
+	     *
+	     * If an object is provided for `callback` the created "_.where" style callback
+	     * will return `true` for elements that have the properties of the given object,
+	     * else `false`.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Arrays
+	     * @param {Array} array The array to query.
+	     * @param {Function|Object|number|string} [callback=1] The function called
+	     *  per element or the number of elements to exclude. If a property name or
+	     *  object is provided it will be used to create a "_.pluck" or "_.where"
+	     *  style callback, respectively.
+	     * @param {*} [thisArg] The `this` binding of `callback`.
+	     * @returns {Array} Returns a slice of `array`.
+	     * @example
+	     *
+	     * _.initial([1, 2, 3]);
+	     * // => [1, 2]
+	     *
+	     * _.initial([1, 2, 3], 2);
+	     * // => [1]
+	     *
+	     * _.initial([1, 2, 3], function(num) {
+	     *   return num > 1;
+	     * });
+	     * // => [1]
+	     *
+	     * var characters = [
+	     *   { 'name': 'barney',  'blocked': false, 'employer': 'slate' },
+	     *   { 'name': 'fred',    'blocked': true,  'employer': 'slate' },
+	     *   { 'name': 'pebbles', 'blocked': true,  'employer': 'na' }
+	     * ];
+	     *
+	     * // using "_.pluck" callback shorthand
+	     * _.initial(characters, 'blocked');
+	     * // => [{ 'name': 'barney',  'blocked': false, 'employer': 'slate' }]
+	     *
+	     * // using "_.where" callback shorthand
+	     * _.pluck(_.initial(characters, { 'employer': 'na' }), 'name');
+	     * // => ['barney', 'fred']
+	     */
+	    function initial(array, callback, thisArg) {
+	      var n = 0,
+	          length = array ? array.length : 0;
+
+	      if (typeof callback != 'number' && callback != null) {
+	        var index = length;
+	        callback = lodash.createCallback(callback, thisArg, 3);
+	        while (index-- && callback(array[index], index, array)) {
+	          n++;
+	        }
+	      } else {
+	        n = (callback == null || thisArg) ? 1 : callback || n;
+	      }
+	      return slice(array, 0, nativeMin(nativeMax(0, length - n), length));
+	    }
+
+	    /**
+	     * Creates an array of unique values present in all provided arrays using
+	     * strict equality for comparisons, i.e. `===`.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Arrays
+	     * @param {...Array} [array] The arrays to inspect.
+	     * @returns {Array} Returns an array of shared values.
+	     * @example
+	     *
+	     * _.intersection([1, 2, 3], [5, 2, 1, 4], [2, 1]);
+	     * // => [1, 2]
+	     */
+	    function intersection() {
+	      var args = [],
+	          argsIndex = -1,
+	          argsLength = arguments.length,
+	          caches = getArray(),
+	          indexOf = getIndexOf(),
+	          trustIndexOf = indexOf === baseIndexOf,
+	          seen = getArray();
+
+	      while (++argsIndex < argsLength) {
+	        var value = arguments[argsIndex];
+	        if (isArray(value) || isArguments(value)) {
+	          args.push(value);
+	          caches.push(trustIndexOf && value.length >= largeArraySize &&
+	            createCache(argsIndex ? args[argsIndex] : seen));
+	        }
+	      }
+	      var array = args[0],
+	          index = -1,
+	          length = array ? array.length : 0,
+	          result = [];
+
+	      outer:
+	      while (++index < length) {
+	        var cache = caches[0];
+	        value = array[index];
+
+	        if ((cache ? cacheIndexOf(cache, value) : indexOf(seen, value)) < 0) {
+	          argsIndex = argsLength;
+	          (cache || seen).push(value);
+	          while (--argsIndex) {
+	            cache = caches[argsIndex];
+	            if ((cache ? cacheIndexOf(cache, value) : indexOf(args[argsIndex], value)) < 0) {
+	              continue outer;
+	            }
+	          }
+	          result.push(value);
+	        }
+	      }
+	      while (argsLength--) {
+	        cache = caches[argsLength];
+	        if (cache) {
+	          releaseObject(cache);
+	        }
+	      }
+	      releaseArray(caches);
+	      releaseArray(seen);
+	      return result;
+	    }
+
+	    /**
+	     * Gets the last element or last `n` elements of an array. If a callback is
+	     * provided elements at the end of the array are returned as long as the
+	     * callback returns truey. The callback is bound to `thisArg` and invoked
+	     * with three arguments; (value, index, array).
+	     *
+	     * If a property name is provided for `callback` the created "_.pluck" style
+	     * callback will return the property value of the given element.
+	     *
+	     * If an object is provided for `callback` the created "_.where" style callback
+	     * will return `true` for elements that have the properties of the given object,
+	     * else `false`.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Arrays
+	     * @param {Array} array The array to query.
+	     * @param {Function|Object|number|string} [callback] The function called
+	     *  per element or the number of elements to return. If a property name or
+	     *  object is provided it will be used to create a "_.pluck" or "_.where"
+	     *  style callback, respectively.
+	     * @param {*} [thisArg] The `this` binding of `callback`.
+	     * @returns {*} Returns the last element(s) of `array`.
+	     * @example
+	     *
+	     * _.last([1, 2, 3]);
+	     * // => 3
+	     *
+	     * _.last([1, 2, 3], 2);
+	     * // => [2, 3]
+	     *
+	     * _.last([1, 2, 3], function(num) {
+	     *   return num > 1;
+	     * });
+	     * // => [2, 3]
+	     *
+	     * var characters = [
+	     *   { 'name': 'barney',  'blocked': false, 'employer': 'slate' },
+	     *   { 'name': 'fred',    'blocked': true,  'employer': 'slate' },
+	     *   { 'name': 'pebbles', 'blocked': true,  'employer': 'na' }
+	     * ];
+	     *
+	     * // using "_.pluck" callback shorthand
+	     * _.pluck(_.last(characters, 'blocked'), 'name');
+	     * // => ['fred', 'pebbles']
+	     *
+	     * // using "_.where" callback shorthand
+	     * _.last(characters, { 'employer': 'na' });
+	     * // => [{ 'name': 'pebbles', 'blocked': true, 'employer': 'na' }]
+	     */
+	    function last(array, callback, thisArg) {
+	      var n = 0,
+	          length = array ? array.length : 0;
+
+	      if (typeof callback != 'number' && callback != null) {
+	        var index = length;
+	        callback = lodash.createCallback(callback, thisArg, 3);
+	        while (index-- && callback(array[index], index, array)) {
+	          n++;
+	        }
+	      } else {
+	        n = callback;
+	        if (n == null || thisArg) {
+	          return array ? array[length - 1] : undefined;
+	        }
+	      }
+	      return slice(array, nativeMax(0, length - n));
+	    }
+
+	    /**
+	     * Gets the index at which the last occurrence of `value` is found using strict
+	     * equality for comparisons, i.e. `===`. If `fromIndex` is negative, it is used
+	     * as the offset from the end of the collection.
+	     *
+	     * If a property name is provided for `callback` the created "_.pluck" style
+	     * callback will return the property value of the given element.
+	     *
+	     * If an object is provided for `callback` the created "_.where" style callback
+	     * will return `true` for elements that have the properties of the given object,
+	     * else `false`.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Arrays
+	     * @param {Array} array The array to search.
+	     * @param {*} value The value to search for.
+	     * @param {number} [fromIndex=array.length-1] The index to search from.
+	     * @returns {number} Returns the index of the matched value or `-1`.
+	     * @example
+	     *
+	     * _.lastIndexOf([1, 2, 3, 1, 2, 3], 2);
+	     * // => 4
+	     *
+	     * _.lastIndexOf([1, 2, 3, 1, 2, 3], 2, 3);
+	     * // => 1
+	     */
+	    function lastIndexOf(array, value, fromIndex) {
+	      var index = array ? array.length : 0;
+	      if (typeof fromIndex == 'number') {
+	        index = (fromIndex < 0 ? nativeMax(0, index + fromIndex) : nativeMin(fromIndex, index - 1)) + 1;
+	      }
+	      while (index--) {
+	        if (array[index] === value) {
+	          return index;
+	        }
+	      }
+	      return -1;
+	    }
+
+	    /**
+	     * Removes all provided values from the given array using strict equality for
+	     * comparisons, i.e. `===`.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Arrays
+	     * @param {Array} array The array to modify.
+	     * @param {...*} [value] The values to remove.
+	     * @returns {Array} Returns `array`.
+	     * @example
+	     *
+	     * var array = [1, 2, 3, 1, 2, 3];
+	     * _.pull(array, 2, 3);
+	     * console.log(array);
+	     * // => [1, 1]
+	     */
+	    function pull(array) {
+	      var args = arguments,
+	          argsIndex = 0,
+	          argsLength = args.length,
+	          length = array ? array.length : 0;
+
+	      while (++argsIndex < argsLength) {
+	        var index = -1,
+	            value = args[argsIndex];
+	        while (++index < length) {
+	          if (array[index] === value) {
+	            splice.call(array, index--, 1);
+	            length--;
+	          }
+	        }
+	      }
+	      return array;
+	    }
+
+	    /**
+	     * Creates an array of numbers (positive and/or negative) progressing from
+	     * `start` up to but not including `end`. If `start` is less than `stop` a
+	     * zero-length range is created unless a negative `step` is specified.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Arrays
+	     * @param {number} [start=0] The start of the range.
+	     * @param {number} end The end of the range.
+	     * @param {number} [step=1] The value to increment or decrement by.
+	     * @returns {Array} Returns a new range array.
+	     * @example
+	     *
+	     * _.range(4);
+	     * // => [0, 1, 2, 3]
+	     *
+	     * _.range(1, 5);
+	     * // => [1, 2, 3, 4]
+	     *
+	     * _.range(0, 20, 5);
+	     * // => [0, 5, 10, 15]
+	     *
+	     * _.range(0, -4, -1);
+	     * // => [0, -1, -2, -3]
+	     *
+	     * _.range(1, 4, 0);
+	     * // => [1, 1, 1]
+	     *
+	     * _.range(0);
+	     * // => []
+	     */
+	    function range(start, end, step) {
+	      start = +start || 0;
+	      step = typeof step == 'number' ? step : (+step || 1);
+
+	      if (end == null) {
+	        end = start;
+	        start = 0;
+	      }
+	      // use `Array(length)` so engines like Chakra and V8 avoid slower modes
+	      // http://youtu.be/XAqIpGU8ZZk#t=17m25s
+	      var index = -1,
+	          length = nativeMax(0, ceil((end - start) / (step || 1))),
+	          result = Array(length);
+
+	      while (++index < length) {
+	        result[index] = start;
+	        start += step;
+	      }
+	      return result;
+	    }
+
+	    /**
+	     * Removes all elements from an array that the callback returns truey for
+	     * and returns an array of removed elements. The callback is bound to `thisArg`
+	     * and invoked with three arguments; (value, index, array).
+	     *
+	     * If a property name is provided for `callback` the created "_.pluck" style
+	     * callback will return the property value of the given element.
+	     *
+	     * If an object is provided for `callback` the created "_.where" style callback
+	     * will return `true` for elements that have the properties of the given object,
+	     * else `false`.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Arrays
+	     * @param {Array} array The array to modify.
+	     * @param {Function|Object|string} [callback=identity] The function called
+	     *  per iteration. If a property name or object is provided it will be used
+	     *  to create a "_.pluck" or "_.where" style callback, respectively.
+	     * @param {*} [thisArg] The `this` binding of `callback`.
+	     * @returns {Array} Returns a new array of removed elements.
+	     * @example
+	     *
+	     * var array = [1, 2, 3, 4, 5, 6];
+	     * var evens = _.remove(array, function(num) { return num % 2 == 0; });
+	     *
+	     * console.log(array);
+	     * // => [1, 3, 5]
+	     *
+	     * console.log(evens);
+	     * // => [2, 4, 6]
+	     */
+	    function remove(array, callback, thisArg) {
+	      var index = -1,
+	          length = array ? array.length : 0,
+	          result = [];
+
+	      callback = lodash.createCallback(callback, thisArg, 3);
+	      while (++index < length) {
+	        var value = array[index];
+	        if (callback(value, index, array)) {
+	          result.push(value);
+	          splice.call(array, index--, 1);
+	          length--;
+	        }
+	      }
+	      return result;
+	    }
+
+	    /**
+	     * The opposite of `_.initial` this method gets all but the first element or
+	     * first `n` elements of an array. If a callback function is provided elements
+	     * at the beginning of the array are excluded from the result as long as the
+	     * callback returns truey. The callback is bound to `thisArg` and invoked
+	     * with three arguments; (value, index, array).
+	     *
+	     * If a property name is provided for `callback` the created "_.pluck" style
+	     * callback will return the property value of the given element.
+	     *
+	     * If an object is provided for `callback` the created "_.where" style callback
+	     * will return `true` for elements that have the properties of the given object,
+	     * else `false`.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @alias drop, tail
+	     * @category Arrays
+	     * @param {Array} array The array to query.
+	     * @param {Function|Object|number|string} [callback=1] The function called
+	     *  per element or the number of elements to exclude. If a property name or
+	     *  object is provided it will be used to create a "_.pluck" or "_.where"
+	     *  style callback, respectively.
+	     * @param {*} [thisArg] The `this` binding of `callback`.
+	     * @returns {Array} Returns a slice of `array`.
+	     * @example
+	     *
+	     * _.rest([1, 2, 3]);
+	     * // => [2, 3]
+	     *
+	     * _.rest([1, 2, 3], 2);
+	     * // => [3]
+	     *
+	     * _.rest([1, 2, 3], function(num) {
+	     *   return num < 3;
+	     * });
+	     * // => [3]
+	     *
+	     * var characters = [
+	     *   { 'name': 'barney',  'blocked': true,  'employer': 'slate' },
+	     *   { 'name': 'fred',    'blocked': false,  'employer': 'slate' },
+	     *   { 'name': 'pebbles', 'blocked': true, 'employer': 'na' }
+	     * ];
+	     *
+	     * // using "_.pluck" callback shorthand
+	     * _.pluck(_.rest(characters, 'blocked'), 'name');
+	     * // => ['fred', 'pebbles']
+	     *
+	     * // using "_.where" callback shorthand
+	     * _.rest(characters, { 'employer': 'slate' });
+	     * // => [{ 'name': 'pebbles', 'blocked': true, 'employer': 'na' }]
+	     */
+	    function rest(array, callback, thisArg) {
+	      if (typeof callback != 'number' && callback != null) {
+	        var n = 0,
+	            index = -1,
+	            length = array ? array.length : 0;
+
+	        callback = lodash.createCallback(callback, thisArg, 3);
+	        while (++index < length && callback(array[index], index, array)) {
+	          n++;
+	        }
+	      } else {
+	        n = (callback == null || thisArg) ? 1 : nativeMax(0, callback);
+	      }
+	      return slice(array, n);
+	    }
+
+	    /**
+	     * Uses a binary search to determine the smallest index at which a value
+	     * should be inserted into a given sorted array in order to maintain the sort
+	     * order of the array. If a callback is provided it will be executed for
+	     * `value` and each element of `array` to compute their sort ranking. The
+	     * callback is bound to `thisArg` and invoked with one argument; (value).
+	     *
+	     * If a property name is provided for `callback` the created "_.pluck" style
+	     * callback will return the property value of the given element.
+	     *
+	     * If an object is provided for `callback` the created "_.where" style callback
+	     * will return `true` for elements that have the properties of the given object,
+	     * else `false`.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Arrays
+	     * @param {Array} array The array to inspect.
+	     * @param {*} value The value to evaluate.
+	     * @param {Function|Object|string} [callback=identity] The function called
+	     *  per iteration. If a property name or object is provided it will be used
+	     *  to create a "_.pluck" or "_.where" style callback, respectively.
+	     * @param {*} [thisArg] The `this` binding of `callback`.
+	     * @returns {number} Returns the index at which `value` should be inserted
+	     *  into `array`.
+	     * @example
+	     *
+	     * _.sortedIndex([20, 30, 50], 40);
+	     * // => 2
+	     *
+	     * // using "_.pluck" callback shorthand
+	     * _.sortedIndex([{ 'x': 20 }, { 'x': 30 }, { 'x': 50 }], { 'x': 40 }, 'x');
+	     * // => 2
+	     *
+	     * var dict = {
+	     *   'wordToNumber': { 'twenty': 20, 'thirty': 30, 'fourty': 40, 'fifty': 50 }
+	     * };
+	     *
+	     * _.sortedIndex(['twenty', 'thirty', 'fifty'], 'fourty', function(word) {
+	     *   return dict.wordToNumber[word];
+	     * });
+	     * // => 2
+	     *
+	     * _.sortedIndex(['twenty', 'thirty', 'fifty'], 'fourty', function(word) {
+	     *   return this.wordToNumber[word];
+	     * }, dict);
+	     * // => 2
+	     */
+	    function sortedIndex(array, value, callback, thisArg) {
+	      var low = 0,
+	          high = array ? array.length : low;
+
+	      // explicitly reference `identity` for better inlining in Firefox
+	      callback = callback ? lodash.createCallback(callback, thisArg, 1) : identity;
+	      value = callback(value);
+
+	      while (low < high) {
+	        var mid = (low + high) >>> 1;
+	        (callback(array[mid]) < value)
+	          ? low = mid + 1
+	          : high = mid;
+	      }
+	      return low;
+	    }
+
+	    /**
+	     * Creates an array of unique values, in order, of the provided arrays using
+	     * strict equality for comparisons, i.e. `===`.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Arrays
+	     * @param {...Array} [array] The arrays to inspect.
+	     * @returns {Array} Returns an array of combined values.
+	     * @example
+	     *
+	     * _.union([1, 2, 3], [5, 2, 1, 4], [2, 1]);
+	     * // => [1, 2, 3, 5, 4]
+	     */
+	    function union() {
+	      return baseUniq(baseFlatten(arguments, true, true));
+	    }
+
+	    /**
+	     * Creates a duplicate-value-free version of an array using strict equality
+	     * for comparisons, i.e. `===`. If the array is sorted, providing
+	     * `true` for `isSorted` will use a faster algorithm. If a callback is provided
+	     * each element of `array` is passed through the callback before uniqueness
+	     * is computed. The callback is bound to `thisArg` and invoked with three
+	     * arguments; (value, index, array).
+	     *
+	     * If a property name is provided for `callback` the created "_.pluck" style
+	     * callback will return the property value of the given element.
+	     *
+	     * If an object is provided for `callback` the created "_.where" style callback
+	     * will return `true` for elements that have the properties of the given object,
+	     * else `false`.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @alias unique
+	     * @category Arrays
+	     * @param {Array} array The array to process.
+	     * @param {boolean} [isSorted=false] A flag to indicate that `array` is sorted.
+	     * @param {Function|Object|string} [callback=identity] The function called
+	     *  per iteration. If a property name or object is provided it will be used
+	     *  to create a "_.pluck" or "_.where" style callback, respectively.
+	     * @param {*} [thisArg] The `this` binding of `callback`.
+	     * @returns {Array} Returns a duplicate-value-free array.
+	     * @example
+	     *
+	     * _.uniq([1, 2, 1, 3, 1]);
+	     * // => [1, 2, 3]
+	     *
+	     * _.uniq([1, 1, 2, 2, 3], true);
+	     * // => [1, 2, 3]
+	     *
+	     * _.uniq(['A', 'b', 'C', 'a', 'B', 'c'], function(letter) { return letter.toLowerCase(); });
+	     * // => ['A', 'b', 'C']
+	     *
+	     * _.uniq([1, 2.5, 3, 1.5, 2, 3.5], function(num) { return this.floor(num); }, Math);
+	     * // => [1, 2.5, 3]
+	     *
+	     * // using "_.pluck" callback shorthand
+	     * _.uniq([{ 'x': 1 }, { 'x': 2 }, { 'x': 1 }], 'x');
+	     * // => [{ 'x': 1 }, { 'x': 2 }]
+	     */
+	    function uniq(array, isSorted, callback, thisArg) {
+	      // juggle arguments
+	      if (typeof isSorted != 'boolean' && isSorted != null) {
+	        thisArg = callback;
+	        callback = (typeof isSorted != 'function' && thisArg && thisArg[isSorted] === array) ? null : isSorted;
+	        isSorted = false;
+	      }
+	      if (callback != null) {
+	        callback = lodash.createCallback(callback, thisArg, 3);
+	      }
+	      return baseUniq(array, isSorted, callback);
+	    }
+
+	    /**
+	     * Creates an array excluding all provided values using strict equality for
+	     * comparisons, i.e. `===`.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Arrays
+	     * @param {Array} array The array to filter.
+	     * @param {...*} [value] The values to exclude.
+	     * @returns {Array} Returns a new array of filtered values.
+	     * @example
+	     *
+	     * _.without([1, 2, 1, 0, 3, 1, 4], 0, 1);
+	     * // => [2, 3, 4]
+	     */
+	    function without(array) {
+	      return baseDifference(array, slice(arguments, 1));
+	    }
+
+	    /**
+	     * Creates an array that is the symmetric difference of the provided arrays.
+	     * See http://en.wikipedia.org/wiki/Symmetric_difference.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Arrays
+	     * @param {...Array} [array] The arrays to inspect.
+	     * @returns {Array} Returns an array of values.
+	     * @example
+	     *
+	     * _.xor([1, 2, 3], [5, 2, 1, 4]);
+	     * // => [3, 5, 4]
+	     *
+	     * _.xor([1, 2, 5], [2, 3, 5], [3, 4, 5]);
+	     * // => [1, 4, 5]
+	     */
+	    function xor() {
+	      var index = -1,
+	          length = arguments.length;
+
+	      while (++index < length) {
+	        var array = arguments[index];
+	        if (isArray(array) || isArguments(array)) {
+	          var result = result
+	            ? baseUniq(baseDifference(result, array).concat(baseDifference(array, result)))
+	            : array;
+	        }
+	      }
+	      return result || [];
+	    }
+
+	    /**
+	     * Creates an array of grouped elements, the first of which contains the first
+	     * elements of the given arrays, the second of which contains the second
+	     * elements of the given arrays, and so on.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @alias unzip
+	     * @category Arrays
+	     * @param {...Array} [array] Arrays to process.
+	     * @returns {Array} Returns a new array of grouped elements.
+	     * @example
+	     *
+	     * _.zip(['fred', 'barney'], [30, 40], [true, false]);
+	     * // => [['fred', 30, true], ['barney', 40, false]]
+	     */
+	    function zip() {
+	      var array = arguments.length > 1 ? arguments : arguments[0],
+	          index = -1,
+	          length = array ? max(pluck(array, 'length')) : 0,
+	          result = Array(length < 0 ? 0 : length);
+
+	      while (++index < length) {
+	        result[index] = pluck(array, index);
+	      }
+	      return result;
+	    }
+
+	    /**
+	     * Creates an object composed from arrays of `keys` and `values`. Provide
+	     * either a single two dimensional array, i.e. `[[key1, value1], [key2, value2]]`
+	     * or two arrays, one of `keys` and one of corresponding `values`.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @alias object
+	     * @category Arrays
+	     * @param {Array} keys The array of keys.
+	     * @param {Array} [values=[]] The array of values.
+	     * @returns {Object} Returns an object composed of the given keys and
+	     *  corresponding values.
+	     * @example
+	     *
+	     * _.zipObject(['fred', 'barney'], [30, 40]);
+	     * // => { 'fred': 30, 'barney': 40 }
+	     */
+	    function zipObject(keys, values) {
+	      var index = -1,
+	          length = keys ? keys.length : 0,
+	          result = {};
+
+	      if (!values && length && !isArray(keys[0])) {
+	        values = [];
+	      }
+	      while (++index < length) {
+	        var key = keys[index];
+	        if (values) {
+	          result[key] = values[index];
+	        } else if (key) {
+	          result[key[0]] = key[1];
+	        }
+	      }
+	      return result;
+	    }
+
+	    /*--------------------------------------------------------------------------*/
+
+	    /**
+	     * Creates a function that executes `func`, with  the `this` binding and
+	     * arguments of the created function, only after being called `n` times.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Functions
+	     * @param {number} n The number of times the function must be called before
+	     *  `func` is executed.
+	     * @param {Function} func The function to restrict.
+	     * @returns {Function} Returns the new restricted function.
+	     * @example
+	     *
+	     * var saves = ['profile', 'settings'];
+	     *
+	     * var done = _.after(saves.length, function() {
+	     *   console.log('Done saving!');
+	     * });
+	     *
+	     * _.forEach(saves, function(type) {
+	     *   asyncSave({ 'type': type, 'complete': done });
+	     * });
+	     * // => logs 'Done saving!', after all saves have completed
+	     */
+	    function after(n, func) {
+	      if (!isFunction(func)) {
+	        throw new TypeError;
+	      }
+	      return function() {
+	        if (--n < 1) {
+	          return func.apply(this, arguments);
+	        }
+	      };
+	    }
+
+	    /**
+	     * Creates a function that, when called, invokes `func` with the `this`
+	     * binding of `thisArg` and prepends any additional `bind` arguments to those
+	     * provided to the bound function.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Functions
+	     * @param {Function} func The function to bind.
+	     * @param {*} [thisArg] The `this` binding of `func`.
+	     * @param {...*} [arg] Arguments to be partially applied.
+	     * @returns {Function} Returns the new bound function.
+	     * @example
+	     *
+	     * var func = function(greeting) {
+	     *   return greeting + ' ' + this.name;
+	     * };
+	     *
+	     * func = _.bind(func, { 'name': 'fred' }, 'hi');
+	     * func();
+	     * // => 'hi fred'
+	     */
+	    function bind(func, thisArg) {
+	      return arguments.length > 2
+	        ? createWrapper(func, 17, slice(arguments, 2), null, thisArg)
+	        : createWrapper(func, 1, null, null, thisArg);
+	    }
+
+	    /**
+	     * Binds methods of an object to the object itself, overwriting the existing
+	     * method. Method names may be specified as individual arguments or as arrays
+	     * of method names. If no method names are provided all the function properties
+	     * of `object` will be bound.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Functions
+	     * @param {Object} object The object to bind and assign the bound methods to.
+	     * @param {...string} [methodName] The object method names to
+	     *  bind, specified as individual method names or arrays of method names.
+	     * @returns {Object} Returns `object`.
+	     * @example
+	     *
+	     * var view = {
+	     *   'label': 'docs',
+	     *   'onClick': function() { console.log('clicked ' + this.label); }
+	     * };
+	     *
+	     * _.bindAll(view);
+	     * jQuery('#docs').on('click', view.onClick);
+	     * // => logs 'clicked docs', when the button is clicked
+	     */
+	    function bindAll(object) {
+	      var funcs = arguments.length > 1 ? baseFlatten(arguments, true, false, 1) : functions(object),
+	          index = -1,
+	          length = funcs.length;
+
+	      while (++index < length) {
+	        var key = funcs[index];
+	        object[key] = createWrapper(object[key], 1, null, null, object);
+	      }
+	      return object;
+	    }
+
+	    /**
+	     * Creates a function that, when called, invokes the method at `object[key]`
+	     * and prepends any additional `bindKey` arguments to those provided to the bound
+	     * function. This method differs from `_.bind` by allowing bound functions to
+	     * reference methods that will be redefined or don't yet exist.
+	     * See http://michaux.ca/articles/lazy-function-definition-pattern.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Functions
+	     * @param {Object} object The object the method belongs to.
+	     * @param {string} key The key of the method.
+	     * @param {...*} [arg] Arguments to be partially applied.
+	     * @returns {Function} Returns the new bound function.
+	     * @example
+	     *
+	     * var object = {
+	     *   'name': 'fred',
+	     *   'greet': function(greeting) {
+	     *     return greeting + ' ' + this.name;
+	     *   }
+	     * };
+	     *
+	     * var func = _.bindKey(object, 'greet', 'hi');
+	     * func();
+	     * // => 'hi fred'
+	     *
+	     * object.greet = function(greeting) {
+	     *   return greeting + 'ya ' + this.name + '!';
+	     * };
+	     *
+	     * func();
+	     * // => 'hiya fred!'
+	     */
+	    function bindKey(object, key) {
+	      return arguments.length > 2
+	        ? createWrapper(key, 19, slice(arguments, 2), null, object)
+	        : createWrapper(key, 3, null, null, object);
+	    }
+
+	    /**
+	     * Creates a function that is the composition of the provided functions,
+	     * where each function consumes the return value of the function that follows.
+	     * For example, composing the functions `f()`, `g()`, and `h()` produces `f(g(h()))`.
+	     * Each function is executed with the `this` binding of the composed function.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Functions
+	     * @param {...Function} [func] Functions to compose.
+	     * @returns {Function} Returns the new composed function.
+	     * @example
+	     *
+	     * var realNameMap = {
+	     *   'pebbles': 'penelope'
+	     * };
+	     *
+	     * var format = function(name) {
+	     *   name = realNameMap[name.toLowerCase()] || name;
+	     *   return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+	     * };
+	     *
+	     * var greet = function(formatted) {
+	     *   return 'Hiya ' + formatted + '!';
+	     * };
+	     *
+	     * var welcome = _.compose(greet, format);
+	     * welcome('pebbles');
+	     * // => 'Hiya Penelope!'
+	     */
+	    function compose() {
+	      var funcs = arguments,
+	          length = funcs.length;
+
+	      while (length--) {
+	        if (!isFunction(funcs[length])) {
+	          throw new TypeError;
+	        }
+	      }
+	      return function() {
+	        var args = arguments,
+	            length = funcs.length;
+
+	        while (length--) {
+	          args = [funcs[length].apply(this, args)];
+	        }
+	        return args[0];
+	      };
+	    }
+
+	    /**
+	     * Creates a function which accepts one or more arguments of `func` that when
+	     * invoked either executes `func` returning its result, if all `func` arguments
+	     * have been provided, or returns a function that accepts one or more of the
+	     * remaining `func` arguments, and so on. The arity of `func` can be specified
+	     * if `func.length` is not sufficient.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Functions
+	     * @param {Function} func The function to curry.
+	     * @param {number} [arity=func.length] The arity of `func`.
+	     * @returns {Function} Returns the new curried function.
+	     * @example
+	     *
+	     * var curried = _.curry(function(a, b, c) {
+	     *   console.log(a + b + c);
+	     * });
+	     *
+	     * curried(1)(2)(3);
+	     * // => 6
+	     *
+	     * curried(1, 2)(3);
+	     * // => 6
+	     *
+	     * curried(1, 2, 3);
+	     * // => 6
+	     */
+	    function curry(func, arity) {
+	      arity = typeof arity == 'number' ? arity : (+arity || func.length);
+	      return createWrapper(func, 4, null, null, null, arity);
+	    }
+
+	    /**
+	     * Creates a function that will delay the execution of `func` until after
+	     * `wait` milliseconds have elapsed since the last time it was invoked.
+	     * Provide an options object to indicate that `func` should be invoked on
+	     * the leading and/or trailing edge of the `wait` timeout. Subsequent calls
+	     * to the debounced function will return the result of the last `func` call.
+	     *
+	     * Note: If `leading` and `trailing` options are `true` `func` will be called
+	     * on the trailing edge of the timeout only if the the debounced function is
+	     * invoked more than once during the `wait` timeout.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Functions
+	     * @param {Function} func The function to debounce.
+	     * @param {number} wait The number of milliseconds to delay.
+	     * @param {Object} [options] The options object.
+	     * @param {boolean} [options.leading=false] Specify execution on the leading edge of the timeout.
+	     * @param {number} [options.maxWait] The maximum time `func` is allowed to be delayed before it's called.
+	     * @param {boolean} [options.trailing=true] Specify execution on the trailing edge of the timeout.
+	     * @returns {Function} Returns the new debounced function.
+	     * @example
+	     *
+	     * // avoid costly calculations while the window size is in flux
+	     * var lazyLayout = _.debounce(calculateLayout, 150);
+	     * jQuery(window).on('resize', lazyLayout);
+	     *
+	     * // execute `sendMail` when the click event is fired, debouncing subsequent calls
+	     * jQuery('#postbox').on('click', _.debounce(sendMail, 300, {
+	     *   'leading': true,
+	     *   'trailing': false
+	     * });
+	     *
+	     * // ensure `batchLog` is executed once after 1 second of debounced calls
+	     * var source = new EventSource('/stream');
+	     * source.addEventListener('message', _.debounce(batchLog, 250, {
+	     *   'maxWait': 1000
+	     * }, false);
+	     */
+	    function debounce(func, wait, options) {
+	      var args,
+	          maxTimeoutId,
+	          result,
+	          stamp,
+	          thisArg,
+	          timeoutId,
+	          trailingCall,
+	          lastCalled = 0,
+	          maxWait = false,
+	          trailing = true;
+
+	      if (!isFunction(func)) {
+	        throw new TypeError;
+	      }
+	      wait = nativeMax(0, wait) || 0;
+	      if (options === true) {
+	        var leading = true;
+	        trailing = false;
+	      } else if (isObject(options)) {
+	        leading = options.leading;
+	        maxWait = 'maxWait' in options && (nativeMax(wait, options.maxWait) || 0);
+	        trailing = 'trailing' in options ? options.trailing : trailing;
+	      }
+	      var delayed = function() {
+	        var remaining = wait - (now() - stamp);
+	        if (remaining <= 0) {
+	          if (maxTimeoutId) {
+	            clearTimeout(maxTimeoutId);
+	          }
+	          var isCalled = trailingCall;
+	          maxTimeoutId = timeoutId = trailingCall = undefined;
+	          if (isCalled) {
+	            lastCalled = now();
+	            result = func.apply(thisArg, args);
+	            if (!timeoutId && !maxTimeoutId) {
+	              args = thisArg = null;
+	            }
+	          }
+	        } else {
+	          timeoutId = setTimeout(delayed, remaining);
+	        }
+	      };
+
+	      var maxDelayed = function() {
+	        if (timeoutId) {
+	          clearTimeout(timeoutId);
+	        }
+	        maxTimeoutId = timeoutId = trailingCall = undefined;
+	        if (trailing || (maxWait !== wait)) {
+	          lastCalled = now();
+	          result = func.apply(thisArg, args);
+	          if (!timeoutId && !maxTimeoutId) {
+	            args = thisArg = null;
+	          }
+	        }
+	      };
+
+	      return function() {
+	        args = arguments;
+	        stamp = now();
+	        thisArg = this;
+	        trailingCall = trailing && (timeoutId || !leading);
+
+	        if (maxWait === false) {
+	          var leadingCall = leading && !timeoutId;
+	        } else {
+	          if (!maxTimeoutId && !leading) {
+	            lastCalled = stamp;
+	          }
+	          var remaining = maxWait - (stamp - lastCalled),
+	              isCalled = remaining <= 0;
+
+	          if (isCalled) {
+	            if (maxTimeoutId) {
+	              maxTimeoutId = clearTimeout(maxTimeoutId);
+	            }
+	            lastCalled = stamp;
+	            result = func.apply(thisArg, args);
+	          }
+	          else if (!maxTimeoutId) {
+	            maxTimeoutId = setTimeout(maxDelayed, remaining);
+	          }
+	        }
+	        if (isCalled && timeoutId) {
+	          timeoutId = clearTimeout(timeoutId);
+	        }
+	        else if (!timeoutId && wait !== maxWait) {
+	          timeoutId = setTimeout(delayed, wait);
+	        }
+	        if (leadingCall) {
+	          isCalled = true;
+	          result = func.apply(thisArg, args);
+	        }
+	        if (isCalled && !timeoutId && !maxTimeoutId) {
+	          args = thisArg = null;
+	        }
+	        return result;
+	      };
+	    }
+
+	    /**
+	     * Defers executing the `func` function until the current call stack has cleared.
+	     * Additional arguments will be provided to `func` when it is invoked.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Functions
+	     * @param {Function} func The function to defer.
+	     * @param {...*} [arg] Arguments to invoke the function with.
+	     * @returns {number} Returns the timer id.
+	     * @example
+	     *
+	     * _.defer(function(text) { console.log(text); }, 'deferred');
+	     * // logs 'deferred' after one or more milliseconds
+	     */
+	    function defer(func) {
+	      if (!isFunction(func)) {
+	        throw new TypeError;
+	      }
+	      var args = slice(arguments, 1);
+	      return setTimeout(function() { func.apply(undefined, args); }, 1);
+	    }
+
+	    /**
+	     * Executes the `func` function after `wait` milliseconds. Additional arguments
+	     * will be provided to `func` when it is invoked.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Functions
+	     * @param {Function} func The function to delay.
+	     * @param {number} wait The number of milliseconds to delay execution.
+	     * @param {...*} [arg] Arguments to invoke the function with.
+	     * @returns {number} Returns the timer id.
+	     * @example
+	     *
+	     * _.delay(function(text) { console.log(text); }, 1000, 'later');
+	     * // => logs 'later' after one second
+	     */
+	    function delay(func, wait) {
+	      if (!isFunction(func)) {
+	        throw new TypeError;
+	      }
+	      var args = slice(arguments, 2);
+	      return setTimeout(function() { func.apply(undefined, args); }, wait);
+	    }
+
+	    /**
+	     * Creates a function that memoizes the result of `func`. If `resolver` is
+	     * provided it will be used to determine the cache key for storing the result
+	     * based on the arguments provided to the memoized function. By default, the
+	     * first argument provided to the memoized function is used as the cache key.
+	     * The `func` is executed with the `this` binding of the memoized function.
+	     * The result cache is exposed as the `cache` property on the memoized function.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Functions
+	     * @param {Function} func The function to have its output memoized.
+	     * @param {Function} [resolver] A function used to resolve the cache key.
+	     * @returns {Function} Returns the new memoizing function.
+	     * @example
+	     *
+	     * var fibonacci = _.memoize(function(n) {
+	     *   return n < 2 ? n : fibonacci(n - 1) + fibonacci(n - 2);
+	     * });
+	     *
+	     * fibonacci(9)
+	     * // => 34
+	     *
+	     * var data = {
+	     *   'fred': { 'name': 'fred', 'age': 40 },
+	     *   'pebbles': { 'name': 'pebbles', 'age': 1 }
+	     * };
+	     *
+	     * // modifying the result cache
+	     * var get = _.memoize(function(name) { return data[name]; }, _.identity);
+	     * get('pebbles');
+	     * // => { 'name': 'pebbles', 'age': 1 }
+	     *
+	     * get.cache.pebbles.name = 'penelope';
+	     * get('pebbles');
+	     * // => { 'name': 'penelope', 'age': 1 }
+	     */
+	    function memoize(func, resolver) {
+	      if (!isFunction(func)) {
+	        throw new TypeError;
+	      }
+	      var memoized = function() {
+	        var cache = memoized.cache,
+	            key = resolver ? resolver.apply(this, arguments) : keyPrefix + arguments[0];
+
+	        return hasOwnProperty.call(cache, key)
+	          ? cache[key]
+	          : (cache[key] = func.apply(this, arguments));
+	      }
+	      memoized.cache = {};
+	      return memoized;
+	    }
+
+	    /**
+	     * Creates a function that is restricted to execute `func` once. Repeat calls to
+	     * the function will return the value of the first call. The `func` is executed
+	     * with the `this` binding of the created function.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Functions
+	     * @param {Function} func The function to restrict.
+	     * @returns {Function} Returns the new restricted function.
+	     * @example
+	     *
+	     * var initialize = _.once(createApplication);
+	     * initialize();
+	     * initialize();
+	     * // `initialize` executes `createApplication` once
+	     */
+	    function once(func) {
+	      var ran,
+	          result;
+
+	      if (!isFunction(func)) {
+	        throw new TypeError;
+	      }
+	      return function() {
+	        if (ran) {
+	          return result;
+	        }
+	        ran = true;
+	        result = func.apply(this, arguments);
+
+	        // clear the `func` variable so the function may be garbage collected
+	        func = null;
+	        return result;
+	      };
+	    }
+
+	    /**
+	     * Creates a function that, when called, invokes `func` with any additional
+	     * `partial` arguments prepended to those provided to the new function. This
+	     * method is similar to `_.bind` except it does **not** alter the `this` binding.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Functions
+	     * @param {Function} func The function to partially apply arguments to.
+	     * @param {...*} [arg] Arguments to be partially applied.
+	     * @returns {Function} Returns the new partially applied function.
+	     * @example
+	     *
+	     * var greet = function(greeting, name) { return greeting + ' ' + name; };
+	     * var hi = _.partial(greet, 'hi');
+	     * hi('fred');
+	     * // => 'hi fred'
+	     */
+	    function partial(func) {
+	      return createWrapper(func, 16, slice(arguments, 1));
+	    }
+
+	    /**
+	     * This method is like `_.partial` except that `partial` arguments are
+	     * appended to those provided to the new function.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Functions
+	     * @param {Function} func The function to partially apply arguments to.
+	     * @param {...*} [arg] Arguments to be partially applied.
+	     * @returns {Function} Returns the new partially applied function.
+	     * @example
+	     *
+	     * var defaultsDeep = _.partialRight(_.merge, _.defaults);
+	     *
+	     * var options = {
+	     *   'variable': 'data',
+	     *   'imports': { 'jq': $ }
+	     * };
+	     *
+	     * defaultsDeep(options, _.templateSettings);
+	     *
+	     * options.variable
+	     * // => 'data'
+	     *
+	     * options.imports
+	     * // => { '_': _, 'jq': $ }
+	     */
+	    function partialRight(func) {
+	      return createWrapper(func, 32, null, slice(arguments, 1));
+	    }
+
+	    /**
+	     * Creates a function that, when executed, will only call the `func` function
+	     * at most once per every `wait` milliseconds. Provide an options object to
+	     * indicate that `func` should be invoked on the leading and/or trailing edge
+	     * of the `wait` timeout. Subsequent calls to the throttled function will
+	     * return the result of the last `func` call.
+	     *
+	     * Note: If `leading` and `trailing` options are `true` `func` will be called
+	     * on the trailing edge of the timeout only if the the throttled function is
+	     * invoked more than once during the `wait` timeout.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Functions
+	     * @param {Function} func The function to throttle.
+	     * @param {number} wait The number of milliseconds to throttle executions to.
+	     * @param {Object} [options] The options object.
+	     * @param {boolean} [options.leading=true] Specify execution on the leading edge of the timeout.
+	     * @param {boolean} [options.trailing=true] Specify execution on the trailing edge of the timeout.
+	     * @returns {Function} Returns the new throttled function.
+	     * @example
+	     *
+	     * // avoid excessively updating the position while scrolling
+	     * var throttled = _.throttle(updatePosition, 100);
+	     * jQuery(window).on('scroll', throttled);
+	     *
+	     * // execute `renewToken` when the click event is fired, but not more than once every 5 minutes
+	     * jQuery('.interactive').on('click', _.throttle(renewToken, 300000, {
+	     *   'trailing': false
+	     * }));
+	     */
+	    function throttle(func, wait, options) {
+	      var leading = true,
+	          trailing = true;
+
+	      if (!isFunction(func)) {
+	        throw new TypeError;
+	      }
+	      if (options === false) {
+	        leading = false;
+	      } else if (isObject(options)) {
+	        leading = 'leading' in options ? options.leading : leading;
+	        trailing = 'trailing' in options ? options.trailing : trailing;
+	      }
+	      debounceOptions.leading = leading;
+	      debounceOptions.maxWait = wait;
+	      debounceOptions.trailing = trailing;
+
+	      return debounce(func, wait, debounceOptions);
+	    }
+
+	    /**
+	     * Creates a function that provides `value` to the wrapper function as its
+	     * first argument. Additional arguments provided to the function are appended
+	     * to those provided to the wrapper function. The wrapper is executed with
+	     * the `this` binding of the created function.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Functions
+	     * @param {*} value The value to wrap.
+	     * @param {Function} wrapper The wrapper function.
+	     * @returns {Function} Returns the new function.
+	     * @example
+	     *
+	     * var p = _.wrap(_.escape, function(func, text) {
+	     *   return '<p>' + func(text) + '</p>';
+	     * });
+	     *
+	     * p('Fred, Wilma, & Pebbles');
+	     * // => '<p>Fred, Wilma, &amp; Pebbles</p>'
+	     */
+	    function wrap(value, wrapper) {
+	      return createWrapper(wrapper, 16, [value]);
+	    }
+
+	    /*--------------------------------------------------------------------------*/
+
+	    /**
+	     * Creates a function that returns `value`.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Utilities
+	     * @param {*} value The value to return from the new function.
+	     * @returns {Function} Returns the new function.
+	     * @example
+	     *
+	     * var object = { 'name': 'fred' };
+	     * var getter = _.constant(object);
+	     * getter() === object;
+	     * // => true
+	     */
+	    function constant(value) {
+	      return function() {
+	        return value;
+	      };
+	    }
+
+	    /**
+	     * Produces a callback bound to an optional `thisArg`. If `func` is a property
+	     * name the created callback will return the property value for a given element.
+	     * If `func` is an object the created callback will return `true` for elements
+	     * that contain the equivalent object properties, otherwise it will return `false`.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Utilities
+	     * @param {*} [func=identity] The value to convert to a callback.
+	     * @param {*} [thisArg] The `this` binding of the created callback.
+	     * @param {number} [argCount] The number of arguments the callback accepts.
+	     * @returns {Function} Returns a callback function.
+	     * @example
+	     *
+	     * var characters = [
+	     *   { 'name': 'barney', 'age': 36 },
+	     *   { 'name': 'fred',   'age': 40 }
+	     * ];
+	     *
+	     * // wrap to create custom callback shorthands
+	     * _.createCallback = _.wrap(_.createCallback, function(func, callback, thisArg) {
+	     *   var match = /^(.+?)__([gl]t)(.+)$/.exec(callback);
+	     *   return !match ? func(callback, thisArg) : function(object) {
+	     *     return match[2] == 'gt' ? object[match[1]] > match[3] : object[match[1]] < match[3];
+	     *   };
+	     * });
+	     *
+	     * _.filter(characters, 'age__gt38');
+	     * // => [{ 'name': 'fred', 'age': 40 }]
+	     */
+	    function createCallback(func, thisArg, argCount) {
+	      var type = typeof func;
+	      if (func == null || type == 'function') {
+	        return baseCreateCallback(func, thisArg, argCount);
+	      }
+	      // handle "_.pluck" style callback shorthands
+	      if (type != 'object') {
+	        return property(func);
+	      }
+	      var props = keys(func),
+	          key = props[0],
+	          a = func[key];
+
+	      // handle "_.where" style callback shorthands
+	      if (props.length == 1 && a === a && !isObject(a)) {
+	        // fast path the common case of providing an object with a single
+	        // property containing a primitive value
+	        return function(object) {
+	          var b = object[key];
+	          return a === b && (a !== 0 || (1 / a == 1 / b));
+	        };
+	      }
+	      return function(object) {
+	        var length = props.length,
+	            result = false;
+
+	        while (length--) {
+	          if (!(result = baseIsEqual(object[props[length]], func[props[length]], null, true))) {
+	            break;
+	          }
+	        }
+	        return result;
+	      };
+	    }
+
+	    /**
+	     * Converts the characters `&`, `<`, `>`, `"`, and `'` in `string` to their
+	     * corresponding HTML entities.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Utilities
+	     * @param {string} string The string to escape.
+	     * @returns {string} Returns the escaped string.
+	     * @example
+	     *
+	     * _.escape('Fred, Wilma, & Pebbles');
+	     * // => 'Fred, Wilma, &amp; Pebbles'
+	     */
+	    function escape(string) {
+	      return string == null ? '' : String(string).replace(reUnescapedHtml, escapeHtmlChar);
+	    }
+
+	    /**
+	     * This method returns the first argument provided to it.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Utilities
+	     * @param {*} value Any value.
+	     * @returns {*} Returns `value`.
+	     * @example
+	     *
+	     * var object = { 'name': 'fred' };
+	     * _.identity(object) === object;
+	     * // => true
+	     */
+	    function identity(value) {
+	      return value;
+	    }
+
+	    /**
+	     * Adds function properties of a source object to the destination object.
+	     * If `object` is a function methods will be added to its prototype as well.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Utilities
+	     * @param {Function|Object} [object=lodash] object The destination object.
+	     * @param {Object} source The object of functions to add.
+	     * @param {Object} [options] The options object.
+	     * @param {boolean} [options.chain=true] Specify whether the functions added are chainable.
+	     * @example
+	     *
+	     * function capitalize(string) {
+	     *   return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+	     * }
+	     *
+	     * _.mixin({ 'capitalize': capitalize });
+	     * _.capitalize('fred');
+	     * // => 'Fred'
+	     *
+	     * _('fred').capitalize().value();
+	     * // => 'Fred'
+	     *
+	     * _.mixin({ 'capitalize': capitalize }, { 'chain': false });
+	     * _('fred').capitalize();
+	     * // => 'Fred'
+	     */
+	    function mixin(object, source, options) {
+	      var chain = true,
+	          methodNames = source && functions(source);
+
+	      if (!source || (!options && !methodNames.length)) {
+	        if (options == null) {
+	          options = source;
+	        }
+	        ctor = lodashWrapper;
+	        source = object;
+	        object = lodash;
+	        methodNames = functions(source);
+	      }
+	      if (options === false) {
+	        chain = false;
+	      } else if (isObject(options) && 'chain' in options) {
+	        chain = options.chain;
+	      }
+	      var ctor = object,
+	          isFunc = isFunction(ctor);
+
+	      forEach(methodNames, function(methodName) {
+	        var func = object[methodName] = source[methodName];
+	        if (isFunc) {
+	          ctor.prototype[methodName] = function() {
+	            var chainAll = this.__chain__,
+	                value = this.__wrapped__,
+	                args = [value];
+
+	            push.apply(args, arguments);
+	            var result = func.apply(object, args);
+	            if (chain || chainAll) {
+	              if (value === result && isObject(result)) {
+	                return this;
+	              }
+	              result = new ctor(result);
+	              result.__chain__ = chainAll;
+	            }
+	            return result;
+	          };
+	        }
+	      });
+	    }
+
+	    /**
+	     * Reverts the '_' variable to its previous value and returns a reference to
+	     * the `lodash` function.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Utilities
+	     * @returns {Function} Returns the `lodash` function.
+	     * @example
+	     *
+	     * var lodash = _.noConflict();
+	     */
+	    function noConflict() {
+	      context._ = oldDash;
+	      return this;
+	    }
+
+	    /**
+	     * A no-operation function.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Utilities
+	     * @example
+	     *
+	     * var object = { 'name': 'fred' };
+	     * _.noop(object) === undefined;
+	     * // => true
+	     */
+	    function noop() {
+	      // no operation performed
+	    }
+
+	    /**
+	     * Gets the number of milliseconds that have elapsed since the Unix epoch
+	     * (1 January 1970 00:00:00 UTC).
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Utilities
+	     * @example
+	     *
+	     * var stamp = _.now();
+	     * _.defer(function() { console.log(_.now() - stamp); });
+	     * // => logs the number of milliseconds it took for the deferred function to be called
+	     */
+	    var now = isNative(now = Date.now) && now || function() {
+	      return new Date().getTime();
+	    };
+
+	    /**
+	     * Converts the given value into an integer of the specified radix.
+	     * If `radix` is `undefined` or `0` a `radix` of `10` is used unless the
+	     * `value` is a hexadecimal, in which case a `radix` of `16` is used.
+	     *
+	     * Note: This method avoids differences in native ES3 and ES5 `parseInt`
+	     * implementations. See http://es5.github.io/#E.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Utilities
+	     * @param {string} value The value to parse.
+	     * @param {number} [radix] The radix used to interpret the value to parse.
+	     * @returns {number} Returns the new integer value.
+	     * @example
+	     *
+	     * _.parseInt('08');
+	     * // => 8
+	     */
+	    var parseInt = nativeParseInt(whitespace + '08') == 8 ? nativeParseInt : function(value, radix) {
+	      // Firefox < 21 and Opera < 15 follow the ES3 specified implementation of `parseInt`
+	      return nativeParseInt(isString(value) ? value.replace(reLeadingSpacesAndZeros, '') : value, radix || 0);
+	    };
+
+	    /**
+	     * Creates a "_.pluck" style function, which returns the `key` value of a
+	     * given object.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Utilities
+	     * @param {string} key The name of the property to retrieve.
+	     * @returns {Function} Returns the new function.
+	     * @example
+	     *
+	     * var characters = [
+	     *   { 'name': 'fred',   'age': 40 },
+	     *   { 'name': 'barney', 'age': 36 }
+	     * ];
+	     *
+	     * var getName = _.property('name');
+	     *
+	     * _.map(characters, getName);
+	     * // => ['barney', 'fred']
+	     *
+	     * _.sortBy(characters, getName);
+	     * // => [{ 'name': 'barney', 'age': 36 }, { 'name': 'fred',   'age': 40 }]
+	     */
+	    function property(key) {
+	      return function(object) {
+	        return object[key];
+	      };
+	    }
+
+	    /**
+	     * Produces a random number between `min` and `max` (inclusive). If only one
+	     * argument is provided a number between `0` and the given number will be
+	     * returned. If `floating` is truey or either `min` or `max` are floats a
+	     * floating-point number will be returned instead of an integer.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Utilities
+	     * @param {number} [min=0] The minimum possible value.
+	     * @param {number} [max=1] The maximum possible value.
+	     * @param {boolean} [floating=false] Specify returning a floating-point number.
+	     * @returns {number} Returns a random number.
+	     * @example
+	     *
+	     * _.random(0, 5);
+	     * // => an integer between 0 and 5
+	     *
+	     * _.random(5);
+	     * // => also an integer between 0 and 5
+	     *
+	     * _.random(5, true);
+	     * // => a floating-point number between 0 and 5
+	     *
+	     * _.random(1.2, 5.2);
+	     * // => a floating-point number between 1.2 and 5.2
+	     */
+	    function random(min, max, floating) {
+	      var noMin = min == null,
+	          noMax = max == null;
+
+	      if (floating == null) {
+	        if (typeof min == 'boolean' && noMax) {
+	          floating = min;
+	          min = 1;
+	        }
+	        else if (!noMax && typeof max == 'boolean') {
+	          floating = max;
+	          noMax = true;
+	        }
+	      }
+	      if (noMin && noMax) {
+	        max = 1;
+	      }
+	      min = +min || 0;
+	      if (noMax) {
+	        max = min;
+	        min = 0;
+	      } else {
+	        max = +max || 0;
+	      }
+	      if (floating || min % 1 || max % 1) {
+	        var rand = nativeRandom();
+	        return nativeMin(min + (rand * (max - min + parseFloat('1e-' + ((rand +'').length - 1)))), max);
+	      }
+	      return baseRandom(min, max);
+	    }
+
+	    /**
+	     * Resolves the value of property `key` on `object`. If `key` is a function
+	     * it will be invoked with the `this` binding of `object` and its result returned,
+	     * else the property value is returned. If `object` is falsey then `undefined`
+	     * is returned.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Utilities
+	     * @param {Object} object The object to inspect.
+	     * @param {string} key The name of the property to resolve.
+	     * @returns {*} Returns the resolved value.
+	     * @example
+	     *
+	     * var object = {
+	     *   'cheese': 'crumpets',
+	     *   'stuff': function() {
+	     *     return 'nonsense';
+	     *   }
+	     * };
+	     *
+	     * _.result(object, 'cheese');
+	     * // => 'crumpets'
+	     *
+	     * _.result(object, 'stuff');
+	     * // => 'nonsense'
+	     */
+	    function result(object, key) {
+	      if (object) {
+	        var value = object[key];
+	        return isFunction(value) ? object[key]() : value;
+	      }
+	    }
+
+	    /**
+	     * A micro-templating method that handles arbitrary delimiters, preserves
+	     * whitespace, and correctly escapes quotes within interpolated code.
+	     *
+	     * Note: In the development build, `_.template` utilizes sourceURLs for easier
+	     * debugging. See http://www.html5rocks.com/en/tutorials/developertools/sourcemaps/#toc-sourceurl
+	     *
+	     * For more information on precompiling templates see:
+	     * http://lodash.com/custom-builds
+	     *
+	     * For more information on Chrome extension sandboxes see:
+	     * http://developer.chrome.com/stable/extensions/sandboxingEval.html
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Utilities
+	     * @param {string} text The template text.
+	     * @param {Object} data The data object used to populate the text.
+	     * @param {Object} [options] The options object.
+	     * @param {RegExp} [options.escape] The "escape" delimiter.
+	     * @param {RegExp} [options.evaluate] The "evaluate" delimiter.
+	     * @param {Object} [options.imports] An object to import into the template as local variables.
+	     * @param {RegExp} [options.interpolate] The "interpolate" delimiter.
+	     * @param {string} [sourceURL] The sourceURL of the template's compiled source.
+	     * @param {string} [variable] The data object variable name.
+	     * @returns {Function|string} Returns a compiled function when no `data` object
+	     *  is given, else it returns the interpolated text.
+	     * @example
+	     *
+	     * // using the "interpolate" delimiter to create a compiled template
+	     * var compiled = _.template('hello <%= name %>');
+	     * compiled({ 'name': 'fred' });
+	     * // => 'hello fred'
+	     *
+	     * // using the "escape" delimiter to escape HTML in data property values
+	     * _.template('<b><%- value %></b>', { 'value': '<script>' });
+	     * // => '<b>&lt;script&gt;</b>'
+	     *
+	     * // using the "evaluate" delimiter to generate HTML
+	     * var list = '<% _.forEach(people, function(name) { %><li><%- name %></li><% }); %>';
+	     * _.template(list, { 'people': ['fred', 'barney'] });
+	     * // => '<li>fred</li><li>barney</li>'
+	     *
+	     * // using the ES6 delimiter as an alternative to the default "interpolate" delimiter
+	     * _.template('hello ${ name }', { 'name': 'pebbles' });
+	     * // => 'hello pebbles'
+	     *
+	     * // using the internal `print` function in "evaluate" delimiters
+	     * _.template('<% print("hello " + name); %>!', { 'name': 'barney' });
+	     * // => 'hello barney!'
+	     *
+	     * // using a custom template delimiters
+	     * _.templateSettings = {
+	     *   'interpolate': /{{([\s\S]+?)}}/g
+	     * };
+	     *
+	     * _.template('hello {{ name }}!', { 'name': 'mustache' });
+	     * // => 'hello mustache!'
+	     *
+	     * // using the `imports` option to import jQuery
+	     * var list = '<% jq.each(people, function(name) { %><li><%- name %></li><% }); %>';
+	     * _.template(list, { 'people': ['fred', 'barney'] }, { 'imports': { 'jq': jQuery } });
+	     * // => '<li>fred</li><li>barney</li>'
+	     *
+	     * // using the `sourceURL` option to specify a custom sourceURL for the template
+	     * var compiled = _.template('hello <%= name %>', null, { 'sourceURL': '/basic/greeting.jst' });
+	     * compiled(data);
+	     * // => find the source of "greeting.jst" under the Sources tab or Resources panel of the web inspector
+	     *
+	     * // using the `variable` option to ensure a with-statement isn't used in the compiled template
+	     * var compiled = _.template('hi <%= data.name %>!', null, { 'variable': 'data' });
+	     * compiled.source;
+	     * // => function(data) {
+	     *   var __t, __p = '', __e = _.escape;
+	     *   __p += 'hi ' + ((__t = ( data.name )) == null ? '' : __t) + '!';
+	     *   return __p;
+	     * }
+	     *
+	     * // using the `source` property to inline compiled templates for meaningful
+	     * // line numbers in error messages and a stack trace
+	     * fs.writeFileSync(path.join(cwd, 'jst.js'), '\
+	     *   var JST = {\
+	     *     "main": ' + _.template(mainText).source + '\
+	     *   };\
+	     * ');
+	     */
+	    function template(text, data, options) {
+	      // based on John Resig's `tmpl` implementation
+	      // http://ejohn.org/blog/javascript-micro-templating/
+	      // and Laura Doktorova's doT.js
+	      // https://github.com/olado/doT
+	      var settings = lodash.templateSettings;
+	      text = String(text || '');
+
+	      // avoid missing dependencies when `iteratorTemplate` is not defined
+	      options = defaults({}, options, settings);
+
+	      var imports = defaults({}, options.imports, settings.imports),
+	          importsKeys = keys(imports),
+	          importsValues = values(imports);
+
+	      var isEvaluating,
+	          index = 0,
+	          interpolate = options.interpolate || reNoMatch,
+	          source = "__p += '";
+
+	      // compile the regexp to match each delimiter
+	      var reDelimiters = RegExp(
+	        (options.escape || reNoMatch).source + '|' +
+	        interpolate.source + '|' +
+	        (interpolate === reInterpolate ? reEsTemplate : reNoMatch).source + '|' +
+	        (options.evaluate || reNoMatch).source + '|$'
+	      , 'g');
+
+	      text.replace(reDelimiters, function(match, escapeValue, interpolateValue, esTemplateValue, evaluateValue, offset) {
+	        interpolateValue || (interpolateValue = esTemplateValue);
+
+	        // escape characters that cannot be included in string literals
+	        source += text.slice(index, offset).replace(reUnescapedString, escapeStringChar);
+
+	        // replace delimiters with snippets
+	        if (escapeValue) {
+	          source += "' +\n__e(" + escapeValue + ") +\n'";
+	        }
+	        if (evaluateValue) {
+	          isEvaluating = true;
+	          source += "';\n" + evaluateValue + ";\n__p += '";
+	        }
+	        if (interpolateValue) {
+	          source += "' +\n((__t = (" + interpolateValue + ")) == null ? '' : __t) +\n'";
+	        }
+	        index = offset + match.length;
+
+	        // the JS engine embedded in Adobe products requires returning the `match`
+	        // string in order to produce the correct `offset` value
+	        return match;
+	      });
+
+	      source += "';\n";
+
+	      // if `variable` is not specified, wrap a with-statement around the generated
+	      // code to add the data object to the top of the scope chain
+	      var variable = options.variable,
+	          hasVariable = variable;
+
+	      if (!hasVariable) {
+	        variable = 'obj';
+	        source = 'with (' + variable + ') {\n' + source + '\n}\n';
+	      }
+	      // cleanup code by stripping empty strings
+	      source = (isEvaluating ? source.replace(reEmptyStringLeading, '') : source)
+	        .replace(reEmptyStringMiddle, '$1')
+	        .replace(reEmptyStringTrailing, '$1;');
+
+	      // frame code as the function body
+	      source = 'function(' + variable + ') {\n' +
+	        (hasVariable ? '' : variable + ' || (' + variable + ' = {});\n') +
+	        "var __t, __p = '', __e = _.escape" +
+	        (isEvaluating
+	          ? ', __j = Array.prototype.join;\n' +
+	            "function print() { __p += __j.call(arguments, '') }\n"
+	          : ';\n'
+	        ) +
+	        source +
+	        'return __p\n}';
+
+	      // Use a sourceURL for easier debugging.
+	      // http://www.html5rocks.com/en/tutorials/developertools/sourcemaps/#toc-sourceurl
+	      var sourceURL = '\n/*\n//# sourceURL=' + (options.sourceURL || '/lodash/template/source[' + (templateCounter++) + ']') + '\n*/';
+
+	      try {
+	        var result = Function(importsKeys, 'return ' + source + sourceURL).apply(undefined, importsValues);
+	      } catch(e) {
+	        e.source = source;
+	        throw e;
+	      }
+	      if (data) {
+	        return result(data);
+	      }
+	      // provide the compiled function's source by its `toString` method, in
+	      // supported environments, or the `source` property as a convenience for
+	      // inlining compiled templates during the build process
+	      result.source = source;
+	      return result;
+	    }
+
+	    /**
+	     * Executes the callback `n` times, returning an array of the results
+	     * of each callback execution. The callback is bound to `thisArg` and invoked
+	     * with one argument; (index).
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Utilities
+	     * @param {number} n The number of times to execute the callback.
+	     * @param {Function} callback The function called per iteration.
+	     * @param {*} [thisArg] The `this` binding of `callback`.
+	     * @returns {Array} Returns an array of the results of each `callback` execution.
+	     * @example
+	     *
+	     * var diceRolls = _.times(3, _.partial(_.random, 1, 6));
+	     * // => [3, 6, 4]
+	     *
+	     * _.times(3, function(n) { mage.castSpell(n); });
+	     * // => calls `mage.castSpell(n)` three times, passing `n` of `0`, `1`, and `2` respectively
+	     *
+	     * _.times(3, function(n) { this.cast(n); }, mage);
+	     * // => also calls `mage.castSpell(n)` three times
+	     */
+	    function times(n, callback, thisArg) {
+	      n = (n = +n) > -1 ? n : 0;
+	      var index = -1,
+	          result = Array(n);
+
+	      callback = baseCreateCallback(callback, thisArg, 1);
+	      while (++index < n) {
+	        result[index] = callback(index);
+	      }
+	      return result;
+	    }
+
+	    /**
+	     * The inverse of `_.escape` this method converts the HTML entities
+	     * `&amp;`, `&lt;`, `&gt;`, `&quot;`, and `&#39;` in `string` to their
+	     * corresponding characters.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Utilities
+	     * @param {string} string The string to unescape.
+	     * @returns {string} Returns the unescaped string.
+	     * @example
+	     *
+	     * _.unescape('Fred, Barney &amp; Pebbles');
+	     * // => 'Fred, Barney & Pebbles'
+	     */
+	    function unescape(string) {
+	      return string == null ? '' : String(string).replace(reEscapedHtml, unescapeHtmlChar);
+	    }
+
+	    /**
+	     * Generates a unique ID. If `prefix` is provided the ID will be appended to it.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Utilities
+	     * @param {string} [prefix] The value to prefix the ID with.
+	     * @returns {string} Returns the unique ID.
+	     * @example
+	     *
+	     * _.uniqueId('contact_');
+	     * // => 'contact_104'
+	     *
+	     * _.uniqueId();
+	     * // => '105'
+	     */
+	    function uniqueId(prefix) {
+	      var id = ++idCounter;
+	      return String(prefix == null ? '' : prefix) + id;
+	    }
+
+	    /*--------------------------------------------------------------------------*/
+
+	    /**
+	     * Creates a `lodash` object that wraps the given value with explicit
+	     * method chaining enabled.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Chaining
+	     * @param {*} value The value to wrap.
+	     * @returns {Object} Returns the wrapper object.
+	     * @example
+	     *
+	     * var characters = [
+	     *   { 'name': 'barney',  'age': 36 },
+	     *   { 'name': 'fred',    'age': 40 },
+	     *   { 'name': 'pebbles', 'age': 1 }
+	     * ];
+	     *
+	     * var youngest = _.chain(characters)
+	     *     .sortBy('age')
+	     *     .map(function(chr) { return chr.name + ' is ' + chr.age; })
+	     *     .first()
+	     *     .value();
+	     * // => 'pebbles is 1'
+	     */
+	    function chain(value) {
+	      value = new lodashWrapper(value);
+	      value.__chain__ = true;
+	      return value;
+	    }
+
+	    /**
+	     * Invokes `interceptor` with the `value` as the first argument and then
+	     * returns `value`. The purpose of this method is to "tap into" a method
+	     * chain in order to perform operations on intermediate results within
+	     * the chain.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @category Chaining
+	     * @param {*} value The value to provide to `interceptor`.
+	     * @param {Function} interceptor The function to invoke.
+	     * @returns {*} Returns `value`.
+	     * @example
+	     *
+	     * _([1, 2, 3, 4])
+	     *  .tap(function(array) { array.pop(); })
+	     *  .reverse()
+	     *  .value();
+	     * // => [3, 2, 1]
+	     */
+	    function tap(value, interceptor) {
+	      interceptor(value);
+	      return value;
+	    }
+
+	    /**
+	     * Enables explicit method chaining on the wrapper object.
+	     *
+	     * @name chain
+	     * @memberOf _
+	     * @category Chaining
+	     * @returns {*} Returns the wrapper object.
+	     * @example
+	     *
+	     * var characters = [
+	     *   { 'name': 'barney', 'age': 36 },
+	     *   { 'name': 'fred',   'age': 40 }
+	     * ];
+	     *
+	     * // without explicit chaining
+	     * _(characters).first();
+	     * // => { 'name': 'barney', 'age': 36 }
+	     *
+	     * // with explicit chaining
+	     * _(characters).chain()
+	     *   .first()
+	     *   .pick('age')
+	     *   .value();
+	     * // => { 'age': 36 }
+	     */
+	    function wrapperChain() {
+	      this.__chain__ = true;
+	      return this;
+	    }
+
+	    /**
+	     * Produces the `toString` result of the wrapped value.
+	     *
+	     * @name toString
+	     * @memberOf _
+	     * @category Chaining
+	     * @returns {string} Returns the string result.
+	     * @example
+	     *
+	     * _([1, 2, 3]).toString();
+	     * // => '1,2,3'
+	     */
+	    function wrapperToString() {
+	      return String(this.__wrapped__);
+	    }
+
+	    /**
+	     * Extracts the wrapped value.
+	     *
+	     * @name valueOf
+	     * @memberOf _
+	     * @alias value
+	     * @category Chaining
+	     * @returns {*} Returns the wrapped value.
+	     * @example
+	     *
+	     * _([1, 2, 3]).valueOf();
+	     * // => [1, 2, 3]
+	     */
+	    function wrapperValueOf() {
+	      return this.__wrapped__;
+	    }
+
+	    /*--------------------------------------------------------------------------*/
+
+	    // add functions that return wrapped values when chaining
+	    lodash.after = after;
+	    lodash.assign = assign;
+	    lodash.at = at;
+	    lodash.bind = bind;
+	    lodash.bindAll = bindAll;
+	    lodash.bindKey = bindKey;
+	    lodash.chain = chain;
+	    lodash.compact = compact;
+	    lodash.compose = compose;
+	    lodash.constant = constant;
+	    lodash.countBy = countBy;
+	    lodash.create = create;
+	    lodash.createCallback = createCallback;
+	    lodash.curry = curry;
+	    lodash.debounce = debounce;
+	    lodash.defaults = defaults;
+	    lodash.defer = defer;
+	    lodash.delay = delay;
+	    lodash.difference = difference;
+	    lodash.filter = filter;
+	    lodash.flatten = flatten;
+	    lodash.forEach = forEach;
+	    lodash.forEachRight = forEachRight;
+	    lodash.forIn = forIn;
+	    lodash.forInRight = forInRight;
+	    lodash.forOwn = forOwn;
+	    lodash.forOwnRight = forOwnRight;
+	    lodash.functions = functions;
+	    lodash.groupBy = groupBy;
+	    lodash.indexBy = indexBy;
+	    lodash.initial = initial;
+	    lodash.intersection = intersection;
+	    lodash.invert = invert;
+	    lodash.invoke = invoke;
+	    lodash.keys = keys;
+	    lodash.map = map;
+	    lodash.mapValues = mapValues;
+	    lodash.max = max;
+	    lodash.memoize = memoize;
+	    lodash.merge = merge;
+	    lodash.min = min;
+	    lodash.omit = omit;
+	    lodash.once = once;
+	    lodash.pairs = pairs;
+	    lodash.partial = partial;
+	    lodash.partialRight = partialRight;
+	    lodash.pick = pick;
+	    lodash.pluck = pluck;
+	    lodash.property = property;
+	    lodash.pull = pull;
+	    lodash.range = range;
+	    lodash.reject = reject;
+	    lodash.remove = remove;
+	    lodash.rest = rest;
+	    lodash.shuffle = shuffle;
+	    lodash.sortBy = sortBy;
+	    lodash.tap = tap;
+	    lodash.throttle = throttle;
+	    lodash.times = times;
+	    lodash.toArray = toArray;
+	    lodash.transform = transform;
+	    lodash.union = union;
+	    lodash.uniq = uniq;
+	    lodash.values = values;
+	    lodash.where = where;
+	    lodash.without = without;
+	    lodash.wrap = wrap;
+	    lodash.xor = xor;
+	    lodash.zip = zip;
+	    lodash.zipObject = zipObject;
+
+	    // add aliases
+	    lodash.collect = map;
+	    lodash.drop = rest;
+	    lodash.each = forEach;
+	    lodash.eachRight = forEachRight;
+	    lodash.extend = assign;
+	    lodash.methods = functions;
+	    lodash.object = zipObject;
+	    lodash.select = filter;
+	    lodash.tail = rest;
+	    lodash.unique = uniq;
+	    lodash.unzip = zip;
+
+	    // add functions to `lodash.prototype`
+	    mixin(lodash);
+
+	    /*--------------------------------------------------------------------------*/
+
+	    // add functions that return unwrapped values when chaining
+	    lodash.clone = clone;
+	    lodash.cloneDeep = cloneDeep;
+	    lodash.contains = contains;
+	    lodash.escape = escape;
+	    lodash.every = every;
+	    lodash.find = find;
+	    lodash.findIndex = findIndex;
+	    lodash.findKey = findKey;
+	    lodash.findLast = findLast;
+	    lodash.findLastIndex = findLastIndex;
+	    lodash.findLastKey = findLastKey;
+	    lodash.has = has;
+	    lodash.identity = identity;
+	    lodash.indexOf = indexOf;
+	    lodash.isArguments = isArguments;
+	    lodash.isArray = isArray;
+	    lodash.isBoolean = isBoolean;
+	    lodash.isDate = isDate;
+	    lodash.isElement = isElement;
+	    lodash.isEmpty = isEmpty;
+	    lodash.isEqual = isEqual;
+	    lodash.isFinite = isFinite;
+	    lodash.isFunction = isFunction;
+	    lodash.isNaN = isNaN;
+	    lodash.isNull = isNull;
+	    lodash.isNumber = isNumber;
+	    lodash.isObject = isObject;
+	    lodash.isPlainObject = isPlainObject;
+	    lodash.isRegExp = isRegExp;
+	    lodash.isString = isString;
+	    lodash.isUndefined = isUndefined;
+	    lodash.lastIndexOf = lastIndexOf;
+	    lodash.mixin = mixin;
+	    lodash.noConflict = noConflict;
+	    lodash.noop = noop;
+	    lodash.now = now;
+	    lodash.parseInt = parseInt;
+	    lodash.random = random;
+	    lodash.reduce = reduce;
+	    lodash.reduceRight = reduceRight;
+	    lodash.result = result;
+	    lodash.runInContext = runInContext;
+	    lodash.size = size;
+	    lodash.some = some;
+	    lodash.sortedIndex = sortedIndex;
+	    lodash.template = template;
+	    lodash.unescape = unescape;
+	    lodash.uniqueId = uniqueId;
+
+	    // add aliases
+	    lodash.all = every;
+	    lodash.any = some;
+	    lodash.detect = find;
+	    lodash.findWhere = find;
+	    lodash.foldl = reduce;
+	    lodash.foldr = reduceRight;
+	    lodash.include = contains;
+	    lodash.inject = reduce;
+
+	    mixin(function() {
+	      var source = {}
+	      forOwn(lodash, function(func, methodName) {
+	        if (!lodash.prototype[methodName]) {
+	          source[methodName] = func;
+	        }
+	      });
+	      return source;
+	    }(), false);
+
+	    /*--------------------------------------------------------------------------*/
+
+	    // add functions capable of returning wrapped and unwrapped values when chaining
+	    lodash.first = first;
+	    lodash.last = last;
+	    lodash.sample = sample;
+
+	    // add aliases
+	    lodash.take = first;
+	    lodash.head = first;
+
+	    forOwn(lodash, function(func, methodName) {
+	      var callbackable = methodName !== 'sample';
+	      if (!lodash.prototype[methodName]) {
+	        lodash.prototype[methodName]= function(n, guard) {
+	          var chainAll = this.__chain__,
+	              result = func(this.__wrapped__, n, guard);
+
+	          return !chainAll && (n == null || (guard && !(callbackable && typeof n == 'function')))
+	            ? result
+	            : new lodashWrapper(result, chainAll);
+	        };
+	      }
+	    });
+
+	    /*--------------------------------------------------------------------------*/
+
+	    /**
+	     * The semantic version number.
+	     *
+	     * @static
+	     * @memberOf _
+	     * @type string
+	     */
+	    lodash.VERSION = '2.4.1';
+
+	    // add "Chaining" functions to the wrapper
+	    lodash.prototype.chain = wrapperChain;
+	    lodash.prototype.toString = wrapperToString;
+	    lodash.prototype.value = wrapperValueOf;
+	    lodash.prototype.valueOf = wrapperValueOf;
+
+	    // add `Array` functions that return unwrapped values
+	    baseEach(['join', 'pop', 'shift'], function(methodName) {
+	      var func = arrayRef[methodName];
+	      lodash.prototype[methodName] = function() {
+	        var chainAll = this.__chain__,
+	            result = func.apply(this.__wrapped__, arguments);
+
+	        return chainAll
+	          ? new lodashWrapper(result, chainAll)
+	          : result;
+	      };
+	    });
+
+	    // add `Array` functions that return the existing wrapped value
+	    baseEach(['push', 'reverse', 'sort', 'unshift'], function(methodName) {
+	      var func = arrayRef[methodName];
+	      lodash.prototype[methodName] = function() {
+	        func.apply(this.__wrapped__, arguments);
+	        return this;
+	      };
+	    });
+
+	    // add `Array` functions that return new wrapped values
+	    baseEach(['concat', 'slice', 'splice'], function(methodName) {
+	      var func = arrayRef[methodName];
+	      lodash.prototype[methodName] = function() {
+	        return new lodashWrapper(func.apply(this.__wrapped__, arguments), this.__chain__);
+	      };
+	    });
+
+	    // avoid array-like object bugs with `Array#shift` and `Array#splice`
+	    // in IE < 9, Firefox < 10, Narwhal, and RingoJS
+	    if (!support.spliceObjects) {
+	      baseEach(['pop', 'shift', 'splice'], function(methodName) {
+	        var func = arrayRef[methodName],
+	            isSplice = methodName == 'splice';
+
+	        lodash.prototype[methodName] = function() {
+	          var chainAll = this.__chain__,
+	              value = this.__wrapped__,
+	              result = func.apply(value, arguments);
+
+	          if (value.length === 0) {
+	            delete value[0];
+	          }
+	          return (chainAll || isSplice)
+	            ? new lodashWrapper(result, chainAll)
+	            : result;
+	        };
+	      });
+	    }
+
+	    return lodash;
+	  }
+
+	  /*--------------------------------------------------------------------------*/
+
+	  // expose Lo-Dash
+	  var _ = runInContext();
+
+	  // some AMD build optimizers like r.js check for condition patterns like the following:
+	  if (true) {
+	    // Expose Lo-Dash to the global object even when an AMD loader is present in
+	    // case Lo-Dash is loaded with a RequireJS shim config.
+	    // See http://requirejs.org/docs/api.html#config-shim
+	    root._ = _;
+
+	    // define as an anonymous module so, through path mapping, it can be
+	    // referenced as the "underscore" module
+	    !(__WEBPACK_AMD_DEFINE_RESULT__ = function() {
+	      return _;
+	    }.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	  }
+	  // check for `exports` after `define` in case a build optimizer adds an `exports` object
+	  else if (freeExports && freeModule) {
+	    // in Node.js or RingoJS
+	    if (moduleExports) {
+	      (freeModule.exports = _)._ = _;
+	    }
+	    // in Narwhal or Rhino -require
+	    else {
+	      freeExports._ = _;
+	    }
+	  }
+	  else {
+	    // in a browser or Rhino
+	    root._ = _;
+	  }
+	}.call(this));
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(219)(module), (function() { return this; }())))
+
+/***/ },
+/* 161 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -21603,3933 +28992,7 @@
 
 
 /***/ },
-/* 149 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(process) {/**
-	 * Copyright 2013-2014, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule emptyObject
-	 */
-
-	"use strict";
-
-	var emptyObject = {};
-
-	if ("production" !== process.env.NODE_ENV) {
-	  Object.freeze(emptyObject);
-	}
-
-	module.exports = emptyObject;
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(85)))
-
-/***/ },
-/* 150 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(process) {/**
-	 * Copyright 2013-2014, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule CallbackQueue
-	 */
-
-	"use strict";
-
-	var PooledClass = __webpack_require__(92);
-
-	var assign = __webpack_require__(46);
-	var invariant = __webpack_require__(91);
-
-	/**
-	 * A specialized pseudo-event module to help keep track of components waiting to
-	 * be notified when their DOM representations are available for use.
-	 *
-	 * This implements `PooledClass`, so you should never need to instantiate this.
-	 * Instead, use `CallbackQueue.getPooled()`.
-	 *
-	 * @class ReactMountReady
-	 * @implements PooledClass
-	 * @internal
-	 */
-	function CallbackQueue() {
-	  this._callbacks = null;
-	  this._contexts = null;
-	}
-
-	assign(CallbackQueue.prototype, {
-
-	  /**
-	   * Enqueues a callback to be invoked when `notifyAll` is invoked.
-	   *
-	   * @param {function} callback Invoked when `notifyAll` is invoked.
-	   * @param {?object} context Context to call `callback` with.
-	   * @internal
-	   */
-	  enqueue: function(callback, context) {
-	    this._callbacks = this._callbacks || [];
-	    this._contexts = this._contexts || [];
-	    this._callbacks.push(callback);
-	    this._contexts.push(context);
-	  },
-
-	  /**
-	   * Invokes all enqueued callbacks and clears the queue. This is invoked after
-	   * the DOM representation of a component has been created or updated.
-	   *
-	   * @internal
-	   */
-	  notifyAll: function() {
-	    var callbacks = this._callbacks;
-	    var contexts = this._contexts;
-	    if (callbacks) {
-	      ("production" !== process.env.NODE_ENV ? invariant(
-	        callbacks.length === contexts.length,
-	        "Mismatched list of contexts in callback queue"
-	      ) : invariant(callbacks.length === contexts.length));
-	      this._callbacks = null;
-	      this._contexts = null;
-	      for (var i = 0, l = callbacks.length; i < l; i++) {
-	        callbacks[i].call(contexts[i]);
-	      }
-	      callbacks.length = 0;
-	      contexts.length = 0;
-	    }
-	  },
-
-	  /**
-	   * Resets the internal queue.
-	   *
-	   * @internal
-	   */
-	  reset: function() {
-	    this._callbacks = null;
-	    this._contexts = null;
-	  },
-
-	  /**
-	   * `PooledClass` looks for this.
-	   */
-	  destructor: function() {
-	    this.reset();
-	  }
-
-	});
-
-	PooledClass.addPoolingTo(CallbackQueue);
-
-	module.exports = CallbackQueue;
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(85)))
-
-/***/ },
-/* 151 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(process) {/**
-	 * Copyright 2013-2014, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule Transaction
-	 */
-
-	"use strict";
-
-	var invariant = __webpack_require__(91);
-
-	/**
-	 * `Transaction` creates a black box that is able to wrap any method such that
-	 * certain invariants are maintained before and after the method is invoked
-	 * (Even if an exception is thrown while invoking the wrapped method). Whoever
-	 * instantiates a transaction can provide enforcers of the invariants at
-	 * creation time. The `Transaction` class itself will supply one additional
-	 * automatic invariant for you - the invariant that any transaction instance
-	 * should not be run while it is already being run. You would typically create a
-	 * single instance of a `Transaction` for reuse multiple times, that potentially
-	 * is used to wrap several different methods. Wrappers are extremely simple -
-	 * they only require implementing two methods.
-	 *
-	 * <pre>
-	 *                       wrappers (injected at creation time)
-	 *                                      +        +
-	 *                                      |        |
-	 *                    +-----------------|--------|--------------+
-	 *                    |                 v        |              |
-	 *                    |      +---------------+   |              |
-	 *                    |   +--|    wrapper1   |---|----+         |
-	 *                    |   |  +---------------+   v    |         |
-	 *                    |   |          +-------------+  |         |
-	 *                    |   |     +----|   wrapper2  |--------+   |
-	 *                    |   |     |    +-------------+  |     |   |
-	 *                    |   |     |                     |     |   |
-	 *                    |   v     v                     v     v   | wrapper
-	 *                    | +---+ +---+   +---------+   +---+ +---+ | invariants
-	 * perform(anyMethod) | |   | |   |   |         |   |   | |   | | maintained
-	 * +----------------->|-|---|-|---|-->|anyMethod|---|---|-|---|-|-------->
-	 *                    | |   | |   |   |         |   |   | |   | |
-	 *                    | |   | |   |   |         |   |   | |   | |
-	 *                    | |   | |   |   |         |   |   | |   | |
-	 *                    | +---+ +---+   +---------+   +---+ +---+ |
-	 *                    |  initialize                    close    |
-	 *                    +-----------------------------------------+
-	 * </pre>
-	 *
-	 * Use cases:
-	 * - Preserving the input selection ranges before/after reconciliation.
-	 *   Restoring selection even in the event of an unexpected error.
-	 * - Deactivating events while rearranging the DOM, preventing blurs/focuses,
-	 *   while guaranteeing that afterwards, the event system is reactivated.
-	 * - Flushing a queue of collected DOM mutations to the main UI thread after a
-	 *   reconciliation takes place in a worker thread.
-	 * - Invoking any collected `componentDidUpdate` callbacks after rendering new
-	 *   content.
-	 * - (Future use case): Wrapping particular flushes of the `ReactWorker` queue
-	 *   to preserve the `scrollTop` (an automatic scroll aware DOM).
-	 * - (Future use case): Layout calculations before and after DOM upates.
-	 *
-	 * Transactional plugin API:
-	 * - A module that has an `initialize` method that returns any precomputation.
-	 * - and a `close` method that accepts the precomputation. `close` is invoked
-	 *   when the wrapped process is completed, or has failed.
-	 *
-	 * @param {Array<TransactionalWrapper>} transactionWrapper Wrapper modules
-	 * that implement `initialize` and `close`.
-	 * @return {Transaction} Single transaction for reuse in thread.
-	 *
-	 * @class Transaction
-	 */
-	var Mixin = {
-	  /**
-	   * Sets up this instance so that it is prepared for collecting metrics. Does
-	   * so such that this setup method may be used on an instance that is already
-	   * initialized, in a way that does not consume additional memory upon reuse.
-	   * That can be useful if you decide to make your subclass of this mixin a
-	   * "PooledClass".
-	   */
-	  reinitializeTransaction: function() {
-	    this.transactionWrappers = this.getTransactionWrappers();
-	    if (!this.wrapperInitData) {
-	      this.wrapperInitData = [];
-	    } else {
-	      this.wrapperInitData.length = 0;
-	    }
-	    this._isInTransaction = false;
-	  },
-
-	  _isInTransaction: false,
-
-	  /**
-	   * @abstract
-	   * @return {Array<TransactionWrapper>} Array of transaction wrappers.
-	   */
-	  getTransactionWrappers: null,
-
-	  isInTransaction: function() {
-	    return !!this._isInTransaction;
-	  },
-
-	  /**
-	   * Executes the function within a safety window. Use this for the top level
-	   * methods that result in large amounts of computation/mutations that would
-	   * need to be safety checked.
-	   *
-	   * @param {function} method Member of scope to call.
-	   * @param {Object} scope Scope to invoke from.
-	   * @param {Object?=} args... Arguments to pass to the method (optional).
-	   *                           Helps prevent need to bind in many cases.
-	   * @return Return value from `method`.
-	   */
-	  perform: function(method, scope, a, b, c, d, e, f) {
-	    ("production" !== process.env.NODE_ENV ? invariant(
-	      !this.isInTransaction(),
-	      'Transaction.perform(...): Cannot initialize a transaction when there ' +
-	      'is already an outstanding transaction.'
-	    ) : invariant(!this.isInTransaction()));
-	    var errorThrown;
-	    var ret;
-	    try {
-	      this._isInTransaction = true;
-	      // Catching errors makes debugging more difficult, so we start with
-	      // errorThrown set to true before setting it to false after calling
-	      // close -- if it's still set to true in the finally block, it means
-	      // one of these calls threw.
-	      errorThrown = true;
-	      this.initializeAll(0);
-	      ret = method.call(scope, a, b, c, d, e, f);
-	      errorThrown = false;
-	    } finally {
-	      try {
-	        if (errorThrown) {
-	          // If `method` throws, prefer to show that stack trace over any thrown
-	          // by invoking `closeAll`.
-	          try {
-	            this.closeAll(0);
-	          } catch (err) {
-	          }
-	        } else {
-	          // Since `method` didn't throw, we don't want to silence the exception
-	          // here.
-	          this.closeAll(0);
-	        }
-	      } finally {
-	        this._isInTransaction = false;
-	      }
-	    }
-	    return ret;
-	  },
-
-	  initializeAll: function(startIndex) {
-	    var transactionWrappers = this.transactionWrappers;
-	    for (var i = startIndex; i < transactionWrappers.length; i++) {
-	      var wrapper = transactionWrappers[i];
-	      try {
-	        // Catching errors makes debugging more difficult, so we start with the
-	        // OBSERVED_ERROR state before overwriting it with the real return value
-	        // of initialize -- if it's still set to OBSERVED_ERROR in the finally
-	        // block, it means wrapper.initialize threw.
-	        this.wrapperInitData[i] = Transaction.OBSERVED_ERROR;
-	        this.wrapperInitData[i] = wrapper.initialize ?
-	          wrapper.initialize.call(this) :
-	          null;
-	      } finally {
-	        if (this.wrapperInitData[i] === Transaction.OBSERVED_ERROR) {
-	          // The initializer for wrapper i threw an error; initialize the
-	          // remaining wrappers but silence any exceptions from them to ensure
-	          // that the first error is the one to bubble up.
-	          try {
-	            this.initializeAll(i + 1);
-	          } catch (err) {
-	          }
-	        }
-	      }
-	    }
-	  },
-
-	  /**
-	   * Invokes each of `this.transactionWrappers.close[i]` functions, passing into
-	   * them the respective return values of `this.transactionWrappers.init[i]`
-	   * (`close`rs that correspond to initializers that failed will not be
-	   * invoked).
-	   */
-	  closeAll: function(startIndex) {
-	    ("production" !== process.env.NODE_ENV ? invariant(
-	      this.isInTransaction(),
-	      'Transaction.closeAll(): Cannot close transaction when none are open.'
-	    ) : invariant(this.isInTransaction()));
-	    var transactionWrappers = this.transactionWrappers;
-	    for (var i = startIndex; i < transactionWrappers.length; i++) {
-	      var wrapper = transactionWrappers[i];
-	      var initData = this.wrapperInitData[i];
-	      var errorThrown;
-	      try {
-	        // Catching errors makes debugging more difficult, so we start with
-	        // errorThrown set to true before setting it to false after calling
-	        // close -- if it's still set to true in the finally block, it means
-	        // wrapper.close threw.
-	        errorThrown = true;
-	        if (initData !== Transaction.OBSERVED_ERROR) {
-	          wrapper.close && wrapper.close.call(this, initData);
-	        }
-	        errorThrown = false;
-	      } finally {
-	        if (errorThrown) {
-	          // The closer for wrapper i threw an error; close the remaining
-	          // wrappers but silence any exceptions from them to ensure that the
-	          // first error is the one to bubble up.
-	          try {
-	            this.closeAll(i + 1);
-	          } catch (e) {
-	          }
-	        }
-	      }
-	    }
-	    this.wrapperInitData.length = 0;
-	  }
-	};
-
-	var Transaction = {
-
-	  Mixin: Mixin,
-
-	  /**
-	   * Token to look for to determine if an error occured.
-	   */
-	  OBSERVED_ERROR: {}
-
-	};
-
-	module.exports = Transaction;
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(85)))
-
-/***/ },
-/* 152 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-2014, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule joinClasses
-	 * @typechecks static-only
-	 */
-
-	"use strict";
-
-	/**
-	 * Combines multiple className strings into one.
-	 * http://jsperf.com/joinclasses-args-vs-array
-	 *
-	 * @param {...?string} classes
-	 * @return {string}
-	 */
-	function joinClasses(className/*, ... */) {
-	  if (!className) {
-	    className = '';
-	  }
-	  var nextClass;
-	  var argLength = arguments.length;
-	  if (argLength > 1) {
-	    for (var ii = 1; ii < argLength; ii++) {
-	      nextClass = arguments[ii];
-	      if (nextClass) {
-	        className = (className ? className + ' ' : '') + nextClass;
-	      }
-	    }
-	  }
-	  return className;
-	}
-
-	module.exports = joinClasses;
-
-
-/***/ },
-/* 153 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(process) {/**
-	 * Copyright 2014, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule ReactNativeComponent
-	 */
-
-	"use strict";
-
-	var assign = __webpack_require__(46);
-	var invariant = __webpack_require__(91);
-
-	var genericComponentClass = null;
-	// This registry keeps track of wrapper classes around native tags
-	var tagToComponentClass = {};
-
-	var ReactNativeComponentInjection = {
-	  // This accepts a class that receives the tag string. This is a catch all
-	  // that can render any kind of tag.
-	  injectGenericComponentClass: function(componentClass) {
-	    genericComponentClass = componentClass;
-	  },
-	  // This accepts a keyed object with classes as values. Each key represents a
-	  // tag. That particular tag will use this class instead of the generic one.
-	  injectComponentClasses: function(componentClasses) {
-	    assign(tagToComponentClass, componentClasses);
-	  }
-	};
-
-	/**
-	 * Create an internal class for a specific tag.
-	 *
-	 * @param {string} tag The tag for which to create an internal instance.
-	 * @param {any} props The props passed to the instance constructor.
-	 * @return {ReactComponent} component The injected empty component.
-	 */
-	function createInstanceForTag(tag, props, parentType) {
-	  var componentClass = tagToComponentClass[tag];
-	  if (componentClass == null) {
-	    ("production" !== process.env.NODE_ENV ? invariant(
-	      genericComponentClass,
-	      'There is no registered component for the tag %s',
-	      tag
-	    ) : invariant(genericComponentClass));
-	    return new genericComponentClass(tag, props);
-	  }
-	  if (parentType === tag) {
-	    // Avoid recursion
-	    ("production" !== process.env.NODE_ENV ? invariant(
-	      genericComponentClass,
-	      'There is no registered component for the tag %s',
-	      tag
-	    ) : invariant(genericComponentClass));
-	    return new genericComponentClass(tag, props);
-	  }
-	  // Unwrap legacy factories
-	  return new componentClass.type(props);
-	}
-
-	var ReactNativeComponent = {
-	  createInstanceForTag: createInstanceForTag,
-	  injection: ReactNativeComponentInjection,
-	};
-
-	module.exports = ReactNativeComponent;
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(85)))
-
-/***/ },
-/* 154 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-2014, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule CSSProperty
-	 */
-
-	"use strict";
-
-	/**
-	 * CSS properties which accept numbers but are not in units of "px".
-	 */
-	var isUnitlessNumber = {
-	  columnCount: true,
-	  fillOpacity: true,
-	  flex: true,
-	  flexGrow: true,
-	  flexShrink: true,
-	  fontWeight: true,
-	  lineClamp: true,
-	  lineHeight: true,
-	  opacity: true,
-	  order: true,
-	  orphans: true,
-	  widows: true,
-	  zIndex: true,
-	  zoom: true
-	};
-
-	/**
-	 * @param {string} prefix vendor-specific prefix, eg: Webkit
-	 * @param {string} key style name, eg: transitionDuration
-	 * @return {string} style name prefixed with `prefix`, properly camelCased, eg:
-	 * WebkitTransitionDuration
-	 */
-	function prefixKey(prefix, key) {
-	  return prefix + key.charAt(0).toUpperCase() + key.substring(1);
-	}
-
-	/**
-	 * Support style names that may come passed in prefixed by adding permutations
-	 * of vendor prefixes.
-	 */
-	var prefixes = ['Webkit', 'ms', 'Moz', 'O'];
-
-	// Using Object.keys here, or else the vanilla for-in loop makes IE8 go into an
-	// infinite loop, because it iterates over the newly added props too.
-	Object.keys(isUnitlessNumber).forEach(function(prop) {
-	  prefixes.forEach(function(prefix) {
-	    isUnitlessNumber[prefixKey(prefix, prop)] = isUnitlessNumber[prop];
-	  });
-	});
-
-	/**
-	 * Most style properties can be unset by doing .style[prop] = '' but IE8
-	 * doesn't like doing that with shorthand properties so for the properties that
-	 * IE8 breaks on, which are listed here, we instead unset each of the
-	 * individual properties. See http://bugs.jquery.com/ticket/12385.
-	 * The 4-value 'clock' properties like margin, padding, border-width seem to
-	 * behave without any problems. Curiously, list-style works too without any
-	 * special prodding.
-	 */
-	var shorthandPropertyExpansions = {
-	  background: {
-	    backgroundImage: true,
-	    backgroundPosition: true,
-	    backgroundRepeat: true,
-	    backgroundColor: true
-	  },
-	  border: {
-	    borderWidth: true,
-	    borderStyle: true,
-	    borderColor: true
-	  },
-	  borderBottom: {
-	    borderBottomWidth: true,
-	    borderBottomStyle: true,
-	    borderBottomColor: true
-	  },
-	  borderLeft: {
-	    borderLeftWidth: true,
-	    borderLeftStyle: true,
-	    borderLeftColor: true
-	  },
-	  borderRight: {
-	    borderRightWidth: true,
-	    borderRightStyle: true,
-	    borderRightColor: true
-	  },
-	  borderTop: {
-	    borderTopWidth: true,
-	    borderTopStyle: true,
-	    borderTopColor: true
-	  },
-	  font: {
-	    fontStyle: true,
-	    fontVariant: true,
-	    fontWeight: true,
-	    fontSize: true,
-	    lineHeight: true,
-	    fontFamily: true
-	  }
-	};
-
-	var CSSProperty = {
-	  isUnitlessNumber: isUnitlessNumber,
-	  shorthandPropertyExpansions: shorthandPropertyExpansions
-	};
-
-	module.exports = CSSProperty;
-
-
-/***/ },
-/* 155 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2014, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule camelizeStyleName
-	 * @typechecks
-	 */
-
-	"use strict";
-
-	var camelize = __webpack_require__(195);
-
-	var msPattern = /^-ms-/;
-
-	/**
-	 * Camelcases a hyphenated CSS property name, for example:
-	 *
-	 *   > camelizeStyleName('background-color')
-	 *   < "backgroundColor"
-	 *   > camelizeStyleName('-moz-transition')
-	 *   < "MozTransition"
-	 *   > camelizeStyleName('-ms-transition')
-	 *   < "msTransition"
-	 *
-	 * As Andi Smith suggests
-	 * (http://www.andismith.com/blog/2012/02/modernizr-prefixed/), an `-ms` prefix
-	 * is converted to lowercase `ms`.
-	 *
-	 * @param {string} string
-	 * @return {string}
-	 */
-	function camelizeStyleName(string) {
-	  return camelize(string.replace(msPattern, 'ms-'));
-	}
-
-	module.exports = camelizeStyleName;
-
-
-/***/ },
-/* 156 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-2014, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule dangerousStyleValue
-	 * @typechecks static-only
-	 */
-
-	"use strict";
-
-	var CSSProperty = __webpack_require__(154);
-
-	var isUnitlessNumber = CSSProperty.isUnitlessNumber;
-
-	/**
-	 * Convert a value into the proper css writable value. The style name `name`
-	 * should be logical (no hyphens), as specified
-	 * in `CSSProperty.isUnitlessNumber`.
-	 *
-	 * @param {string} name CSS property name such as `topMargin`.
-	 * @param {*} value CSS property value such as `10px`.
-	 * @return {string} Normalized style value with dimensions applied.
-	 */
-	function dangerousStyleValue(name, value) {
-	  // Note that we've removed escapeTextForBrowser() calls here since the
-	  // whole string will be escaped when the attribute is injected into
-	  // the markup. If you provide unsafe user data here they can inject
-	  // arbitrary CSS which may be problematic (I couldn't repro this):
-	  // https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet
-	  // http://www.thespanner.co.uk/2007/11/26/ultimate-xss-css-injection/
-	  // This is not an XSS hole but instead a potential CSS injection issue
-	  // which has lead to a greater discussion about how we're going to
-	  // trust URLs moving forward. See #2115901
-
-	  var isEmpty = value == null || typeof value === 'boolean' || value === '';
-	  if (isEmpty) {
-	    return '';
-	  }
-
-	  var isNonNumeric = isNaN(value);
-	  if (isNonNumeric || value === 0 ||
-	      isUnitlessNumber.hasOwnProperty(name) && isUnitlessNumber[name]) {
-	    return '' + value; // cast to string
-	  }
-
-	  if (typeof value === 'string') {
-	    value = value.trim();
-	  }
-	  return value + 'px';
-	}
-
-	module.exports = dangerousStyleValue;
-
-
-/***/ },
-/* 157 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-2014, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule hyphenateStyleName
-	 * @typechecks
-	 */
-
-	"use strict";
-
-	var hyphenate = __webpack_require__(196);
-
-	var msPattern = /^ms-/;
-
-	/**
-	 * Hyphenates a camelcased CSS property name, for example:
-	 *
-	 *   > hyphenateStyleName('backgroundColor')
-	 *   < "background-color"
-	 *   > hyphenateStyleName('MozTransition')
-	 *   < "-moz-transition"
-	 *   > hyphenateStyleName('msTransition')
-	 *   < "-ms-transition"
-	 *
-	 * As Modernizr suggests (http://modernizr.com/docs/#prefixed), an `ms` prefix
-	 * is converted to `-ms-`.
-	 *
-	 * @param {string} string
-	 * @return {string}
-	 */
-	function hyphenateStyleName(string) {
-	  return hyphenate(string).replace(msPattern, '-ms-');
-	}
-
-	module.exports = hyphenateStyleName;
-
-
-/***/ },
-/* 158 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(process) {/**
-	 * Copyright 2013-2014, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule EventPluginHub
-	 */
-
-	"use strict";
-
-	var EventPluginRegistry = __webpack_require__(159);
-	var EventPluginUtils = __webpack_require__(27);
-
-	var accumulateInto = __webpack_require__(197);
-	var forEachAccumulated = __webpack_require__(198);
-	var invariant = __webpack_require__(91);
-
-	/**
-	 * Internal store for event listeners
-	 */
-	var listenerBank = {};
-
-	/**
-	 * Internal queue of events that have accumulated their dispatches and are
-	 * waiting to have their dispatches executed.
-	 */
-	var eventQueue = null;
-
-	/**
-	 * Dispatches an event and releases it back into the pool, unless persistent.
-	 *
-	 * @param {?object} event Synthetic event to be dispatched.
-	 * @private
-	 */
-	var executeDispatchesAndRelease = function(event) {
-	  if (event) {
-	    var executeDispatch = EventPluginUtils.executeDispatch;
-	    // Plugins can provide custom behavior when dispatching events.
-	    var PluginModule = EventPluginRegistry.getPluginModuleForEvent(event);
-	    if (PluginModule && PluginModule.executeDispatch) {
-	      executeDispatch = PluginModule.executeDispatch;
-	    }
-	    EventPluginUtils.executeDispatchesInOrder(event, executeDispatch);
-
-	    if (!event.isPersistent()) {
-	      event.constructor.release(event);
-	    }
-	  }
-	};
-
-	/**
-	 * - `InstanceHandle`: [required] Module that performs logical traversals of DOM
-	 *   hierarchy given ids of the logical DOM elements involved.
-	 */
-	var InstanceHandle = null;
-
-	function validateInstanceHandle() {
-	  var invalid = !InstanceHandle||
-	    !InstanceHandle.traverseTwoPhase ||
-	    !InstanceHandle.traverseEnterLeave;
-	  if (invalid) {
-	    throw new Error('InstanceHandle not injected before use!');
-	  }
-	}
-
-	/**
-	 * This is a unified interface for event plugins to be installed and configured.
-	 *
-	 * Event plugins can implement the following properties:
-	 *
-	 *   `extractEvents` {function(string, DOMEventTarget, string, object): *}
-	 *     Required. When a top-level event is fired, this method is expected to
-	 *     extract synthetic events that will in turn be queued and dispatched.
-	 *
-	 *   `eventTypes` {object}
-	 *     Optional, plugins that fire events must publish a mapping of registration
-	 *     names that are used to register listeners. Values of this mapping must
-	 *     be objects that contain `registrationName` or `phasedRegistrationNames`.
-	 *
-	 *   `executeDispatch` {function(object, function, string)}
-	 *     Optional, allows plugins to override how an event gets dispatched. By
-	 *     default, the listener is simply invoked.
-	 *
-	 * Each plugin that is injected into `EventsPluginHub` is immediately operable.
-	 *
-	 * @public
-	 */
-	var EventPluginHub = {
-
-	  /**
-	   * Methods for injecting dependencies.
-	   */
-	  injection: {
-
-	    /**
-	     * @param {object} InjectedMount
-	     * @public
-	     */
-	    injectMount: EventPluginUtils.injection.injectMount,
-
-	    /**
-	     * @param {object} InjectedInstanceHandle
-	     * @public
-	     */
-	    injectInstanceHandle: function(InjectedInstanceHandle) {
-	      InstanceHandle = InjectedInstanceHandle;
-	      if ("production" !== process.env.NODE_ENV) {
-	        validateInstanceHandle();
-	      }
-	    },
-
-	    getInstanceHandle: function() {
-	      if ("production" !== process.env.NODE_ENV) {
-	        validateInstanceHandle();
-	      }
-	      return InstanceHandle;
-	    },
-
-	    /**
-	     * @param {array} InjectedEventPluginOrder
-	     * @public
-	     */
-	    injectEventPluginOrder: EventPluginRegistry.injectEventPluginOrder,
-
-	    /**
-	     * @param {object} injectedNamesToPlugins Map from names to plugin modules.
-	     */
-	    injectEventPluginsByName: EventPluginRegistry.injectEventPluginsByName
-
-	  },
-
-	  eventNameDispatchConfigs: EventPluginRegistry.eventNameDispatchConfigs,
-
-	  registrationNameModules: EventPluginRegistry.registrationNameModules,
-
-	  /**
-	   * Stores `listener` at `listenerBank[registrationName][id]`. Is idempotent.
-	   *
-	   * @param {string} id ID of the DOM element.
-	   * @param {string} registrationName Name of listener (e.g. `onClick`).
-	   * @param {?function} listener The callback to store.
-	   */
-	  putListener: function(id, registrationName, listener) {
-	    ("production" !== process.env.NODE_ENV ? invariant(
-	      !listener || typeof listener === 'function',
-	      'Expected %s listener to be a function, instead got type %s',
-	      registrationName, typeof listener
-	    ) : invariant(!listener || typeof listener === 'function'));
-
-	    var bankForRegistrationName =
-	      listenerBank[registrationName] || (listenerBank[registrationName] = {});
-	    bankForRegistrationName[id] = listener;
-	  },
-
-	  /**
-	   * @param {string} id ID of the DOM element.
-	   * @param {string} registrationName Name of listener (e.g. `onClick`).
-	   * @return {?function} The stored callback.
-	   */
-	  getListener: function(id, registrationName) {
-	    var bankForRegistrationName = listenerBank[registrationName];
-	    return bankForRegistrationName && bankForRegistrationName[id];
-	  },
-
-	  /**
-	   * Deletes a listener from the registration bank.
-	   *
-	   * @param {string} id ID of the DOM element.
-	   * @param {string} registrationName Name of listener (e.g. `onClick`).
-	   */
-	  deleteListener: function(id, registrationName) {
-	    var bankForRegistrationName = listenerBank[registrationName];
-	    if (bankForRegistrationName) {
-	      delete bankForRegistrationName[id];
-	    }
-	  },
-
-	  /**
-	   * Deletes all listeners for the DOM element with the supplied ID.
-	   *
-	   * @param {string} id ID of the DOM element.
-	   */
-	  deleteAllListeners: function(id) {
-	    for (var registrationName in listenerBank) {
-	      delete listenerBank[registrationName][id];
-	    }
-	  },
-
-	  /**
-	   * Allows registered plugins an opportunity to extract events from top-level
-	   * native browser events.
-	   *
-	   * @param {string} topLevelType Record from `EventConstants`.
-	   * @param {DOMEventTarget} topLevelTarget The listening component root node.
-	   * @param {string} topLevelTargetID ID of `topLevelTarget`.
-	   * @param {object} nativeEvent Native browser event.
-	   * @return {*} An accumulation of synthetic events.
-	   * @internal
-	   */
-	  extractEvents: function(
-	      topLevelType,
-	      topLevelTarget,
-	      topLevelTargetID,
-	      nativeEvent) {
-	    var events;
-	    var plugins = EventPluginRegistry.plugins;
-	    for (var i = 0, l = plugins.length; i < l; i++) {
-	      // Not every plugin in the ordering may be loaded at runtime.
-	      var possiblePlugin = plugins[i];
-	      if (possiblePlugin) {
-	        var extractedEvents = possiblePlugin.extractEvents(
-	          topLevelType,
-	          topLevelTarget,
-	          topLevelTargetID,
-	          nativeEvent
-	        );
-	        if (extractedEvents) {
-	          events = accumulateInto(events, extractedEvents);
-	        }
-	      }
-	    }
-	    return events;
-	  },
-
-	  /**
-	   * Enqueues a synthetic event that should be dispatched when
-	   * `processEventQueue` is invoked.
-	   *
-	   * @param {*} events An accumulation of synthetic events.
-	   * @internal
-	   */
-	  enqueueEvents: function(events) {
-	    if (events) {
-	      eventQueue = accumulateInto(eventQueue, events);
-	    }
-	  },
-
-	  /**
-	   * Dispatches all synthetic events on the event queue.
-	   *
-	   * @internal
-	   */
-	  processEventQueue: function() {
-	    // Set `eventQueue` to null before processing it so that we can tell if more
-	    // events get enqueued while processing.
-	    var processingEventQueue = eventQueue;
-	    eventQueue = null;
-	    forEachAccumulated(processingEventQueue, executeDispatchesAndRelease);
-	    ("production" !== process.env.NODE_ENV ? invariant(
-	      !eventQueue,
-	      'processEventQueue(): Additional events were enqueued while processing ' +
-	      'an event queue. Support for this has not yet been implemented.'
-	    ) : invariant(!eventQueue));
-	  },
-
-	  /**
-	   * These are needed for tests only. Do not use!
-	   */
-	  __purge: function() {
-	    listenerBank = {};
-	  },
-
-	  __getListenerBank: function() {
-	    return listenerBank;
-	  }
-
-	};
-
-	module.exports = EventPluginHub;
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(85)))
-
-/***/ },
-/* 159 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(process) {/**
-	 * Copyright 2013-2014, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule EventPluginRegistry
-	 * @typechecks static-only
-	 */
-
-	"use strict";
-
-	var invariant = __webpack_require__(91);
-
-	/**
-	 * Injectable ordering of event plugins.
-	 */
-	var EventPluginOrder = null;
-
-	/**
-	 * Injectable mapping from names to event plugin modules.
-	 */
-	var namesToPlugins = {};
-
-	/**
-	 * Recomputes the plugin list using the injected plugins and plugin ordering.
-	 *
-	 * @private
-	 */
-	function recomputePluginOrdering() {
-	  if (!EventPluginOrder) {
-	    // Wait until an `EventPluginOrder` is injected.
-	    return;
-	  }
-	  for (var pluginName in namesToPlugins) {
-	    var PluginModule = namesToPlugins[pluginName];
-	    var pluginIndex = EventPluginOrder.indexOf(pluginName);
-	    ("production" !== process.env.NODE_ENV ? invariant(
-	      pluginIndex > -1,
-	      'EventPluginRegistry: Cannot inject event plugins that do not exist in ' +
-	      'the plugin ordering, `%s`.',
-	      pluginName
-	    ) : invariant(pluginIndex > -1));
-	    if (EventPluginRegistry.plugins[pluginIndex]) {
-	      continue;
-	    }
-	    ("production" !== process.env.NODE_ENV ? invariant(
-	      PluginModule.extractEvents,
-	      'EventPluginRegistry: Event plugins must implement an `extractEvents` ' +
-	      'method, but `%s` does not.',
-	      pluginName
-	    ) : invariant(PluginModule.extractEvents));
-	    EventPluginRegistry.plugins[pluginIndex] = PluginModule;
-	    var publishedEvents = PluginModule.eventTypes;
-	    for (var eventName in publishedEvents) {
-	      ("production" !== process.env.NODE_ENV ? invariant(
-	        publishEventForPlugin(
-	          publishedEvents[eventName],
-	          PluginModule,
-	          eventName
-	        ),
-	        'EventPluginRegistry: Failed to publish event `%s` for plugin `%s`.',
-	        eventName,
-	        pluginName
-	      ) : invariant(publishEventForPlugin(
-	        publishedEvents[eventName],
-	        PluginModule,
-	        eventName
-	      )));
-	    }
-	  }
-	}
-
-	/**
-	 * Publishes an event so that it can be dispatched by the supplied plugin.
-	 *
-	 * @param {object} dispatchConfig Dispatch configuration for the event.
-	 * @param {object} PluginModule Plugin publishing the event.
-	 * @return {boolean} True if the event was successfully published.
-	 * @private
-	 */
-	function publishEventForPlugin(dispatchConfig, PluginModule, eventName) {
-	  ("production" !== process.env.NODE_ENV ? invariant(
-	    !EventPluginRegistry.eventNameDispatchConfigs.hasOwnProperty(eventName),
-	    'EventPluginHub: More than one plugin attempted to publish the same ' +
-	    'event name, `%s`.',
-	    eventName
-	  ) : invariant(!EventPluginRegistry.eventNameDispatchConfigs.hasOwnProperty(eventName)));
-	  EventPluginRegistry.eventNameDispatchConfigs[eventName] = dispatchConfig;
-
-	  var phasedRegistrationNames = dispatchConfig.phasedRegistrationNames;
-	  if (phasedRegistrationNames) {
-	    for (var phaseName in phasedRegistrationNames) {
-	      if (phasedRegistrationNames.hasOwnProperty(phaseName)) {
-	        var phasedRegistrationName = phasedRegistrationNames[phaseName];
-	        publishRegistrationName(
-	          phasedRegistrationName,
-	          PluginModule,
-	          eventName
-	        );
-	      }
-	    }
-	    return true;
-	  } else if (dispatchConfig.registrationName) {
-	    publishRegistrationName(
-	      dispatchConfig.registrationName,
-	      PluginModule,
-	      eventName
-	    );
-	    return true;
-	  }
-	  return false;
-	}
-
-	/**
-	 * Publishes a registration name that is used to identify dispatched events and
-	 * can be used with `EventPluginHub.putListener` to register listeners.
-	 *
-	 * @param {string} registrationName Registration name to add.
-	 * @param {object} PluginModule Plugin publishing the event.
-	 * @private
-	 */
-	function publishRegistrationName(registrationName, PluginModule, eventName) {
-	  ("production" !== process.env.NODE_ENV ? invariant(
-	    !EventPluginRegistry.registrationNameModules[registrationName],
-	    'EventPluginHub: More than one plugin attempted to publish the same ' +
-	    'registration name, `%s`.',
-	    registrationName
-	  ) : invariant(!EventPluginRegistry.registrationNameModules[registrationName]));
-	  EventPluginRegistry.registrationNameModules[registrationName] = PluginModule;
-	  EventPluginRegistry.registrationNameDependencies[registrationName] =
-	    PluginModule.eventTypes[eventName].dependencies;
-	}
-
-	/**
-	 * Registers plugins so that they can extract and dispatch events.
-	 *
-	 * @see {EventPluginHub}
-	 */
-	var EventPluginRegistry = {
-
-	  /**
-	   * Ordered list of injected plugins.
-	   */
-	  plugins: [],
-
-	  /**
-	   * Mapping from event name to dispatch config
-	   */
-	  eventNameDispatchConfigs: {},
-
-	  /**
-	   * Mapping from registration name to plugin module
-	   */
-	  registrationNameModules: {},
-
-	  /**
-	   * Mapping from registration name to event name
-	   */
-	  registrationNameDependencies: {},
-
-	  /**
-	   * Injects an ordering of plugins (by plugin name). This allows the ordering
-	   * to be decoupled from injection of the actual plugins so that ordering is
-	   * always deterministic regardless of packaging, on-the-fly injection, etc.
-	   *
-	   * @param {array} InjectedEventPluginOrder
-	   * @internal
-	   * @see {EventPluginHub.injection.injectEventPluginOrder}
-	   */
-	  injectEventPluginOrder: function(InjectedEventPluginOrder) {
-	    ("production" !== process.env.NODE_ENV ? invariant(
-	      !EventPluginOrder,
-	      'EventPluginRegistry: Cannot inject event plugin ordering more than ' +
-	      'once. You are likely trying to load more than one copy of React.'
-	    ) : invariant(!EventPluginOrder));
-	    // Clone the ordering so it cannot be dynamically mutated.
-	    EventPluginOrder = Array.prototype.slice.call(InjectedEventPluginOrder);
-	    recomputePluginOrdering();
-	  },
-
-	  /**
-	   * Injects plugins to be used by `EventPluginHub`. The plugin names must be
-	   * in the ordering injected by `injectEventPluginOrder`.
-	   *
-	   * Plugins can be injected as part of page initialization or on-the-fly.
-	   *
-	   * @param {object} injectedNamesToPlugins Map from names to plugin modules.
-	   * @internal
-	   * @see {EventPluginHub.injection.injectEventPluginsByName}
-	   */
-	  injectEventPluginsByName: function(injectedNamesToPlugins) {
-	    var isOrderingDirty = false;
-	    for (var pluginName in injectedNamesToPlugins) {
-	      if (!injectedNamesToPlugins.hasOwnProperty(pluginName)) {
-	        continue;
-	      }
-	      var PluginModule = injectedNamesToPlugins[pluginName];
-	      if (!namesToPlugins.hasOwnProperty(pluginName) ||
-	          namesToPlugins[pluginName] !== PluginModule) {
-	        ("production" !== process.env.NODE_ENV ? invariant(
-	          !namesToPlugins[pluginName],
-	          'EventPluginRegistry: Cannot inject two different event plugins ' +
-	          'using the same name, `%s`.',
-	          pluginName
-	        ) : invariant(!namesToPlugins[pluginName]));
-	        namesToPlugins[pluginName] = PluginModule;
-	        isOrderingDirty = true;
-	      }
-	    }
-	    if (isOrderingDirty) {
-	      recomputePluginOrdering();
-	    }
-	  },
-
-	  /**
-	   * Looks up the plugin for the supplied event.
-	   *
-	   * @param {object} event A synthetic event.
-	   * @return {?object} The plugin that created the supplied event.
-	   * @internal
-	   */
-	  getPluginModuleForEvent: function(event) {
-	    var dispatchConfig = event.dispatchConfig;
-	    if (dispatchConfig.registrationName) {
-	      return EventPluginRegistry.registrationNameModules[
-	        dispatchConfig.registrationName
-	      ] || null;
-	    }
-	    for (var phase in dispatchConfig.phasedRegistrationNames) {
-	      if (!dispatchConfig.phasedRegistrationNames.hasOwnProperty(phase)) {
-	        continue;
-	      }
-	      var PluginModule = EventPluginRegistry.registrationNameModules[
-	        dispatchConfig.phasedRegistrationNames[phase]
-	      ];
-	      if (PluginModule) {
-	        return PluginModule;
-	      }
-	    }
-	    return null;
-	  },
-
-	  /**
-	   * Exposed for unit testing.
-	   * @private
-	   */
-	  _resetEventPlugins: function() {
-	    EventPluginOrder = null;
-	    for (var pluginName in namesToPlugins) {
-	      if (namesToPlugins.hasOwnProperty(pluginName)) {
-	        delete namesToPlugins[pluginName];
-	      }
-	    }
-	    EventPluginRegistry.plugins.length = 0;
-
-	    var eventNameDispatchConfigs = EventPluginRegistry.eventNameDispatchConfigs;
-	    for (var eventName in eventNameDispatchConfigs) {
-	      if (eventNameDispatchConfigs.hasOwnProperty(eventName)) {
-	        delete eventNameDispatchConfigs[eventName];
-	      }
-	    }
-
-	    var registrationNameModules = EventPluginRegistry.registrationNameModules;
-	    for (var registrationName in registrationNameModules) {
-	      if (registrationNameModules.hasOwnProperty(registrationName)) {
-	        delete registrationNameModules[registrationName];
-	      }
-	    }
-	  }
-
-	};
-
-	module.exports = EventPluginRegistry;
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(85)))
-
-/***/ },
-/* 160 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-2014, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule ReactEventEmitterMixin
-	 */
-
-	"use strict";
-
-	var EventPluginHub = __webpack_require__(158);
-
-	function runEventQueueInBatch(events) {
-	  EventPluginHub.enqueueEvents(events);
-	  EventPluginHub.processEventQueue();
-	}
-
-	var ReactEventEmitterMixin = {
-
-	  /**
-	   * Streams a fired top-level event to `EventPluginHub` where plugins have the
-	   * opportunity to create `ReactEvent`s to be dispatched.
-	   *
-	   * @param {string} topLevelType Record from `EventConstants`.
-	   * @param {object} topLevelTarget The listening component root node.
-	   * @param {string} topLevelTargetID ID of `topLevelTarget`.
-	   * @param {object} nativeEvent Native environment event.
-	   */
-	  handleTopLevel: function(
-	      topLevelType,
-	      topLevelTarget,
-	      topLevelTargetID,
-	      nativeEvent) {
-	    var events = EventPluginHub.extractEvents(
-	      topLevelType,
-	      topLevelTarget,
-	      topLevelTargetID,
-	      nativeEvent
-	    );
-
-	    runEventQueueInBatch(events);
-	  }
-	};
-
-	module.exports = ReactEventEmitterMixin;
-
-
-/***/ },
-/* 161 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-2014, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule ViewportMetrics
-	 */
-
-	"use strict";
-
-	var getUnboundedScrollPosition = __webpack_require__(178);
-
-	var ViewportMetrics = {
-
-	  currentScrollLeft: 0,
-
-	  currentScrollTop: 0,
-
-	  refreshScrollValues: function() {
-	    var scrollPosition = getUnboundedScrollPosition(window);
-	    ViewportMetrics.currentScrollLeft = scrollPosition.x;
-	    ViewportMetrics.currentScrollTop = scrollPosition.y;
-	  }
-
-	};
-
-	module.exports = ViewportMetrics;
-
-
-/***/ },
 /* 162 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(process) {/**
-	 * Copyright 2013-2014, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule EventPropagators
-	 */
-
-	"use strict";
-
-	var EventConstants = __webpack_require__(90);
-	var EventPluginHub = __webpack_require__(158);
-
-	var accumulateInto = __webpack_require__(197);
-	var forEachAccumulated = __webpack_require__(198);
-
-	var PropagationPhases = EventConstants.PropagationPhases;
-	var getListener = EventPluginHub.getListener;
-
-	/**
-	 * Some event types have a notion of different registration names for different
-	 * "phases" of propagation. This finds listeners by a given phase.
-	 */
-	function listenerAtPhase(id, event, propagationPhase) {
-	  var registrationName =
-	    event.dispatchConfig.phasedRegistrationNames[propagationPhase];
-	  return getListener(id, registrationName);
-	}
-
-	/**
-	 * Tags a `SyntheticEvent` with dispatched listeners. Creating this function
-	 * here, allows us to not have to bind or create functions for each event.
-	 * Mutating the event's members allows us to not have to create a wrapping
-	 * "dispatch" object that pairs the event with the listener.
-	 */
-	function accumulateDirectionalDispatches(domID, upwards, event) {
-	  if ("production" !== process.env.NODE_ENV) {
-	    if (!domID) {
-	      throw new Error('Dispatching id must not be null');
-	    }
-	  }
-	  var phase = upwards ? PropagationPhases.bubbled : PropagationPhases.captured;
-	  var listener = listenerAtPhase(domID, event, phase);
-	  if (listener) {
-	    event._dispatchListeners =
-	      accumulateInto(event._dispatchListeners, listener);
-	    event._dispatchIDs = accumulateInto(event._dispatchIDs, domID);
-	  }
-	}
-
-	/**
-	 * Collect dispatches (must be entirely collected before dispatching - see unit
-	 * tests). Lazily allocate the array to conserve memory.  We must loop through
-	 * each event and perform the traversal for each one. We can not perform a
-	 * single traversal for the entire collection of events because each event may
-	 * have a different target.
-	 */
-	function accumulateTwoPhaseDispatchesSingle(event) {
-	  if (event && event.dispatchConfig.phasedRegistrationNames) {
-	    EventPluginHub.injection.getInstanceHandle().traverseTwoPhase(
-	      event.dispatchMarker,
-	      accumulateDirectionalDispatches,
-	      event
-	    );
-	  }
-	}
-
-
-	/**
-	 * Accumulates without regard to direction, does not look for phased
-	 * registration names. Same as `accumulateDirectDispatchesSingle` but without
-	 * requiring that the `dispatchMarker` be the same as the dispatched ID.
-	 */
-	function accumulateDispatches(id, ignoredDirection, event) {
-	  if (event && event.dispatchConfig.registrationName) {
-	    var registrationName = event.dispatchConfig.registrationName;
-	    var listener = getListener(id, registrationName);
-	    if (listener) {
-	      event._dispatchListeners =
-	        accumulateInto(event._dispatchListeners, listener);
-	      event._dispatchIDs = accumulateInto(event._dispatchIDs, id);
-	    }
-	  }
-	}
-
-	/**
-	 * Accumulates dispatches on an `SyntheticEvent`, but only for the
-	 * `dispatchMarker`.
-	 * @param {SyntheticEvent} event
-	 */
-	function accumulateDirectDispatchesSingle(event) {
-	  if (event && event.dispatchConfig.registrationName) {
-	    accumulateDispatches(event.dispatchMarker, null, event);
-	  }
-	}
-
-	function accumulateTwoPhaseDispatches(events) {
-	  forEachAccumulated(events, accumulateTwoPhaseDispatchesSingle);
-	}
-
-	function accumulateEnterLeaveDispatches(leave, enter, fromID, toID) {
-	  EventPluginHub.injection.getInstanceHandle().traverseEnterLeave(
-	    fromID,
-	    toID,
-	    accumulateDispatches,
-	    leave,
-	    enter
-	  );
-	}
-
-
-	function accumulateDirectDispatches(events) {
-	  forEachAccumulated(events, accumulateDirectDispatchesSingle);
-	}
-
-
-
-	/**
-	 * A small set of propagation patterns, each of which will accept a small amount
-	 * of information, and generate a set of "dispatch ready event objects" - which
-	 * are sets of events that have already been annotated with a set of dispatched
-	 * listener functions/ids. The API is designed this way to discourage these
-	 * propagation strategies from actually executing the dispatches, since we
-	 * always want to collect the entire set of dispatches before executing event a
-	 * single one.
-	 *
-	 * @constructor EventPropagators
-	 */
-	var EventPropagators = {
-	  accumulateTwoPhaseDispatches: accumulateTwoPhaseDispatches,
-	  accumulateDirectDispatches: accumulateDirectDispatches,
-	  accumulateEnterLeaveDispatches: accumulateEnterLeaveDispatches
-	};
-
-	module.exports = EventPropagators;
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(85)))
-
-/***/ },
-/* 163 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013 Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule SyntheticInputEvent
-	 * @typechecks static-only
-	 */
-
-	"use strict";
-
-	var SyntheticEvent = __webpack_require__(164);
-
-	/**
-	 * @interface Event
-	 * @see http://www.w3.org/TR/2013/WD-DOM-Level-3-Events-20131105
-	 *      /#events-inputevents
-	 */
-	var InputEventInterface = {
-	  data: null
-	};
-
-	/**
-	 * @param {object} dispatchConfig Configuration used to dispatch this event.
-	 * @param {string} dispatchMarker Marker identifying the event target.
-	 * @param {object} nativeEvent Native browser event.
-	 * @extends {SyntheticUIEvent}
-	 */
-	function SyntheticInputEvent(
-	  dispatchConfig,
-	  dispatchMarker,
-	  nativeEvent) {
-	  SyntheticEvent.call(this, dispatchConfig, dispatchMarker, nativeEvent);
-	}
-
-	SyntheticEvent.augmentClass(
-	  SyntheticInputEvent,
-	  InputEventInterface
-	);
-
-	module.exports = SyntheticInputEvent;
-
-
-
-/***/ },
-/* 164 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-2014, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule SyntheticEvent
-	 * @typechecks static-only
-	 */
-
-	"use strict";
-
-	var PooledClass = __webpack_require__(92);
-
-	var assign = __webpack_require__(46);
-	var emptyFunction = __webpack_require__(141);
-	var getEventTarget = __webpack_require__(177);
-
-	/**
-	 * @interface Event
-	 * @see http://www.w3.org/TR/DOM-Level-3-Events/
-	 */
-	var EventInterface = {
-	  type: null,
-	  target: getEventTarget,
-	  // currentTarget is set when dispatching; no use in copying it here
-	  currentTarget: emptyFunction.thatReturnsNull,
-	  eventPhase: null,
-	  bubbles: null,
-	  cancelable: null,
-	  timeStamp: function(event) {
-	    return event.timeStamp || Date.now();
-	  },
-	  defaultPrevented: null,
-	  isTrusted: null
-	};
-
-	/**
-	 * Synthetic events are dispatched by event plugins, typically in response to a
-	 * top-level event delegation handler.
-	 *
-	 * These systems should generally use pooling to reduce the frequency of garbage
-	 * collection. The system should check `isPersistent` to determine whether the
-	 * event should be released into the pool after being dispatched. Users that
-	 * need a persisted event should invoke `persist`.
-	 *
-	 * Synthetic events (and subclasses) implement the DOM Level 3 Events API by
-	 * normalizing browser quirks. Subclasses do not necessarily have to implement a
-	 * DOM interface; custom application-specific events can also subclass this.
-	 *
-	 * @param {object} dispatchConfig Configuration used to dispatch this event.
-	 * @param {string} dispatchMarker Marker identifying the event target.
-	 * @param {object} nativeEvent Native browser event.
-	 */
-	function SyntheticEvent(dispatchConfig, dispatchMarker, nativeEvent) {
-	  this.dispatchConfig = dispatchConfig;
-	  this.dispatchMarker = dispatchMarker;
-	  this.nativeEvent = nativeEvent;
-
-	  var Interface = this.constructor.Interface;
-	  for (var propName in Interface) {
-	    if (!Interface.hasOwnProperty(propName)) {
-	      continue;
-	    }
-	    var normalize = Interface[propName];
-	    if (normalize) {
-	      this[propName] = normalize(nativeEvent);
-	    } else {
-	      this[propName] = nativeEvent[propName];
-	    }
-	  }
-
-	  var defaultPrevented = nativeEvent.defaultPrevented != null ?
-	    nativeEvent.defaultPrevented :
-	    nativeEvent.returnValue === false;
-	  if (defaultPrevented) {
-	    this.isDefaultPrevented = emptyFunction.thatReturnsTrue;
-	  } else {
-	    this.isDefaultPrevented = emptyFunction.thatReturnsFalse;
-	  }
-	  this.isPropagationStopped = emptyFunction.thatReturnsFalse;
-	}
-
-	assign(SyntheticEvent.prototype, {
-
-	  preventDefault: function() {
-	    this.defaultPrevented = true;
-	    var event = this.nativeEvent;
-	    event.preventDefault ? event.preventDefault() : event.returnValue = false;
-	    this.isDefaultPrevented = emptyFunction.thatReturnsTrue;
-	  },
-
-	  stopPropagation: function() {
-	    var event = this.nativeEvent;
-	    event.stopPropagation ? event.stopPropagation() : event.cancelBubble = true;
-	    this.isPropagationStopped = emptyFunction.thatReturnsTrue;
-	  },
-
-	  /**
-	   * We release all dispatched `SyntheticEvent`s after each event loop, adding
-	   * them back into the pool. This allows a way to hold onto a reference that
-	   * won't be added back into the pool.
-	   */
-	  persist: function() {
-	    this.isPersistent = emptyFunction.thatReturnsTrue;
-	  },
-
-	  /**
-	   * Checks if this event should be released back into the pool.
-	   *
-	   * @return {boolean} True if this should not be released, false otherwise.
-	   */
-	  isPersistent: emptyFunction.thatReturnsFalse,
-
-	  /**
-	   * `PooledClass` looks for `destructor` on each instance it releases.
-	   */
-	  destructor: function() {
-	    var Interface = this.constructor.Interface;
-	    for (var propName in Interface) {
-	      this[propName] = null;
-	    }
-	    this.dispatchConfig = null;
-	    this.dispatchMarker = null;
-	    this.nativeEvent = null;
-	  }
-
-	});
-
-	SyntheticEvent.Interface = EventInterface;
-
-	/**
-	 * Helper to reduce boilerplate when creating subclasses.
-	 *
-	 * @param {function} Class
-	 * @param {?object} Interface
-	 */
-	SyntheticEvent.augmentClass = function(Class, Interface) {
-	  var Super = this;
-
-	  var prototype = Object.create(Super.prototype);
-	  assign(prototype, Class.prototype);
-	  Class.prototype = prototype;
-	  Class.prototype.constructor = Class;
-
-	  Class.Interface = assign({}, Super.Interface, Interface);
-	  Class.augmentClass = Super.augmentClass;
-
-	  PooledClass.addPoolingTo(Class, PooledClass.threeArgumentPooler);
-	};
-
-	PooledClass.addPoolingTo(SyntheticEvent, PooledClass.threeArgumentPooler);
-
-	module.exports = SyntheticEvent;
-
-
-/***/ },
-/* 165 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-2014, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule isTextInputElement
-	 */
-
-	"use strict";
-
-	/**
-	 * @see http://www.whatwg.org/specs/web-apps/current-work/multipage/the-input-element.html#input-type-attr-summary
-	 */
-	var supportedInputTypes = {
-	  'color': true,
-	  'date': true,
-	  'datetime': true,
-	  'datetime-local': true,
-	  'email': true,
-	  'month': true,
-	  'number': true,
-	  'password': true,
-	  'range': true,
-	  'search': true,
-	  'tel': true,
-	  'text': true,
-	  'time': true,
-	  'url': true,
-	  'week': true
-	};
-
-	function isTextInputElement(elem) {
-	  return elem && (
-	    (elem.nodeName === 'INPUT' && supportedInputTypes[elem.type]) ||
-	    elem.nodeName === 'TEXTAREA'
-	  );
-	}
-
-	module.exports = isTextInputElement;
-
-
-/***/ },
-/* 166 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-2014, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule ReactInputSelection
-	 */
-
-	"use strict";
-
-	var ReactDOMSelection = __webpack_require__(199);
-
-	var containsNode = __webpack_require__(137);
-	var focusNode = __webpack_require__(200);
-	var getActiveElement = __webpack_require__(179);
-
-	function isInDocument(node) {
-	  return containsNode(document.documentElement, node);
-	}
-
-	/**
-	 * @ReactInputSelection: React input selection module. Based on Selection.js,
-	 * but modified to be suitable for react and has a couple of bug fixes (doesn't
-	 * assume buttons have range selections allowed).
-	 * Input selection module for React.
-	 */
-	var ReactInputSelection = {
-
-	  hasSelectionCapabilities: function(elem) {
-	    return elem && (
-	      (elem.nodeName === 'INPUT' && elem.type === 'text') ||
-	      elem.nodeName === 'TEXTAREA' ||
-	      elem.contentEditable === 'true'
-	    );
-	  },
-
-	  getSelectionInformation: function() {
-	    var focusedElem = getActiveElement();
-	    return {
-	      focusedElem: focusedElem,
-	      selectionRange:
-	          ReactInputSelection.hasSelectionCapabilities(focusedElem) ?
-	          ReactInputSelection.getSelection(focusedElem) :
-	          null
-	    };
-	  },
-
-	  /**
-	   * @restoreSelection: If any selection information was potentially lost,
-	   * restore it. This is useful when performing operations that could remove dom
-	   * nodes and place them back in, resulting in focus being lost.
-	   */
-	  restoreSelection: function(priorSelectionInformation) {
-	    var curFocusedElem = getActiveElement();
-	    var priorFocusedElem = priorSelectionInformation.focusedElem;
-	    var priorSelectionRange = priorSelectionInformation.selectionRange;
-	    if (curFocusedElem !== priorFocusedElem &&
-	        isInDocument(priorFocusedElem)) {
-	      if (ReactInputSelection.hasSelectionCapabilities(priorFocusedElem)) {
-	        ReactInputSelection.setSelection(
-	          priorFocusedElem,
-	          priorSelectionRange
-	        );
-	      }
-	      focusNode(priorFocusedElem);
-	    }
-	  },
-
-	  /**
-	   * @getSelection: Gets the selection bounds of a focused textarea, input or
-	   * contentEditable node.
-	   * -@input: Look up selection bounds of this input
-	   * -@return {start: selectionStart, end: selectionEnd}
-	   */
-	  getSelection: function(input) {
-	    var selection;
-
-	    if ('selectionStart' in input) {
-	      // Modern browser with input or textarea.
-	      selection = {
-	        start: input.selectionStart,
-	        end: input.selectionEnd
-	      };
-	    } else if (document.selection && input.nodeName === 'INPUT') {
-	      // IE8 input.
-	      var range = document.selection.createRange();
-	      // There can only be one selection per document in IE, so it must
-	      // be in our element.
-	      if (range.parentElement() === input) {
-	        selection = {
-	          start: -range.moveStart('character', -input.value.length),
-	          end: -range.moveEnd('character', -input.value.length)
-	        };
-	      }
-	    } else {
-	      // Content editable or old IE textarea.
-	      selection = ReactDOMSelection.getOffsets(input);
-	    }
-
-	    return selection || {start: 0, end: 0};
-	  },
-
-	  /**
-	   * @setSelection: Sets the selection bounds of a textarea or input and focuses
-	   * the input.
-	   * -@input     Set selection bounds of this input or textarea
-	   * -@offsets   Object of same form that is returned from get*
-	   */
-	  setSelection: function(input, offsets) {
-	    var start = offsets.start;
-	    var end = offsets.end;
-	    if (typeof end === 'undefined') {
-	      end = start;
-	    }
-
-	    if ('selectionStart' in input) {
-	      input.selectionStart = start;
-	      input.selectionEnd = Math.min(end, input.value.length);
-	    } else if (document.selection && input.nodeName === 'INPUT') {
-	      var range = input.createTextRange();
-	      range.collapse(true);
-	      range.moveStart('character', start);
-	      range.moveEnd('character', end - start);
-	      range.select();
-	    } else {
-	      ReactDOMSelection.setOffsets(input, offsets);
-	    }
-	  }
-	};
-
-	module.exports = ReactInputSelection;
-
-
-/***/ },
-/* 167 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-2014, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule SyntheticCompositionEvent
-	 * @typechecks static-only
-	 */
-
-	"use strict";
-
-	var SyntheticEvent = __webpack_require__(164);
-
-	/**
-	 * @interface Event
-	 * @see http://www.w3.org/TR/DOM-Level-3-Events/#events-compositionevents
-	 */
-	var CompositionEventInterface = {
-	  data: null
-	};
-
-	/**
-	 * @param {object} dispatchConfig Configuration used to dispatch this event.
-	 * @param {string} dispatchMarker Marker identifying the event target.
-	 * @param {object} nativeEvent Native browser event.
-	 * @extends {SyntheticUIEvent}
-	 */
-	function SyntheticCompositionEvent(
-	  dispatchConfig,
-	  dispatchMarker,
-	  nativeEvent) {
-	  SyntheticEvent.call(this, dispatchConfig, dispatchMarker, nativeEvent);
-	}
-
-	SyntheticEvent.augmentClass(
-	  SyntheticCompositionEvent,
-	  CompositionEventInterface
-	);
-
-	module.exports = SyntheticCompositionEvent;
-
-
-
-/***/ },
-/* 168 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-2014, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule getTextContentAccessor
-	 */
-
-	"use strict";
-
-	var ExecutionEnvironment = __webpack_require__(49);
-
-	var contentKey = null;
-
-	/**
-	 * Gets the key used to access text content on a DOM node.
-	 *
-	 * @return {?string} Key used to access text content.
-	 * @internal
-	 */
-	function getTextContentAccessor() {
-	  if (!contentKey && ExecutionEnvironment.canUseDOM) {
-	    // Prefer textContent to innerText because many browsers support both but
-	    // SVG <text> elements don't support innerText even when <div> does.
-	    contentKey = 'textContent' in document.documentElement ?
-	      'textContent' :
-	      'innerText';
-	  }
-	  return contentKey;
-	}
-
-	module.exports = getTextContentAccessor;
-
-
-/***/ },
-/* 169 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-2014, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule SyntheticMouseEvent
-	 * @typechecks static-only
-	 */
-
-	"use strict";
-
-	var SyntheticUIEvent = __webpack_require__(186);
-	var ViewportMetrics = __webpack_require__(161);
-
-	var getEventModifierState = __webpack_require__(201);
-
-	/**
-	 * @interface MouseEvent
-	 * @see http://www.w3.org/TR/DOM-Level-3-Events/
-	 */
-	var MouseEventInterface = {
-	  screenX: null,
-	  screenY: null,
-	  clientX: null,
-	  clientY: null,
-	  ctrlKey: null,
-	  shiftKey: null,
-	  altKey: null,
-	  metaKey: null,
-	  getModifierState: getEventModifierState,
-	  button: function(event) {
-	    // Webkit, Firefox, IE9+
-	    // which:  1 2 3
-	    // button: 0 1 2 (standard)
-	    var button = event.button;
-	    if ('which' in event) {
-	      return button;
-	    }
-	    // IE<9
-	    // which:  undefined
-	    // button: 0 0 0
-	    // button: 1 4 2 (onmouseup)
-	    return button === 2 ? 2 : button === 4 ? 1 : 0;
-	  },
-	  buttons: null,
-	  relatedTarget: function(event) {
-	    return event.relatedTarget || (
-	      event.fromElement === event.srcElement ?
-	        event.toElement :
-	        event.fromElement
-	    );
-	  },
-	  // "Proprietary" Interface.
-	  pageX: function(event) {
-	    return 'pageX' in event ?
-	      event.pageX :
-	      event.clientX + ViewportMetrics.currentScrollLeft;
-	  },
-	  pageY: function(event) {
-	    return 'pageY' in event ?
-	      event.pageY :
-	      event.clientY + ViewportMetrics.currentScrollTop;
-	  }
-	};
-
-	/**
-	 * @param {object} dispatchConfig Configuration used to dispatch this event.
-	 * @param {string} dispatchMarker Marker identifying the event target.
-	 * @param {object} nativeEvent Native browser event.
-	 * @extends {SyntheticUIEvent}
-	 */
-	function SyntheticMouseEvent(dispatchConfig, dispatchMarker, nativeEvent) {
-	  SyntheticUIEvent.call(this, dispatchConfig, dispatchMarker, nativeEvent);
-	}
-
-	SyntheticUIEvent.augmentClass(SyntheticMouseEvent, MouseEventInterface);
-
-	module.exports = SyntheticMouseEvent;
-
-
-/***/ },
-/* 170 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(process) {/**
-	 * Copyright 2013-2014, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule ReactDOMIDOperations
-	 * @typechecks static-only
-	 */
-
-	/*jslint evil: true */
-
-	"use strict";
-
-	var CSSPropertyOperations = __webpack_require__(107);
-	var DOMChildrenOperations = __webpack_require__(202);
-	var DOMPropertyOperations = __webpack_require__(26);
-	var ReactMount = __webpack_require__(40);
-	var ReactPerf = __webpack_require__(42);
-
-	var invariant = __webpack_require__(91);
-	var setInnerHTML = __webpack_require__(172);
-
-	/**
-	 * Errors for properties that should not be updated with `updatePropertyById()`.
-	 *
-	 * @type {object}
-	 * @private
-	 */
-	var INVALID_PROPERTY_ERRORS = {
-	  dangerouslySetInnerHTML:
-	    '`dangerouslySetInnerHTML` must be set using `updateInnerHTMLByID()`.',
-	  style: '`style` must be set using `updateStylesByID()`.'
-	};
-
-	/**
-	 * Operations used to process updates to DOM nodes. This is made injectable via
-	 * `ReactComponent.BackendIDOperations`.
-	 */
-	var ReactDOMIDOperations = {
-
-	  /**
-	   * Updates a DOM node with new property values. This should only be used to
-	   * update DOM properties in `DOMProperty`.
-	   *
-	   * @param {string} id ID of the node to update.
-	   * @param {string} name A valid property name, see `DOMProperty`.
-	   * @param {*} value New value of the property.
-	   * @internal
-	   */
-	  updatePropertyByID: ReactPerf.measure(
-	    'ReactDOMIDOperations',
-	    'updatePropertyByID',
-	    function(id, name, value) {
-	      var node = ReactMount.getNode(id);
-	      ("production" !== process.env.NODE_ENV ? invariant(
-	        !INVALID_PROPERTY_ERRORS.hasOwnProperty(name),
-	        'updatePropertyByID(...): %s',
-	        INVALID_PROPERTY_ERRORS[name]
-	      ) : invariant(!INVALID_PROPERTY_ERRORS.hasOwnProperty(name)));
-
-	      // If we're updating to null or undefined, we should remove the property
-	      // from the DOM node instead of inadvertantly setting to a string. This
-	      // brings us in line with the same behavior we have on initial render.
-	      if (value != null) {
-	        DOMPropertyOperations.setValueForProperty(node, name, value);
-	      } else {
-	        DOMPropertyOperations.deleteValueForProperty(node, name);
-	      }
-	    }
-	  ),
-
-	  /**
-	   * Updates a DOM node to remove a property. This should only be used to remove
-	   * DOM properties in `DOMProperty`.
-	   *
-	   * @param {string} id ID of the node to update.
-	   * @param {string} name A property name to remove, see `DOMProperty`.
-	   * @internal
-	   */
-	  deletePropertyByID: ReactPerf.measure(
-	    'ReactDOMIDOperations',
-	    'deletePropertyByID',
-	    function(id, name, value) {
-	      var node = ReactMount.getNode(id);
-	      ("production" !== process.env.NODE_ENV ? invariant(
-	        !INVALID_PROPERTY_ERRORS.hasOwnProperty(name),
-	        'updatePropertyByID(...): %s',
-	        INVALID_PROPERTY_ERRORS[name]
-	      ) : invariant(!INVALID_PROPERTY_ERRORS.hasOwnProperty(name)));
-	      DOMPropertyOperations.deleteValueForProperty(node, name, value);
-	    }
-	  ),
-
-	  /**
-	   * Updates a DOM node with new style values. If a value is specified as '',
-	   * the corresponding style property will be unset.
-	   *
-	   * @param {string} id ID of the node to update.
-	   * @param {object} styles Mapping from styles to values.
-	   * @internal
-	   */
-	  updateStylesByID: ReactPerf.measure(
-	    'ReactDOMIDOperations',
-	    'updateStylesByID',
-	    function(id, styles) {
-	      var node = ReactMount.getNode(id);
-	      CSSPropertyOperations.setValueForStyles(node, styles);
-	    }
-	  ),
-
-	  /**
-	   * Updates a DOM node's innerHTML.
-	   *
-	   * @param {string} id ID of the node to update.
-	   * @param {string} html An HTML string.
-	   * @internal
-	   */
-	  updateInnerHTMLByID: ReactPerf.measure(
-	    'ReactDOMIDOperations',
-	    'updateInnerHTMLByID',
-	    function(id, html) {
-	      var node = ReactMount.getNode(id);
-	      setInnerHTML(node, html);
-	    }
-	  ),
-
-	  /**
-	   * Updates a DOM node's text content set by `props.content`.
-	   *
-	   * @param {string} id ID of the node to update.
-	   * @param {string} content Text content.
-	   * @internal
-	   */
-	  updateTextContentByID: ReactPerf.measure(
-	    'ReactDOMIDOperations',
-	    'updateTextContentByID',
-	    function(id, content) {
-	      var node = ReactMount.getNode(id);
-	      DOMChildrenOperations.updateTextContent(node, content);
-	    }
-	  ),
-
-	  /**
-	   * Replaces a DOM node that exists in the document with markup.
-	   *
-	   * @param {string} id ID of child to be replaced.
-	   * @param {string} markup Dangerous markup to inject in place of child.
-	   * @internal
-	   * @see {Danger.dangerouslyReplaceNodeWithMarkup}
-	   */
-	  dangerouslyReplaceNodeWithMarkupByID: ReactPerf.measure(
-	    'ReactDOMIDOperations',
-	    'dangerouslyReplaceNodeWithMarkupByID',
-	    function(id, markup) {
-	      var node = ReactMount.getNode(id);
-	      DOMChildrenOperations.dangerouslyReplaceNodeWithMarkup(node, markup);
-	    }
-	  ),
-
-	  /**
-	   * Updates a component's children by processing a series of updates.
-	   *
-	   * @param {array<object>} updates List of update configurations.
-	   * @param {array<string>} markup List of markup strings.
-	   * @internal
-	   */
-	  dangerouslyProcessChildrenUpdates: ReactPerf.measure(
-	    'ReactDOMIDOperations',
-	    'dangerouslyProcessChildrenUpdates',
-	    function(updates, markup) {
-	      for (var i = 0; i < updates.length; i++) {
-	        updates[i].parentNode = ReactMount.getNode(updates[i].parentID);
-	      }
-	      DOMChildrenOperations.processUpdates(updates, markup);
-	    }
-	  )
-	};
-
-	module.exports = ReactDOMIDOperations;
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(85)))
-
-/***/ },
-/* 171 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-2014, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule ReactReconcileTransaction
-	 * @typechecks static-only
-	 */
-
-	"use strict";
-
-	var CallbackQueue = __webpack_require__(150);
-	var PooledClass = __webpack_require__(92);
-	var ReactBrowserEventEmitter = __webpack_require__(109);
-	var ReactInputSelection = __webpack_require__(166);
-	var ReactPutListenerQueue = __webpack_require__(193);
-	var Transaction = __webpack_require__(151);
-
-	var assign = __webpack_require__(46);
-
-	/**
-	 * Ensures that, when possible, the selection range (currently selected text
-	 * input) is not disturbed by performing the transaction.
-	 */
-	var SELECTION_RESTORATION = {
-	  /**
-	   * @return {Selection} Selection information.
-	   */
-	  initialize: ReactInputSelection.getSelectionInformation,
-	  /**
-	   * @param {Selection} sel Selection information returned from `initialize`.
-	   */
-	  close: ReactInputSelection.restoreSelection
-	};
-
-	/**
-	 * Suppresses events (blur/focus) that could be inadvertently dispatched due to
-	 * high level DOM manipulations (like temporarily removing a text input from the
-	 * DOM).
-	 */
-	var EVENT_SUPPRESSION = {
-	  /**
-	   * @return {boolean} The enabled status of `ReactBrowserEventEmitter` before
-	   * the reconciliation.
-	   */
-	  initialize: function() {
-	    var currentlyEnabled = ReactBrowserEventEmitter.isEnabled();
-	    ReactBrowserEventEmitter.setEnabled(false);
-	    return currentlyEnabled;
-	  },
-
-	  /**
-	   * @param {boolean} previouslyEnabled Enabled status of
-	   *   `ReactBrowserEventEmitter` before the reconciliation occured. `close`
-	   *   restores the previous value.
-	   */
-	  close: function(previouslyEnabled) {
-	    ReactBrowserEventEmitter.setEnabled(previouslyEnabled);
-	  }
-	};
-
-	/**
-	 * Provides a queue for collecting `componentDidMount` and
-	 * `componentDidUpdate` callbacks during the the transaction.
-	 */
-	var ON_DOM_READY_QUEUEING = {
-	  /**
-	   * Initializes the internal `onDOMReady` queue.
-	   */
-	  initialize: function() {
-	    this.reactMountReady.reset();
-	  },
-
-	  /**
-	   * After DOM is flushed, invoke all registered `onDOMReady` callbacks.
-	   */
-	  close: function() {
-	    this.reactMountReady.notifyAll();
-	  }
-	};
-
-	var PUT_LISTENER_QUEUEING = {
-	  initialize: function() {
-	    this.putListenerQueue.reset();
-	  },
-
-	  close: function() {
-	    this.putListenerQueue.putListeners();
-	  }
-	};
-
-	/**
-	 * Executed within the scope of the `Transaction` instance. Consider these as
-	 * being member methods, but with an implied ordering while being isolated from
-	 * each other.
-	 */
-	var TRANSACTION_WRAPPERS = [
-	  PUT_LISTENER_QUEUEING,
-	  SELECTION_RESTORATION,
-	  EVENT_SUPPRESSION,
-	  ON_DOM_READY_QUEUEING
-	];
-
-	/**
-	 * Currently:
-	 * - The order that these are listed in the transaction is critical:
-	 * - Suppresses events.
-	 * - Restores selection range.
-	 *
-	 * Future:
-	 * - Restore document/overflow scroll positions that were unintentionally
-	 *   modified via DOM insertions above the top viewport boundary.
-	 * - Implement/integrate with customized constraint based layout system and keep
-	 *   track of which dimensions must be remeasured.
-	 *
-	 * @class ReactReconcileTransaction
-	 */
-	function ReactReconcileTransaction() {
-	  this.reinitializeTransaction();
-	  // Only server-side rendering really needs this option (see
-	  // `ReactServerRendering`), but server-side uses
-	  // `ReactServerRenderingTransaction` instead. This option is here so that it's
-	  // accessible and defaults to false when `ReactDOMComponent` and
-	  // `ReactTextComponent` checks it in `mountComponent`.`
-	  this.renderToStaticMarkup = false;
-	  this.reactMountReady = CallbackQueue.getPooled(null);
-	  this.putListenerQueue = ReactPutListenerQueue.getPooled();
-	}
-
-	var Mixin = {
-	  /**
-	   * @see Transaction
-	   * @abstract
-	   * @final
-	   * @return {array<object>} List of operation wrap proceedures.
-	   *   TODO: convert to array<TransactionWrapper>
-	   */
-	  getTransactionWrappers: function() {
-	    return TRANSACTION_WRAPPERS;
-	  },
-
-	  /**
-	   * @return {object} The queue to collect `onDOMReady` callbacks with.
-	   */
-	  getReactMountReady: function() {
-	    return this.reactMountReady;
-	  },
-
-	  getPutListenerQueue: function() {
-	    return this.putListenerQueue;
-	  },
-
-	  /**
-	   * `PooledClass` looks for this, and will invoke this before allowing this
-	   * instance to be resused.
-	   */
-	  destructor: function() {
-	    CallbackQueue.release(this.reactMountReady);
-	    this.reactMountReady = null;
-
-	    ReactPutListenerQueue.release(this.putListenerQueue);
-	    this.putListenerQueue = null;
-	  }
-	};
-
-
-	assign(ReactReconcileTransaction.prototype, Transaction.Mixin, Mixin);
-
-	PooledClass.addPoolingTo(ReactReconcileTransaction);
-
-	module.exports = ReactReconcileTransaction;
-
-
-/***/ },
-/* 172 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-2014, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule setInnerHTML
-	 */
-
-	"use strict";
-
-	var ExecutionEnvironment = __webpack_require__(49);
-
-	var WHITESPACE_TEST = /^[ \r\n\t\f]/;
-	var NONVISIBLE_TEST = /<(!--|link|noscript|meta|script|style)[ \r\n\t\f\/>]/;
-
-	/**
-	 * Set the innerHTML property of a node, ensuring that whitespace is preserved
-	 * even in IE8.
-	 *
-	 * @param {DOMElement} node
-	 * @param {string} html
-	 * @internal
-	 */
-	var setInnerHTML = function(node, html) {
-	  node.innerHTML = html;
-	};
-
-	if (ExecutionEnvironment.canUseDOM) {
-	  // IE8: When updating a just created node with innerHTML only leading
-	  // whitespace is removed. When updating an existing node with innerHTML
-	  // whitespace in root TextNodes is also collapsed.
-	  // @see quirksmode.org/bugreports/archives/2004/11/innerhtml_and_t.html
-
-	  // Feature detection; only IE8 is known to behave improperly like this.
-	  var testElement = document.createElement('div');
-	  testElement.innerHTML = ' ';
-	  if (testElement.innerHTML === '') {
-	    setInnerHTML = function(node, html) {
-	      // Magic theory: IE8 supposedly differentiates between added and updated
-	      // nodes when processing innerHTML, innerHTML on updated nodes suffers
-	      // from worse whitespace behavior. Re-adding a node like this triggers
-	      // the initial and more favorable whitespace behavior.
-	      // TODO: What to do on a detached node?
-	      if (node.parentNode) {
-	        node.parentNode.replaceChild(node, node);
-	      }
-
-	      // We also implement a workaround for non-visible tags disappearing into
-	      // thin air on IE8, this only happens if there is no visible text
-	      // in-front of the non-visible tags. Piggyback on the whitespace fix
-	      // and simply check if any non-visible tags appear in the source.
-	      if (WHITESPACE_TEST.test(html) ||
-	          html[0] === '<' && NONVISIBLE_TEST.test(html)) {
-	        // Recover leading whitespace by temporarily prepending any character.
-	        // \uFEFF has the potential advantage of being zero-width/invisible.
-	        node.innerHTML = '\uFEFF' + html;
-
-	        // deleteData leaves an empty `TextNode` which offsets the index of all
-	        // children. Definitely want to avoid this.
-	        var textNode = node.firstChild;
-	        if (textNode.data.length === 1) {
-	          node.removeChild(textNode);
-	        } else {
-	          textNode.deleteData(0, 1);
-	        }
-	      } else {
-	        node.innerHTML = html;
-	      }
-	    };
-	  }
-	}
-
-	module.exports = setInnerHTML;
-
-
-/***/ },
-/* 173 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-2014, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule AutoFocusMixin
-	 * @typechecks static-only
-	 */
-
-	"use strict";
-
-	var focusNode = __webpack_require__(200);
-
-	var AutoFocusMixin = {
-	  componentDidMount: function() {
-	    if (this.props.autoFocus) {
-	      focusNode(this.getDOMNode());
-	    }
-	  }
-	};
-
-	module.exports = AutoFocusMixin;
-
-
-/***/ },
-/* 174 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(process) {/**
-	 * Copyright 2014, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule LocalEventTrapMixin
-	 */
-
-	"use strict";
-
-	var ReactBrowserEventEmitter = __webpack_require__(109);
-
-	var accumulateInto = __webpack_require__(197);
-	var forEachAccumulated = __webpack_require__(198);
-	var invariant = __webpack_require__(91);
-
-	function remove(event) {
-	  event.remove();
-	}
-
-	var LocalEventTrapMixin = {
-	  trapBubbledEvent:function(topLevelType, handlerBaseName) {
-	    ("production" !== process.env.NODE_ENV ? invariant(this.isMounted(), 'Must be mounted to trap events') : invariant(this.isMounted()));
-	    var listener = ReactBrowserEventEmitter.trapBubbledEvent(
-	      topLevelType,
-	      handlerBaseName,
-	      this.getDOMNode()
-	    );
-	    this._localEventListeners =
-	      accumulateInto(this._localEventListeners, listener);
-	  },
-
-	  // trapCapturedEvent would look nearly identical. We don't implement that
-	  // method because it isn't currently needed.
-
-	  componentWillUnmount:function() {
-	    if (this._localEventListeners) {
-	      forEachAccumulated(this._localEventListeners, remove);
-	    }
-	  }
-	};
-
-	module.exports = LocalEventTrapMixin;
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(85)))
-
-/***/ },
-/* 175 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(process) {/**
-	 * Copyright 2013-2014, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule LinkedValueUtils
-	 * @typechecks static-only
-	 */
-
-	"use strict";
-
-	var ReactPropTypes = __webpack_require__(43);
-
-	var invariant = __webpack_require__(91);
-
-	var hasReadOnlyValue = {
-	  'button': true,
-	  'checkbox': true,
-	  'image': true,
-	  'hidden': true,
-	  'radio': true,
-	  'reset': true,
-	  'submit': true
-	};
-
-	function _assertSingleLink(input) {
-	  ("production" !== process.env.NODE_ENV ? invariant(
-	    input.props.checkedLink == null || input.props.valueLink == null,
-	    'Cannot provide a checkedLink and a valueLink. If you want to use ' +
-	    'checkedLink, you probably don\'t want to use valueLink and vice versa.'
-	  ) : invariant(input.props.checkedLink == null || input.props.valueLink == null));
-	}
-	function _assertValueLink(input) {
-	  _assertSingleLink(input);
-	  ("production" !== process.env.NODE_ENV ? invariant(
-	    input.props.value == null && input.props.onChange == null,
-	    'Cannot provide a valueLink and a value or onChange event. If you want ' +
-	    'to use value or onChange, you probably don\'t want to use valueLink.'
-	  ) : invariant(input.props.value == null && input.props.onChange == null));
-	}
-
-	function _assertCheckedLink(input) {
-	  _assertSingleLink(input);
-	  ("production" !== process.env.NODE_ENV ? invariant(
-	    input.props.checked == null && input.props.onChange == null,
-	    'Cannot provide a checkedLink and a checked property or onChange event. ' +
-	    'If you want to use checked or onChange, you probably don\'t want to ' +
-	    'use checkedLink'
-	  ) : invariant(input.props.checked == null && input.props.onChange == null));
-	}
-
-	/**
-	 * @param {SyntheticEvent} e change event to handle
-	 */
-	function _handleLinkedValueChange(e) {
-	  /*jshint validthis:true */
-	  this.props.valueLink.requestChange(e.target.value);
-	}
-
-	/**
-	  * @param {SyntheticEvent} e change event to handle
-	  */
-	function _handleLinkedCheckChange(e) {
-	  /*jshint validthis:true */
-	  this.props.checkedLink.requestChange(e.target.checked);
-	}
-
-	/**
-	 * Provide a linked `value` attribute for controlled forms. You should not use
-	 * this outside of the ReactDOM controlled form components.
-	 */
-	var LinkedValueUtils = {
-	  Mixin: {
-	    propTypes: {
-	      value: function(props, propName, componentName) {
-	        if (!props[propName] ||
-	            hasReadOnlyValue[props.type] ||
-	            props.onChange ||
-	            props.readOnly ||
-	            props.disabled) {
-	          return;
-	        }
-	        return new Error(
-	          'You provided a `value` prop to a form field without an ' +
-	          '`onChange` handler. This will render a read-only field. If ' +
-	          'the field should be mutable use `defaultValue`. Otherwise, ' +
-	          'set either `onChange` or `readOnly`.'
-	        );
-	      },
-	      checked: function(props, propName, componentName) {
-	        if (!props[propName] ||
-	            props.onChange ||
-	            props.readOnly ||
-	            props.disabled) {
-	          return;
-	        }
-	        return new Error(
-	          'You provided a `checked` prop to a form field without an ' +
-	          '`onChange` handler. This will render a read-only field. If ' +
-	          'the field should be mutable use `defaultChecked`. Otherwise, ' +
-	          'set either `onChange` or `readOnly`.'
-	        );
-	      },
-	      onChange: ReactPropTypes.func
-	    }
-	  },
-
-	  /**
-	   * @param {ReactComponent} input Form component
-	   * @return {*} current value of the input either from value prop or link.
-	   */
-	  getValue: function(input) {
-	    if (input.props.valueLink) {
-	      _assertValueLink(input);
-	      return input.props.valueLink.value;
-	    }
-	    return input.props.value;
-	  },
-
-	  /**
-	   * @param {ReactComponent} input Form component
-	   * @return {*} current checked status of the input either from checked prop
-	   *             or link.
-	   */
-	  getChecked: function(input) {
-	    if (input.props.checkedLink) {
-	      _assertCheckedLink(input);
-	      return input.props.checkedLink.value;
-	    }
-	    return input.props.checked;
-	  },
-
-	  /**
-	   * @param {ReactComponent} input Form component
-	   * @return {function} change callback either from onChange prop or link.
-	   */
-	  getOnChange: function(input) {
-	    if (input.props.valueLink) {
-	      _assertValueLink(input);
-	      return _handleLinkedValueChange;
-	    } else if (input.props.checkedLink) {
-	      _assertCheckedLink(input);
-	      return _handleLinkedCheckChange;
-	    }
-	    return input.props.onChange;
-	  }
-	};
-
-	module.exports = LinkedValueUtils;
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(85)))
-
-/***/ },
-/* 176 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(process) {/**
-	 * Copyright 2013-2014 Facebook, Inc.
-	 *
-	 * Licensed under the Apache License, Version 2.0 (the "License");
-	 * you may not use this file except in compliance with the License.
-	 * You may obtain a copy of the License at
-	 *
-	 * http://www.apache.org/licenses/LICENSE-2.0
-	 *
-	 * Unless required by applicable law or agreed to in writing, software
-	 * distributed under the License is distributed on an "AS IS" BASIS,
-	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	 * See the License for the specific language governing permissions and
-	 * limitations under the License.
-	 *
-	 * @providesModule EventListener
-	 * @typechecks
-	 */
-
-	var emptyFunction = __webpack_require__(141);
-
-	/**
-	 * Upstream version of event listener. Does not take into account specific
-	 * nature of platform.
-	 */
-	var EventListener = {
-	  /**
-	   * Listen to DOM events during the bubble phase.
-	   *
-	   * @param {DOMEventTarget} target DOM element to register listener on.
-	   * @param {string} eventType Event type, e.g. 'click' or 'mouseover'.
-	   * @param {function} callback Callback function.
-	   * @return {object} Object with a `remove` method.
-	   */
-	  listen: function(target, eventType, callback) {
-	    if (target.addEventListener) {
-	      target.addEventListener(eventType, callback, false);
-	      return {
-	        remove: function() {
-	          target.removeEventListener(eventType, callback, false);
-	        }
-	      };
-	    } else if (target.attachEvent) {
-	      target.attachEvent('on' + eventType, callback);
-	      return {
-	        remove: function() {
-	          target.detachEvent('on' + eventType, callback);
-	        }
-	      };
-	    }
-	  },
-
-	  /**
-	   * Listen to DOM events during the capture phase.
-	   *
-	   * @param {DOMEventTarget} target DOM element to register listener on.
-	   * @param {string} eventType Event type, e.g. 'click' or 'mouseover'.
-	   * @param {function} callback Callback function.
-	   * @return {object} Object with a `remove` method.
-	   */
-	  capture: function(target, eventType, callback) {
-	    if (!target.addEventListener) {
-	      if ("production" !== process.env.NODE_ENV) {
-	        console.error(
-	          'Attempted to listen to events during the capture phase on a ' +
-	          'browser that does not support the capture phase. Your application ' +
-	          'will not receive some events.'
-	        );
-	      }
-	      return {
-	        remove: emptyFunction
-	      };
-	    } else {
-	      target.addEventListener(eventType, callback, true);
-	      return {
-	        remove: function() {
-	          target.removeEventListener(eventType, callback, true);
-	        }
-	      };
-	    }
-	  },
-
-	  registerDefault: function() {}
-	};
-
-	module.exports = EventListener;
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(85)))
-
-/***/ },
-/* 177 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-2014, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule getEventTarget
-	 * @typechecks static-only
-	 */
-
-	"use strict";
-
-	/**
-	 * Gets the target node from a native browser event by accounting for
-	 * inconsistencies in browser DOM APIs.
-	 *
-	 * @param {object} nativeEvent Native browser event.
-	 * @return {DOMEventTarget} Target node.
-	 */
-	function getEventTarget(nativeEvent) {
-	  var target = nativeEvent.target || nativeEvent.srcElement || window;
-	  // Safari may fire events on text nodes (Node.TEXT_NODE is 3).
-	  // @see http://www.quirksmode.org/js/events_properties.html
-	  return target.nodeType === 3 ? target.parentNode : target;
-	}
-
-	module.exports = getEventTarget;
-
-
-/***/ },
-/* 178 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-2014, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule getUnboundedScrollPosition
-	 * @typechecks
-	 */
-
-	"use strict";
-
-	/**
-	 * Gets the scroll position of the supplied element or window.
-	 *
-	 * The return values are unbounded, unlike `getScrollPosition`. This means they
-	 * may be negative or exceed the element boundaries (which is possible using
-	 * inertial scrolling).
-	 *
-	 * @param {DOMWindow|DOMElement} scrollable
-	 * @return {object} Map with `x` and `y` keys.
-	 */
-	function getUnboundedScrollPosition(scrollable) {
-	  if (scrollable === window) {
-	    return {
-	      x: window.pageXOffset || document.documentElement.scrollLeft,
-	      y: window.pageYOffset || document.documentElement.scrollTop
-	    };
-	  }
-	  return {
-	    x: scrollable.scrollLeft,
-	    y: scrollable.scrollTop
-	  };
-	}
-
-	module.exports = getUnboundedScrollPosition;
-
-
-/***/ },
-/* 179 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-2014, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule getActiveElement
-	 * @typechecks
-	 */
-
-	/**
-	 * Same as document.activeElement but wraps in a try-catch block. In IE it is
-	 * not safe to call document.activeElement if there is nothing focused.
-	 *
-	 * The activeElement will be null only if the document body is not yet defined.
-	 */
-	function getActiveElement() /*?DOMElement*/ {
-	  try {
-	    return document.activeElement || document.body;
-	  } catch (e) {
-	    return document.body;
-	  }
-	}
-
-	module.exports = getActiveElement;
-
-
-/***/ },
-/* 180 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-2014, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule shallowEqual
-	 */
-
-	"use strict";
-
-	/**
-	 * Performs equality by iterating through keys on an object and returning
-	 * false when any key has values which are not strictly equal between
-	 * objA and objB. Returns true when the values of all keys are strictly equal.
-	 *
-	 * @return {boolean}
-	 */
-	function shallowEqual(objA, objB) {
-	  if (objA === objB) {
-	    return true;
-	  }
-	  var key;
-	  // Test for A's keys different from B.
-	  for (key in objA) {
-	    if (objA.hasOwnProperty(key) &&
-	        (!objB.hasOwnProperty(key) || objA[key] !== objB[key])) {
-	      return false;
-	    }
-	  }
-	  // Test for B's keys missing from A.
-	  for (key in objB) {
-	    if (objB.hasOwnProperty(key) && !objA.hasOwnProperty(key)) {
-	      return false;
-	    }
-	  }
-	  return true;
-	}
-
-	module.exports = shallowEqual;
-
-
-/***/ },
-/* 181 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-2014, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule SyntheticClipboardEvent
-	 * @typechecks static-only
-	 */
-
-	"use strict";
-
-	var SyntheticEvent = __webpack_require__(164);
-
-	/**
-	 * @interface Event
-	 * @see http://www.w3.org/TR/clipboard-apis/
-	 */
-	var ClipboardEventInterface = {
-	  clipboardData: function(event) {
-	    return (
-	      'clipboardData' in event ?
-	        event.clipboardData :
-	        window.clipboardData
-	    );
-	  }
-	};
-
-	/**
-	 * @param {object} dispatchConfig Configuration used to dispatch this event.
-	 * @param {string} dispatchMarker Marker identifying the event target.
-	 * @param {object} nativeEvent Native browser event.
-	 * @extends {SyntheticUIEvent}
-	 */
-	function SyntheticClipboardEvent(dispatchConfig, dispatchMarker, nativeEvent) {
-	  SyntheticEvent.call(this, dispatchConfig, dispatchMarker, nativeEvent);
-	}
-
-	SyntheticEvent.augmentClass(SyntheticClipboardEvent, ClipboardEventInterface);
-
-	module.exports = SyntheticClipboardEvent;
-
-
-
-/***/ },
-/* 182 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-2014, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule SyntheticFocusEvent
-	 * @typechecks static-only
-	 */
-
-	"use strict";
-
-	var SyntheticUIEvent = __webpack_require__(186);
-
-	/**
-	 * @interface FocusEvent
-	 * @see http://www.w3.org/TR/DOM-Level-3-Events/
-	 */
-	var FocusEventInterface = {
-	  relatedTarget: null
-	};
-
-	/**
-	 * @param {object} dispatchConfig Configuration used to dispatch this event.
-	 * @param {string} dispatchMarker Marker identifying the event target.
-	 * @param {object} nativeEvent Native browser event.
-	 * @extends {SyntheticUIEvent}
-	 */
-	function SyntheticFocusEvent(dispatchConfig, dispatchMarker, nativeEvent) {
-	  SyntheticUIEvent.call(this, dispatchConfig, dispatchMarker, nativeEvent);
-	}
-
-	SyntheticUIEvent.augmentClass(SyntheticFocusEvent, FocusEventInterface);
-
-	module.exports = SyntheticFocusEvent;
-
-
-/***/ },
-/* 183 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-2014, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule SyntheticKeyboardEvent
-	 * @typechecks static-only
-	 */
-
-	"use strict";
-
-	var SyntheticUIEvent = __webpack_require__(186);
-
-	var getEventCharCode = __webpack_require__(188);
-	var getEventKey = __webpack_require__(203);
-	var getEventModifierState = __webpack_require__(201);
-
-	/**
-	 * @interface KeyboardEvent
-	 * @see http://www.w3.org/TR/DOM-Level-3-Events/
-	 */
-	var KeyboardEventInterface = {
-	  key: getEventKey,
-	  location: null,
-	  ctrlKey: null,
-	  shiftKey: null,
-	  altKey: null,
-	  metaKey: null,
-	  repeat: null,
-	  locale: null,
-	  getModifierState: getEventModifierState,
-	  // Legacy Interface
-	  charCode: function(event) {
-	    // `charCode` is the result of a KeyPress event and represents the value of
-	    // the actual printable character.
-
-	    // KeyPress is deprecated, but its replacement is not yet final and not
-	    // implemented in any major browser. Only KeyPress has charCode.
-	    if (event.type === 'keypress') {
-	      return getEventCharCode(event);
-	    }
-	    return 0;
-	  },
-	  keyCode: function(event) {
-	    // `keyCode` is the result of a KeyDown/Up event and represents the value of
-	    // physical keyboard key.
-
-	    // The actual meaning of the value depends on the users' keyboard layout
-	    // which cannot be detected. Assuming that it is a US keyboard layout
-	    // provides a surprisingly accurate mapping for US and European users.
-	    // Due to this, it is left to the user to implement at this time.
-	    if (event.type === 'keydown' || event.type === 'keyup') {
-	      return event.keyCode;
-	    }
-	    return 0;
-	  },
-	  which: function(event) {
-	    // `which` is an alias for either `keyCode` or `charCode` depending on the
-	    // type of the event.
-	    if (event.type === 'keypress') {
-	      return getEventCharCode(event);
-	    }
-	    if (event.type === 'keydown' || event.type === 'keyup') {
-	      return event.keyCode;
-	    }
-	    return 0;
-	  }
-	};
-
-	/**
-	 * @param {object} dispatchConfig Configuration used to dispatch this event.
-	 * @param {string} dispatchMarker Marker identifying the event target.
-	 * @param {object} nativeEvent Native browser event.
-	 * @extends {SyntheticUIEvent}
-	 */
-	function SyntheticKeyboardEvent(dispatchConfig, dispatchMarker, nativeEvent) {
-	  SyntheticUIEvent.call(this, dispatchConfig, dispatchMarker, nativeEvent);
-	}
-
-	SyntheticUIEvent.augmentClass(SyntheticKeyboardEvent, KeyboardEventInterface);
-
-	module.exports = SyntheticKeyboardEvent;
-
-
-/***/ },
-/* 184 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-2014, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule SyntheticDragEvent
-	 * @typechecks static-only
-	 */
-
-	"use strict";
-
-	var SyntheticMouseEvent = __webpack_require__(169);
-
-	/**
-	 * @interface DragEvent
-	 * @see http://www.w3.org/TR/DOM-Level-3-Events/
-	 */
-	var DragEventInterface = {
-	  dataTransfer: null
-	};
-
-	/**
-	 * @param {object} dispatchConfig Configuration used to dispatch this event.
-	 * @param {string} dispatchMarker Marker identifying the event target.
-	 * @param {object} nativeEvent Native browser event.
-	 * @extends {SyntheticUIEvent}
-	 */
-	function SyntheticDragEvent(dispatchConfig, dispatchMarker, nativeEvent) {
-	  SyntheticMouseEvent.call(this, dispatchConfig, dispatchMarker, nativeEvent);
-	}
-
-	SyntheticMouseEvent.augmentClass(SyntheticDragEvent, DragEventInterface);
-
-	module.exports = SyntheticDragEvent;
-
-
-/***/ },
-/* 185 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-2014, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule SyntheticTouchEvent
-	 * @typechecks static-only
-	 */
-
-	"use strict";
-
-	var SyntheticUIEvent = __webpack_require__(186);
-
-	var getEventModifierState = __webpack_require__(201);
-
-	/**
-	 * @interface TouchEvent
-	 * @see http://www.w3.org/TR/touch-events/
-	 */
-	var TouchEventInterface = {
-	  touches: null,
-	  targetTouches: null,
-	  changedTouches: null,
-	  altKey: null,
-	  metaKey: null,
-	  ctrlKey: null,
-	  shiftKey: null,
-	  getModifierState: getEventModifierState
-	};
-
-	/**
-	 * @param {object} dispatchConfig Configuration used to dispatch this event.
-	 * @param {string} dispatchMarker Marker identifying the event target.
-	 * @param {object} nativeEvent Native browser event.
-	 * @extends {SyntheticUIEvent}
-	 */
-	function SyntheticTouchEvent(dispatchConfig, dispatchMarker, nativeEvent) {
-	  SyntheticUIEvent.call(this, dispatchConfig, dispatchMarker, nativeEvent);
-	}
-
-	SyntheticUIEvent.augmentClass(SyntheticTouchEvent, TouchEventInterface);
-
-	module.exports = SyntheticTouchEvent;
-
-
-/***/ },
-/* 186 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-2014, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule SyntheticUIEvent
-	 * @typechecks static-only
-	 */
-
-	"use strict";
-
-	var SyntheticEvent = __webpack_require__(164);
-
-	var getEventTarget = __webpack_require__(177);
-
-	/**
-	 * @interface UIEvent
-	 * @see http://www.w3.org/TR/DOM-Level-3-Events/
-	 */
-	var UIEventInterface = {
-	  view: function(event) {
-	    if (event.view) {
-	      return event.view;
-	    }
-
-	    var target = getEventTarget(event);
-	    if (target != null && target.window === target) {
-	      // target is a window object
-	      return target;
-	    }
-
-	    var doc = target.ownerDocument;
-	    // TODO: Figure out why `ownerDocument` is sometimes undefined in IE8.
-	    if (doc) {
-	      return doc.defaultView || doc.parentWindow;
-	    } else {
-	      return window;
-	    }
-	  },
-	  detail: function(event) {
-	    return event.detail || 0;
-	  }
-	};
-
-	/**
-	 * @param {object} dispatchConfig Configuration used to dispatch this event.
-	 * @param {string} dispatchMarker Marker identifying the event target.
-	 * @param {object} nativeEvent Native browser event.
-	 * @extends {SyntheticEvent}
-	 */
-	function SyntheticUIEvent(dispatchConfig, dispatchMarker, nativeEvent) {
-	  SyntheticEvent.call(this, dispatchConfig, dispatchMarker, nativeEvent);
-	}
-
-	SyntheticEvent.augmentClass(SyntheticUIEvent, UIEventInterface);
-
-	module.exports = SyntheticUIEvent;
-
-
-/***/ },
-/* 187 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-2014, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule SyntheticWheelEvent
-	 * @typechecks static-only
-	 */
-
-	"use strict";
-
-	var SyntheticMouseEvent = __webpack_require__(169);
-
-	/**
-	 * @interface WheelEvent
-	 * @see http://www.w3.org/TR/DOM-Level-3-Events/
-	 */
-	var WheelEventInterface = {
-	  deltaX: function(event) {
-	    return (
-	      'deltaX' in event ? event.deltaX :
-	      // Fallback to `wheelDeltaX` for Webkit and normalize (right is positive).
-	      'wheelDeltaX' in event ? -event.wheelDeltaX : 0
-	    );
-	  },
-	  deltaY: function(event) {
-	    return (
-	      'deltaY' in event ? event.deltaY :
-	      // Fallback to `wheelDeltaY` for Webkit and normalize (down is positive).
-	      'wheelDeltaY' in event ? -event.wheelDeltaY :
-	      // Fallback to `wheelDelta` for IE<9 and normalize (down is positive).
-	      'wheelDelta' in event ? -event.wheelDelta : 0
-	    );
-	  },
-	  deltaZ: null,
-
-	  // Browsers without "deltaMode" is reporting in raw wheel delta where one
-	  // notch on the scroll is always +/- 120, roughly equivalent to pixels.
-	  // A good approximation of DOM_DELTA_LINE (1) is 5% of viewport size or
-	  // ~40 pixels, for DOM_DELTA_SCREEN (2) it is 87.5% of viewport size.
-	  deltaMode: null
-	};
-
-	/**
-	 * @param {object} dispatchConfig Configuration used to dispatch this event.
-	 * @param {string} dispatchMarker Marker identifying the event target.
-	 * @param {object} nativeEvent Native browser event.
-	 * @extends {SyntheticMouseEvent}
-	 */
-	function SyntheticWheelEvent(dispatchConfig, dispatchMarker, nativeEvent) {
-	  SyntheticMouseEvent.call(this, dispatchConfig, dispatchMarker, nativeEvent);
-	}
-
-	SyntheticMouseEvent.augmentClass(SyntheticWheelEvent, WheelEventInterface);
-
-	module.exports = SyntheticWheelEvent;
-
-
-/***/ },
-/* 188 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-2014, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule getEventCharCode
-	 * @typechecks static-only
-	 */
-
-	"use strict";
-
-	/**
-	 * `charCode` represents the actual "character code" and is safe to use with
-	 * `String.fromCharCode`. As such, only keys that correspond to printable
-	 * characters produce a valid `charCode`, the only exception to this is Enter.
-	 * The Tab-key is considered non-printable and does not have a `charCode`,
-	 * presumably because it does not produce a tab-character in browsers.
-	 *
-	 * @param {object} nativeEvent Native browser event.
-	 * @return {string} Normalized `charCode` property.
-	 */
-	function getEventCharCode(nativeEvent) {
-	  var charCode;
-	  var keyCode = nativeEvent.keyCode;
-
-	  if ('charCode' in nativeEvent) {
-	    charCode = nativeEvent.charCode;
-
-	    // FF does not set `charCode` for the Enter-key, check against `keyCode`.
-	    if (charCode === 0 && keyCode === 13) {
-	      charCode = 13;
-	    }
-	  } else {
-	    // IE8 does not implement `charCode`, but `keyCode` has the correct value.
-	    charCode = keyCode;
-	  }
-
-	  // Some non-printable keys are reported in `charCode`/`keyCode`, discard them.
-	  // Must not discard the (non-)printable Enter-key.
-	  if (charCode >= 32 || charCode === 13) {
-	    return charCode;
-	  }
-
-	  return 0;
-	}
-
-	module.exports = getEventCharCode;
-
-
-/***/ },
-/* 189 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-2014, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule ReactDefaultPerfAnalysis
-	 */
-
-	var assign = __webpack_require__(46);
-
-	// Don't try to save users less than 1.2ms (a number I made up)
-	var DONT_CARE_THRESHOLD = 1.2;
-	var DOM_OPERATION_TYPES = {
-	  'mountImageIntoNode': 'set innerHTML',
-	  INSERT_MARKUP: 'set innerHTML',
-	  MOVE_EXISTING: 'move',
-	  REMOVE_NODE: 'remove',
-	  TEXT_CONTENT: 'set textContent',
-	  'updatePropertyByID': 'update attribute',
-	  'deletePropertyByID': 'delete attribute',
-	  'updateStylesByID': 'update styles',
-	  'updateInnerHTMLByID': 'set innerHTML',
-	  'dangerouslyReplaceNodeWithMarkupByID': 'replace'
-	};
-
-	function getTotalTime(measurements) {
-	  // TODO: return number of DOM ops? could be misleading.
-	  // TODO: measure dropped frames after reconcile?
-	  // TODO: log total time of each reconcile and the top-level component
-	  // class that triggered it.
-	  var totalTime = 0;
-	  for (var i = 0; i < measurements.length; i++) {
-	    var measurement = measurements[i];
-	    totalTime += measurement.totalTime;
-	  }
-	  return totalTime;
-	}
-
-	function getDOMSummary(measurements) {
-	  var items = [];
-	  for (var i = 0; i < measurements.length; i++) {
-	    var measurement = measurements[i];
-	    var id;
-
-	    for (id in measurement.writes) {
-	      measurement.writes[id].forEach(function(write) {
-	        items.push({
-	          id: id,
-	          type: DOM_OPERATION_TYPES[write.type] || write.type,
-	          args: write.args
-	        });
-	      });
-	    }
-	  }
-	  return items;
-	}
-
-	function getExclusiveSummary(measurements) {
-	  var candidates = {};
-	  var displayName;
-
-	  for (var i = 0; i < measurements.length; i++) {
-	    var measurement = measurements[i];
-	    var allIDs = assign(
-	      {},
-	      measurement.exclusive,
-	      measurement.inclusive
-	    );
-
-	    for (var id in allIDs) {
-	      displayName = measurement.displayNames[id].current;
-
-	      candidates[displayName] = candidates[displayName] || {
-	        componentName: displayName,
-	        inclusive: 0,
-	        exclusive: 0,
-	        render: 0,
-	        count: 0
-	      };
-	      if (measurement.render[id]) {
-	        candidates[displayName].render += measurement.render[id];
-	      }
-	      if (measurement.exclusive[id]) {
-	        candidates[displayName].exclusive += measurement.exclusive[id];
-	      }
-	      if (measurement.inclusive[id]) {
-	        candidates[displayName].inclusive += measurement.inclusive[id];
-	      }
-	      if (measurement.counts[id]) {
-	        candidates[displayName].count += measurement.counts[id];
-	      }
-	    }
-	  }
-
-	  // Now make a sorted array with the results.
-	  var arr = [];
-	  for (displayName in candidates) {
-	    if (candidates[displayName].exclusive >= DONT_CARE_THRESHOLD) {
-	      arr.push(candidates[displayName]);
-	    }
-	  }
-
-	  arr.sort(function(a, b) {
-	    return b.exclusive - a.exclusive;
-	  });
-
-	  return arr;
-	}
-
-	function getInclusiveSummary(measurements, onlyClean) {
-	  var candidates = {};
-	  var inclusiveKey;
-
-	  for (var i = 0; i < measurements.length; i++) {
-	    var measurement = measurements[i];
-	    var allIDs = assign(
-	      {},
-	      measurement.exclusive,
-	      measurement.inclusive
-	    );
-	    var cleanComponents;
-
-	    if (onlyClean) {
-	      cleanComponents = getUnchangedComponents(measurement);
-	    }
-
-	    for (var id in allIDs) {
-	      if (onlyClean && !cleanComponents[id]) {
-	        continue;
-	      }
-
-	      var displayName = measurement.displayNames[id];
-
-	      // Inclusive time is not useful for many components without knowing where
-	      // they are instantiated. So we aggregate inclusive time with both the
-	      // owner and current displayName as the key.
-	      inclusiveKey = displayName.owner + ' > ' + displayName.current;
-
-	      candidates[inclusiveKey] = candidates[inclusiveKey] || {
-	        componentName: inclusiveKey,
-	        time: 0,
-	        count: 0
-	      };
-
-	      if (measurement.inclusive[id]) {
-	        candidates[inclusiveKey].time += measurement.inclusive[id];
-	      }
-	      if (measurement.counts[id]) {
-	        candidates[inclusiveKey].count += measurement.counts[id];
-	      }
-	    }
-	  }
-
-	  // Now make a sorted array with the results.
-	  var arr = [];
-	  for (inclusiveKey in candidates) {
-	    if (candidates[inclusiveKey].time >= DONT_CARE_THRESHOLD) {
-	      arr.push(candidates[inclusiveKey]);
-	    }
-	  }
-
-	  arr.sort(function(a, b) {
-	    return b.time - a.time;
-	  });
-
-	  return arr;
-	}
-
-	function getUnchangedComponents(measurement) {
-	  // For a given reconcile, look at which components did not actually
-	  // render anything to the DOM and return a mapping of their ID to
-	  // the amount of time it took to render the entire subtree.
-	  var cleanComponents = {};
-	  var dirtyLeafIDs = Object.keys(measurement.writes);
-	  var allIDs = assign({}, measurement.exclusive, measurement.inclusive);
-
-	  for (var id in allIDs) {
-	    var isDirty = false;
-	    // For each component that rendered, see if a component that triggered
-	    // a DOM op is in its subtree.
-	    for (var i = 0; i < dirtyLeafIDs.length; i++) {
-	      if (dirtyLeafIDs[i].indexOf(id) === 0) {
-	        isDirty = true;
-	        break;
-	      }
-	    }
-	    if (!isDirty && measurement.counts[id] > 0) {
-	      cleanComponents[id] = true;
-	    }
-	  }
-	  return cleanComponents;
-	}
-
-	var ReactDefaultPerfAnalysis = {
-	  getExclusiveSummary: getExclusiveSummary,
-	  getInclusiveSummary: getInclusiveSummary,
-	  getDOMSummary: getDOMSummary,
-	  getTotalTime: getTotalTime
-	};
-
-	module.exports = ReactDefaultPerfAnalysis;
-
-
-/***/ },
-/* 190 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-2014, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule performanceNow
-	 * @typechecks
-	 */
-
-	var performance = __webpack_require__(204);
-
-	/**
-	 * Detect if we can use `window.performance.now()` and gracefully fallback to
-	 * `Date.now()` if it doesn't exist. We need to support Firefox < 15 for now
-	 * because of Facebook's testing infrastructure.
-	 */
-	if (!performance || !performance.now) {
-	  performance = Date;
-	}
-
-	var performanceNow = performance.now.bind(performance);
-
-	module.exports = performanceNow;
-
-
-/***/ },
-/* 191 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-2014, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule isTextNode
-	 * @typechecks
-	 */
-
-	var isNode = __webpack_require__(205);
-
-	/**
-	 * @param {*} object The object to check.
-	 * @return {boolean} Whether or not the object is a DOM text node.
-	 */
-	function isTextNode(object) {
-	  return isNode(object) && object.nodeType == 3;
-	}
-
-	module.exports = isTextNode;
-
-
-/***/ },
-/* 192 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-2014, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule adler32
-	 */
-
-	/* jslint bitwise:true */
-
-	"use strict";
-
-	var MOD = 65521;
-
-	// This is a clean-room implementation of adler32 designed for detecting
-	// if markup is not what we expect it to be. It does not need to be
-	// cryptographically strong, only reasonably good at detecting if markup
-	// generated on the server is different than that on the client.
-	function adler32(data) {
-	  var a = 1;
-	  var b = 0;
-	  for (var i = 0; i < data.length; i++) {
-	    a = (a + data.charCodeAt(i)) % MOD;
-	    b = (b + a) % MOD;
-	  }
-	  return a | (b << 16);
-	}
-
-	module.exports = adler32;
-
-
-/***/ },
-/* 193 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-2014, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule ReactPutListenerQueue
-	 */
-
-	"use strict";
-
-	var PooledClass = __webpack_require__(92);
-	var ReactBrowserEventEmitter = __webpack_require__(109);
-
-	var assign = __webpack_require__(46);
-
-	function ReactPutListenerQueue() {
-	  this.listenersToPut = [];
-	}
-
-	assign(ReactPutListenerQueue.prototype, {
-	  enqueuePutListener: function(rootNodeID, propKey, propValue) {
-	    this.listenersToPut.push({
-	      rootNodeID: rootNodeID,
-	      propKey: propKey,
-	      propValue: propValue
-	    });
-	  },
-
-	  putListeners: function() {
-	    for (var i = 0; i < this.listenersToPut.length; i++) {
-	      var listenerToPut = this.listenersToPut[i];
-	      ReactBrowserEventEmitter.putListener(
-	        listenerToPut.rootNodeID,
-	        listenerToPut.propKey,
-	        listenerToPut.propValue
-	      );
-	    }
-	  },
-
-	  reset: function() {
-	    this.listenersToPut.length = 0;
-	  },
-
-	  destructor: function() {
-	    this.reset();
-	  }
-	});
-
-	PooledClass.addPoolingTo(ReactPutListenerQueue);
-
-	module.exports = ReactPutListenerQueue;
-
-
-/***/ },
-/* 194 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(Buffer) {/*!
@@ -25539,9 +29002,9 @@
 	 * @license  MIT
 	 */
 
-	var base64 = __webpack_require__(210)
-	var ieee754 = __webpack_require__(208)
-	var isArray = __webpack_require__(209)
+	var base64 = __webpack_require__(224)
+	var ieee754 = __webpack_require__(220)
+	var isArray = __webpack_require__(221)
 
 	exports.Buffer = Buffer
 	exports.SlowBuffer = Buffer
@@ -26585,10 +30048,3939 @@
 	  }
 	}
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(194).Buffer))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(162).Buffer))
+
+/***/ },
+/* 163 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {/**
+	 * Copyright 2013-2014, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule emptyObject
+	 */
+
+	"use strict";
+
+	var emptyObject = {};
+
+	if ("production" !== process.env.NODE_ENV) {
+	  Object.freeze(emptyObject);
+	}
+
+	module.exports = emptyObject;
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(97)))
+
+/***/ },
+/* 164 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {/**
+	 * Copyright 2013-2014, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule CallbackQueue
+	 */
+
+	"use strict";
+
+	var PooledClass = __webpack_require__(104);
+
+	var assign = __webpack_require__(56);
+	var invariant = __webpack_require__(103);
+
+	/**
+	 * A specialized pseudo-event module to help keep track of components waiting to
+	 * be notified when their DOM representations are available for use.
+	 *
+	 * This implements `PooledClass`, so you should never need to instantiate this.
+	 * Instead, use `CallbackQueue.getPooled()`.
+	 *
+	 * @class ReactMountReady
+	 * @implements PooledClass
+	 * @internal
+	 */
+	function CallbackQueue() {
+	  this._callbacks = null;
+	  this._contexts = null;
+	}
+
+	assign(CallbackQueue.prototype, {
+
+	  /**
+	   * Enqueues a callback to be invoked when `notifyAll` is invoked.
+	   *
+	   * @param {function} callback Invoked when `notifyAll` is invoked.
+	   * @param {?object} context Context to call `callback` with.
+	   * @internal
+	   */
+	  enqueue: function(callback, context) {
+	    this._callbacks = this._callbacks || [];
+	    this._contexts = this._contexts || [];
+	    this._callbacks.push(callback);
+	    this._contexts.push(context);
+	  },
+
+	  /**
+	   * Invokes all enqueued callbacks and clears the queue. This is invoked after
+	   * the DOM representation of a component has been created or updated.
+	   *
+	   * @internal
+	   */
+	  notifyAll: function() {
+	    var callbacks = this._callbacks;
+	    var contexts = this._contexts;
+	    if (callbacks) {
+	      ("production" !== process.env.NODE_ENV ? invariant(
+	        callbacks.length === contexts.length,
+	        "Mismatched list of contexts in callback queue"
+	      ) : invariant(callbacks.length === contexts.length));
+	      this._callbacks = null;
+	      this._contexts = null;
+	      for (var i = 0, l = callbacks.length; i < l; i++) {
+	        callbacks[i].call(contexts[i]);
+	      }
+	      callbacks.length = 0;
+	      contexts.length = 0;
+	    }
+	  },
+
+	  /**
+	   * Resets the internal queue.
+	   *
+	   * @internal
+	   */
+	  reset: function() {
+	    this._callbacks = null;
+	    this._contexts = null;
+	  },
+
+	  /**
+	   * `PooledClass` looks for this.
+	   */
+	  destructor: function() {
+	    this.reset();
+	  }
+
+	});
+
+	PooledClass.addPoolingTo(CallbackQueue);
+
+	module.exports = CallbackQueue;
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(97)))
+
+/***/ },
+/* 165 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {/**
+	 * Copyright 2013-2014, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule Transaction
+	 */
+
+	"use strict";
+
+	var invariant = __webpack_require__(103);
+
+	/**
+	 * `Transaction` creates a black box that is able to wrap any method such that
+	 * certain invariants are maintained before and after the method is invoked
+	 * (Even if an exception is thrown while invoking the wrapped method). Whoever
+	 * instantiates a transaction can provide enforcers of the invariants at
+	 * creation time. The `Transaction` class itself will supply one additional
+	 * automatic invariant for you - the invariant that any transaction instance
+	 * should not be run while it is already being run. You would typically create a
+	 * single instance of a `Transaction` for reuse multiple times, that potentially
+	 * is used to wrap several different methods. Wrappers are extremely simple -
+	 * they only require implementing two methods.
+	 *
+	 * <pre>
+	 *                       wrappers (injected at creation time)
+	 *                                      +        +
+	 *                                      |        |
+	 *                    +-----------------|--------|--------------+
+	 *                    |                 v        |              |
+	 *                    |      +---------------+   |              |
+	 *                    |   +--|    wrapper1   |---|----+         |
+	 *                    |   |  +---------------+   v    |         |
+	 *                    |   |          +-------------+  |         |
+	 *                    |   |     +----|   wrapper2  |--------+   |
+	 *                    |   |     |    +-------------+  |     |   |
+	 *                    |   |     |                     |     |   |
+	 *                    |   v     v                     v     v   | wrapper
+	 *                    | +---+ +---+   +---------+   +---+ +---+ | invariants
+	 * perform(anyMethod) | |   | |   |   |         |   |   | |   | | maintained
+	 * +----------------->|-|---|-|---|-->|anyMethod|---|---|-|---|-|-------->
+	 *                    | |   | |   |   |         |   |   | |   | |
+	 *                    | |   | |   |   |         |   |   | |   | |
+	 *                    | |   | |   |   |         |   |   | |   | |
+	 *                    | +---+ +---+   +---------+   +---+ +---+ |
+	 *                    |  initialize                    close    |
+	 *                    +-----------------------------------------+
+	 * </pre>
+	 *
+	 * Use cases:
+	 * - Preserving the input selection ranges before/after reconciliation.
+	 *   Restoring selection even in the event of an unexpected error.
+	 * - Deactivating events while rearranging the DOM, preventing blurs/focuses,
+	 *   while guaranteeing that afterwards, the event system is reactivated.
+	 * - Flushing a queue of collected DOM mutations to the main UI thread after a
+	 *   reconciliation takes place in a worker thread.
+	 * - Invoking any collected `componentDidUpdate` callbacks after rendering new
+	 *   content.
+	 * - (Future use case): Wrapping particular flushes of the `ReactWorker` queue
+	 *   to preserve the `scrollTop` (an automatic scroll aware DOM).
+	 * - (Future use case): Layout calculations before and after DOM upates.
+	 *
+	 * Transactional plugin API:
+	 * - A module that has an `initialize` method that returns any precomputation.
+	 * - and a `close` method that accepts the precomputation. `close` is invoked
+	 *   when the wrapped process is completed, or has failed.
+	 *
+	 * @param {Array<TransactionalWrapper>} transactionWrapper Wrapper modules
+	 * that implement `initialize` and `close`.
+	 * @return {Transaction} Single transaction for reuse in thread.
+	 *
+	 * @class Transaction
+	 */
+	var Mixin = {
+	  /**
+	   * Sets up this instance so that it is prepared for collecting metrics. Does
+	   * so such that this setup method may be used on an instance that is already
+	   * initialized, in a way that does not consume additional memory upon reuse.
+	   * That can be useful if you decide to make your subclass of this mixin a
+	   * "PooledClass".
+	   */
+	  reinitializeTransaction: function() {
+	    this.transactionWrappers = this.getTransactionWrappers();
+	    if (!this.wrapperInitData) {
+	      this.wrapperInitData = [];
+	    } else {
+	      this.wrapperInitData.length = 0;
+	    }
+	    this._isInTransaction = false;
+	  },
+
+	  _isInTransaction: false,
+
+	  /**
+	   * @abstract
+	   * @return {Array<TransactionWrapper>} Array of transaction wrappers.
+	   */
+	  getTransactionWrappers: null,
+
+	  isInTransaction: function() {
+	    return !!this._isInTransaction;
+	  },
+
+	  /**
+	   * Executes the function within a safety window. Use this for the top level
+	   * methods that result in large amounts of computation/mutations that would
+	   * need to be safety checked.
+	   *
+	   * @param {function} method Member of scope to call.
+	   * @param {Object} scope Scope to invoke from.
+	   * @param {Object?=} args... Arguments to pass to the method (optional).
+	   *                           Helps prevent need to bind in many cases.
+	   * @return Return value from `method`.
+	   */
+	  perform: function(method, scope, a, b, c, d, e, f) {
+	    ("production" !== process.env.NODE_ENV ? invariant(
+	      !this.isInTransaction(),
+	      'Transaction.perform(...): Cannot initialize a transaction when there ' +
+	      'is already an outstanding transaction.'
+	    ) : invariant(!this.isInTransaction()));
+	    var errorThrown;
+	    var ret;
+	    try {
+	      this._isInTransaction = true;
+	      // Catching errors makes debugging more difficult, so we start with
+	      // errorThrown set to true before setting it to false after calling
+	      // close -- if it's still set to true in the finally block, it means
+	      // one of these calls threw.
+	      errorThrown = true;
+	      this.initializeAll(0);
+	      ret = method.call(scope, a, b, c, d, e, f);
+	      errorThrown = false;
+	    } finally {
+	      try {
+	        if (errorThrown) {
+	          // If `method` throws, prefer to show that stack trace over any thrown
+	          // by invoking `closeAll`.
+	          try {
+	            this.closeAll(0);
+	          } catch (err) {
+	          }
+	        } else {
+	          // Since `method` didn't throw, we don't want to silence the exception
+	          // here.
+	          this.closeAll(0);
+	        }
+	      } finally {
+	        this._isInTransaction = false;
+	      }
+	    }
+	    return ret;
+	  },
+
+	  initializeAll: function(startIndex) {
+	    var transactionWrappers = this.transactionWrappers;
+	    for (var i = startIndex; i < transactionWrappers.length; i++) {
+	      var wrapper = transactionWrappers[i];
+	      try {
+	        // Catching errors makes debugging more difficult, so we start with the
+	        // OBSERVED_ERROR state before overwriting it with the real return value
+	        // of initialize -- if it's still set to OBSERVED_ERROR in the finally
+	        // block, it means wrapper.initialize threw.
+	        this.wrapperInitData[i] = Transaction.OBSERVED_ERROR;
+	        this.wrapperInitData[i] = wrapper.initialize ?
+	          wrapper.initialize.call(this) :
+	          null;
+	      } finally {
+	        if (this.wrapperInitData[i] === Transaction.OBSERVED_ERROR) {
+	          // The initializer for wrapper i threw an error; initialize the
+	          // remaining wrappers but silence any exceptions from them to ensure
+	          // that the first error is the one to bubble up.
+	          try {
+	            this.initializeAll(i + 1);
+	          } catch (err) {
+	          }
+	        }
+	      }
+	    }
+	  },
+
+	  /**
+	   * Invokes each of `this.transactionWrappers.close[i]` functions, passing into
+	   * them the respective return values of `this.transactionWrappers.init[i]`
+	   * (`close`rs that correspond to initializers that failed will not be
+	   * invoked).
+	   */
+	  closeAll: function(startIndex) {
+	    ("production" !== process.env.NODE_ENV ? invariant(
+	      this.isInTransaction(),
+	      'Transaction.closeAll(): Cannot close transaction when none are open.'
+	    ) : invariant(this.isInTransaction()));
+	    var transactionWrappers = this.transactionWrappers;
+	    for (var i = startIndex; i < transactionWrappers.length; i++) {
+	      var wrapper = transactionWrappers[i];
+	      var initData = this.wrapperInitData[i];
+	      var errorThrown;
+	      try {
+	        // Catching errors makes debugging more difficult, so we start with
+	        // errorThrown set to true before setting it to false after calling
+	        // close -- if it's still set to true in the finally block, it means
+	        // wrapper.close threw.
+	        errorThrown = true;
+	        if (initData !== Transaction.OBSERVED_ERROR) {
+	          wrapper.close && wrapper.close.call(this, initData);
+	        }
+	        errorThrown = false;
+	      } finally {
+	        if (errorThrown) {
+	          // The closer for wrapper i threw an error; close the remaining
+	          // wrappers but silence any exceptions from them to ensure that the
+	          // first error is the one to bubble up.
+	          try {
+	            this.closeAll(i + 1);
+	          } catch (e) {
+	          }
+	        }
+	      }
+	    }
+	    this.wrapperInitData.length = 0;
+	  }
+	};
+
+	var Transaction = {
+
+	  Mixin: Mixin,
+
+	  /**
+	   * Token to look for to determine if an error occured.
+	   */
+	  OBSERVED_ERROR: {}
+
+	};
+
+	module.exports = Transaction;
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(97)))
+
+/***/ },
+/* 166 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2014, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule joinClasses
+	 * @typechecks static-only
+	 */
+
+	"use strict";
+
+	/**
+	 * Combines multiple className strings into one.
+	 * http://jsperf.com/joinclasses-args-vs-array
+	 *
+	 * @param {...?string} classes
+	 * @return {string}
+	 */
+	function joinClasses(className/*, ... */) {
+	  if (!className) {
+	    className = '';
+	  }
+	  var nextClass;
+	  var argLength = arguments.length;
+	  if (argLength > 1) {
+	    for (var ii = 1; ii < argLength; ii++) {
+	      nextClass = arguments[ii];
+	      if (nextClass) {
+	        className = (className ? className + ' ' : '') + nextClass;
+	      }
+	    }
+	  }
+	  return className;
+	}
+
+	module.exports = joinClasses;
+
+
+/***/ },
+/* 167 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {/**
+	 * Copyright 2014, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule ReactNativeComponent
+	 */
+
+	"use strict";
+
+	var assign = __webpack_require__(56);
+	var invariant = __webpack_require__(103);
+
+	var genericComponentClass = null;
+	// This registry keeps track of wrapper classes around native tags
+	var tagToComponentClass = {};
+
+	var ReactNativeComponentInjection = {
+	  // This accepts a class that receives the tag string. This is a catch all
+	  // that can render any kind of tag.
+	  injectGenericComponentClass: function(componentClass) {
+	    genericComponentClass = componentClass;
+	  },
+	  // This accepts a keyed object with classes as values. Each key represents a
+	  // tag. That particular tag will use this class instead of the generic one.
+	  injectComponentClasses: function(componentClasses) {
+	    assign(tagToComponentClass, componentClasses);
+	  }
+	};
+
+	/**
+	 * Create an internal class for a specific tag.
+	 *
+	 * @param {string} tag The tag for which to create an internal instance.
+	 * @param {any} props The props passed to the instance constructor.
+	 * @return {ReactComponent} component The injected empty component.
+	 */
+	function createInstanceForTag(tag, props, parentType) {
+	  var componentClass = tagToComponentClass[tag];
+	  if (componentClass == null) {
+	    ("production" !== process.env.NODE_ENV ? invariant(
+	      genericComponentClass,
+	      'There is no registered component for the tag %s',
+	      tag
+	    ) : invariant(genericComponentClass));
+	    return new genericComponentClass(tag, props);
+	  }
+	  if (parentType === tag) {
+	    // Avoid recursion
+	    ("production" !== process.env.NODE_ENV ? invariant(
+	      genericComponentClass,
+	      'There is no registered component for the tag %s',
+	      tag
+	    ) : invariant(genericComponentClass));
+	    return new genericComponentClass(tag, props);
+	  }
+	  // Unwrap legacy factories
+	  return new componentClass.type(props);
+	}
+
+	var ReactNativeComponent = {
+	  createInstanceForTag: createInstanceForTag,
+	  injection: ReactNativeComponentInjection
+	};
+
+	module.exports = ReactNativeComponent;
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(97)))
+
+/***/ },
+/* 168 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2014, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule CSSProperty
+	 */
+
+	"use strict";
+
+	/**
+	 * CSS properties which accept numbers but are not in units of "px".
+	 */
+	var isUnitlessNumber = {
+	  columnCount: true,
+	  flex: true,
+	  flexGrow: true,
+	  flexShrink: true,
+	  fontWeight: true,
+	  lineClamp: true,
+	  lineHeight: true,
+	  opacity: true,
+	  order: true,
+	  orphans: true,
+	  widows: true,
+	  zIndex: true,
+	  zoom: true,
+
+	  // SVG-related properties
+	  fillOpacity: true,
+	  strokeOpacity: true
+	};
+
+	/**
+	 * @param {string} prefix vendor-specific prefix, eg: Webkit
+	 * @param {string} key style name, eg: transitionDuration
+	 * @return {string} style name prefixed with `prefix`, properly camelCased, eg:
+	 * WebkitTransitionDuration
+	 */
+	function prefixKey(prefix, key) {
+	  return prefix + key.charAt(0).toUpperCase() + key.substring(1);
+	}
+
+	/**
+	 * Support style names that may come passed in prefixed by adding permutations
+	 * of vendor prefixes.
+	 */
+	var prefixes = ['Webkit', 'ms', 'Moz', 'O'];
+
+	// Using Object.keys here, or else the vanilla for-in loop makes IE8 go into an
+	// infinite loop, because it iterates over the newly added props too.
+	Object.keys(isUnitlessNumber).forEach(function(prop) {
+	  prefixes.forEach(function(prefix) {
+	    isUnitlessNumber[prefixKey(prefix, prop)] = isUnitlessNumber[prop];
+	  });
+	});
+
+	/**
+	 * Most style properties can be unset by doing .style[prop] = '' but IE8
+	 * doesn't like doing that with shorthand properties so for the properties that
+	 * IE8 breaks on, which are listed here, we instead unset each of the
+	 * individual properties. See http://bugs.jquery.com/ticket/12385.
+	 * The 4-value 'clock' properties like margin, padding, border-width seem to
+	 * behave without any problems. Curiously, list-style works too without any
+	 * special prodding.
+	 */
+	var shorthandPropertyExpansions = {
+	  background: {
+	    backgroundImage: true,
+	    backgroundPosition: true,
+	    backgroundRepeat: true,
+	    backgroundColor: true
+	  },
+	  border: {
+	    borderWidth: true,
+	    borderStyle: true,
+	    borderColor: true
+	  },
+	  borderBottom: {
+	    borderBottomWidth: true,
+	    borderBottomStyle: true,
+	    borderBottomColor: true
+	  },
+	  borderLeft: {
+	    borderLeftWidth: true,
+	    borderLeftStyle: true,
+	    borderLeftColor: true
+	  },
+	  borderRight: {
+	    borderRightWidth: true,
+	    borderRightStyle: true,
+	    borderRightColor: true
+	  },
+	  borderTop: {
+	    borderTopWidth: true,
+	    borderTopStyle: true,
+	    borderTopColor: true
+	  },
+	  font: {
+	    fontStyle: true,
+	    fontVariant: true,
+	    fontWeight: true,
+	    fontSize: true,
+	    lineHeight: true,
+	    fontFamily: true
+	  }
+	};
+
+	var CSSProperty = {
+	  isUnitlessNumber: isUnitlessNumber,
+	  shorthandPropertyExpansions: shorthandPropertyExpansions
+	};
+
+	module.exports = CSSProperty;
+
+
+/***/ },
+/* 169 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2014, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule camelizeStyleName
+	 * @typechecks
+	 */
+
+	"use strict";
+
+	var camelize = __webpack_require__(208);
+
+	var msPattern = /^-ms-/;
+
+	/**
+	 * Camelcases a hyphenated CSS property name, for example:
+	 *
+	 *   > camelizeStyleName('background-color')
+	 *   < "backgroundColor"
+	 *   > camelizeStyleName('-moz-transition')
+	 *   < "MozTransition"
+	 *   > camelizeStyleName('-ms-transition')
+	 *   < "msTransition"
+	 *
+	 * As Andi Smith suggests
+	 * (http://www.andismith.com/blog/2012/02/modernizr-prefixed/), an `-ms` prefix
+	 * is converted to lowercase `ms`.
+	 *
+	 * @param {string} string
+	 * @return {string}
+	 */
+	function camelizeStyleName(string) {
+	  return camelize(string.replace(msPattern, 'ms-'));
+	}
+
+	module.exports = camelizeStyleName;
+
+
+/***/ },
+/* 170 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2014, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule dangerousStyleValue
+	 * @typechecks static-only
+	 */
+
+	"use strict";
+
+	var CSSProperty = __webpack_require__(168);
+
+	var isUnitlessNumber = CSSProperty.isUnitlessNumber;
+
+	/**
+	 * Convert a value into the proper css writable value. The style name `name`
+	 * should be logical (no hyphens), as specified
+	 * in `CSSProperty.isUnitlessNumber`.
+	 *
+	 * @param {string} name CSS property name such as `topMargin`.
+	 * @param {*} value CSS property value such as `10px`.
+	 * @return {string} Normalized style value with dimensions applied.
+	 */
+	function dangerousStyleValue(name, value) {
+	  // Note that we've removed escapeTextForBrowser() calls here since the
+	  // whole string will be escaped when the attribute is injected into
+	  // the markup. If you provide unsafe user data here they can inject
+	  // arbitrary CSS which may be problematic (I couldn't repro this):
+	  // https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet
+	  // http://www.thespanner.co.uk/2007/11/26/ultimate-xss-css-injection/
+	  // This is not an XSS hole but instead a potential CSS injection issue
+	  // which has lead to a greater discussion about how we're going to
+	  // trust URLs moving forward. See #2115901
+
+	  var isEmpty = value == null || typeof value === 'boolean' || value === '';
+	  if (isEmpty) {
+	    return '';
+	  }
+
+	  var isNonNumeric = isNaN(value);
+	  if (isNonNumeric || value === 0 ||
+	      isUnitlessNumber.hasOwnProperty(name) && isUnitlessNumber[name]) {
+	    return '' + value; // cast to string
+	  }
+
+	  if (typeof value === 'string') {
+	    value = value.trim();
+	  }
+	  return value + 'px';
+	}
+
+	module.exports = dangerousStyleValue;
+
+
+/***/ },
+/* 171 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2014, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule hyphenateStyleName
+	 * @typechecks
+	 */
+
+	"use strict";
+
+	var hyphenate = __webpack_require__(209);
+
+	var msPattern = /^ms-/;
+
+	/**
+	 * Hyphenates a camelcased CSS property name, for example:
+	 *
+	 *   > hyphenateStyleName('backgroundColor')
+	 *   < "background-color"
+	 *   > hyphenateStyleName('MozTransition')
+	 *   < "-moz-transition"
+	 *   > hyphenateStyleName('msTransition')
+	 *   < "-ms-transition"
+	 *
+	 * As Modernizr suggests (http://modernizr.com/docs/#prefixed), an `ms` prefix
+	 * is converted to `-ms-`.
+	 *
+	 * @param {string} string
+	 * @return {string}
+	 */
+	function hyphenateStyleName(string) {
+	  return hyphenate(string).replace(msPattern, '-ms-');
+	}
+
+	module.exports = hyphenateStyleName;
+
+
+/***/ },
+/* 172 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {/**
+	 * Copyright 2013-2014, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule EventPluginHub
+	 */
+
+	"use strict";
+
+	var EventPluginRegistry = __webpack_require__(173);
+	var EventPluginUtils = __webpack_require__(37);
+
+	var accumulateInto = __webpack_require__(210);
+	var forEachAccumulated = __webpack_require__(211);
+	var invariant = __webpack_require__(103);
+
+	/**
+	 * Internal store for event listeners
+	 */
+	var listenerBank = {};
+
+	/**
+	 * Internal queue of events that have accumulated their dispatches and are
+	 * waiting to have their dispatches executed.
+	 */
+	var eventQueue = null;
+
+	/**
+	 * Dispatches an event and releases it back into the pool, unless persistent.
+	 *
+	 * @param {?object} event Synthetic event to be dispatched.
+	 * @private
+	 */
+	var executeDispatchesAndRelease = function(event) {
+	  if (event) {
+	    var executeDispatch = EventPluginUtils.executeDispatch;
+	    // Plugins can provide custom behavior when dispatching events.
+	    var PluginModule = EventPluginRegistry.getPluginModuleForEvent(event);
+	    if (PluginModule && PluginModule.executeDispatch) {
+	      executeDispatch = PluginModule.executeDispatch;
+	    }
+	    EventPluginUtils.executeDispatchesInOrder(event, executeDispatch);
+
+	    if (!event.isPersistent()) {
+	      event.constructor.release(event);
+	    }
+	  }
+	};
+
+	/**
+	 * - `InstanceHandle`: [required] Module that performs logical traversals of DOM
+	 *   hierarchy given ids of the logical DOM elements involved.
+	 */
+	var InstanceHandle = null;
+
+	function validateInstanceHandle() {
+	  var invalid = !InstanceHandle||
+	    !InstanceHandle.traverseTwoPhase ||
+	    !InstanceHandle.traverseEnterLeave;
+	  if (invalid) {
+	    throw new Error('InstanceHandle not injected before use!');
+	  }
+	}
+
+	/**
+	 * This is a unified interface for event plugins to be installed and configured.
+	 *
+	 * Event plugins can implement the following properties:
+	 *
+	 *   `extractEvents` {function(string, DOMEventTarget, string, object): *}
+	 *     Required. When a top-level event is fired, this method is expected to
+	 *     extract synthetic events that will in turn be queued and dispatched.
+	 *
+	 *   `eventTypes` {object}
+	 *     Optional, plugins that fire events must publish a mapping of registration
+	 *     names that are used to register listeners. Values of this mapping must
+	 *     be objects that contain `registrationName` or `phasedRegistrationNames`.
+	 *
+	 *   `executeDispatch` {function(object, function, string)}
+	 *     Optional, allows plugins to override how an event gets dispatched. By
+	 *     default, the listener is simply invoked.
+	 *
+	 * Each plugin that is injected into `EventsPluginHub` is immediately operable.
+	 *
+	 * @public
+	 */
+	var EventPluginHub = {
+
+	  /**
+	   * Methods for injecting dependencies.
+	   */
+	  injection: {
+
+	    /**
+	     * @param {object} InjectedMount
+	     * @public
+	     */
+	    injectMount: EventPluginUtils.injection.injectMount,
+
+	    /**
+	     * @param {object} InjectedInstanceHandle
+	     * @public
+	     */
+	    injectInstanceHandle: function(InjectedInstanceHandle) {
+	      InstanceHandle = InjectedInstanceHandle;
+	      if ("production" !== process.env.NODE_ENV) {
+	        validateInstanceHandle();
+	      }
+	    },
+
+	    getInstanceHandle: function() {
+	      if ("production" !== process.env.NODE_ENV) {
+	        validateInstanceHandle();
+	      }
+	      return InstanceHandle;
+	    },
+
+	    /**
+	     * @param {array} InjectedEventPluginOrder
+	     * @public
+	     */
+	    injectEventPluginOrder: EventPluginRegistry.injectEventPluginOrder,
+
+	    /**
+	     * @param {object} injectedNamesToPlugins Map from names to plugin modules.
+	     */
+	    injectEventPluginsByName: EventPluginRegistry.injectEventPluginsByName
+
+	  },
+
+	  eventNameDispatchConfigs: EventPluginRegistry.eventNameDispatchConfigs,
+
+	  registrationNameModules: EventPluginRegistry.registrationNameModules,
+
+	  /**
+	   * Stores `listener` at `listenerBank[registrationName][id]`. Is idempotent.
+	   *
+	   * @param {string} id ID of the DOM element.
+	   * @param {string} registrationName Name of listener (e.g. `onClick`).
+	   * @param {?function} listener The callback to store.
+	   */
+	  putListener: function(id, registrationName, listener) {
+	    ("production" !== process.env.NODE_ENV ? invariant(
+	      !listener || typeof listener === 'function',
+	      'Expected %s listener to be a function, instead got type %s',
+	      registrationName, typeof listener
+	    ) : invariant(!listener || typeof listener === 'function'));
+
+	    var bankForRegistrationName =
+	      listenerBank[registrationName] || (listenerBank[registrationName] = {});
+	    bankForRegistrationName[id] = listener;
+	  },
+
+	  /**
+	   * @param {string} id ID of the DOM element.
+	   * @param {string} registrationName Name of listener (e.g. `onClick`).
+	   * @return {?function} The stored callback.
+	   */
+	  getListener: function(id, registrationName) {
+	    var bankForRegistrationName = listenerBank[registrationName];
+	    return bankForRegistrationName && bankForRegistrationName[id];
+	  },
+
+	  /**
+	   * Deletes a listener from the registration bank.
+	   *
+	   * @param {string} id ID of the DOM element.
+	   * @param {string} registrationName Name of listener (e.g. `onClick`).
+	   */
+	  deleteListener: function(id, registrationName) {
+	    var bankForRegistrationName = listenerBank[registrationName];
+	    if (bankForRegistrationName) {
+	      delete bankForRegistrationName[id];
+	    }
+	  },
+
+	  /**
+	   * Deletes all listeners for the DOM element with the supplied ID.
+	   *
+	   * @param {string} id ID of the DOM element.
+	   */
+	  deleteAllListeners: function(id) {
+	    for (var registrationName in listenerBank) {
+	      delete listenerBank[registrationName][id];
+	    }
+	  },
+
+	  /**
+	   * Allows registered plugins an opportunity to extract events from top-level
+	   * native browser events.
+	   *
+	   * @param {string} topLevelType Record from `EventConstants`.
+	   * @param {DOMEventTarget} topLevelTarget The listening component root node.
+	   * @param {string} topLevelTargetID ID of `topLevelTarget`.
+	   * @param {object} nativeEvent Native browser event.
+	   * @return {*} An accumulation of synthetic events.
+	   * @internal
+	   */
+	  extractEvents: function(
+	      topLevelType,
+	      topLevelTarget,
+	      topLevelTargetID,
+	      nativeEvent) {
+	    var events;
+	    var plugins = EventPluginRegistry.plugins;
+	    for (var i = 0, l = plugins.length; i < l; i++) {
+	      // Not every plugin in the ordering may be loaded at runtime.
+	      var possiblePlugin = plugins[i];
+	      if (possiblePlugin) {
+	        var extractedEvents = possiblePlugin.extractEvents(
+	          topLevelType,
+	          topLevelTarget,
+	          topLevelTargetID,
+	          nativeEvent
+	        );
+	        if (extractedEvents) {
+	          events = accumulateInto(events, extractedEvents);
+	        }
+	      }
+	    }
+	    return events;
+	  },
+
+	  /**
+	   * Enqueues a synthetic event that should be dispatched when
+	   * `processEventQueue` is invoked.
+	   *
+	   * @param {*} events An accumulation of synthetic events.
+	   * @internal
+	   */
+	  enqueueEvents: function(events) {
+	    if (events) {
+	      eventQueue = accumulateInto(eventQueue, events);
+	    }
+	  },
+
+	  /**
+	   * Dispatches all synthetic events on the event queue.
+	   *
+	   * @internal
+	   */
+	  processEventQueue: function() {
+	    // Set `eventQueue` to null before processing it so that we can tell if more
+	    // events get enqueued while processing.
+	    var processingEventQueue = eventQueue;
+	    eventQueue = null;
+	    forEachAccumulated(processingEventQueue, executeDispatchesAndRelease);
+	    ("production" !== process.env.NODE_ENV ? invariant(
+	      !eventQueue,
+	      'processEventQueue(): Additional events were enqueued while processing ' +
+	      'an event queue. Support for this has not yet been implemented.'
+	    ) : invariant(!eventQueue));
+	  },
+
+	  /**
+	   * These are needed for tests only. Do not use!
+	   */
+	  __purge: function() {
+	    listenerBank = {};
+	  },
+
+	  __getListenerBank: function() {
+	    return listenerBank;
+	  }
+
+	};
+
+	module.exports = EventPluginHub;
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(97)))
+
+/***/ },
+/* 173 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {/**
+	 * Copyright 2013-2014, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule EventPluginRegistry
+	 * @typechecks static-only
+	 */
+
+	"use strict";
+
+	var invariant = __webpack_require__(103);
+
+	/**
+	 * Injectable ordering of event plugins.
+	 */
+	var EventPluginOrder = null;
+
+	/**
+	 * Injectable mapping from names to event plugin modules.
+	 */
+	var namesToPlugins = {};
+
+	/**
+	 * Recomputes the plugin list using the injected plugins and plugin ordering.
+	 *
+	 * @private
+	 */
+	function recomputePluginOrdering() {
+	  if (!EventPluginOrder) {
+	    // Wait until an `EventPluginOrder` is injected.
+	    return;
+	  }
+	  for (var pluginName in namesToPlugins) {
+	    var PluginModule = namesToPlugins[pluginName];
+	    var pluginIndex = EventPluginOrder.indexOf(pluginName);
+	    ("production" !== process.env.NODE_ENV ? invariant(
+	      pluginIndex > -1,
+	      'EventPluginRegistry: Cannot inject event plugins that do not exist in ' +
+	      'the plugin ordering, `%s`.',
+	      pluginName
+	    ) : invariant(pluginIndex > -1));
+	    if (EventPluginRegistry.plugins[pluginIndex]) {
+	      continue;
+	    }
+	    ("production" !== process.env.NODE_ENV ? invariant(
+	      PluginModule.extractEvents,
+	      'EventPluginRegistry: Event plugins must implement an `extractEvents` ' +
+	      'method, but `%s` does not.',
+	      pluginName
+	    ) : invariant(PluginModule.extractEvents));
+	    EventPluginRegistry.plugins[pluginIndex] = PluginModule;
+	    var publishedEvents = PluginModule.eventTypes;
+	    for (var eventName in publishedEvents) {
+	      ("production" !== process.env.NODE_ENV ? invariant(
+	        publishEventForPlugin(
+	          publishedEvents[eventName],
+	          PluginModule,
+	          eventName
+	        ),
+	        'EventPluginRegistry: Failed to publish event `%s` for plugin `%s`.',
+	        eventName,
+	        pluginName
+	      ) : invariant(publishEventForPlugin(
+	        publishedEvents[eventName],
+	        PluginModule,
+	        eventName
+	      )));
+	    }
+	  }
+	}
+
+	/**
+	 * Publishes an event so that it can be dispatched by the supplied plugin.
+	 *
+	 * @param {object} dispatchConfig Dispatch configuration for the event.
+	 * @param {object} PluginModule Plugin publishing the event.
+	 * @return {boolean} True if the event was successfully published.
+	 * @private
+	 */
+	function publishEventForPlugin(dispatchConfig, PluginModule, eventName) {
+	  ("production" !== process.env.NODE_ENV ? invariant(
+	    !EventPluginRegistry.eventNameDispatchConfigs.hasOwnProperty(eventName),
+	    'EventPluginHub: More than one plugin attempted to publish the same ' +
+	    'event name, `%s`.',
+	    eventName
+	  ) : invariant(!EventPluginRegistry.eventNameDispatchConfigs.hasOwnProperty(eventName)));
+	  EventPluginRegistry.eventNameDispatchConfigs[eventName] = dispatchConfig;
+
+	  var phasedRegistrationNames = dispatchConfig.phasedRegistrationNames;
+	  if (phasedRegistrationNames) {
+	    for (var phaseName in phasedRegistrationNames) {
+	      if (phasedRegistrationNames.hasOwnProperty(phaseName)) {
+	        var phasedRegistrationName = phasedRegistrationNames[phaseName];
+	        publishRegistrationName(
+	          phasedRegistrationName,
+	          PluginModule,
+	          eventName
+	        );
+	      }
+	    }
+	    return true;
+	  } else if (dispatchConfig.registrationName) {
+	    publishRegistrationName(
+	      dispatchConfig.registrationName,
+	      PluginModule,
+	      eventName
+	    );
+	    return true;
+	  }
+	  return false;
+	}
+
+	/**
+	 * Publishes a registration name that is used to identify dispatched events and
+	 * can be used with `EventPluginHub.putListener` to register listeners.
+	 *
+	 * @param {string} registrationName Registration name to add.
+	 * @param {object} PluginModule Plugin publishing the event.
+	 * @private
+	 */
+	function publishRegistrationName(registrationName, PluginModule, eventName) {
+	  ("production" !== process.env.NODE_ENV ? invariant(
+	    !EventPluginRegistry.registrationNameModules[registrationName],
+	    'EventPluginHub: More than one plugin attempted to publish the same ' +
+	    'registration name, `%s`.',
+	    registrationName
+	  ) : invariant(!EventPluginRegistry.registrationNameModules[registrationName]));
+	  EventPluginRegistry.registrationNameModules[registrationName] = PluginModule;
+	  EventPluginRegistry.registrationNameDependencies[registrationName] =
+	    PluginModule.eventTypes[eventName].dependencies;
+	}
+
+	/**
+	 * Registers plugins so that they can extract and dispatch events.
+	 *
+	 * @see {EventPluginHub}
+	 */
+	var EventPluginRegistry = {
+
+	  /**
+	   * Ordered list of injected plugins.
+	   */
+	  plugins: [],
+
+	  /**
+	   * Mapping from event name to dispatch config
+	   */
+	  eventNameDispatchConfigs: {},
+
+	  /**
+	   * Mapping from registration name to plugin module
+	   */
+	  registrationNameModules: {},
+
+	  /**
+	   * Mapping from registration name to event name
+	   */
+	  registrationNameDependencies: {},
+
+	  /**
+	   * Injects an ordering of plugins (by plugin name). This allows the ordering
+	   * to be decoupled from injection of the actual plugins so that ordering is
+	   * always deterministic regardless of packaging, on-the-fly injection, etc.
+	   *
+	   * @param {array} InjectedEventPluginOrder
+	   * @internal
+	   * @see {EventPluginHub.injection.injectEventPluginOrder}
+	   */
+	  injectEventPluginOrder: function(InjectedEventPluginOrder) {
+	    ("production" !== process.env.NODE_ENV ? invariant(
+	      !EventPluginOrder,
+	      'EventPluginRegistry: Cannot inject event plugin ordering more than ' +
+	      'once. You are likely trying to load more than one copy of React.'
+	    ) : invariant(!EventPluginOrder));
+	    // Clone the ordering so it cannot be dynamically mutated.
+	    EventPluginOrder = Array.prototype.slice.call(InjectedEventPluginOrder);
+	    recomputePluginOrdering();
+	  },
+
+	  /**
+	   * Injects plugins to be used by `EventPluginHub`. The plugin names must be
+	   * in the ordering injected by `injectEventPluginOrder`.
+	   *
+	   * Plugins can be injected as part of page initialization or on-the-fly.
+	   *
+	   * @param {object} injectedNamesToPlugins Map from names to plugin modules.
+	   * @internal
+	   * @see {EventPluginHub.injection.injectEventPluginsByName}
+	   */
+	  injectEventPluginsByName: function(injectedNamesToPlugins) {
+	    var isOrderingDirty = false;
+	    for (var pluginName in injectedNamesToPlugins) {
+	      if (!injectedNamesToPlugins.hasOwnProperty(pluginName)) {
+	        continue;
+	      }
+	      var PluginModule = injectedNamesToPlugins[pluginName];
+	      if (!namesToPlugins.hasOwnProperty(pluginName) ||
+	          namesToPlugins[pluginName] !== PluginModule) {
+	        ("production" !== process.env.NODE_ENV ? invariant(
+	          !namesToPlugins[pluginName],
+	          'EventPluginRegistry: Cannot inject two different event plugins ' +
+	          'using the same name, `%s`.',
+	          pluginName
+	        ) : invariant(!namesToPlugins[pluginName]));
+	        namesToPlugins[pluginName] = PluginModule;
+	        isOrderingDirty = true;
+	      }
+	    }
+	    if (isOrderingDirty) {
+	      recomputePluginOrdering();
+	    }
+	  },
+
+	  /**
+	   * Looks up the plugin for the supplied event.
+	   *
+	   * @param {object} event A synthetic event.
+	   * @return {?object} The plugin that created the supplied event.
+	   * @internal
+	   */
+	  getPluginModuleForEvent: function(event) {
+	    var dispatchConfig = event.dispatchConfig;
+	    if (dispatchConfig.registrationName) {
+	      return EventPluginRegistry.registrationNameModules[
+	        dispatchConfig.registrationName
+	      ] || null;
+	    }
+	    for (var phase in dispatchConfig.phasedRegistrationNames) {
+	      if (!dispatchConfig.phasedRegistrationNames.hasOwnProperty(phase)) {
+	        continue;
+	      }
+	      var PluginModule = EventPluginRegistry.registrationNameModules[
+	        dispatchConfig.phasedRegistrationNames[phase]
+	      ];
+	      if (PluginModule) {
+	        return PluginModule;
+	      }
+	    }
+	    return null;
+	  },
+
+	  /**
+	   * Exposed for unit testing.
+	   * @private
+	   */
+	  _resetEventPlugins: function() {
+	    EventPluginOrder = null;
+	    for (var pluginName in namesToPlugins) {
+	      if (namesToPlugins.hasOwnProperty(pluginName)) {
+	        delete namesToPlugins[pluginName];
+	      }
+	    }
+	    EventPluginRegistry.plugins.length = 0;
+
+	    var eventNameDispatchConfigs = EventPluginRegistry.eventNameDispatchConfigs;
+	    for (var eventName in eventNameDispatchConfigs) {
+	      if (eventNameDispatchConfigs.hasOwnProperty(eventName)) {
+	        delete eventNameDispatchConfigs[eventName];
+	      }
+	    }
+
+	    var registrationNameModules = EventPluginRegistry.registrationNameModules;
+	    for (var registrationName in registrationNameModules) {
+	      if (registrationNameModules.hasOwnProperty(registrationName)) {
+	        delete registrationNameModules[registrationName];
+	      }
+	    }
+	  }
+
+	};
+
+	module.exports = EventPluginRegistry;
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(97)))
+
+/***/ },
+/* 174 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2014, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule ReactEventEmitterMixin
+	 */
+
+	"use strict";
+
+	var EventPluginHub = __webpack_require__(172);
+
+	function runEventQueueInBatch(events) {
+	  EventPluginHub.enqueueEvents(events);
+	  EventPluginHub.processEventQueue();
+	}
+
+	var ReactEventEmitterMixin = {
+
+	  /**
+	   * Streams a fired top-level event to `EventPluginHub` where plugins have the
+	   * opportunity to create `ReactEvent`s to be dispatched.
+	   *
+	   * @param {string} topLevelType Record from `EventConstants`.
+	   * @param {object} topLevelTarget The listening component root node.
+	   * @param {string} topLevelTargetID ID of `topLevelTarget`.
+	   * @param {object} nativeEvent Native environment event.
+	   */
+	  handleTopLevel: function(
+	      topLevelType,
+	      topLevelTarget,
+	      topLevelTargetID,
+	      nativeEvent) {
+	    var events = EventPluginHub.extractEvents(
+	      topLevelType,
+	      topLevelTarget,
+	      topLevelTargetID,
+	      nativeEvent
+	    );
+
+	    runEventQueueInBatch(events);
+	  }
+	};
+
+	module.exports = ReactEventEmitterMixin;
+
+
+/***/ },
+/* 175 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2014, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule ViewportMetrics
+	 */
+
+	"use strict";
+
+	var getUnboundedScrollPosition = __webpack_require__(192);
+
+	var ViewportMetrics = {
+
+	  currentScrollLeft: 0,
+
+	  currentScrollTop: 0,
+
+	  refreshScrollValues: function() {
+	    var scrollPosition = getUnboundedScrollPosition(window);
+	    ViewportMetrics.currentScrollLeft = scrollPosition.x;
+	    ViewportMetrics.currentScrollTop = scrollPosition.y;
+	  }
+
+	};
+
+	module.exports = ViewportMetrics;
+
+
+/***/ },
+/* 176 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {/**
+	 * Copyright 2013-2014, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule EventPropagators
+	 */
+
+	"use strict";
+
+	var EventConstants = __webpack_require__(102);
+	var EventPluginHub = __webpack_require__(172);
+
+	var accumulateInto = __webpack_require__(210);
+	var forEachAccumulated = __webpack_require__(211);
+
+	var PropagationPhases = EventConstants.PropagationPhases;
+	var getListener = EventPluginHub.getListener;
+
+	/**
+	 * Some event types have a notion of different registration names for different
+	 * "phases" of propagation. This finds listeners by a given phase.
+	 */
+	function listenerAtPhase(id, event, propagationPhase) {
+	  var registrationName =
+	    event.dispatchConfig.phasedRegistrationNames[propagationPhase];
+	  return getListener(id, registrationName);
+	}
+
+	/**
+	 * Tags a `SyntheticEvent` with dispatched listeners. Creating this function
+	 * here, allows us to not have to bind or create functions for each event.
+	 * Mutating the event's members allows us to not have to create a wrapping
+	 * "dispatch" object that pairs the event with the listener.
+	 */
+	function accumulateDirectionalDispatches(domID, upwards, event) {
+	  if ("production" !== process.env.NODE_ENV) {
+	    if (!domID) {
+	      throw new Error('Dispatching id must not be null');
+	    }
+	  }
+	  var phase = upwards ? PropagationPhases.bubbled : PropagationPhases.captured;
+	  var listener = listenerAtPhase(domID, event, phase);
+	  if (listener) {
+	    event._dispatchListeners =
+	      accumulateInto(event._dispatchListeners, listener);
+	    event._dispatchIDs = accumulateInto(event._dispatchIDs, domID);
+	  }
+	}
+
+	/**
+	 * Collect dispatches (must be entirely collected before dispatching - see unit
+	 * tests). Lazily allocate the array to conserve memory.  We must loop through
+	 * each event and perform the traversal for each one. We can not perform a
+	 * single traversal for the entire collection of events because each event may
+	 * have a different target.
+	 */
+	function accumulateTwoPhaseDispatchesSingle(event) {
+	  if (event && event.dispatchConfig.phasedRegistrationNames) {
+	    EventPluginHub.injection.getInstanceHandle().traverseTwoPhase(
+	      event.dispatchMarker,
+	      accumulateDirectionalDispatches,
+	      event
+	    );
+	  }
+	}
+
+
+	/**
+	 * Accumulates without regard to direction, does not look for phased
+	 * registration names. Same as `accumulateDirectDispatchesSingle` but without
+	 * requiring that the `dispatchMarker` be the same as the dispatched ID.
+	 */
+	function accumulateDispatches(id, ignoredDirection, event) {
+	  if (event && event.dispatchConfig.registrationName) {
+	    var registrationName = event.dispatchConfig.registrationName;
+	    var listener = getListener(id, registrationName);
+	    if (listener) {
+	      event._dispatchListeners =
+	        accumulateInto(event._dispatchListeners, listener);
+	      event._dispatchIDs = accumulateInto(event._dispatchIDs, id);
+	    }
+	  }
+	}
+
+	/**
+	 * Accumulates dispatches on an `SyntheticEvent`, but only for the
+	 * `dispatchMarker`.
+	 * @param {SyntheticEvent} event
+	 */
+	function accumulateDirectDispatchesSingle(event) {
+	  if (event && event.dispatchConfig.registrationName) {
+	    accumulateDispatches(event.dispatchMarker, null, event);
+	  }
+	}
+
+	function accumulateTwoPhaseDispatches(events) {
+	  forEachAccumulated(events, accumulateTwoPhaseDispatchesSingle);
+	}
+
+	function accumulateEnterLeaveDispatches(leave, enter, fromID, toID) {
+	  EventPluginHub.injection.getInstanceHandle().traverseEnterLeave(
+	    fromID,
+	    toID,
+	    accumulateDispatches,
+	    leave,
+	    enter
+	  );
+	}
+
+
+	function accumulateDirectDispatches(events) {
+	  forEachAccumulated(events, accumulateDirectDispatchesSingle);
+	}
+
+
+
+	/**
+	 * A small set of propagation patterns, each of which will accept a small amount
+	 * of information, and generate a set of "dispatch ready event objects" - which
+	 * are sets of events that have already been annotated with a set of dispatched
+	 * listener functions/ids. The API is designed this way to discourage these
+	 * propagation strategies from actually executing the dispatches, since we
+	 * always want to collect the entire set of dispatches before executing event a
+	 * single one.
+	 *
+	 * @constructor EventPropagators
+	 */
+	var EventPropagators = {
+	  accumulateTwoPhaseDispatches: accumulateTwoPhaseDispatches,
+	  accumulateDirectDispatches: accumulateDirectDispatches,
+	  accumulateEnterLeaveDispatches: accumulateEnterLeaveDispatches
+	};
+
+	module.exports = EventPropagators;
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(97)))
+
+/***/ },
+/* 177 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013 Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule SyntheticInputEvent
+	 * @typechecks static-only
+	 */
+
+	"use strict";
+
+	var SyntheticEvent = __webpack_require__(178);
+
+	/**
+	 * @interface Event
+	 * @see http://www.w3.org/TR/2013/WD-DOM-Level-3-Events-20131105
+	 *      /#events-inputevents
+	 */
+	var InputEventInterface = {
+	  data: null
+	};
+
+	/**
+	 * @param {object} dispatchConfig Configuration used to dispatch this event.
+	 * @param {string} dispatchMarker Marker identifying the event target.
+	 * @param {object} nativeEvent Native browser event.
+	 * @extends {SyntheticUIEvent}
+	 */
+	function SyntheticInputEvent(
+	  dispatchConfig,
+	  dispatchMarker,
+	  nativeEvent) {
+	  SyntheticEvent.call(this, dispatchConfig, dispatchMarker, nativeEvent);
+	}
+
+	SyntheticEvent.augmentClass(
+	  SyntheticInputEvent,
+	  InputEventInterface
+	);
+
+	module.exports = SyntheticInputEvent;
+
+
+
+/***/ },
+/* 178 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2014, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule SyntheticEvent
+	 * @typechecks static-only
+	 */
+
+	"use strict";
+
+	var PooledClass = __webpack_require__(104);
+
+	var assign = __webpack_require__(56);
+	var emptyFunction = __webpack_require__(153);
+	var getEventTarget = __webpack_require__(191);
+
+	/**
+	 * @interface Event
+	 * @see http://www.w3.org/TR/DOM-Level-3-Events/
+	 */
+	var EventInterface = {
+	  type: null,
+	  target: getEventTarget,
+	  // currentTarget is set when dispatching; no use in copying it here
+	  currentTarget: emptyFunction.thatReturnsNull,
+	  eventPhase: null,
+	  bubbles: null,
+	  cancelable: null,
+	  timeStamp: function(event) {
+	    return event.timeStamp || Date.now();
+	  },
+	  defaultPrevented: null,
+	  isTrusted: null
+	};
+
+	/**
+	 * Synthetic events are dispatched by event plugins, typically in response to a
+	 * top-level event delegation handler.
+	 *
+	 * These systems should generally use pooling to reduce the frequency of garbage
+	 * collection. The system should check `isPersistent` to determine whether the
+	 * event should be released into the pool after being dispatched. Users that
+	 * need a persisted event should invoke `persist`.
+	 *
+	 * Synthetic events (and subclasses) implement the DOM Level 3 Events API by
+	 * normalizing browser quirks. Subclasses do not necessarily have to implement a
+	 * DOM interface; custom application-specific events can also subclass this.
+	 *
+	 * @param {object} dispatchConfig Configuration used to dispatch this event.
+	 * @param {string} dispatchMarker Marker identifying the event target.
+	 * @param {object} nativeEvent Native browser event.
+	 */
+	function SyntheticEvent(dispatchConfig, dispatchMarker, nativeEvent) {
+	  this.dispatchConfig = dispatchConfig;
+	  this.dispatchMarker = dispatchMarker;
+	  this.nativeEvent = nativeEvent;
+
+	  var Interface = this.constructor.Interface;
+	  for (var propName in Interface) {
+	    if (!Interface.hasOwnProperty(propName)) {
+	      continue;
+	    }
+	    var normalize = Interface[propName];
+	    if (normalize) {
+	      this[propName] = normalize(nativeEvent);
+	    } else {
+	      this[propName] = nativeEvent[propName];
+	    }
+	  }
+
+	  var defaultPrevented = nativeEvent.defaultPrevented != null ?
+	    nativeEvent.defaultPrevented :
+	    nativeEvent.returnValue === false;
+	  if (defaultPrevented) {
+	    this.isDefaultPrevented = emptyFunction.thatReturnsTrue;
+	  } else {
+	    this.isDefaultPrevented = emptyFunction.thatReturnsFalse;
+	  }
+	  this.isPropagationStopped = emptyFunction.thatReturnsFalse;
+	}
+
+	assign(SyntheticEvent.prototype, {
+
+	  preventDefault: function() {
+	    this.defaultPrevented = true;
+	    var event = this.nativeEvent;
+	    event.preventDefault ? event.preventDefault() : event.returnValue = false;
+	    this.isDefaultPrevented = emptyFunction.thatReturnsTrue;
+	  },
+
+	  stopPropagation: function() {
+	    var event = this.nativeEvent;
+	    event.stopPropagation ? event.stopPropagation() : event.cancelBubble = true;
+	    this.isPropagationStopped = emptyFunction.thatReturnsTrue;
+	  },
+
+	  /**
+	   * We release all dispatched `SyntheticEvent`s after each event loop, adding
+	   * them back into the pool. This allows a way to hold onto a reference that
+	   * won't be added back into the pool.
+	   */
+	  persist: function() {
+	    this.isPersistent = emptyFunction.thatReturnsTrue;
+	  },
+
+	  /**
+	   * Checks if this event should be released back into the pool.
+	   *
+	   * @return {boolean} True if this should not be released, false otherwise.
+	   */
+	  isPersistent: emptyFunction.thatReturnsFalse,
+
+	  /**
+	   * `PooledClass` looks for `destructor` on each instance it releases.
+	   */
+	  destructor: function() {
+	    var Interface = this.constructor.Interface;
+	    for (var propName in Interface) {
+	      this[propName] = null;
+	    }
+	    this.dispatchConfig = null;
+	    this.dispatchMarker = null;
+	    this.nativeEvent = null;
+	  }
+
+	});
+
+	SyntheticEvent.Interface = EventInterface;
+
+	/**
+	 * Helper to reduce boilerplate when creating subclasses.
+	 *
+	 * @param {function} Class
+	 * @param {?object} Interface
+	 */
+	SyntheticEvent.augmentClass = function(Class, Interface) {
+	  var Super = this;
+
+	  var prototype = Object.create(Super.prototype);
+	  assign(prototype, Class.prototype);
+	  Class.prototype = prototype;
+	  Class.prototype.constructor = Class;
+
+	  Class.Interface = assign({}, Super.Interface, Interface);
+	  Class.augmentClass = Super.augmentClass;
+
+	  PooledClass.addPoolingTo(Class, PooledClass.threeArgumentPooler);
+	};
+
+	PooledClass.addPoolingTo(SyntheticEvent, PooledClass.threeArgumentPooler);
+
+	module.exports = SyntheticEvent;
+
+
+/***/ },
+/* 179 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2014, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule isTextInputElement
+	 */
+
+	"use strict";
+
+	/**
+	 * @see http://www.whatwg.org/specs/web-apps/current-work/multipage/the-input-element.html#input-type-attr-summary
+	 */
+	var supportedInputTypes = {
+	  'color': true,
+	  'date': true,
+	  'datetime': true,
+	  'datetime-local': true,
+	  'email': true,
+	  'month': true,
+	  'number': true,
+	  'password': true,
+	  'range': true,
+	  'search': true,
+	  'tel': true,
+	  'text': true,
+	  'time': true,
+	  'url': true,
+	  'week': true
+	};
+
+	function isTextInputElement(elem) {
+	  return elem && (
+	    (elem.nodeName === 'INPUT' && supportedInputTypes[elem.type]) ||
+	    elem.nodeName === 'TEXTAREA'
+	  );
+	}
+
+	module.exports = isTextInputElement;
+
+
+/***/ },
+/* 180 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2014, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule ReactInputSelection
+	 */
+
+	"use strict";
+
+	var ReactDOMSelection = __webpack_require__(212);
+
+	var containsNode = __webpack_require__(149);
+	var focusNode = __webpack_require__(213);
+	var getActiveElement = __webpack_require__(193);
+
+	function isInDocument(node) {
+	  return containsNode(document.documentElement, node);
+	}
+
+	/**
+	 * @ReactInputSelection: React input selection module. Based on Selection.js,
+	 * but modified to be suitable for react and has a couple of bug fixes (doesn't
+	 * assume buttons have range selections allowed).
+	 * Input selection module for React.
+	 */
+	var ReactInputSelection = {
+
+	  hasSelectionCapabilities: function(elem) {
+	    return elem && (
+	      (elem.nodeName === 'INPUT' && elem.type === 'text') ||
+	      elem.nodeName === 'TEXTAREA' ||
+	      elem.contentEditable === 'true'
+	    );
+	  },
+
+	  getSelectionInformation: function() {
+	    var focusedElem = getActiveElement();
+	    return {
+	      focusedElem: focusedElem,
+	      selectionRange:
+	          ReactInputSelection.hasSelectionCapabilities(focusedElem) ?
+	          ReactInputSelection.getSelection(focusedElem) :
+	          null
+	    };
+	  },
+
+	  /**
+	   * @restoreSelection: If any selection information was potentially lost,
+	   * restore it. This is useful when performing operations that could remove dom
+	   * nodes and place them back in, resulting in focus being lost.
+	   */
+	  restoreSelection: function(priorSelectionInformation) {
+	    var curFocusedElem = getActiveElement();
+	    var priorFocusedElem = priorSelectionInformation.focusedElem;
+	    var priorSelectionRange = priorSelectionInformation.selectionRange;
+	    if (curFocusedElem !== priorFocusedElem &&
+	        isInDocument(priorFocusedElem)) {
+	      if (ReactInputSelection.hasSelectionCapabilities(priorFocusedElem)) {
+	        ReactInputSelection.setSelection(
+	          priorFocusedElem,
+	          priorSelectionRange
+	        );
+	      }
+	      focusNode(priorFocusedElem);
+	    }
+	  },
+
+	  /**
+	   * @getSelection: Gets the selection bounds of a focused textarea, input or
+	   * contentEditable node.
+	   * -@input: Look up selection bounds of this input
+	   * -@return {start: selectionStart, end: selectionEnd}
+	   */
+	  getSelection: function(input) {
+	    var selection;
+
+	    if ('selectionStart' in input) {
+	      // Modern browser with input or textarea.
+	      selection = {
+	        start: input.selectionStart,
+	        end: input.selectionEnd
+	      };
+	    } else if (document.selection && input.nodeName === 'INPUT') {
+	      // IE8 input.
+	      var range = document.selection.createRange();
+	      // There can only be one selection per document in IE, so it must
+	      // be in our element.
+	      if (range.parentElement() === input) {
+	        selection = {
+	          start: -range.moveStart('character', -input.value.length),
+	          end: -range.moveEnd('character', -input.value.length)
+	        };
+	      }
+	    } else {
+	      // Content editable or old IE textarea.
+	      selection = ReactDOMSelection.getOffsets(input);
+	    }
+
+	    return selection || {start: 0, end: 0};
+	  },
+
+	  /**
+	   * @setSelection: Sets the selection bounds of a textarea or input and focuses
+	   * the input.
+	   * -@input     Set selection bounds of this input or textarea
+	   * -@offsets   Object of same form that is returned from get*
+	   */
+	  setSelection: function(input, offsets) {
+	    var start = offsets.start;
+	    var end = offsets.end;
+	    if (typeof end === 'undefined') {
+	      end = start;
+	    }
+
+	    if ('selectionStart' in input) {
+	      input.selectionStart = start;
+	      input.selectionEnd = Math.min(end, input.value.length);
+	    } else if (document.selection && input.nodeName === 'INPUT') {
+	      var range = input.createTextRange();
+	      range.collapse(true);
+	      range.moveStart('character', start);
+	      range.moveEnd('character', end - start);
+	      range.select();
+	    } else {
+	      ReactDOMSelection.setOffsets(input, offsets);
+	    }
+	  }
+	};
+
+	module.exports = ReactInputSelection;
+
+
+/***/ },
+/* 181 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2014, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule SyntheticCompositionEvent
+	 * @typechecks static-only
+	 */
+
+	"use strict";
+
+	var SyntheticEvent = __webpack_require__(178);
+
+	/**
+	 * @interface Event
+	 * @see http://www.w3.org/TR/DOM-Level-3-Events/#events-compositionevents
+	 */
+	var CompositionEventInterface = {
+	  data: null
+	};
+
+	/**
+	 * @param {object} dispatchConfig Configuration used to dispatch this event.
+	 * @param {string} dispatchMarker Marker identifying the event target.
+	 * @param {object} nativeEvent Native browser event.
+	 * @extends {SyntheticUIEvent}
+	 */
+	function SyntheticCompositionEvent(
+	  dispatchConfig,
+	  dispatchMarker,
+	  nativeEvent) {
+	  SyntheticEvent.call(this, dispatchConfig, dispatchMarker, nativeEvent);
+	}
+
+	SyntheticEvent.augmentClass(
+	  SyntheticCompositionEvent,
+	  CompositionEventInterface
+	);
+
+	module.exports = SyntheticCompositionEvent;
+
+
+
+/***/ },
+/* 182 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2014, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule getTextContentAccessor
+	 */
+
+	"use strict";
+
+	var ExecutionEnvironment = __webpack_require__(59);
+
+	var contentKey = null;
+
+	/**
+	 * Gets the key used to access text content on a DOM node.
+	 *
+	 * @return {?string} Key used to access text content.
+	 * @internal
+	 */
+	function getTextContentAccessor() {
+	  if (!contentKey && ExecutionEnvironment.canUseDOM) {
+	    // Prefer textContent to innerText because many browsers support both but
+	    // SVG <text> elements don't support innerText even when <div> does.
+	    contentKey = 'textContent' in document.documentElement ?
+	      'textContent' :
+	      'innerText';
+	  }
+	  return contentKey;
+	}
+
+	module.exports = getTextContentAccessor;
+
+
+/***/ },
+/* 183 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2014, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule SyntheticMouseEvent
+	 * @typechecks static-only
+	 */
+
+	"use strict";
+
+	var SyntheticUIEvent = __webpack_require__(200);
+	var ViewportMetrics = __webpack_require__(175);
+
+	var getEventModifierState = __webpack_require__(214);
+
+	/**
+	 * @interface MouseEvent
+	 * @see http://www.w3.org/TR/DOM-Level-3-Events/
+	 */
+	var MouseEventInterface = {
+	  screenX: null,
+	  screenY: null,
+	  clientX: null,
+	  clientY: null,
+	  ctrlKey: null,
+	  shiftKey: null,
+	  altKey: null,
+	  metaKey: null,
+	  getModifierState: getEventModifierState,
+	  button: function(event) {
+	    // Webkit, Firefox, IE9+
+	    // which:  1 2 3
+	    // button: 0 1 2 (standard)
+	    var button = event.button;
+	    if ('which' in event) {
+	      return button;
+	    }
+	    // IE<9
+	    // which:  undefined
+	    // button: 0 0 0
+	    // button: 1 4 2 (onmouseup)
+	    return button === 2 ? 2 : button === 4 ? 1 : 0;
+	  },
+	  buttons: null,
+	  relatedTarget: function(event) {
+	    return event.relatedTarget || (
+	      event.fromElement === event.srcElement ?
+	        event.toElement :
+	        event.fromElement
+	    );
+	  },
+	  // "Proprietary" Interface.
+	  pageX: function(event) {
+	    return 'pageX' in event ?
+	      event.pageX :
+	      event.clientX + ViewportMetrics.currentScrollLeft;
+	  },
+	  pageY: function(event) {
+	    return 'pageY' in event ?
+	      event.pageY :
+	      event.clientY + ViewportMetrics.currentScrollTop;
+	  }
+	};
+
+	/**
+	 * @param {object} dispatchConfig Configuration used to dispatch this event.
+	 * @param {string} dispatchMarker Marker identifying the event target.
+	 * @param {object} nativeEvent Native browser event.
+	 * @extends {SyntheticUIEvent}
+	 */
+	function SyntheticMouseEvent(dispatchConfig, dispatchMarker, nativeEvent) {
+	  SyntheticUIEvent.call(this, dispatchConfig, dispatchMarker, nativeEvent);
+	}
+
+	SyntheticUIEvent.augmentClass(SyntheticMouseEvent, MouseEventInterface);
+
+	module.exports = SyntheticMouseEvent;
+
+
+/***/ },
+/* 184 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {/**
+	 * Copyright 2013-2014, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule ReactDOMIDOperations
+	 * @typechecks static-only
+	 */
+
+	/*jslint evil: true */
+
+	"use strict";
+
+	var CSSPropertyOperations = __webpack_require__(119);
+	var DOMChildrenOperations = __webpack_require__(215);
+	var DOMPropertyOperations = __webpack_require__(36);
+	var ReactMount = __webpack_require__(50);
+	var ReactPerf = __webpack_require__(52);
+
+	var invariant = __webpack_require__(103);
+	var setInnerHTML = __webpack_require__(186);
+
+	/**
+	 * Errors for properties that should not be updated with `updatePropertyById()`.
+	 *
+	 * @type {object}
+	 * @private
+	 */
+	var INVALID_PROPERTY_ERRORS = {
+	  dangerouslySetInnerHTML:
+	    '`dangerouslySetInnerHTML` must be set using `updateInnerHTMLByID()`.',
+	  style: '`style` must be set using `updateStylesByID()`.'
+	};
+
+	/**
+	 * Operations used to process updates to DOM nodes. This is made injectable via
+	 * `ReactComponent.BackendIDOperations`.
+	 */
+	var ReactDOMIDOperations = {
+
+	  /**
+	   * Updates a DOM node with new property values. This should only be used to
+	   * update DOM properties in `DOMProperty`.
+	   *
+	   * @param {string} id ID of the node to update.
+	   * @param {string} name A valid property name, see `DOMProperty`.
+	   * @param {*} value New value of the property.
+	   * @internal
+	   */
+	  updatePropertyByID: ReactPerf.measure(
+	    'ReactDOMIDOperations',
+	    'updatePropertyByID',
+	    function(id, name, value) {
+	      var node = ReactMount.getNode(id);
+	      ("production" !== process.env.NODE_ENV ? invariant(
+	        !INVALID_PROPERTY_ERRORS.hasOwnProperty(name),
+	        'updatePropertyByID(...): %s',
+	        INVALID_PROPERTY_ERRORS[name]
+	      ) : invariant(!INVALID_PROPERTY_ERRORS.hasOwnProperty(name)));
+
+	      // If we're updating to null or undefined, we should remove the property
+	      // from the DOM node instead of inadvertantly setting to a string. This
+	      // brings us in line with the same behavior we have on initial render.
+	      if (value != null) {
+	        DOMPropertyOperations.setValueForProperty(node, name, value);
+	      } else {
+	        DOMPropertyOperations.deleteValueForProperty(node, name);
+	      }
+	    }
+	  ),
+
+	  /**
+	   * Updates a DOM node to remove a property. This should only be used to remove
+	   * DOM properties in `DOMProperty`.
+	   *
+	   * @param {string} id ID of the node to update.
+	   * @param {string} name A property name to remove, see `DOMProperty`.
+	   * @internal
+	   */
+	  deletePropertyByID: ReactPerf.measure(
+	    'ReactDOMIDOperations',
+	    'deletePropertyByID',
+	    function(id, name, value) {
+	      var node = ReactMount.getNode(id);
+	      ("production" !== process.env.NODE_ENV ? invariant(
+	        !INVALID_PROPERTY_ERRORS.hasOwnProperty(name),
+	        'updatePropertyByID(...): %s',
+	        INVALID_PROPERTY_ERRORS[name]
+	      ) : invariant(!INVALID_PROPERTY_ERRORS.hasOwnProperty(name)));
+	      DOMPropertyOperations.deleteValueForProperty(node, name, value);
+	    }
+	  ),
+
+	  /**
+	   * Updates a DOM node with new style values. If a value is specified as '',
+	   * the corresponding style property will be unset.
+	   *
+	   * @param {string} id ID of the node to update.
+	   * @param {object} styles Mapping from styles to values.
+	   * @internal
+	   */
+	  updateStylesByID: ReactPerf.measure(
+	    'ReactDOMIDOperations',
+	    'updateStylesByID',
+	    function(id, styles) {
+	      var node = ReactMount.getNode(id);
+	      CSSPropertyOperations.setValueForStyles(node, styles);
+	    }
+	  ),
+
+	  /**
+	   * Updates a DOM node's innerHTML.
+	   *
+	   * @param {string} id ID of the node to update.
+	   * @param {string} html An HTML string.
+	   * @internal
+	   */
+	  updateInnerHTMLByID: ReactPerf.measure(
+	    'ReactDOMIDOperations',
+	    'updateInnerHTMLByID',
+	    function(id, html) {
+	      var node = ReactMount.getNode(id);
+	      setInnerHTML(node, html);
+	    }
+	  ),
+
+	  /**
+	   * Updates a DOM node's text content set by `props.content`.
+	   *
+	   * @param {string} id ID of the node to update.
+	   * @param {string} content Text content.
+	   * @internal
+	   */
+	  updateTextContentByID: ReactPerf.measure(
+	    'ReactDOMIDOperations',
+	    'updateTextContentByID',
+	    function(id, content) {
+	      var node = ReactMount.getNode(id);
+	      DOMChildrenOperations.updateTextContent(node, content);
+	    }
+	  ),
+
+	  /**
+	   * Replaces a DOM node that exists in the document with markup.
+	   *
+	   * @param {string} id ID of child to be replaced.
+	   * @param {string} markup Dangerous markup to inject in place of child.
+	   * @internal
+	   * @see {Danger.dangerouslyReplaceNodeWithMarkup}
+	   */
+	  dangerouslyReplaceNodeWithMarkupByID: ReactPerf.measure(
+	    'ReactDOMIDOperations',
+	    'dangerouslyReplaceNodeWithMarkupByID',
+	    function(id, markup) {
+	      var node = ReactMount.getNode(id);
+	      DOMChildrenOperations.dangerouslyReplaceNodeWithMarkup(node, markup);
+	    }
+	  ),
+
+	  /**
+	   * Updates a component's children by processing a series of updates.
+	   *
+	   * @param {array<object>} updates List of update configurations.
+	   * @param {array<string>} markup List of markup strings.
+	   * @internal
+	   */
+	  dangerouslyProcessChildrenUpdates: ReactPerf.measure(
+	    'ReactDOMIDOperations',
+	    'dangerouslyProcessChildrenUpdates',
+	    function(updates, markup) {
+	      for (var i = 0; i < updates.length; i++) {
+	        updates[i].parentNode = ReactMount.getNode(updates[i].parentID);
+	      }
+	      DOMChildrenOperations.processUpdates(updates, markup);
+	    }
+	  )
+	};
+
+	module.exports = ReactDOMIDOperations;
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(97)))
+
+/***/ },
+/* 185 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2014, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule ReactReconcileTransaction
+	 * @typechecks static-only
+	 */
+
+	"use strict";
+
+	var CallbackQueue = __webpack_require__(164);
+	var PooledClass = __webpack_require__(104);
+	var ReactBrowserEventEmitter = __webpack_require__(121);
+	var ReactInputSelection = __webpack_require__(180);
+	var ReactPutListenerQueue = __webpack_require__(207);
+	var Transaction = __webpack_require__(165);
+
+	var assign = __webpack_require__(56);
+
+	/**
+	 * Ensures that, when possible, the selection range (currently selected text
+	 * input) is not disturbed by performing the transaction.
+	 */
+	var SELECTION_RESTORATION = {
+	  /**
+	   * @return {Selection} Selection information.
+	   */
+	  initialize: ReactInputSelection.getSelectionInformation,
+	  /**
+	   * @param {Selection} sel Selection information returned from `initialize`.
+	   */
+	  close: ReactInputSelection.restoreSelection
+	};
+
+	/**
+	 * Suppresses events (blur/focus) that could be inadvertently dispatched due to
+	 * high level DOM manipulations (like temporarily removing a text input from the
+	 * DOM).
+	 */
+	var EVENT_SUPPRESSION = {
+	  /**
+	   * @return {boolean} The enabled status of `ReactBrowserEventEmitter` before
+	   * the reconciliation.
+	   */
+	  initialize: function() {
+	    var currentlyEnabled = ReactBrowserEventEmitter.isEnabled();
+	    ReactBrowserEventEmitter.setEnabled(false);
+	    return currentlyEnabled;
+	  },
+
+	  /**
+	   * @param {boolean} previouslyEnabled Enabled status of
+	   *   `ReactBrowserEventEmitter` before the reconciliation occured. `close`
+	   *   restores the previous value.
+	   */
+	  close: function(previouslyEnabled) {
+	    ReactBrowserEventEmitter.setEnabled(previouslyEnabled);
+	  }
+	};
+
+	/**
+	 * Provides a queue for collecting `componentDidMount` and
+	 * `componentDidUpdate` callbacks during the the transaction.
+	 */
+	var ON_DOM_READY_QUEUEING = {
+	  /**
+	   * Initializes the internal `onDOMReady` queue.
+	   */
+	  initialize: function() {
+	    this.reactMountReady.reset();
+	  },
+
+	  /**
+	   * After DOM is flushed, invoke all registered `onDOMReady` callbacks.
+	   */
+	  close: function() {
+	    this.reactMountReady.notifyAll();
+	  }
+	};
+
+	var PUT_LISTENER_QUEUEING = {
+	  initialize: function() {
+	    this.putListenerQueue.reset();
+	  },
+
+	  close: function() {
+	    this.putListenerQueue.putListeners();
+	  }
+	};
+
+	/**
+	 * Executed within the scope of the `Transaction` instance. Consider these as
+	 * being member methods, but with an implied ordering while being isolated from
+	 * each other.
+	 */
+	var TRANSACTION_WRAPPERS = [
+	  PUT_LISTENER_QUEUEING,
+	  SELECTION_RESTORATION,
+	  EVENT_SUPPRESSION,
+	  ON_DOM_READY_QUEUEING
+	];
+
+	/**
+	 * Currently:
+	 * - The order that these are listed in the transaction is critical:
+	 * - Suppresses events.
+	 * - Restores selection range.
+	 *
+	 * Future:
+	 * - Restore document/overflow scroll positions that were unintentionally
+	 *   modified via DOM insertions above the top viewport boundary.
+	 * - Implement/integrate with customized constraint based layout system and keep
+	 *   track of which dimensions must be remeasured.
+	 *
+	 * @class ReactReconcileTransaction
+	 */
+	function ReactReconcileTransaction() {
+	  this.reinitializeTransaction();
+	  // Only server-side rendering really needs this option (see
+	  // `ReactServerRendering`), but server-side uses
+	  // `ReactServerRenderingTransaction` instead. This option is here so that it's
+	  // accessible and defaults to false when `ReactDOMComponent` and
+	  // `ReactTextComponent` checks it in `mountComponent`.`
+	  this.renderToStaticMarkup = false;
+	  this.reactMountReady = CallbackQueue.getPooled(null);
+	  this.putListenerQueue = ReactPutListenerQueue.getPooled();
+	}
+
+	var Mixin = {
+	  /**
+	   * @see Transaction
+	   * @abstract
+	   * @final
+	   * @return {array<object>} List of operation wrap proceedures.
+	   *   TODO: convert to array<TransactionWrapper>
+	   */
+	  getTransactionWrappers: function() {
+	    return TRANSACTION_WRAPPERS;
+	  },
+
+	  /**
+	   * @return {object} The queue to collect `onDOMReady` callbacks with.
+	   */
+	  getReactMountReady: function() {
+	    return this.reactMountReady;
+	  },
+
+	  getPutListenerQueue: function() {
+	    return this.putListenerQueue;
+	  },
+
+	  /**
+	   * `PooledClass` looks for this, and will invoke this before allowing this
+	   * instance to be resused.
+	   */
+	  destructor: function() {
+	    CallbackQueue.release(this.reactMountReady);
+	    this.reactMountReady = null;
+
+	    ReactPutListenerQueue.release(this.putListenerQueue);
+	    this.putListenerQueue = null;
+	  }
+	};
+
+
+	assign(ReactReconcileTransaction.prototype, Transaction.Mixin, Mixin);
+
+	PooledClass.addPoolingTo(ReactReconcileTransaction);
+
+	module.exports = ReactReconcileTransaction;
+
+
+/***/ },
+/* 186 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2014, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule setInnerHTML
+	 */
+
+	"use strict";
+
+	var ExecutionEnvironment = __webpack_require__(59);
+
+	var WHITESPACE_TEST = /^[ \r\n\t\f]/;
+	var NONVISIBLE_TEST = /<(!--|link|noscript|meta|script|style)[ \r\n\t\f\/>]/;
+
+	/**
+	 * Set the innerHTML property of a node, ensuring that whitespace is preserved
+	 * even in IE8.
+	 *
+	 * @param {DOMElement} node
+	 * @param {string} html
+	 * @internal
+	 */
+	var setInnerHTML = function(node, html) {
+	  node.innerHTML = html;
+	};
+
+	if (ExecutionEnvironment.canUseDOM) {
+	  // IE8: When updating a just created node with innerHTML only leading
+	  // whitespace is removed. When updating an existing node with innerHTML
+	  // whitespace in root TextNodes is also collapsed.
+	  // @see quirksmode.org/bugreports/archives/2004/11/innerhtml_and_t.html
+
+	  // Feature detection; only IE8 is known to behave improperly like this.
+	  var testElement = document.createElement('div');
+	  testElement.innerHTML = ' ';
+	  if (testElement.innerHTML === '') {
+	    setInnerHTML = function(node, html) {
+	      // Magic theory: IE8 supposedly differentiates between added and updated
+	      // nodes when processing innerHTML, innerHTML on updated nodes suffers
+	      // from worse whitespace behavior. Re-adding a node like this triggers
+	      // the initial and more favorable whitespace behavior.
+	      // TODO: What to do on a detached node?
+	      if (node.parentNode) {
+	        node.parentNode.replaceChild(node, node);
+	      }
+
+	      // We also implement a workaround for non-visible tags disappearing into
+	      // thin air on IE8, this only happens if there is no visible text
+	      // in-front of the non-visible tags. Piggyback on the whitespace fix
+	      // and simply check if any non-visible tags appear in the source.
+	      if (WHITESPACE_TEST.test(html) ||
+	          html[0] === '<' && NONVISIBLE_TEST.test(html)) {
+	        // Recover leading whitespace by temporarily prepending any character.
+	        // \uFEFF has the potential advantage of being zero-width/invisible.
+	        node.innerHTML = '\uFEFF' + html;
+
+	        // deleteData leaves an empty `TextNode` which offsets the index of all
+	        // children. Definitely want to avoid this.
+	        var textNode = node.firstChild;
+	        if (textNode.data.length === 1) {
+	          node.removeChild(textNode);
+	        } else {
+	          textNode.deleteData(0, 1);
+	        }
+	      } else {
+	        node.innerHTML = html;
+	      }
+	    };
+	  }
+	}
+
+	module.exports = setInnerHTML;
+
+
+/***/ },
+/* 187 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2014, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule AutoFocusMixin
+	 * @typechecks static-only
+	 */
+
+	"use strict";
+
+	var focusNode = __webpack_require__(213);
+
+	var AutoFocusMixin = {
+	  componentDidMount: function() {
+	    if (this.props.autoFocus) {
+	      focusNode(this.getDOMNode());
+	    }
+	  }
+	};
+
+	module.exports = AutoFocusMixin;
+
+
+/***/ },
+/* 188 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {/**
+	 * Copyright 2014, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule LocalEventTrapMixin
+	 */
+
+	"use strict";
+
+	var ReactBrowserEventEmitter = __webpack_require__(121);
+
+	var accumulateInto = __webpack_require__(210);
+	var forEachAccumulated = __webpack_require__(211);
+	var invariant = __webpack_require__(103);
+
+	function remove(event) {
+	  event.remove();
+	}
+
+	var LocalEventTrapMixin = {
+	  trapBubbledEvent:function(topLevelType, handlerBaseName) {
+	    ("production" !== process.env.NODE_ENV ? invariant(this.isMounted(), 'Must be mounted to trap events') : invariant(this.isMounted()));
+	    var listener = ReactBrowserEventEmitter.trapBubbledEvent(
+	      topLevelType,
+	      handlerBaseName,
+	      this.getDOMNode()
+	    );
+	    this._localEventListeners =
+	      accumulateInto(this._localEventListeners, listener);
+	  },
+
+	  // trapCapturedEvent would look nearly identical. We don't implement that
+	  // method because it isn't currently needed.
+
+	  componentWillUnmount:function() {
+	    if (this._localEventListeners) {
+	      forEachAccumulated(this._localEventListeners, remove);
+	    }
+	  }
+	};
+
+	module.exports = LocalEventTrapMixin;
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(97)))
+
+/***/ },
+/* 189 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {/**
+	 * Copyright 2013-2014, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule LinkedValueUtils
+	 * @typechecks static-only
+	 */
+
+	"use strict";
+
+	var ReactPropTypes = __webpack_require__(53);
+
+	var invariant = __webpack_require__(103);
+
+	var hasReadOnlyValue = {
+	  'button': true,
+	  'checkbox': true,
+	  'image': true,
+	  'hidden': true,
+	  'radio': true,
+	  'reset': true,
+	  'submit': true
+	};
+
+	function _assertSingleLink(input) {
+	  ("production" !== process.env.NODE_ENV ? invariant(
+	    input.props.checkedLink == null || input.props.valueLink == null,
+	    'Cannot provide a checkedLink and a valueLink. If you want to use ' +
+	    'checkedLink, you probably don\'t want to use valueLink and vice versa.'
+	  ) : invariant(input.props.checkedLink == null || input.props.valueLink == null));
+	}
+	function _assertValueLink(input) {
+	  _assertSingleLink(input);
+	  ("production" !== process.env.NODE_ENV ? invariant(
+	    input.props.value == null && input.props.onChange == null,
+	    'Cannot provide a valueLink and a value or onChange event. If you want ' +
+	    'to use value or onChange, you probably don\'t want to use valueLink.'
+	  ) : invariant(input.props.value == null && input.props.onChange == null));
+	}
+
+	function _assertCheckedLink(input) {
+	  _assertSingleLink(input);
+	  ("production" !== process.env.NODE_ENV ? invariant(
+	    input.props.checked == null && input.props.onChange == null,
+	    'Cannot provide a checkedLink and a checked property or onChange event. ' +
+	    'If you want to use checked or onChange, you probably don\'t want to ' +
+	    'use checkedLink'
+	  ) : invariant(input.props.checked == null && input.props.onChange == null));
+	}
+
+	/**
+	 * @param {SyntheticEvent} e change event to handle
+	 */
+	function _handleLinkedValueChange(e) {
+	  /*jshint validthis:true */
+	  this.props.valueLink.requestChange(e.target.value);
+	}
+
+	/**
+	  * @param {SyntheticEvent} e change event to handle
+	  */
+	function _handleLinkedCheckChange(e) {
+	  /*jshint validthis:true */
+	  this.props.checkedLink.requestChange(e.target.checked);
+	}
+
+	/**
+	 * Provide a linked `value` attribute for controlled forms. You should not use
+	 * this outside of the ReactDOM controlled form components.
+	 */
+	var LinkedValueUtils = {
+	  Mixin: {
+	    propTypes: {
+	      value: function(props, propName, componentName) {
+	        if (!props[propName] ||
+	            hasReadOnlyValue[props.type] ||
+	            props.onChange ||
+	            props.readOnly ||
+	            props.disabled) {
+	          return;
+	        }
+	        return new Error(
+	          'You provided a `value` prop to a form field without an ' +
+	          '`onChange` handler. This will render a read-only field. If ' +
+	          'the field should be mutable use `defaultValue`. Otherwise, ' +
+	          'set either `onChange` or `readOnly`.'
+	        );
+	      },
+	      checked: function(props, propName, componentName) {
+	        if (!props[propName] ||
+	            props.onChange ||
+	            props.readOnly ||
+	            props.disabled) {
+	          return;
+	        }
+	        return new Error(
+	          'You provided a `checked` prop to a form field without an ' +
+	          '`onChange` handler. This will render a read-only field. If ' +
+	          'the field should be mutable use `defaultChecked`. Otherwise, ' +
+	          'set either `onChange` or `readOnly`.'
+	        );
+	      },
+	      onChange: ReactPropTypes.func
+	    }
+	  },
+
+	  /**
+	   * @param {ReactComponent} input Form component
+	   * @return {*} current value of the input either from value prop or link.
+	   */
+	  getValue: function(input) {
+	    if (input.props.valueLink) {
+	      _assertValueLink(input);
+	      return input.props.valueLink.value;
+	    }
+	    return input.props.value;
+	  },
+
+	  /**
+	   * @param {ReactComponent} input Form component
+	   * @return {*} current checked status of the input either from checked prop
+	   *             or link.
+	   */
+	  getChecked: function(input) {
+	    if (input.props.checkedLink) {
+	      _assertCheckedLink(input);
+	      return input.props.checkedLink.value;
+	    }
+	    return input.props.checked;
+	  },
+
+	  /**
+	   * @param {ReactComponent} input Form component
+	   * @return {function} change callback either from onChange prop or link.
+	   */
+	  getOnChange: function(input) {
+	    if (input.props.valueLink) {
+	      _assertValueLink(input);
+	      return _handleLinkedValueChange;
+	    } else if (input.props.checkedLink) {
+	      _assertCheckedLink(input);
+	      return _handleLinkedCheckChange;
+	    }
+	    return input.props.onChange;
+	  }
+	};
+
+	module.exports = LinkedValueUtils;
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(97)))
+
+/***/ },
+/* 190 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {/**
+	 * Copyright 2013-2014 Facebook, Inc.
+	 *
+	 * Licensed under the Apache License, Version 2.0 (the "License");
+	 * you may not use this file except in compliance with the License.
+	 * You may obtain a copy of the License at
+	 *
+	 * http://www.apache.org/licenses/LICENSE-2.0
+	 *
+	 * Unless required by applicable law or agreed to in writing, software
+	 * distributed under the License is distributed on an "AS IS" BASIS,
+	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	 * See the License for the specific language governing permissions and
+	 * limitations under the License.
+	 *
+	 * @providesModule EventListener
+	 * @typechecks
+	 */
+
+	var emptyFunction = __webpack_require__(153);
+
+	/**
+	 * Upstream version of event listener. Does not take into account specific
+	 * nature of platform.
+	 */
+	var EventListener = {
+	  /**
+	   * Listen to DOM events during the bubble phase.
+	   *
+	   * @param {DOMEventTarget} target DOM element to register listener on.
+	   * @param {string} eventType Event type, e.g. 'click' or 'mouseover'.
+	   * @param {function} callback Callback function.
+	   * @return {object} Object with a `remove` method.
+	   */
+	  listen: function(target, eventType, callback) {
+	    if (target.addEventListener) {
+	      target.addEventListener(eventType, callback, false);
+	      return {
+	        remove: function() {
+	          target.removeEventListener(eventType, callback, false);
+	        }
+	      };
+	    } else if (target.attachEvent) {
+	      target.attachEvent('on' + eventType, callback);
+	      return {
+	        remove: function() {
+	          target.detachEvent('on' + eventType, callback);
+	        }
+	      };
+	    }
+	  },
+
+	  /**
+	   * Listen to DOM events during the capture phase.
+	   *
+	   * @param {DOMEventTarget} target DOM element to register listener on.
+	   * @param {string} eventType Event type, e.g. 'click' or 'mouseover'.
+	   * @param {function} callback Callback function.
+	   * @return {object} Object with a `remove` method.
+	   */
+	  capture: function(target, eventType, callback) {
+	    if (!target.addEventListener) {
+	      if ("production" !== process.env.NODE_ENV) {
+	        console.error(
+	          'Attempted to listen to events during the capture phase on a ' +
+	          'browser that does not support the capture phase. Your application ' +
+	          'will not receive some events.'
+	        );
+	      }
+	      return {
+	        remove: emptyFunction
+	      };
+	    } else {
+	      target.addEventListener(eventType, callback, true);
+	      return {
+	        remove: function() {
+	          target.removeEventListener(eventType, callback, true);
+	        }
+	      };
+	    }
+	  },
+
+	  registerDefault: function() {}
+	};
+
+	module.exports = EventListener;
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(97)))
+
+/***/ },
+/* 191 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2014, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule getEventTarget
+	 * @typechecks static-only
+	 */
+
+	"use strict";
+
+	/**
+	 * Gets the target node from a native browser event by accounting for
+	 * inconsistencies in browser DOM APIs.
+	 *
+	 * @param {object} nativeEvent Native browser event.
+	 * @return {DOMEventTarget} Target node.
+	 */
+	function getEventTarget(nativeEvent) {
+	  var target = nativeEvent.target || nativeEvent.srcElement || window;
+	  // Safari may fire events on text nodes (Node.TEXT_NODE is 3).
+	  // @see http://www.quirksmode.org/js/events_properties.html
+	  return target.nodeType === 3 ? target.parentNode : target;
+	}
+
+	module.exports = getEventTarget;
+
+
+/***/ },
+/* 192 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2014, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule getUnboundedScrollPosition
+	 * @typechecks
+	 */
+
+	"use strict";
+
+	/**
+	 * Gets the scroll position of the supplied element or window.
+	 *
+	 * The return values are unbounded, unlike `getScrollPosition`. This means they
+	 * may be negative or exceed the element boundaries (which is possible using
+	 * inertial scrolling).
+	 *
+	 * @param {DOMWindow|DOMElement} scrollable
+	 * @return {object} Map with `x` and `y` keys.
+	 */
+	function getUnboundedScrollPosition(scrollable) {
+	  if (scrollable === window) {
+	    return {
+	      x: window.pageXOffset || document.documentElement.scrollLeft,
+	      y: window.pageYOffset || document.documentElement.scrollTop
+	    };
+	  }
+	  return {
+	    x: scrollable.scrollLeft,
+	    y: scrollable.scrollTop
+	  };
+	}
+
+	module.exports = getUnboundedScrollPosition;
+
+
+/***/ },
+/* 193 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2014, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule getActiveElement
+	 * @typechecks
+	 */
+
+	/**
+	 * Same as document.activeElement but wraps in a try-catch block. In IE it is
+	 * not safe to call document.activeElement if there is nothing focused.
+	 *
+	 * The activeElement will be null only if the document body is not yet defined.
+	 */
+	function getActiveElement() /*?DOMElement*/ {
+	  try {
+	    return document.activeElement || document.body;
+	  } catch (e) {
+	    return document.body;
+	  }
+	}
+
+	module.exports = getActiveElement;
+
+
+/***/ },
+/* 194 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2014, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule shallowEqual
+	 */
+
+	"use strict";
+
+	/**
+	 * Performs equality by iterating through keys on an object and returning
+	 * false when any key has values which are not strictly equal between
+	 * objA and objB. Returns true when the values of all keys are strictly equal.
+	 *
+	 * @return {boolean}
+	 */
+	function shallowEqual(objA, objB) {
+	  if (objA === objB) {
+	    return true;
+	  }
+	  var key;
+	  // Test for A's keys different from B.
+	  for (key in objA) {
+	    if (objA.hasOwnProperty(key) &&
+	        (!objB.hasOwnProperty(key) || objA[key] !== objB[key])) {
+	      return false;
+	    }
+	  }
+	  // Test for B's keys missing from A.
+	  for (key in objB) {
+	    if (objB.hasOwnProperty(key) && !objA.hasOwnProperty(key)) {
+	      return false;
+	    }
+	  }
+	  return true;
+	}
+
+	module.exports = shallowEqual;
+
 
 /***/ },
 /* 195 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2014, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule SyntheticClipboardEvent
+	 * @typechecks static-only
+	 */
+
+	"use strict";
+
+	var SyntheticEvent = __webpack_require__(178);
+
+	/**
+	 * @interface Event
+	 * @see http://www.w3.org/TR/clipboard-apis/
+	 */
+	var ClipboardEventInterface = {
+	  clipboardData: function(event) {
+	    return (
+	      'clipboardData' in event ?
+	        event.clipboardData :
+	        window.clipboardData
+	    );
+	  }
+	};
+
+	/**
+	 * @param {object} dispatchConfig Configuration used to dispatch this event.
+	 * @param {string} dispatchMarker Marker identifying the event target.
+	 * @param {object} nativeEvent Native browser event.
+	 * @extends {SyntheticUIEvent}
+	 */
+	function SyntheticClipboardEvent(dispatchConfig, dispatchMarker, nativeEvent) {
+	  SyntheticEvent.call(this, dispatchConfig, dispatchMarker, nativeEvent);
+	}
+
+	SyntheticEvent.augmentClass(SyntheticClipboardEvent, ClipboardEventInterface);
+
+	module.exports = SyntheticClipboardEvent;
+
+
+
+/***/ },
+/* 196 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2014, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule SyntheticFocusEvent
+	 * @typechecks static-only
+	 */
+
+	"use strict";
+
+	var SyntheticUIEvent = __webpack_require__(200);
+
+	/**
+	 * @interface FocusEvent
+	 * @see http://www.w3.org/TR/DOM-Level-3-Events/
+	 */
+	var FocusEventInterface = {
+	  relatedTarget: null
+	};
+
+	/**
+	 * @param {object} dispatchConfig Configuration used to dispatch this event.
+	 * @param {string} dispatchMarker Marker identifying the event target.
+	 * @param {object} nativeEvent Native browser event.
+	 * @extends {SyntheticUIEvent}
+	 */
+	function SyntheticFocusEvent(dispatchConfig, dispatchMarker, nativeEvent) {
+	  SyntheticUIEvent.call(this, dispatchConfig, dispatchMarker, nativeEvent);
+	}
+
+	SyntheticUIEvent.augmentClass(SyntheticFocusEvent, FocusEventInterface);
+
+	module.exports = SyntheticFocusEvent;
+
+
+/***/ },
+/* 197 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2014, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule SyntheticKeyboardEvent
+	 * @typechecks static-only
+	 */
+
+	"use strict";
+
+	var SyntheticUIEvent = __webpack_require__(200);
+
+	var getEventCharCode = __webpack_require__(202);
+	var getEventKey = __webpack_require__(216);
+	var getEventModifierState = __webpack_require__(214);
+
+	/**
+	 * @interface KeyboardEvent
+	 * @see http://www.w3.org/TR/DOM-Level-3-Events/
+	 */
+	var KeyboardEventInterface = {
+	  key: getEventKey,
+	  location: null,
+	  ctrlKey: null,
+	  shiftKey: null,
+	  altKey: null,
+	  metaKey: null,
+	  repeat: null,
+	  locale: null,
+	  getModifierState: getEventModifierState,
+	  // Legacy Interface
+	  charCode: function(event) {
+	    // `charCode` is the result of a KeyPress event and represents the value of
+	    // the actual printable character.
+
+	    // KeyPress is deprecated, but its replacement is not yet final and not
+	    // implemented in any major browser. Only KeyPress has charCode.
+	    if (event.type === 'keypress') {
+	      return getEventCharCode(event);
+	    }
+	    return 0;
+	  },
+	  keyCode: function(event) {
+	    // `keyCode` is the result of a KeyDown/Up event and represents the value of
+	    // physical keyboard key.
+
+	    // The actual meaning of the value depends on the users' keyboard layout
+	    // which cannot be detected. Assuming that it is a US keyboard layout
+	    // provides a surprisingly accurate mapping for US and European users.
+	    // Due to this, it is left to the user to implement at this time.
+	    if (event.type === 'keydown' || event.type === 'keyup') {
+	      return event.keyCode;
+	    }
+	    return 0;
+	  },
+	  which: function(event) {
+	    // `which` is an alias for either `keyCode` or `charCode` depending on the
+	    // type of the event.
+	    if (event.type === 'keypress') {
+	      return getEventCharCode(event);
+	    }
+	    if (event.type === 'keydown' || event.type === 'keyup') {
+	      return event.keyCode;
+	    }
+	    return 0;
+	  }
+	};
+
+	/**
+	 * @param {object} dispatchConfig Configuration used to dispatch this event.
+	 * @param {string} dispatchMarker Marker identifying the event target.
+	 * @param {object} nativeEvent Native browser event.
+	 * @extends {SyntheticUIEvent}
+	 */
+	function SyntheticKeyboardEvent(dispatchConfig, dispatchMarker, nativeEvent) {
+	  SyntheticUIEvent.call(this, dispatchConfig, dispatchMarker, nativeEvent);
+	}
+
+	SyntheticUIEvent.augmentClass(SyntheticKeyboardEvent, KeyboardEventInterface);
+
+	module.exports = SyntheticKeyboardEvent;
+
+
+/***/ },
+/* 198 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2014, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule SyntheticDragEvent
+	 * @typechecks static-only
+	 */
+
+	"use strict";
+
+	var SyntheticMouseEvent = __webpack_require__(183);
+
+	/**
+	 * @interface DragEvent
+	 * @see http://www.w3.org/TR/DOM-Level-3-Events/
+	 */
+	var DragEventInterface = {
+	  dataTransfer: null
+	};
+
+	/**
+	 * @param {object} dispatchConfig Configuration used to dispatch this event.
+	 * @param {string} dispatchMarker Marker identifying the event target.
+	 * @param {object} nativeEvent Native browser event.
+	 * @extends {SyntheticUIEvent}
+	 */
+	function SyntheticDragEvent(dispatchConfig, dispatchMarker, nativeEvent) {
+	  SyntheticMouseEvent.call(this, dispatchConfig, dispatchMarker, nativeEvent);
+	}
+
+	SyntheticMouseEvent.augmentClass(SyntheticDragEvent, DragEventInterface);
+
+	module.exports = SyntheticDragEvent;
+
+
+/***/ },
+/* 199 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2014, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule SyntheticTouchEvent
+	 * @typechecks static-only
+	 */
+
+	"use strict";
+
+	var SyntheticUIEvent = __webpack_require__(200);
+
+	var getEventModifierState = __webpack_require__(214);
+
+	/**
+	 * @interface TouchEvent
+	 * @see http://www.w3.org/TR/touch-events/
+	 */
+	var TouchEventInterface = {
+	  touches: null,
+	  targetTouches: null,
+	  changedTouches: null,
+	  altKey: null,
+	  metaKey: null,
+	  ctrlKey: null,
+	  shiftKey: null,
+	  getModifierState: getEventModifierState
+	};
+
+	/**
+	 * @param {object} dispatchConfig Configuration used to dispatch this event.
+	 * @param {string} dispatchMarker Marker identifying the event target.
+	 * @param {object} nativeEvent Native browser event.
+	 * @extends {SyntheticUIEvent}
+	 */
+	function SyntheticTouchEvent(dispatchConfig, dispatchMarker, nativeEvent) {
+	  SyntheticUIEvent.call(this, dispatchConfig, dispatchMarker, nativeEvent);
+	}
+
+	SyntheticUIEvent.augmentClass(SyntheticTouchEvent, TouchEventInterface);
+
+	module.exports = SyntheticTouchEvent;
+
+
+/***/ },
+/* 200 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2014, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule SyntheticUIEvent
+	 * @typechecks static-only
+	 */
+
+	"use strict";
+
+	var SyntheticEvent = __webpack_require__(178);
+
+	var getEventTarget = __webpack_require__(191);
+
+	/**
+	 * @interface UIEvent
+	 * @see http://www.w3.org/TR/DOM-Level-3-Events/
+	 */
+	var UIEventInterface = {
+	  view: function(event) {
+	    if (event.view) {
+	      return event.view;
+	    }
+
+	    var target = getEventTarget(event);
+	    if (target != null && target.window === target) {
+	      // target is a window object
+	      return target;
+	    }
+
+	    var doc = target.ownerDocument;
+	    // TODO: Figure out why `ownerDocument` is sometimes undefined in IE8.
+	    if (doc) {
+	      return doc.defaultView || doc.parentWindow;
+	    } else {
+	      return window;
+	    }
+	  },
+	  detail: function(event) {
+	    return event.detail || 0;
+	  }
+	};
+
+	/**
+	 * @param {object} dispatchConfig Configuration used to dispatch this event.
+	 * @param {string} dispatchMarker Marker identifying the event target.
+	 * @param {object} nativeEvent Native browser event.
+	 * @extends {SyntheticEvent}
+	 */
+	function SyntheticUIEvent(dispatchConfig, dispatchMarker, nativeEvent) {
+	  SyntheticEvent.call(this, dispatchConfig, dispatchMarker, nativeEvent);
+	}
+
+	SyntheticEvent.augmentClass(SyntheticUIEvent, UIEventInterface);
+
+	module.exports = SyntheticUIEvent;
+
+
+/***/ },
+/* 201 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2014, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule SyntheticWheelEvent
+	 * @typechecks static-only
+	 */
+
+	"use strict";
+
+	var SyntheticMouseEvent = __webpack_require__(183);
+
+	/**
+	 * @interface WheelEvent
+	 * @see http://www.w3.org/TR/DOM-Level-3-Events/
+	 */
+	var WheelEventInterface = {
+	  deltaX: function(event) {
+	    return (
+	      'deltaX' in event ? event.deltaX :
+	      // Fallback to `wheelDeltaX` for Webkit and normalize (right is positive).
+	      'wheelDeltaX' in event ? -event.wheelDeltaX : 0
+	    );
+	  },
+	  deltaY: function(event) {
+	    return (
+	      'deltaY' in event ? event.deltaY :
+	      // Fallback to `wheelDeltaY` for Webkit and normalize (down is positive).
+	      'wheelDeltaY' in event ? -event.wheelDeltaY :
+	      // Fallback to `wheelDelta` for IE<9 and normalize (down is positive).
+	      'wheelDelta' in event ? -event.wheelDelta : 0
+	    );
+	  },
+	  deltaZ: null,
+
+	  // Browsers without "deltaMode" is reporting in raw wheel delta where one
+	  // notch on the scroll is always +/- 120, roughly equivalent to pixels.
+	  // A good approximation of DOM_DELTA_LINE (1) is 5% of viewport size or
+	  // ~40 pixels, for DOM_DELTA_SCREEN (2) it is 87.5% of viewport size.
+	  deltaMode: null
+	};
+
+	/**
+	 * @param {object} dispatchConfig Configuration used to dispatch this event.
+	 * @param {string} dispatchMarker Marker identifying the event target.
+	 * @param {object} nativeEvent Native browser event.
+	 * @extends {SyntheticMouseEvent}
+	 */
+	function SyntheticWheelEvent(dispatchConfig, dispatchMarker, nativeEvent) {
+	  SyntheticMouseEvent.call(this, dispatchConfig, dispatchMarker, nativeEvent);
+	}
+
+	SyntheticMouseEvent.augmentClass(SyntheticWheelEvent, WheelEventInterface);
+
+	module.exports = SyntheticWheelEvent;
+
+
+/***/ },
+/* 202 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2014, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule getEventCharCode
+	 * @typechecks static-only
+	 */
+
+	"use strict";
+
+	/**
+	 * `charCode` represents the actual "character code" and is safe to use with
+	 * `String.fromCharCode`. As such, only keys that correspond to printable
+	 * characters produce a valid `charCode`, the only exception to this is Enter.
+	 * The Tab-key is considered non-printable and does not have a `charCode`,
+	 * presumably because it does not produce a tab-character in browsers.
+	 *
+	 * @param {object} nativeEvent Native browser event.
+	 * @return {string} Normalized `charCode` property.
+	 */
+	function getEventCharCode(nativeEvent) {
+	  var charCode;
+	  var keyCode = nativeEvent.keyCode;
+
+	  if ('charCode' in nativeEvent) {
+	    charCode = nativeEvent.charCode;
+
+	    // FF does not set `charCode` for the Enter-key, check against `keyCode`.
+	    if (charCode === 0 && keyCode === 13) {
+	      charCode = 13;
+	    }
+	  } else {
+	    // IE8 does not implement `charCode`, but `keyCode` has the correct value.
+	    charCode = keyCode;
+	  }
+
+	  // Some non-printable keys are reported in `charCode`/`keyCode`, discard them.
+	  // Must not discard the (non-)printable Enter-key.
+	  if (charCode >= 32 || charCode === 13) {
+	    return charCode;
+	  }
+
+	  return 0;
+	}
+
+	module.exports = getEventCharCode;
+
+
+/***/ },
+/* 203 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2014, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule ReactDefaultPerfAnalysis
+	 */
+
+	var assign = __webpack_require__(56);
+
+	// Don't try to save users less than 1.2ms (a number I made up)
+	var DONT_CARE_THRESHOLD = 1.2;
+	var DOM_OPERATION_TYPES = {
+	  'mountImageIntoNode': 'set innerHTML',
+	  INSERT_MARKUP: 'set innerHTML',
+	  MOVE_EXISTING: 'move',
+	  REMOVE_NODE: 'remove',
+	  TEXT_CONTENT: 'set textContent',
+	  'updatePropertyByID': 'update attribute',
+	  'deletePropertyByID': 'delete attribute',
+	  'updateStylesByID': 'update styles',
+	  'updateInnerHTMLByID': 'set innerHTML',
+	  'dangerouslyReplaceNodeWithMarkupByID': 'replace'
+	};
+
+	function getTotalTime(measurements) {
+	  // TODO: return number of DOM ops? could be misleading.
+	  // TODO: measure dropped frames after reconcile?
+	  // TODO: log total time of each reconcile and the top-level component
+	  // class that triggered it.
+	  var totalTime = 0;
+	  for (var i = 0; i < measurements.length; i++) {
+	    var measurement = measurements[i];
+	    totalTime += measurement.totalTime;
+	  }
+	  return totalTime;
+	}
+
+	function getDOMSummary(measurements) {
+	  var items = [];
+	  for (var i = 0; i < measurements.length; i++) {
+	    var measurement = measurements[i];
+	    var id;
+
+	    for (id in measurement.writes) {
+	      measurement.writes[id].forEach(function(write) {
+	        items.push({
+	          id: id,
+	          type: DOM_OPERATION_TYPES[write.type] || write.type,
+	          args: write.args
+	        });
+	      });
+	    }
+	  }
+	  return items;
+	}
+
+	function getExclusiveSummary(measurements) {
+	  var candidates = {};
+	  var displayName;
+
+	  for (var i = 0; i < measurements.length; i++) {
+	    var measurement = measurements[i];
+	    var allIDs = assign(
+	      {},
+	      measurement.exclusive,
+	      measurement.inclusive
+	    );
+
+	    for (var id in allIDs) {
+	      displayName = measurement.displayNames[id].current;
+
+	      candidates[displayName] = candidates[displayName] || {
+	        componentName: displayName,
+	        inclusive: 0,
+	        exclusive: 0,
+	        render: 0,
+	        count: 0
+	      };
+	      if (measurement.render[id]) {
+	        candidates[displayName].render += measurement.render[id];
+	      }
+	      if (measurement.exclusive[id]) {
+	        candidates[displayName].exclusive += measurement.exclusive[id];
+	      }
+	      if (measurement.inclusive[id]) {
+	        candidates[displayName].inclusive += measurement.inclusive[id];
+	      }
+	      if (measurement.counts[id]) {
+	        candidates[displayName].count += measurement.counts[id];
+	      }
+	    }
+	  }
+
+	  // Now make a sorted array with the results.
+	  var arr = [];
+	  for (displayName in candidates) {
+	    if (candidates[displayName].exclusive >= DONT_CARE_THRESHOLD) {
+	      arr.push(candidates[displayName]);
+	    }
+	  }
+
+	  arr.sort(function(a, b) {
+	    return b.exclusive - a.exclusive;
+	  });
+
+	  return arr;
+	}
+
+	function getInclusiveSummary(measurements, onlyClean) {
+	  var candidates = {};
+	  var inclusiveKey;
+
+	  for (var i = 0; i < measurements.length; i++) {
+	    var measurement = measurements[i];
+	    var allIDs = assign(
+	      {},
+	      measurement.exclusive,
+	      measurement.inclusive
+	    );
+	    var cleanComponents;
+
+	    if (onlyClean) {
+	      cleanComponents = getUnchangedComponents(measurement);
+	    }
+
+	    for (var id in allIDs) {
+	      if (onlyClean && !cleanComponents[id]) {
+	        continue;
+	      }
+
+	      var displayName = measurement.displayNames[id];
+
+	      // Inclusive time is not useful for many components without knowing where
+	      // they are instantiated. So we aggregate inclusive time with both the
+	      // owner and current displayName as the key.
+	      inclusiveKey = displayName.owner + ' > ' + displayName.current;
+
+	      candidates[inclusiveKey] = candidates[inclusiveKey] || {
+	        componentName: inclusiveKey,
+	        time: 0,
+	        count: 0
+	      };
+
+	      if (measurement.inclusive[id]) {
+	        candidates[inclusiveKey].time += measurement.inclusive[id];
+	      }
+	      if (measurement.counts[id]) {
+	        candidates[inclusiveKey].count += measurement.counts[id];
+	      }
+	    }
+	  }
+
+	  // Now make a sorted array with the results.
+	  var arr = [];
+	  for (inclusiveKey in candidates) {
+	    if (candidates[inclusiveKey].time >= DONT_CARE_THRESHOLD) {
+	      arr.push(candidates[inclusiveKey]);
+	    }
+	  }
+
+	  arr.sort(function(a, b) {
+	    return b.time - a.time;
+	  });
+
+	  return arr;
+	}
+
+	function getUnchangedComponents(measurement) {
+	  // For a given reconcile, look at which components did not actually
+	  // render anything to the DOM and return a mapping of their ID to
+	  // the amount of time it took to render the entire subtree.
+	  var cleanComponents = {};
+	  var dirtyLeafIDs = Object.keys(measurement.writes);
+	  var allIDs = assign({}, measurement.exclusive, measurement.inclusive);
+
+	  for (var id in allIDs) {
+	    var isDirty = false;
+	    // For each component that rendered, see if a component that triggered
+	    // a DOM op is in its subtree.
+	    for (var i = 0; i < dirtyLeafIDs.length; i++) {
+	      if (dirtyLeafIDs[i].indexOf(id) === 0) {
+	        isDirty = true;
+	        break;
+	      }
+	    }
+	    if (!isDirty && measurement.counts[id] > 0) {
+	      cleanComponents[id] = true;
+	    }
+	  }
+	  return cleanComponents;
+	}
+
+	var ReactDefaultPerfAnalysis = {
+	  getExclusiveSummary: getExclusiveSummary,
+	  getInclusiveSummary: getInclusiveSummary,
+	  getDOMSummary: getDOMSummary,
+	  getTotalTime: getTotalTime
+	};
+
+	module.exports = ReactDefaultPerfAnalysis;
+
+
+/***/ },
+/* 204 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2014, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule performanceNow
+	 * @typechecks
+	 */
+
+	var performance = __webpack_require__(217);
+
+	/**
+	 * Detect if we can use `window.performance.now()` and gracefully fallback to
+	 * `Date.now()` if it doesn't exist. We need to support Firefox < 15 for now
+	 * because of Facebook's testing infrastructure.
+	 */
+	if (!performance || !performance.now) {
+	  performance = Date;
+	}
+
+	var performanceNow = performance.now.bind(performance);
+
+	module.exports = performanceNow;
+
+
+/***/ },
+/* 205 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2014, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule isTextNode
+	 * @typechecks
+	 */
+
+	var isNode = __webpack_require__(218);
+
+	/**
+	 * @param {*} object The object to check.
+	 * @return {boolean} Whether or not the object is a DOM text node.
+	 */
+	function isTextNode(object) {
+	  return isNode(object) && object.nodeType == 3;
+	}
+
+	module.exports = isTextNode;
+
+
+/***/ },
+/* 206 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2014, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule adler32
+	 */
+
+	/* jslint bitwise:true */
+
+	"use strict";
+
+	var MOD = 65521;
+
+	// This is a clean-room implementation of adler32 designed for detecting
+	// if markup is not what we expect it to be. It does not need to be
+	// cryptographically strong, only reasonably good at detecting if markup
+	// generated on the server is different than that on the client.
+	function adler32(data) {
+	  var a = 1;
+	  var b = 0;
+	  for (var i = 0; i < data.length; i++) {
+	    a = (a + data.charCodeAt(i)) % MOD;
+	    b = (b + a) % MOD;
+	  }
+	  return a | (b << 16);
+	}
+
+	module.exports = adler32;
+
+
+/***/ },
+/* 207 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2014, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule ReactPutListenerQueue
+	 */
+
+	"use strict";
+
+	var PooledClass = __webpack_require__(104);
+	var ReactBrowserEventEmitter = __webpack_require__(121);
+
+	var assign = __webpack_require__(56);
+
+	function ReactPutListenerQueue() {
+	  this.listenersToPut = [];
+	}
+
+	assign(ReactPutListenerQueue.prototype, {
+	  enqueuePutListener: function(rootNodeID, propKey, propValue) {
+	    this.listenersToPut.push({
+	      rootNodeID: rootNodeID,
+	      propKey: propKey,
+	      propValue: propValue
+	    });
+	  },
+
+	  putListeners: function() {
+	    for (var i = 0; i < this.listenersToPut.length; i++) {
+	      var listenerToPut = this.listenersToPut[i];
+	      ReactBrowserEventEmitter.putListener(
+	        listenerToPut.rootNodeID,
+	        listenerToPut.propKey,
+	        listenerToPut.propValue
+	      );
+	    }
+	  },
+
+	  reset: function() {
+	    this.listenersToPut.length = 0;
+	  },
+
+	  destructor: function() {
+	    this.reset();
+	  }
+	});
+
+	PooledClass.addPoolingTo(ReactPutListenerQueue);
+
+	module.exports = ReactPutListenerQueue;
+
+
+/***/ },
+/* 208 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -26624,7 +34016,7 @@
 
 
 /***/ },
-/* 196 */
+/* 209 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -26661,7 +34053,7 @@
 
 
 /***/ },
-/* 197 */
+/* 210 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26677,7 +34069,7 @@
 
 	"use strict";
 
-	var invariant = __webpack_require__(91);
+	var invariant = __webpack_require__(103);
 
 	/**
 	 *
@@ -26727,10 +34119,10 @@
 
 	module.exports = accumulateInto;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(85)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(97)))
 
 /***/ },
-/* 198 */
+/* 211 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -26765,7 +34157,7 @@
 
 
 /***/ },
-/* 199 */
+/* 212 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -26781,10 +34173,10 @@
 
 	"use strict";
 
-	var ExecutionEnvironment = __webpack_require__(49);
+	var ExecutionEnvironment = __webpack_require__(59);
 
-	var getNodeForCharacterOffset = __webpack_require__(206);
-	var getTextContentAccessor = __webpack_require__(168);
+	var getNodeForCharacterOffset = __webpack_require__(222);
+	var getTextContentAccessor = __webpack_require__(182);
 
 	/**
 	 * While `isCollapsed` is available on the Selection object and `collapsed`
@@ -26978,7 +34370,7 @@
 
 
 /***/ },
-/* 200 */
+/* 213 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -27011,7 +34403,7 @@
 
 
 /***/ },
-/* 201 */
+/* 214 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -27062,7 +34454,7 @@
 
 
 /***/ },
-/* 202 */
+/* 215 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -27079,11 +34471,11 @@
 
 	"use strict";
 
-	var Danger = __webpack_require__(207);
-	var ReactMultiChildUpdateTypes = __webpack_require__(139);
+	var Danger = __webpack_require__(223);
+	var ReactMultiChildUpdateTypes = __webpack_require__(151);
 
-	var getTextContentAccessor = __webpack_require__(168);
-	var invariant = __webpack_require__(91);
+	var getTextContentAccessor = __webpack_require__(182);
+	var invariant = __webpack_require__(103);
 
 	/**
 	 * The DOM property to use when setting text content.
@@ -27237,10 +34629,10 @@
 
 	module.exports = DOMChildrenOperations;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(85)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(97)))
 
 /***/ },
-/* 203 */
+/* 216 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -27257,7 +34649,7 @@
 
 	"use strict";
 
-	var getEventCharCode = __webpack_require__(188);
+	var getEventCharCode = __webpack_require__(202);
 
 	/**
 	 * Normalization of deprecated HTML5 `key` values
@@ -27349,7 +34741,7 @@
 
 
 /***/ },
-/* 204 */
+/* 217 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -27366,7 +34758,7 @@
 
 	"use strict";
 
-	var ExecutionEnvironment = __webpack_require__(49);
+	var ExecutionEnvironment = __webpack_require__(59);
 
 	var performance;
 
@@ -27381,7 +34773,7 @@
 
 
 /***/ },
-/* 205 */
+/* 218 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -27413,7 +34805,152 @@
 
 
 /***/ },
-/* 206 */
+/* 219 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = function(module) {
+		if(!module.webpackPolyfill) {
+			module.deprecate = function() {};
+			module.paths = [];
+			// module.parent = undefined by default
+			module.children = [];
+			module.webpackPolyfill = 1;
+		}
+		return module;
+	}
+
+
+/***/ },
+/* 220 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports.read = function(buffer, offset, isLE, mLen, nBytes) {
+	  var e, m,
+	      eLen = nBytes * 8 - mLen - 1,
+	      eMax = (1 << eLen) - 1,
+	      eBias = eMax >> 1,
+	      nBits = -7,
+	      i = isLE ? (nBytes - 1) : 0,
+	      d = isLE ? -1 : 1,
+	      s = buffer[offset + i];
+
+	  i += d;
+
+	  e = s & ((1 << (-nBits)) - 1);
+	  s >>= (-nBits);
+	  nBits += eLen;
+	  for (; nBits > 0; e = e * 256 + buffer[offset + i], i += d, nBits -= 8);
+
+	  m = e & ((1 << (-nBits)) - 1);
+	  e >>= (-nBits);
+	  nBits += mLen;
+	  for (; nBits > 0; m = m * 256 + buffer[offset + i], i += d, nBits -= 8);
+
+	  if (e === 0) {
+	    e = 1 - eBias;
+	  } else if (e === eMax) {
+	    return m ? NaN : ((s ? -1 : 1) * Infinity);
+	  } else {
+	    m = m + Math.pow(2, mLen);
+	    e = e - eBias;
+	  }
+	  return (s ? -1 : 1) * m * Math.pow(2, e - mLen);
+	};
+
+	exports.write = function(buffer, value, offset, isLE, mLen, nBytes) {
+	  var e, m, c,
+	      eLen = nBytes * 8 - mLen - 1,
+	      eMax = (1 << eLen) - 1,
+	      eBias = eMax >> 1,
+	      rt = (mLen === 23 ? Math.pow(2, -24) - Math.pow(2, -77) : 0),
+	      i = isLE ? 0 : (nBytes - 1),
+	      d = isLE ? 1 : -1,
+	      s = value < 0 || (value === 0 && 1 / value < 0) ? 1 : 0;
+
+	  value = Math.abs(value);
+
+	  if (isNaN(value) || value === Infinity) {
+	    m = isNaN(value) ? 1 : 0;
+	    e = eMax;
+	  } else {
+	    e = Math.floor(Math.log(value) / Math.LN2);
+	    if (value * (c = Math.pow(2, -e)) < 1) {
+	      e--;
+	      c *= 2;
+	    }
+	    if (e + eBias >= 1) {
+	      value += rt / c;
+	    } else {
+	      value += rt * Math.pow(2, 1 - eBias);
+	    }
+	    if (value * c >= 2) {
+	      e++;
+	      c /= 2;
+	    }
+
+	    if (e + eBias >= eMax) {
+	      m = 0;
+	      e = eMax;
+	    } else if (e + eBias >= 1) {
+	      m = (value * c - 1) * Math.pow(2, mLen);
+	      e = e + eBias;
+	    } else {
+	      m = value * Math.pow(2, eBias - 1) * Math.pow(2, mLen);
+	      e = 0;
+	    }
+	  }
+
+	  for (; mLen >= 8; buffer[offset + i] = m & 0xff, i += d, m /= 256, mLen -= 8);
+
+	  e = (e << mLen) | m;
+	  eLen += mLen;
+	  for (; eLen > 0; buffer[offset + i] = e & 0xff, i += d, e /= 256, eLen -= 8);
+
+	  buffer[offset + i - d] |= s * 128;
+	};
+
+
+/***/ },
+/* 221 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	/**
+	 * isArray
+	 */
+
+	var isArray = Array.isArray;
+
+	/**
+	 * toString
+	 */
+
+	var str = Object.prototype.toString;
+
+	/**
+	 * Whether or not the given `val`
+	 * is an array.
+	 *
+	 * example:
+	 *
+	 *        isArray([]);
+	 *        // > true
+	 *        isArray(arguments);
+	 *        // > false
+	 *        isArray('');
+	 *        // > false
+	 *
+	 * @param {mixed} val
+	 * @return {bool}
+	 */
+
+	module.exports = isArray || function (val) {
+	  return !! val && '[object Array]' == str.call(val);
+	};
+
+
+/***/ },
+/* 222 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -27492,7 +35029,7 @@
 
 
 /***/ },
-/* 207 */
+/* 223 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -27511,12 +35048,12 @@
 
 	"use strict";
 
-	var ExecutionEnvironment = __webpack_require__(49);
+	var ExecutionEnvironment = __webpack_require__(59);
 
-	var createNodesFromMarkup = __webpack_require__(211);
-	var emptyFunction = __webpack_require__(141);
-	var getMarkupWrap = __webpack_require__(212);
-	var invariant = __webpack_require__(91);
+	var createNodesFromMarkup = __webpack_require__(225);
+	var emptyFunction = __webpack_require__(153);
+	var getMarkupWrap = __webpack_require__(226);
+	var invariant = __webpack_require__(103);
 
 	var OPEN_TAG_NAME_EXP = /^(<[^ \/>]+)/;
 	var RESULT_INDEX_ATTR = 'data-danger-index';
@@ -27678,139 +35215,10 @@
 
 	module.exports = Danger;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(85)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(97)))
 
 /***/ },
-/* 208 */
-/***/ function(module, exports, __webpack_require__) {
-
-	exports.read = function(buffer, offset, isLE, mLen, nBytes) {
-	  var e, m,
-	      eLen = nBytes * 8 - mLen - 1,
-	      eMax = (1 << eLen) - 1,
-	      eBias = eMax >> 1,
-	      nBits = -7,
-	      i = isLE ? (nBytes - 1) : 0,
-	      d = isLE ? -1 : 1,
-	      s = buffer[offset + i];
-
-	  i += d;
-
-	  e = s & ((1 << (-nBits)) - 1);
-	  s >>= (-nBits);
-	  nBits += eLen;
-	  for (; nBits > 0; e = e * 256 + buffer[offset + i], i += d, nBits -= 8);
-
-	  m = e & ((1 << (-nBits)) - 1);
-	  e >>= (-nBits);
-	  nBits += mLen;
-	  for (; nBits > 0; m = m * 256 + buffer[offset + i], i += d, nBits -= 8);
-
-	  if (e === 0) {
-	    e = 1 - eBias;
-	  } else if (e === eMax) {
-	    return m ? NaN : ((s ? -1 : 1) * Infinity);
-	  } else {
-	    m = m + Math.pow(2, mLen);
-	    e = e - eBias;
-	  }
-	  return (s ? -1 : 1) * m * Math.pow(2, e - mLen);
-	};
-
-	exports.write = function(buffer, value, offset, isLE, mLen, nBytes) {
-	  var e, m, c,
-	      eLen = nBytes * 8 - mLen - 1,
-	      eMax = (1 << eLen) - 1,
-	      eBias = eMax >> 1,
-	      rt = (mLen === 23 ? Math.pow(2, -24) - Math.pow(2, -77) : 0),
-	      i = isLE ? 0 : (nBytes - 1),
-	      d = isLE ? 1 : -1,
-	      s = value < 0 || (value === 0 && 1 / value < 0) ? 1 : 0;
-
-	  value = Math.abs(value);
-
-	  if (isNaN(value) || value === Infinity) {
-	    m = isNaN(value) ? 1 : 0;
-	    e = eMax;
-	  } else {
-	    e = Math.floor(Math.log(value) / Math.LN2);
-	    if (value * (c = Math.pow(2, -e)) < 1) {
-	      e--;
-	      c *= 2;
-	    }
-	    if (e + eBias >= 1) {
-	      value += rt / c;
-	    } else {
-	      value += rt * Math.pow(2, 1 - eBias);
-	    }
-	    if (value * c >= 2) {
-	      e++;
-	      c /= 2;
-	    }
-
-	    if (e + eBias >= eMax) {
-	      m = 0;
-	      e = eMax;
-	    } else if (e + eBias >= 1) {
-	      m = (value * c - 1) * Math.pow(2, mLen);
-	      e = e + eBias;
-	    } else {
-	      m = value * Math.pow(2, eBias - 1) * Math.pow(2, mLen);
-	      e = 0;
-	    }
-	  }
-
-	  for (; mLen >= 8; buffer[offset + i] = m & 0xff, i += d, m /= 256, mLen -= 8);
-
-	  e = (e << mLen) | m;
-	  eLen += mLen;
-	  for (; eLen > 0; buffer[offset + i] = e & 0xff, i += d, e /= 256, eLen -= 8);
-
-	  buffer[offset + i - d] |= s * 128;
-	};
-
-
-/***/ },
-/* 209 */
-/***/ function(module, exports, __webpack_require__) {
-
-	
-	/**
-	 * isArray
-	 */
-
-	var isArray = Array.isArray;
-
-	/**
-	 * toString
-	 */
-
-	var str = Object.prototype.toString;
-
-	/**
-	 * Whether or not the given `val`
-	 * is an array.
-	 *
-	 * example:
-	 *
-	 *        isArray([]);
-	 *        // > true
-	 *        isArray(arguments);
-	 *        // > false
-	 *        isArray('');
-	 *        // > false
-	 *
-	 * @param {mixed} val
-	 * @return {bool}
-	 */
-
-	module.exports = isArray || function (val) {
-	  return !! val && '[object Array]' == str.call(val);
-	};
-
-
-/***/ },
-/* 210 */
+/* 224 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
@@ -27936,7 +35344,7 @@
 
 
 /***/ },
-/* 211 */
+/* 225 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -27953,11 +35361,11 @@
 
 	/*jslint evil: true, sub: true */
 
-	var ExecutionEnvironment = __webpack_require__(49);
+	var ExecutionEnvironment = __webpack_require__(59);
 
-	var createArrayFrom = __webpack_require__(213);
-	var getMarkupWrap = __webpack_require__(212);
-	var invariant = __webpack_require__(91);
+	var createArrayFrom = __webpack_require__(227);
+	var getMarkupWrap = __webpack_require__(226);
+	var invariant = __webpack_require__(103);
 
 	/**
 	 * Dummy container used to render all markup.
@@ -28026,10 +35434,10 @@
 
 	module.exports = createNodesFromMarkup;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(85)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(97)))
 
 /***/ },
-/* 212 */
+/* 226 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -28043,9 +35451,9 @@
 	 * @providesModule getMarkupWrap
 	 */
 
-	var ExecutionEnvironment = __webpack_require__(49);
+	var ExecutionEnvironment = __webpack_require__(59);
 
-	var invariant = __webpack_require__(91);
+	var invariant = __webpack_require__(103);
 
 	/**
 	 * Dummy container used to detect which wraps are necessary.
@@ -28146,10 +35554,10 @@
 
 	module.exports = getMarkupWrap;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(85)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(97)))
 
 /***/ },
-/* 213 */
+/* 227 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -28164,7 +35572,7 @@
 	 * @typechecks
 	 */
 
-	var toArray = __webpack_require__(214);
+	var toArray = __webpack_require__(228);
 
 	/**
 	 * Perform a heuristic test to determine if an object is "array-like".
@@ -28239,7 +35647,7 @@
 
 
 /***/ },
-/* 214 */
+/* 228 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -28254,7 +35662,7 @@
 	 * @typechecks
 	 */
 
-	var invariant = __webpack_require__(91);
+	var invariant = __webpack_require__(103);
 
 	/**
 	 * Convert array-like objects to arrays.
@@ -28311,7 +35719,7 @@
 
 	module.exports = toArray;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(85)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(97)))
 
 /***/ }
 /******/ ])
