@@ -51,3 +51,26 @@ describe 'Stage', ->
           equal stage.taskQueues.length, 1
           ok spy1.calledTwice
           done()
+
+  it 'should do task by priority', (done) ->
+    stage = new Stage
+    spy1 = sinon.spy()
+    spy2 = sinon.spy()
+
+    task1 =
+      exec: ->
+        ok spy2.called
+        spy1()
+        done()
+      priority: 0
+
+    task2 =
+      exec: ->
+        ok not spy1.called
+        spy2()
+      priority: 1
+
+    stage.addTask(task1);
+    stage.addTask(task2);
+
+    stage.update()

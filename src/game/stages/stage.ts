@@ -3,6 +3,9 @@ global.EventEmitter = require('events').EventEmitter;
 import Player = require('../entities/battlers/player');
 import Entity = require('../entities/entity');
 import Task = require('../tasks/task');
+import Priority = require('../tasks/priority');
+
+var _ = require('lodash');
 
 export = Stage;
 class Stage extends EventEmitter {
@@ -21,12 +24,19 @@ class Stage extends EventEmitter {
     this.taskQueues.push(task);
   }
 
+  private sortTasks(): void {
+    this.taskQueues = _.sortBy(this.taskQueues, (task) => {
+      return task.priority ? task.priority : Priority.LOW
+    });
+  }
+
   private execAllTasks(): Promise<Task[]>{
+    this.sortTasks();
     return new Promise(done => {
       var nextTasks: Task[] = [];
       (<any>Promise).reduce(this.taskQueues, (p, task) => {
         return new Promise(done=> {
-          Promise.resolve(task.exec()).then((val)=> {
+          Promise.resolve(task.exec(this)).then((val)=> {
             if(val === true) nextTasks.push(task);
             done();
           });
@@ -55,7 +65,6 @@ class Stage extends EventEmitter {
       Promise.all(this.entities.map(e => e.step())).then(() => {
         this.execAllTasks().then((nextTasks) => {
           this.taskQueues = nextTasks;
-          this.entities = this.entities.filter(e => e.isAlive());
           done();
         });
       });

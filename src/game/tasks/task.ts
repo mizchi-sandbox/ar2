@@ -1,5 +1,9 @@
+import Stage = require('../stages/stage');
+import Priority = require('./priority')
+
 interface Task {
-  exec(): void | boolean | Promise<boolean> | Promise<void>;
+  priority?: Priority;
+  exec(stage?: Stage): void | boolean | Promise<boolean> | Promise<void>;
 }
 
 export = Task;
