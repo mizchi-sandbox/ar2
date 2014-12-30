@@ -19,8 +19,7 @@ KeyMap =
   73: 'i'
 
 window.addEventListener 'keydown', (e) ->
-  console.log e.keyCode
-
+  # console.log e.keyCode
   emitter = app.getActiveEmitter()
   return unless game
   switch KeyMap[e.keyCode]

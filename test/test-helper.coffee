@@ -8,3 +8,8 @@ Overworld.setReact React
 jade = require('react-jade')
 require.extensions['.jade'] = (module, filename) ->
   module.exports = jade.compileFile(filename)
+
+global.assert = require 'assert'
+global.ok = assert.ok
+global.equal = assert.equal
+global.deepEqual = assert.deepEqual

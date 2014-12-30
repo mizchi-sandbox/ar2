@@ -14,7 +14,7 @@ gulp.task 'build:ts', shell.task [
   'tsc -m commonjs --target es5 --outDir lib src/entry.ts'
 ]
 
-gulp.task 'build:webpack', ->
+gulp.task 'webpack', ->
   gulp.src('lib/index.js')
   .pipe(webpack(webpackConfig))
   .pipe(gulp.dest('.'))
@@ -28,12 +28,21 @@ gulp.task 'watch', ['build'], ->
   gulp.watch 'src/**/*.coffee', ['build:coffee']
   gulp.watch 'src/**/*.ts', ['build:ts']
   gulp.watch 'src/**/*.jade', ['build:jade']
-  gulp.watch 'lib/**/*.js', ['build:webpack']
+  gulp.watch 'lib/**/*', ['webpack']
 
-gulp.task 'build', ['build:coffee', 'build:jade', 'build:ts']
-gulp.task 'default', ['build', 'build:webpack']
+gulp.task 'build', ['clear', 'build:coffee', 'build:jade', 'build:ts']
+gulp.task 'default', ['build']
+
+gulp.task 'clear', shell.task [
+  'rm -r lib'
+]
 
 ## Deploy tasks
 gulp.task 'prepare-deploy', ['build'], ->
   gulp.src('public/**/*')
     .pipe(gulp.dest('deploy'))
+
+## Deploy tasks
+gulp.task 'deploy', ['prepare-deploy'], shell.task [
+  'git subtree push --prefix deploy/ origin gh-pages'
+]
