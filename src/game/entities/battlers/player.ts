@@ -1,5 +1,7 @@
 import Bullet = require('../objects/bullets/bullet');
 import Battler = require('./battler');
+import CreateBullet = require('../../tasks/create-bullet');
+
 declare var game: any;
 
 export = Player;
@@ -39,13 +41,11 @@ class Player extends Battler {
     this.rad = Math.atan2(my-ny, mx-nx); // + Math.PI/2
 
     if(this.inputBuffer.mouseLeft) {
-      var bullet = new Bullet(this.x, this.y, this.rad);
-      game.stage.entities.push(bullet);
+      game.stage.addTask(new CreateBullet(this.x, this.y, this.rad));
     }
 
     if(this.inputBuffer.mouseRight) {
-      var bullet = new Bullet(mx, my, this.rad);
-      game.stage.entities.push(bullet);
+      game.stage.addTask(new CreateBullet(mx, my, this.rad));
     }
   }
 }
