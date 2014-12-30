@@ -1,13 +1,9 @@
 import Task = require('./task');
 import Bullet = require('../entities/objects/bullets/bullet');
 import Battler = require('../entities/battlers/battler')
-/*import Priority = require('./priority');*/
 
 export = CreateBullet;
 
-// Sweep all dead entities
-// Always active if it exists.
-// TODO: Giving exp and gold is here.
 class CreateBullet implements Task {
   constructor(
     public owner:Battler,

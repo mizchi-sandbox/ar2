@@ -1,5 +1,6 @@
 import Battler = require('./battler');
 import CreateBullet = require('../../tasks/create-bullet');
+import CreateBulletTrap = require('../../tasks/create-bullet-trap');
 
 declare var game: any;
 
@@ -44,7 +45,7 @@ class Player extends Battler {
     }
 
     if(this.inputBuffer.mouseRight) {
-      game.stage.addTask(new CreateBullet(this, mx, my, this.rad));
+      game.stage.addTask(new CreateBulletTrap(this, mx, my, this.rad));
     }
   }
 }

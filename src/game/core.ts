@@ -3,7 +3,6 @@ declare var app: any;
 
 /*vr global = require 'global'*/
 import Player = require('./entities/battlers/player');
-import Enemy = require('./entities/battlers/enemies/enemy');
 import Stage = require('./stages/stage');
 import BattleStage = require('./stages/battle-stage');
 
@@ -66,13 +65,6 @@ class Game extends EventEmitter {
   createNewStage(){
     this.stage = new BattleStage
     this.stage.entities.push(this.player);
-
-    [[250, 200], [400, 100], [100, 450]].forEach(pos => {
-      var enemy = new Enemy();
-      enemy.x = pos[0];
-      enemy.y = pos[1];
-      this.stage.entities.push(enemy);
-    });
   }
 
   serialize(){
