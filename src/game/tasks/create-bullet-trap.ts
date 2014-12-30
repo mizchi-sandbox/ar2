@@ -16,6 +16,6 @@ class CreateBulletTrap implements Task {
     bulletTrap.y = this.y;
     bulletTrap.rad = this.rad;
 
-    stage.entities.push(bulletTrap);
+    stage.addChild(bulletTrap);
   }
 }

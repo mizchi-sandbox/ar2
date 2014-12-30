@@ -16,6 +16,12 @@ class Stage extends EventEmitter {
   public taskQueues: Task[];
   public physicsWorld: any;
 
+  addChild(entity: Entity){
+    this.entities.push(entity);
+    entity.stage = this;
+    this.physicsWorld.add(entity.physicsBody);
+  }
+
   constructor(){
     super();
     this.cnt = 0;
@@ -45,26 +51,7 @@ class Stage extends EventEmitter {
       edgeBounce
     ]);
 
-    //debug
-    var ball = Physics.body('circle',{
-      x: 100,
-      y: 100,
-      vx: 0.1,
-      vy: 0.1,
-      radius: 20
-    });
-    world.add(ball)
-
-    var ball2 = Physics.body('circle',{
-      x: 100,
-      y: 150,
-      vx: 0.1,
-      vy: 0,
-      radius: 20
-    });
-    world.add(ball2)
     global.world = world;
-
     return world;
   }
 

@@ -25,6 +25,6 @@ class BulletTrap extends Battler {
     this.cnt++;
     this.rad+= Math.PI/60;
     if(this.cnt%5 === 0) this.fire();
-    if(this.cnt > 120) this.remove();
+    if(this.cnt > 120) this.remove()
   }
 }

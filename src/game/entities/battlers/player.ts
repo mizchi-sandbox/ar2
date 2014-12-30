@@ -14,26 +14,22 @@ class Player extends Battler {
   }
 
   step(){
-    var speed = 4;
-
-    var nx = this.x;
-    var ny = this.y;
-
+    var speed = 0.3;
+    var nx = 0;
+    var ny = 0;
     // update pos
     if(this.inputBuffer.left) {
-      nx -= speed;
+      nx = -speed;
     } else if(this.inputBuffer.right){
-      nx += speed;
+      nx = +speed;
     }
 
     if(this.inputBuffer.up) {
-      ny -= speed;
+      ny = -speed;
     } else if(this.inputBuffer.down) {
-      ny += speed;
+      ny = +speed;
     }
-
-    this.x = nx;
-    this.y = ny;
+    this.physicsBody.state.vel.set(nx, ny);
 
     // update rad
     var mx = this.inputBuffer.focus.x;
@@ -41,11 +37,11 @@ class Player extends Battler {
     this.rad = Math.atan2(my-ny, mx-nx); // + Math.PI/2
 
     if(this.inputBuffer.mouseLeft) {
-      game.stage.addTask(new CreateBullet(this, this.x, this.y, this.rad));
+      this.stage.addTask(new CreateBullet(this, this.x, this.y, this.rad));
     }
 
     if(this.inputBuffer.mouseRight) {
-      game.stage.addTask(new CreateBulletTrap(this, mx, my, this.rad));
+      this.stage.addTask(new CreateBulletTrap(this, mx, my, this.rad));
     }
   }
 }

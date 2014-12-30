@@ -17,7 +17,7 @@ class SimpleSpawner implements Task {
         var enemy = new Enemy();
         enemy.x = Math.random() * 640;
         enemy.y = Math.random() * 480;
-        stage.entities.push(enemy)
+        stage.addChild(enemy);
       });
     }
     return true;

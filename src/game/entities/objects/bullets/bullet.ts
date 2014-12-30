@@ -32,22 +32,7 @@ class Bullet extends Entity {
 
   public step(stage){
     this.cnt++
-    var speed = 8;
-    this.x += Math.cos(this.rad) * speed;
-    this.y += Math.sin(this.rad) * speed;
-
     if(this.cnt > 40)
       this.remove()
-
-    // TODO: 物理エンジンいれる
-    stage.entities
-      .filter(e => e.groupId !== this.owner.groupId && e.groupId != null)
-      .filter(e => this.canAttackTo(e))
-      .forEach(target => {
-        // 同時ヒットを許している
-        this.attack(target);
-        this.life = 0;
-        this.remove();
-      });
   }
 }
