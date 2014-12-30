@@ -6,6 +6,8 @@ import Player = require('./entities/battlers/player');
 import Stage = require('./stages/stage');
 import BattleStage = require('./stages/battle-stage');
 
+var clone = require('clone');
+
 var instance;
 export = Game;
 class Game extends EventEmitter {
@@ -70,18 +72,40 @@ class Game extends EventEmitter {
     this.stage.entities.push(this.player);
   }
 
+  private formatPhysicsBodies(bodies: any[]){
+    return bodies.map(b => {
+      var obj:any = {
+        name: b.name,
+        pos: b.state.pos.values(),
+        angle: b.state.angular.pos
+      }
+      if(b.name === 'circle'){
+        obj.radius = b.radius;
+      } else if(b.name === 'rectangle'){
+        obj.width = b.width;
+        obj.height = b.height;
+        obj.x = b.x;
+        obj.y = b.y;
+      } else if(b.name === 'convex-polygon'){
+        obj.vertices = b.geometry.vertices;
+      }
+      return obj;
+    });
+  }
+
   serialize(){
     var target = this.player;
     var cx = target.x-320;
     var cy = target.y-240;
-
+    var bodies = this.stage.physicsWorld.getBodies();
     return {
       score: this.score,
       cx: cx,
       cy: cy,
       cnt: this.stage.cnt,
       entities: this.stage.entities.map(e => e.serialize()),
-      focus: this.inputBuffer.focus
+      focus: this.inputBuffer.focus,
+      bodies: this.formatPhysicsBodies(bodies)
     };
   }
 

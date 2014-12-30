@@ -7,6 +7,7 @@ module.exports =
     focus:
       x: -1000
       y: -1000
+    bodies: []
 
   aggregate: (props, state) ->
     state
