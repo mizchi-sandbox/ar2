@@ -10,6 +10,8 @@ var instance;
 export = Game;
 class Game extends EventEmitter {
   static instance: Game = null
+  score: number = 0; // temporary game logic
+  addScore(n: number) {this.score+=n;}
 
   player: Player;
   inputBuffer: any;
@@ -74,6 +76,7 @@ class Game extends EventEmitter {
     var cy = target.y-240;
 
     return {
+      score: this.score,
       cx: cx,
       cy: cy,
       cnt: this.stage.cnt,
