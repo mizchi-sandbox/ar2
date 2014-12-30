@@ -1,5 +1,5 @@
 import Task = require('./task');
-import Priority = require('./priority');
+import Priority = require('../values/priority');
 
 export = DeathChecker;
 

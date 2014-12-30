@@ -1,6 +1,8 @@
 var uuid = require('node-uuid');
 var _ = require('lodash');
 global.EventEmitter = require('events').EventEmitter;
+import Stage = require('../stages/stage');
+import GroupId = require('../values/group-id');
 
 export = Entity;
 class Entity extends EventEmitter {
@@ -11,7 +13,7 @@ class Entity extends EventEmitter {
   public y: number;
   public rad: number;
   public life: number;
-  public attackableTypes: any[];
+  public groupId: GroupId;
 
   constructor() {
     super();
@@ -20,10 +22,9 @@ class Entity extends EventEmitter {
     this.y = 0;
     this.rad = 0;
     this.life = 1;
-    this.attackableTypes = [];
   }
 
-  step(): Promise<any> | any{
+  step(stage?: Stage): Promise<any> | any{
     // console.log 'update:', this.id
   }
 
@@ -43,7 +44,7 @@ class Entity extends EventEmitter {
     };
   }
 
-  public isAttackable(): boolean {
+  /*public isAttackable(): boolean {
     return this.attackableTypes && Boolean(this.attackableTypes.length);
   }
 
@@ -63,5 +64,5 @@ class Entity extends EventEmitter {
     // TODO 対象と自分のパラメータからダメージ量を算出
     var damage = this.computeAttackPower();
     other['suffer'](damage);
-  }
+  }*/
 }

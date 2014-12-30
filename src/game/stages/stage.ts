@@ -3,7 +3,7 @@ global.EventEmitter = require('events').EventEmitter;
 import Player = require('../entities/battlers/player');
 import Entity = require('../entities/entity');
 import Task = require('../tasks/task');
-import Priority = require('../tasks/priority');
+import Priority = require('../values/priority');
 
 var _ = require('lodash');
 
@@ -51,7 +51,7 @@ class Stage extends EventEmitter {
     return new Promise(done => {
       this.cnt++;
       // TODO 計算量の圧縮と衝突判定すり抜け対策
-      this.entities
+      /*this.entities
         .filter(e => e.isAttackable() && e.isAlive())
         .forEach(attacker => {
           this.entities
@@ -60,9 +60,9 @@ class Stage extends EventEmitter {
               attacker.attack(target);
               if(attacker.isDead()) return;
             });
-          });
+          });*/
 
-      Promise.all(this.entities.map(e => e.step())).then(() => {
+      Promise.all(this.entities.map(e => e.step(this))).then(() => {
         this.execAllTasks().then((nextTasks) => {
           this.taskQueues = nextTasks;
           done();

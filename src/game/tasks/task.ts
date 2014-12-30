@@ -1,5 +1,5 @@
 import Stage = require('../stages/stage');
-import Priority = require('./priority')
+import Priority = require('../values/priority')
 
 interface Task {
   priority?: Priority;
