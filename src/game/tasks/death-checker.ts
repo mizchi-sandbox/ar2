@@ -1,5 +1,5 @@
 import Task = require('./task');
-import RemoveEntity = require('./remove-entity');
+/*import RemoveEntity = require('./remove-entity');*/
 import Priority = require('../values/priority');
 
 // Sweep all dead entities
@@ -9,11 +9,12 @@ export = DeathChecker;
 class DeathChecker implements Task {
   public get priority(): Priority {return Priority.DEATH_CHECKER;}
   exec(stage){
-    stage.entities
-      .filter(e => e.isDead());
+    stage.entities = stage.entities.filter(e => e.isAlive());
+    /*stage.entities
+      .filter(e => e.isDead())
       .forEach(e => {
-        stage.addTask(new RemoveEntity(e.id));
-      });
+        e.remove()
+      });*/
     return true;
   }
 }

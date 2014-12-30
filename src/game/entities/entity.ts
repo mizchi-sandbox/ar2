@@ -4,6 +4,10 @@ global.EventEmitter = require('events').EventEmitter;
 import Stage = require('../stages/stage');
 import GroupId = require('../values/group-id');
 
+import RemoveEntity = require('../tasks/remove-entity');
+import Game = require('../core');
+declare var game: Game;
+
 export = Entity;
 class Entity extends EventEmitter {
   public static type:string = 'entity';
@@ -14,6 +18,11 @@ class Entity extends EventEmitter {
   public rad: number;
   public life: number;
   public groupId: GroupId;
+
+  remove(): void{
+    console.log('add task to remove self', this.id);
+    game.stage.addTask(new RemoveEntity(this.id));
+  }
 
   constructor() {
     super();
