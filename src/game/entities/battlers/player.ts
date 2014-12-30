@@ -1,4 +1,3 @@
-import Bullet = require('../objects/bullets/bullet');
 import Battler = require('./battler');
 import CreateBullet = require('../../tasks/create-bullet');
 
@@ -41,11 +40,11 @@ class Player extends Battler {
     this.rad = Math.atan2(my-ny, mx-nx); // + Math.PI/2
 
     if(this.inputBuffer.mouseLeft) {
-      game.stage.addTask(new CreateBullet(this.x, this.y, this.rad));
+      game.stage.addTask(new CreateBullet(this, this.x, this.y, this.rad));
     }
 
     if(this.inputBuffer.mouseRight) {
-      game.stage.addTask(new CreateBullet(mx, my, this.rad));
+      game.stage.addTask(new CreateBullet(this, mx, my, this.rad));
     }
   }
 }
