@@ -19,7 +19,6 @@ class Bullet extends Entity {
   private computeAttackPower(){ return 1; }
 
   onHit(other: Battler) {
-
     if(this.groupId !== other.groupId){
       this.attack(other);
       this.remove();

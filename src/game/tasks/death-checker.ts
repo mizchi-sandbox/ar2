@@ -1,5 +1,5 @@
 import Task = require('./task');
-/*import RemoveEntity = require('./remove-entity');*/
+import RemoveEntity = require('./remove-entity');
 import Priority = require('../values/priority');
 import GroupId = require('../values/group-id');
 import Game = require('../core');
@@ -19,14 +19,7 @@ class DeathChecker implements Task {
 
     stage.entities
       .filter(e => e.isDead())
-      .forEach(e => {
-        e.remove()
-      });
-
-    stage.entities = stage.entities.filter(e => e.isAlive());
-    /*stage.entities = stage.entities.filter(e => {
-
-    });*/
+      .forEach(e => e.remove());
     return true;
   }
 }

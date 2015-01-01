@@ -6,7 +6,7 @@ class Enemy extends Battler {
   static type = 'enemy';
   constructor(){
     super();
-    this.life = 10;
+    this.life = 1;
     this.groupId = GroupId.ENEMY;
   }
 }

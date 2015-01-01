@@ -29,7 +29,7 @@ class Entity extends EventEmitter {
   public get vx(): number {return this.physicsBody.state.vel.vx;}
   public get vy(): number {return this.physicsBody.state.vel.vy;}
 
-  remove(): void{
+  remove(): void {
     game.stage.addTask(new RemoveEntity(this.id));
   }
 
@@ -60,8 +60,7 @@ class Entity extends EventEmitter {
   public serialize(): {x: number; y:number; rad: number; id: string; type: string;} {
     return {
       id: this.id,
-      x: this.x,
-      y:this.y,
+      x: this.x, y:this.y,
       rad: this.rad,
       type: (<any>this.constructor).type
     };
