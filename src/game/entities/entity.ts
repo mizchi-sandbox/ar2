@@ -20,6 +20,11 @@ class Entity extends EventEmitter {
   public physicsBody: any;
   public stage: Stage; // attached by addChild
 
+  public suffer(damage: number): void {
+    if(this.isAlive())
+      this.life -= damage;
+  }
+
   // Alias to Physics world
   public get x(): number {return this.physicsBody.state.pos.x;}
   public set x(val) {this.physicsBody.state.pos.x = val;}

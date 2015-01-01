@@ -15,6 +15,7 @@ class BulletTrap extends Battler {
     super();
     this.life = 1;
     this.cnt = 0;
+    this.groupId = owner.groupId;
   }
 
   private fire(){

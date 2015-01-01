@@ -13,6 +13,7 @@ class Player extends Battler {
   constructor(public inputBuffer: any){
     super();
     this.groupId = GroupId.ALLY;
+    this.life = Infinity;
   }
 
   private updateVelocity(){
