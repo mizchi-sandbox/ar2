@@ -5,6 +5,8 @@ import CreateBullet = require('../../../tasks/create-bullet');
 export = Enemy;
 class Enemy extends Battler {
   static type = 'enemy';
+
+  private cnt: number;
   constructor(){
     super();
     this.life = 1;
