@@ -4,16 +4,17 @@ import Player = require('../entities/battlers/player');
 import Entity = require('../entities/entity');
 import Task = require('../tasks/task');
 import Priority = require('../values/priority');
+import TaskRunner = require('./task-runner');
 
 declare var Physics: any;
-
 var _ = require('lodash');
 
 export = Stage;
 class Stage extends EventEmitter {
   public cnt: number;
   public entities: Entity[];
-  public taskQueues: Task[];
+  /*public taskQueues: Task[];*/
+  public taskRunner: TaskRunner;
   public physicsWorld: any;
 
   addChild(entity: Entity){
@@ -22,11 +23,13 @@ class Stage extends EventEmitter {
     this.physicsWorld.add(entity.physicsBody);
   }
 
+  public get taskQueueCount(): number { return this.taskRunner.taskQueues.length; }
+
   constructor(){
     super();
     this.cnt = 0;
     this.entities = [];
-    this.taskQueues = [];
+    this.taskRunner = new TaskRunner();
     this.physicsWorld = this.createWorld();
   }
 
@@ -70,35 +73,11 @@ class Stage extends EventEmitter {
   }
 
   public addTask(task: Task): void{
-    this.taskQueues.push(task);
-  }
-
-  private sortTasks(): void {
-    this.taskQueues = _.sortBy(this.taskQueues, (task) => {
-      return task.priority ? task.priority : Priority.LOW
-    });
-  }
-
-  private execAllTasks(): Promise<Task[]>{
-    this.sortTasks();
-    return new Promise(done => {
-      var nextTasks: Task[] = [];
-      (<any>Promise).reduce(this.taskQueues, (p, task) => {
-        return new Promise(done=> {
-          Promise.resolve(task.exec(this)).then((val)=> {
-            if(val === true) nextTasks.push(task);
-            done();
-          });
-        });
-      }, Promise.resolve()).then(()=>{
-        done(nextTasks);
-      });
-    });
+    this.taskRunner.addTask(task);
   }
 
   private updatePhysicsWorld(){
     this.physicsWorld.step(Date.now());
-    /*console.log(this.physicsWorld.getBodies()[0].state.pos.x);*/
   }
 
   public update(): Promise<any>{
@@ -107,10 +86,7 @@ class Stage extends EventEmitter {
 
     return new Promise(done => {
       Promise.all(this.entities.map(e => e.step(this))).then(() => {
-        this.execAllTasks().then((nextTasks) => {
-          this.taskQueues = nextTasks;
-          done();
-        });
+        done(this.taskRunner.run(this));
       });
     });
   }

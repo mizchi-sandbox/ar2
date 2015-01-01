@@ -2,7 +2,7 @@ Stage = require '../../../lib/game/stages/stage'
 sinon = require 'sinon'
 
 describe 'Stage', ->
-  it 'should exec queues and cosume', ->
+  it 'should exec queues and consume', ->
     stage = new Stage
 
     spy1 = sinon.spy()
@@ -23,12 +23,12 @@ describe 'Stage', ->
 
     stage.addTask(task1);
     stage.addTask(task2);
-    equal stage.taskQueues.length, 2
+    equal stage.taskQueueCount, 2
     new Promise (done) ->
       stage.update().then ->
         ok spy1.calledTwice
         ok spy2.calledOnce
-        equal stage.taskQueues.length, 0
+        equal stage.taskQueueCount, 0
         done()
 
   it 'should save task to next if it returns with true', ->
@@ -40,15 +40,15 @@ describe 'Stage', ->
         done(true)
 
     stage.addTask(task1);
-    equal stage.taskQueues.length, 1
+    equal stage.taskQueueCount, 1
 
     new Promise (done) ->
       stage.update().then ->
-        equal stage.taskQueues.length, 1
+        equal stage.taskQueueCount, 1
         ok spy1.calledOnce
 
         stage.update().then ->
-          equal stage.taskQueues.length, 1
+          equal stage.taskQueueCount, 1
           ok spy1.calledTwice
           done()
 
