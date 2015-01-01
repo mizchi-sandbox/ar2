@@ -9,23 +9,21 @@ export = Bullet;
 class Bullet extends Entity {
   static type = 'bullet';
   private cnt: number;
-  constructor(public owner: Battler, x: number, y: number, rad: number) {
+  constructor(public owner: Battler) {
     super();
-    this.x = x;
-    this.y = y;
-    this.rad = rad;
     this.life = 1;
     this.cnt = 0;
-  }
-
-  private canAttackTo(other: Entity) {
-    return other.isAlive() &&
-      this.x - 15 <= other.x && other.x <= this.x + 15 &&
-      this.y - 15 <= other.y && other.y <= this.y + 15
-    ;
+    this.groupId = owner.groupId;
   }
 
   private computeAttackPower(){ return 1; }
+
+  onHit(other: Battler) {
+    if(this.groupId !== other.groupId){
+      this.attack(other);
+      this.remove();
+    }
+  }
 
   public attack(other: Battler) {
     // TODO 対象と自分のパラメータからダメージ量を算出
@@ -35,22 +33,7 @@ class Bullet extends Entity {
 
   public step(stage){
     this.cnt++
-    var speed = 8;
-    this.x += Math.cos(this.rad) * speed;
-    this.y += Math.sin(this.rad) * speed;
-
     if(this.cnt > 40)
       this.remove()
-
-    // TODO: 物理エンジンいれる
-    stage.entities
-      .filter(e => e.groupId !== this.owner.groupId && e.groupId != null)
-      .filter(e => this.canAttackTo(e))
-      .forEach(target => {
-        // 同時ヒットを許している
-        this.attack(target);
-        this.life = 0;
-        this.remove();
-      });
   }
 }

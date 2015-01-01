@@ -2,6 +2,7 @@ global = require 'global'
 global.Promise = require 'bluebird'
 global.React = require 'react'
 global.Overworld = require 'overworld'
+global.Physics = require 'PhysicsJS'
 Overworld.setReact React
 
 # require jade

@@ -3,6 +3,8 @@ global = require 'global'
 global.Promise = require 'bluebird'
 global.React = require 'react'
 global.Overworld = require 'overworld'
+window.Physics = require 'PhysicsJS'
+
 Overworld.setReact React
 
 global.app = new Overworld.Portal

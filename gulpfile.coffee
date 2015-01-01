@@ -38,7 +38,7 @@ gulp.task 'clear', shell.task [
 ]
 
 ## Deploy tasks
-gulp.task 'prepare-deploy', ['build'], ->
+gulp.task 'prepare-deploy', ->
   gulp.src('public/**/*')
     .pipe(gulp.dest('deploy'))
 

@@ -7,5 +7,4 @@ Game = require './game/core'
 window.game = Game.getInstance()
 window.addEventListener 'DOMContentLoaded', ->
   app.mount(document.body)
-
   app.transition('opening', {})

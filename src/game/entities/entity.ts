@@ -7,25 +7,44 @@ import GroupId = require('../values/group-id');
 import RemoveEntity = require('../tasks/remove-entity');
 import Game = require('../core');
 declare var game: Game;
+var Physics = require('PhysicsJS');
 
 export = Entity;
 class Entity extends EventEmitter {
   public static type:string = 'entity';
 
   public id: string;
-  public x: number;
-  public y: number;
   public rad: number;
   public life: number;
   public groupId: GroupId;
+  public physicsBody: any;
+  public stage: Stage; // attached by addChild
 
-  remove(): void{
-    console.log('add task to remove self', this.id);
+  public suffer(damage: number): void {
+    if(this.isAlive())
+      this.life -= damage;
+  }
+
+  // Alias to Physics world
+  public get x(): number {return this.physicsBody.state.pos.x;}
+  public set x(val) {this.physicsBody.state.pos.x = val;}
+  public get y(): number {return this.physicsBody.state.pos.y;}
+  public set y(val) {this.physicsBody.state.pos.y = val;}
+
+  public get vx(): number {return this.physicsBody.state.vel.vx;}
+  public get vy(): number {return this.physicsBody.state.vel.vy;}
+
+  remove(): void {
     game.stage.addTask(new RemoveEntity(this.id));
   }
 
   constructor() {
     super();
+    this.stage = null;
+    this.physicsBody = Physics.body('circle', {
+      radius: 10
+    });
+
     this.id = uuid();
     this.x = 0;
     this.y = 0;
@@ -33,45 +52,22 @@ class Entity extends EventEmitter {
     this.life = 1;
   }
 
-  step(stage?: Stage): Promise<any> | any{
-    // console.log 'update:', this.id
-  }
+  step(stage?: Stage): Promise<any> | any{}
 
   public isAlive(): boolean { return this.life > 0; }
+
   public isDead(): boolean { return !this.isAlive();}
 
-  public dispose(){
-  }
+  public dispose(){}
+
+  public onHit(other: Entity){}
 
   public serialize(): {x: number; y:number; rad: number; id: string; type: string;} {
     return {
       id: this.id,
-      x: this.x,
-      y:this.y,
+      x: this.x, y:this.y,
       rad: this.rad,
       type: (<any>this.constructor).type
     };
   }
-
-  /*public isAttackable(): boolean {
-    return this.attackableTypes && Boolean(this.attackableTypes.length);
-  }
-
-  canAttackTo(other: Entity) {
-    return other !== this &&
-      other['suffer'] &&  // TODO 攻撃対象となり得るのかを属性で定義する
-      _.include(this.attackableTypes, (<any>other.constructor).type) &&
-      other.isAlive() &&
-      this.x - 15 <= other.x && other.x <= this.x + 15 &&
-      this.y - 15 <= other.y && other.y <= this.y + 15
-    ;
-  }
-
-  private computeAttackPower(){ return 1; }
-
-  public attack(other: Entity) {
-    // TODO 対象と自分のパラメータからダメージ量を算出
-    var damage = this.computeAttackPower();
-    other['suffer'](damage);
-  }*/
 }

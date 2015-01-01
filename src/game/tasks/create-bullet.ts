@@ -1,13 +1,9 @@
 import Task = require('./task');
 import Bullet = require('../entities/objects/bullets/bullet');
 import Battler = require('../entities/battlers/battler')
-/*import Priority = require('./priority');*/
 
 export = CreateBullet;
 
-// Sweep all dead entities
-// Always active if it exists.
-// TODO: Giving exp and gold is here.
 class CreateBullet implements Task {
   constructor(
     public owner:Battler,
@@ -15,7 +11,15 @@ class CreateBullet implements Task {
   ){}
 
   exec(stage){
-    var bullet = new Bullet(this.owner, this.x, this.y, this.rad);
-    stage.entities.push(bullet);
+    var bullet = new Bullet(this.owner);
+    bullet.x = this.x;
+    bullet.y = this.y;
+    bullet.rad = this.rad;
+    stage.addChild(bullet);
+
+    var speed = 0.5;
+    var vx = Math.cos(this.owner.rad) * speed;
+    var vy = Math.sin(this.owner.rad) * speed;
+    bullet.physicsBody.state.vel.set(vx, vy);
   }
 }

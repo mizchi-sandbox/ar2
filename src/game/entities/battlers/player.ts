@@ -1,5 +1,7 @@
 import Battler = require('./battler');
 import CreateBullet = require('../../tasks/create-bullet');
+import CreateBulletTrap = require('../../tasks/create-bullet-trap');
+import GroupId = require('../../values/group-id')
 
 declare var game: any;
 
@@ -10,41 +12,51 @@ class Player extends Battler {
 
   constructor(public inputBuffer: any){
     super();
+    this.groupId = GroupId.ALLY;
+    this.life = Infinity;
   }
 
-  step(){
-    var speed = 4;
-
-    var nx = this.x;
-    var ny = this.y;
-
+  private updateVelocity(){
+    var speed = 0.3;
+    var nx = 0;
+    var ny = 0;
     // update pos
     if(this.inputBuffer.left) {
-      nx -= speed;
+      nx = -speed;
     } else if(this.inputBuffer.right){
-      nx += speed;
+      nx = +speed;
     }
 
     if(this.inputBuffer.up) {
-      ny -= speed;
+      ny = -speed;
     } else if(this.inputBuffer.down) {
-      ny += speed;
+      ny = +speed;
     }
 
-    this.x = nx;
-    this.y = ny;
+    this.physicsBody.state.vel.set(nx, ny);
+  }
 
-    // update rad
+  private updateDirection(){
     var mx = this.inputBuffer.focus.x;
     var my = this.inputBuffer.focus.y;
-    this.rad = Math.atan2(my-ny, mx-nx); // + Math.PI/2
+    this.rad = Math.atan2(my-this.y, mx-this.y);
+  }
 
+  private execSkills(){
+    var mx = this.inputBuffer.focus.x;
+    var my = this.inputBuffer.focus.y;
     if(this.inputBuffer.mouseLeft) {
-      game.stage.addTask(new CreateBullet(this, this.x, this.y, this.rad));
+      this.stage.addTask(new CreateBullet(this, this.x, this.y, this.rad));
     }
-
     if(this.inputBuffer.mouseRight) {
-      game.stage.addTask(new CreateBullet(this, mx, my, this.rad));
+      this.stage.addTask(new CreateBulletTrap(this, mx, my, this.rad));
     }
+  }
+
+  step(){
+    this.physicsBody.sleep(false);
+    this.updateVelocity();
+    this.updateDirection();
+    this.execSkills();
   }
 }
