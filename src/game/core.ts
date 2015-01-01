@@ -65,8 +65,8 @@ class Game extends EventEmitter {
   }
 
   updateFocus(pos){
-    this.inputBuffer.focus.x = pos.x+this.player.x-320
-    this.inputBuffer.focus.y = pos.y+this.player.y-240
+    this.inputBuffer.focus.x = pos.x+this.player.x-320;
+    this.inputBuffer.focus.y = pos.y+this.player.y-240;
   }
 
   createNewStage(){

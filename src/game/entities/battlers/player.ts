@@ -13,7 +13,8 @@ class Player extends Battler {
     super();
   }
 
-  step(){
+
+  private updateVelocity(){
     var speed = 0.3;
     var nx = 0;
     var ny = 0;
@@ -29,19 +30,32 @@ class Player extends Battler {
     } else if(this.inputBuffer.down) {
       ny = +speed;
     }
-    this.physicsBody.state.vel.set(nx, ny);
 
+    this.physicsBody.state.vel.set(nx, ny);
+  }
+
+  private updateDirection(){
     // update rad
     var mx = this.inputBuffer.focus.x;
     var my = this.inputBuffer.focus.y;
-    this.rad = Math.atan2(my-ny, mx-nx); // + Math.PI/2
+    this.rad = Math.atan2(my-this.y, mx-this.y);
+  }
 
+  private execSkills(){
+    var mx = this.inputBuffer.focus.x;
+    var my = this.inputBuffer.focus.y;
     if(this.inputBuffer.mouseLeft) {
       this.stage.addTask(new CreateBullet(this, this.x, this.y, this.rad));
     }
-
     if(this.inputBuffer.mouseRight) {
       this.stage.addTask(new CreateBulletTrap(this, mx, my, this.rad));
     }
+  }
+
+  step(){
+    this.physicsBody.sleep(false);
+    this.updateVelocity();
+    this.updateDirection();
+    this.execSkills();
   }
 }
