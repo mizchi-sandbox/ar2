@@ -7,6 +7,7 @@ class RemoveEntity implements Task {
   exec(stage){
     var target = _.find(stage.entities, e => e.id === this.entityId);
     stage.entities = stage.entities.filter(e => e.id !== this.entityId);
-    stage.physicsWorld.remove(target.physicsBody);
+    if(target)
+      stage.physicsWorld.remove(target.physicsBody);
   }
 }

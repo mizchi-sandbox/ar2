@@ -59,6 +59,8 @@ class Entity extends EventEmitter {
 
   public dispose(){}
 
+  public onHit(other: Entity){}
+
   public serialize(): {x: number; y:number; rad: number; id: string; type: string;} {
     return {
       id: this.id,

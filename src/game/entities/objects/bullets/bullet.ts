@@ -13,16 +13,18 @@ class Bullet extends Entity {
     super();
     this.life = 1;
     this.cnt = 0;
-  }
-
-  private canAttackTo(other: Entity) {
-    return other.isAlive() &&
-      this.x - 15 <= other.x && other.x <= this.x + 15 &&
-      this.y - 15 <= other.y && other.y <= this.y + 15
-    ;
+    this.groupId = owner.groupId;
   }
 
   private computeAttackPower(){ return 1; }
+
+  onHit(other: Battler) {
+
+    if(this.groupId !== other.groupId){
+      this.attack(other);
+      this.remove();
+    }
+  }
 
   public attack(other: Battler) {
     // TODO 対象と自分のパラメータからダメージ量を算出

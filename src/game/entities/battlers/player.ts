@@ -1,6 +1,7 @@
 import Battler = require('./battler');
 import CreateBullet = require('../../tasks/create-bullet');
 import CreateBulletTrap = require('../../tasks/create-bullet-trap');
+import GroupId = require('../../values/group-id')
 
 declare var game: any;
 
@@ -11,8 +12,8 @@ class Player extends Battler {
 
   constructor(public inputBuffer: any){
     super();
+    this.groupId = GroupId.ALLY;
   }
-
 
   private updateVelocity(){
     var speed = 0.3;
