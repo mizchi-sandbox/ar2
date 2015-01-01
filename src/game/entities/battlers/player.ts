@@ -36,7 +36,6 @@ class Player extends Battler {
   }
 
   private updateDirection(){
-    // update rad
     var mx = this.inputBuffer.focus.x;
     var my = this.inputBuffer.focus.y;
     this.rad = Math.atan2(my-this.y, mx-this.y);

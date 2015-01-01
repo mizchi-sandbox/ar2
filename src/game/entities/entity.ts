@@ -27,9 +27,7 @@ class Entity extends EventEmitter {
   public set y(val) {this.physicsBody.state.pos.y = val;}
 
   public get vx(): number {return this.physicsBody.state.vel.vx;}
-  /*public set vx(val) {this.physicsBody.state.vel.vx = val;}*/
   public get vy(): number {return this.physicsBody.state.vel.vy;}
-  /*public set vy(val) {this.physicsBody.state.vel.vy = val;}*/
 
   remove(): void{
     game.stage.addTask(new RemoveEntity(this.id));
@@ -49,9 +47,7 @@ class Entity extends EventEmitter {
     this.life = 1;
   }
 
-  step(stage?: Stage): Promise<any> | any{
-    // console.log 'update:', this.id
-  }
+  step(stage?: Stage): Promise<any> | any{}
 
   public isAlive(): boolean { return this.life > 0; }
 

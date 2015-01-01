@@ -17,12 +17,16 @@ class DeathChecker implements Task {
     ).length;
     game.addScore(point);
 
-    stage.entities = stage.entities.filter(e => e.isAlive());
-    /*stage.entities
+    stage.entities
       .filter(e => e.isDead())
       .forEach(e => {
         e.remove()
-      });*/
+      });
+
+    stage.entities = stage.entities.filter(e => e.isAlive());
+    /*stage.entities = stage.entities.filter(e => {
+
+    });*/
     return true;
   }
 }

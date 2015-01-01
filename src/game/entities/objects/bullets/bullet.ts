@@ -23,6 +23,7 @@ class Bullet extends Entity {
     if(this.groupId !== other.groupId){
       this.attack(other);
       this.remove();
+      console.log('delete ', this.id);
     }
   }
 

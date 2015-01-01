@@ -55,10 +55,9 @@ class Stage extends EventEmitter {
       data.collisions.forEach((col)=>{
         var bodyA = col.bodyA;
         var bodyB = col.bodyB;
-
         var entityA = _.find(this.entities, e => e.physicsBody.uid === bodyA.uid);
         var entityB = _.find(this.entities, e => e.physicsBody.uid === bodyB.uid);
-
+        //TODO: research why get null object
         if(entityA && entityB) {
           entityA.onHit(entityB);
           entityB.onHit(entityA);

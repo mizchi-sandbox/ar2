@@ -4,9 +4,6 @@ import GroupId = require('../values/group-id');
 import Enemy = require('../entities/battlers/enemies/enemy');
 var _ = require('lodash');
 
-// Sweep all dead entities
-// Always active if it exists.
-// TODO: Giving exp and gold is here.
 export = SimpleSpawner;
 class SimpleSpawner implements Task {
   public get priority(): Priority {return Priority.SPAWN;}
