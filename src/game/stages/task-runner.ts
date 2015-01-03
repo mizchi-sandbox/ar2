@@ -22,11 +22,14 @@ class TaskRunner {
     });
   }
 
-  private execAllTasks(stage: Stage): Promise<Task[]>{
+  private execAllTasks(stage: Stage){
     this.sortTasks();
+    var nextTasks: Task[] = [];
+    var taskQueues = this.taskQueues.slice();
+    this.taskQueues = [];
+
     return new Promise(done => {
-      var nextTasks: Task[] = [];
-      (<any>Promise).reduce(this.taskQueues, (p, task) => {
+      (<any>Promise).reduce(taskQueues, (p, task) => {
         return new Promise(done=> {
           Promise.resolve(task.exec(stage)).then((val)=> {
             if(val === true) nextTasks.push(task);
@@ -34,17 +37,15 @@ class TaskRunner {
           });
         });
       }, Promise.resolve()).then(()=>{
-        done(nextTasks);
+        this.taskQueues = this.taskQueues.concat(nextTasks);
+        done();
       });
     });
   }
 
   public run(stage: Stage): Promise<any>{
     return new Promise(done => {
-      this.execAllTasks(stage).then(nextTasks => {
-        this.taskQueues = nextTasks;
-        done();
-      });
+      this.execAllTasks(stage).then(done);
     });
   }
 }
