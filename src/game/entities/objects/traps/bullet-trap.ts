@@ -25,7 +25,7 @@ class BulletTrap extends Battler {
   public step(stage){
     this.cnt++;
     this.rad+= Math.PI/60;
-    if(this.cnt%5 === 0) this.fire();
+    if(this.cnt%21 === 0) this.fire();
     if(this.cnt > 120) this.remove()
   }
 }
