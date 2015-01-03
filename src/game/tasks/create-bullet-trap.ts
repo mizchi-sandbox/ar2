@@ -12,8 +12,7 @@ class CreateBulletTrap implements Task {
 
   exec(stage){
     var bulletTrap = new BulletTrap(this.owner);
-    bulletTrap.x = this.x;
-    bulletTrap.y = this.y;
+    bulletTrap.setPosition(this.x, this.y);
     bulletTrap.rad = this.rad;
 
     stage.addChild(bulletTrap);

@@ -46,8 +46,7 @@ class Game extends EventEmitter {
       focus: {x: 0, y: 0}
     }
     this.player = new Player(this.inputBuffer);
-    this.player.x = 100;
-    this.player.y = 100;
+    this.player.setPosition(100, 100);
     this.fps = ~~(1000/60);
 
     this.on('io:update-focus', (pos) => {
