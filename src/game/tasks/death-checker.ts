@@ -20,19 +20,18 @@ class DeathChecker implements Task {
     game.addScore(deadEntities.length);
 
     // TODO: work around for miss about death
-    var deadPhysicsIds = deadEntities.map(e => e.physicsBody.uid);
+    /*var deadPhysicsIds = deadEntities.map(e => e.physicsBody.uid);
     stage.physicsWorld.getBodies().forEach(body => {
       if(_.include(deadPhysicsIds, body.uid)){
         stage.physicsWorld.remove(body);
       }
     });
-
     stage.entities = stage.entities
-      .filter(e => e.isAlive());
+      .filter(e => e.isAlive());*/
 
-    /*stage.entities
+    stage.entities
       .filter(e => e.isDead())
-      .forEach(e => e.remove());*/
+      .forEach(e => e.remove());
 
     return true;
   }

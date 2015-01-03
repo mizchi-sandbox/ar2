@@ -12,8 +12,10 @@ class SimpleSpawner implements Task {
     if(enemyCount < 4) {
       _.range(10).forEach(() => {
         var enemy = new Enemy();
-        enemy.x = Math.random() * 640;
-        enemy.y = Math.random() * 480;
+        enemy.setPosition(
+          Math.random() * 640,
+          Math.random() * 480
+        );
         stage.addChild(enemy);
       });
     }
