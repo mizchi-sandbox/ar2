@@ -70,7 +70,7 @@ class Game extends EventEmitter {
   }
 
   createNewStage(){
-    this.stage = new BattleStage
+    this.stage = new BattleStage();
     this.stage.addChild(this.player);
   }
 

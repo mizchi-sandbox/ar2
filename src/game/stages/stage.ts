@@ -17,8 +17,8 @@ class Stage extends EventEmitter {
   public taskRunner: TaskRunner;
   public physicsWorld: any;
 
-  public width: number = 2500;
-  public height: number = 2500;
+  public width: number = 1000;
+  public height: number = 1000;
 
   addChild(entity: Entity){
     this.entities.push(entity);

@@ -49,6 +49,12 @@ class Entity extends EventEmitter {
     this.willRemove = false;
   }
 
+  public createPhysicsShape() {
+    return this.physicsBody = Physics.body('circle', {
+      radius: 10
+    });
+  }
+
   step(stage?: Stage): Promise<any> | any{}
 
   public isAlive(): boolean { return this.life > 0; }
