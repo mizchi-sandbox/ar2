@@ -14,10 +14,10 @@ class Block extends Entity {
 
   isAlive() {return true;}
 
-  createPhysicsShape() {
-    return Physics.body('rect', {
-      width: 100,
-      height: 100,
+  public createPhysicsShape() {
+    return Physics.body('rectangle', {
+      width: 30,
+      height: 30,
       treatment: 'static'
     });
   }

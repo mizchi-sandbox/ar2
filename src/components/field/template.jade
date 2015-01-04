@@ -18,11 +18,20 @@ mixin entityAvatar(entity)
         x1=0 y1=0
         x2=0 y2=-15
         stroke='black')
+    else if entity.type === 'wall'
+      rect(
+        width=10
+        height=10
+        x=-5
+        y=-5
+        fill='black'
+      )
     else
+      //- maybe bullet now
       circle(cx=0 cy=0 r=5 fill=baseColor stroke='green')
-      //- line( x1=0 y1=0
-      //-   x2=0 y2=-5
-      //-   stroke='white')
+      line( x1=0 y1=0
+        x2=0 y2=-5
+        stroke='white')
 
 mixin physicsBody(body)
   - var x = body.pos.x;
@@ -46,7 +55,7 @@ mixin physicsBody(body)
         height=body.height
         x=-body.width/2
         y=-body.height/2
-        fill='gray'
+        fill='green'
       )
     else if body.name === 'convex-polygon'
       - var vs = body.vertices;
@@ -93,9 +102,9 @@ svg(
       +entityAvatar(entity)
     +focus(focus.x, focus.y)
     
-  //- g(
-  //-   transform='translate(' + -cx + ', ' + -cy + ')'
-  //-   key='physics'
-  //- )
-  //-   for body in bodies
-  //-     +physicsBody(body)
+  g(
+    transform='translate(' + -cx + ', ' + -cy + ')'
+    key='physics'
+  )
+    for body in bodies
+      +physicsBody(body)

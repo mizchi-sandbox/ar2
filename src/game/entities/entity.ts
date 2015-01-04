@@ -38,9 +38,7 @@ class Entity extends EventEmitter {
   constructor() {
     super();
     this.stage = null;
-    this.physicsBody = Physics.body('circle', {
-      radius: 10
-    });
+    this.physicsBody = this.createPhysicsShape();
 
     this.id = uuid();
     this.setPosition(0, 0);
