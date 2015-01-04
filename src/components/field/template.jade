@@ -60,7 +60,7 @@ mixin focus(x, y)
   g(
     transform='translate(' + x + ', ' + y + ')'
   )
-    circle(cx=0 cy=0 r=10 fill='transparent' stroke='red')
+    circle(cx=0 cy=0 r=10 fill='transparent' stroke='blue')
 
 svg(
   key='main'
@@ -71,16 +71,24 @@ svg(
   onMouseUp=onMouseUp
   onContextMenu=onContextMenu
 )
+  rect(
+    x=0 y=0
+    width=640 height=480
+    fill='wheat'
+    key='bg'
+  )
   g(
     transform='translate(' + -cx + ', ' + -cy + ')'
     key='field'
   )
+    //- background
     rect(
-      width=620 height=460
-      x=10 y=10
+      x=0 y=0
+      width=stage.width height=stage.height
       fill='gray'
     )
     
+    //- entities
     for entity in entities
       +entityAvatar(entity)
     +focus(focus.x, focus.y)

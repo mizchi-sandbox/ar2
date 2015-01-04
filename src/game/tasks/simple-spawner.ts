@@ -9,12 +9,12 @@ class SimpleSpawner implements Task {
   public get priority(): Priority {return Priority.SPAWN;}
   exec(stage){
     var enemyCount = stage.entities.filter(e => e.groupId === GroupId.ENEMY).length;
-    if(enemyCount < 4) {
-      _.range(10).forEach(() => {
+    if(enemyCount < 10) {
+      _.range(40).forEach(() => {
         var enemy = new Enemy();
         enemy.setPosition(
-          Math.random() * 640,
-          Math.random() * 480
+          Math.random() * stage.width,
+          Math.random() * stage.height
         );
         stage.addChild(enemy);
       });

@@ -42,6 +42,10 @@ function serialize(game, stage: Stage, target: Entity){
     cx: cx,
     cy: cy,
     cnt: stage.cnt,
+    stage: {
+      width: stage.width,
+      height: stage.height
+    },
     entities: stage.entities.map(e => serializeEntity(e)),
     focus: game.inputBuffer.focus,
     bodies: formatPhysicsBodies(bodies)
