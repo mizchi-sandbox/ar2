@@ -19,12 +19,12 @@ class BulletTrap extends Battler {
   }
 
   private fire(){
-    game.stage.addTask(new CreateBullet(this, this.x, this.y, this.rad));
+    game.stage.addTask(new CreateBullet(this, this.x, this.y, this.dir));
   }
 
   public step(stage){
     this.cnt++;
-    this.rad+= Math.PI/60;
+    this.dir += 10;
     if(this.cnt%21 === 0) this.fire();
     if(this.cnt > 120) this.remove()
   }

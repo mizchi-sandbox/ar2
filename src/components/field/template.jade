@@ -2,7 +2,7 @@ mixin entityAvatar(entity)
   //- id, type, x, y, rad
   - var baseColor = entity.groupId === 1 ? 'white' : 'red';
   g(
-    transform='translate(' + entity.x + ', ' + entity.y + ') rotate(' + (entity.rad+90) + ')'
+    transform='translate(' + entity.x + ', ' + entity.y + ') rotate(' + (entity.dir+90) + ')'
     key=entity.id
     id=entity.id
   )

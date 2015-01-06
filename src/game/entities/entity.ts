@@ -35,11 +35,11 @@ class Entity extends EventEmitter {
     this.physicsBody.state.vel.set(vx, vy);
   }
 
-  public get rad(): number {
+  public get dir(): number {
     return this.physicsBody.state.angular.pos;
   }
 
-  public set rad(v: number) {
+  public set dir(v: number) {
     this.physicsBody.state.angular.pos = v;
     this.physicsBody.state.angular.vel = 0;
     this.physicsBody.state.angular.acc = 0;

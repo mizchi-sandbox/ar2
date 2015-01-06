@@ -27,7 +27,7 @@ function serializeEntity(entity: Entity){
     id: entity.id,
     groupId: entity.groupId,
     x: entity.x, y: entity.y,
-    rad: entity.rad,
+    dir: entity.dir,
     type: (<any>entity.constructor).type
   };
 }
