@@ -12,7 +12,7 @@ class BattleStage extends Stage {
   constructor(){
     super();
     this.addTask(new DeathChecker());
-    /*this.addTask(new SimpleSpawner());*/
+    this.addTask(new SimpleSpawner());
 
     _.range(10).forEach((i: number)=>{
       var polygon = new Polygon();
