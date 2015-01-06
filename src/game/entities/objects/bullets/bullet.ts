@@ -2,8 +2,7 @@ import Entity = require('../../entity');
 import Battler = require('../../battlers/battler');
 import GroupId = require('../../../values/group-id');
 import Game = require('../../../core');
-
-declare var game: Game;
+declare var Physics: any;
 
 export = Bullet;
 class Bullet extends Entity {
@@ -16,7 +15,13 @@ class Bullet extends Entity {
     this.groupId = owner.groupId;
   }
 
-  private computeAttackPower(){ return 1; }
+  public createPhysicsShape() {
+    // default shape
+    return this.physicsBody = Physics.body('circle', {
+      radius: 10,
+      cof: 0,
+    });
+  }
 
   onHit(other: Battler) {
     if(this.groupId !== other.groupId){
@@ -24,6 +29,8 @@ class Bullet extends Entity {
       this.remove();
     }
   }
+
+  private computeAttackPower(){ return 1; }
 
   public attack(other: Battler) {
     // TODO 対象と自分のパラメータからダメージ量を算出

@@ -47,13 +47,16 @@ class Stage extends EventEmitter {
     var edgeBounce = Physics.behavior('edge-collision-detection',{
       aabb: viewportBounds,
       restitution: 0.5,
-      cof: 0.5
+      cof: 0.05
     });
+
+    var friction = Physics.behavior('constant-friction');
 
     world.add([
       Physics.behavior('body-impulse-response'),
       Physics.behavior('body-collision-detection'),
       Physics.behavior('sweep-prune'),
+      friction,
       edgeBounce
     ]);
 
