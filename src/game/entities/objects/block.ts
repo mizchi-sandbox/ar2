@@ -18,7 +18,7 @@ class Block extends Entity {
     return Physics.body('rectangle', {
       width: 30,
       height: 30,
-      treatment: 'static'
+        /*treatment: 'static'*/
     });
   }
 
