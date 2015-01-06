@@ -17,8 +17,8 @@ class Enemy extends Battler {
   step(){
     this.cnt++;
     if(this.cnt % 12 === 0) {
-      this.rad = 2 * Math.random() * Math.PI;
-      this.stage.addTask(new CreateBullet(this, this.x, this.y, this.rad));
+      this.dir = 360*Math.random();
+      this.stage.addTask(new CreateBullet(this, this.x, this.y, this.dir));
     }
   }
 }

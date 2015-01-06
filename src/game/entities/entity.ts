@@ -12,7 +12,7 @@ class Entity extends EventEmitter {
   public static type:string = 'entity';
 
   public id: string;
-  public rad: number;
+  /*public rad: number;*/
   public life: number;
   public groupId: GroupId;
   public physicsBody: any;
@@ -35,18 +35,32 @@ class Entity extends EventEmitter {
     this.physicsBody.state.vel.set(vx, vy);
   }
 
+  public get dir(): number {
+    return this.physicsBody.state.angular.pos;
+  }
+
+  public set dir(v: number) {
+    this.physicsBody.state.angular.pos = v;
+    this.physicsBody.state.angular.vel = 0;
+    this.physicsBody.state.angular.acc = 0;
+  }
+
   constructor() {
     super();
     this.stage = null;
-    this.physicsBody = Physics.body('circle', {
-      radius: 10
-    });
+    this.physicsBody = this.createPhysicsShape();
 
     this.id = uuid();
     this.setPosition(0, 0);
-    this.rad = 0;
     this.life = 1;
     this.willRemove = false;
+  }
+
+  public createPhysicsShape() {
+    // default shape
+    return this.physicsBody = Physics.body('circle', {
+      radius: 10
+    });
   }
 
   step(stage?: Stage): Promise<any> | any{}

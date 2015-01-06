@@ -17,6 +17,9 @@ class Stage extends EventEmitter {
   public taskRunner: TaskRunner;
   public physicsWorld: any;
 
+  public width: number = 1000;
+  public height: number = 1000;
+
   addChild(entity: Entity){
     this.entities.push(entity);
     entity.stage = this;
@@ -40,7 +43,7 @@ class Stage extends EventEmitter {
       timestep: 1000.0 / 60
     });
 
-    var viewportBounds = Physics.aabb(0, 0, 640, 480);
+    var viewportBounds = Physics.aabb(0, 0, this.width, this.height);
     var edgeBounce = Physics.behavior('edge-collision-detection',{
       aabb: viewportBounds,
       restitution: 0.5,

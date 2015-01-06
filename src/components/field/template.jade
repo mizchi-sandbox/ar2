@@ -1,8 +1,40 @@
+mixin physicsBody(body)
+  - var x = body.pos.x;
+  - var y = body.pos.y;
+  - var med = body.angle;
+  g(
+    key= body.uid
+    transform= 'translate('+x+','+y+') rotate(' + med + ')'
+  )
+    if body.name === "circle"
+      circle(
+        cx=0
+        cy=0
+        r= body.radius
+        fill= 'none',
+        stroke= 'green'
+      )
+    else if body.name === 'rectangle'
+      rect(
+        width=body.width
+        height=body.height
+        x=-body.width/2
+        y=-body.height/2
+        fill='green'
+      )
+    else if body.name === 'convex-polygon'
+      - var vs = body.vertices;
+      - var points = vs.map(function(v){return v.x+','+v.y;}).join(' ')
+      polygon(
+        points = points
+        fill= 'green'
+      )
+      
 mixin entityAvatar(entity)
   //- id, type, x, y, rad
   - var baseColor = entity.groupId === 1 ? 'white' : 'red';
   g(
-    transform='translate(' + entity.x + ', ' + entity.y + ') rotate(' + (entity.rad+3.14/2)*180/3.14 + ')'
+    transform='translate(' + entity.x + ', ' + entity.y + ') rotate(' + (entity.dir+90) + ')'
     key=entity.id
     id=entity.id
   )
@@ -18,49 +50,33 @@ mixin entityAvatar(entity)
         x1=0 y1=0
         x2=0 y2=-15
         stroke='black')
-    else
-      circle(cx=0 cy=0 r=5 fill=baseColor stroke='green')
-      //- line( x1=0 y1=0
-      //-   x2=0 y2=-5
-      //-   stroke='white')
-
-mixin physicsBody(body)
-  - var x = body.pos.x;
-  - var y = body.pos.y;
-  - var med = body.angle;
-  g(
-    key= body.uid
-    transform= 'translate('+x+','+y+') rotate(' + med + ')'
-  )
-    if body.name === "circle"
-      circle(
-        cx=0
-        cy=0
-        r= body.radius
-        fill= 'none',
-        stroke= 'red'
-      )
-    else if body.name === 'rectangle'
+    else if entity.type === 'wall'
       rect(
-        width=body.width
-        height=body.height
-        x=-body.width/2
-        y=-body.height/2
-        fill='gray'
+        width=entity.body.width
+        height=entity.body.height
+        x=-entity.body.width/2
+        y=-entity.body.height/2
+        fill='black'
       )
-    else if body.name === 'convex-polygon'
-      - var vs = body.vertices;
+    else if entity.type === 'polygon'
+      - var vs = entity.body.vertices;
       - var points = vs.map(function(v){return v.x+','+v.y;}).join(' ')
       polygon(
         points = points
-        fill= 'gray'
+        fill='black'
       )
-      
+    else
+      //- maybe bullet now
+      circle(cx=0 cy=0 r=5 fill=baseColor stroke='green')
+      line( x1=0 y1=0
+        x2=0 y2=-5
+        stroke='white')
+
 mixin focus(x, y)
   g(
     transform='translate(' + x + ', ' + y + ')'
   )
-    circle(cx=0 cy=0 r=10 fill='transparent' stroke='red')
+    circle(cx=0 cy=0 r=10 fill='transparent' stroke='blue')
 
 svg(
   key='main'
@@ -71,16 +87,24 @@ svg(
   onMouseUp=onMouseUp
   onContextMenu=onContextMenu
 )
+  rect(
+    x=0 y=0
+    width=640 height=480
+    fill='wheat'
+    key='bg'
+  )
   g(
     transform='translate(' + -cx + ', ' + -cy + ')'
     key='field'
   )
+    //- background
     rect(
-      width=620 height=460
-      x=10 y=10
+      x=0 y=0
+      width=stage.width height=stage.height
       fill='gray'
     )
     
+    //- entities
     for entity in entities
       +entityAvatar(entity)
     +focus(focus.x, focus.y)

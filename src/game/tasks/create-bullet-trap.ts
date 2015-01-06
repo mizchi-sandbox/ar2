@@ -7,13 +7,13 @@ export = CreateBulletTrap;
 class CreateBulletTrap implements Task {
   constructor(
     public owner:Battler,
-    public x: number, public y: number, public rad: number
+    public x: number, public y: number, public dir: number
   ){}
 
   exec(stage){
     var bulletTrap = new BulletTrap(this.owner);
     bulletTrap.setPosition(this.x, this.y);
-    bulletTrap.rad = this.rad;
+    bulletTrap.dir = this.dir;
 
     stage.addChild(bulletTrap);
   }

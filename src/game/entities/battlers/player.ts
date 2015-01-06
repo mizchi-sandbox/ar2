@@ -10,6 +10,7 @@ export = Player;
 class Player extends Battler {
   static type = 'player';
 
+  public focusDir: number = 0;
   constructor(public inputBuffer: any){
     super();
     this.groupId = GroupId.ALLY;
@@ -36,27 +37,40 @@ class Player extends Battler {
     this.physicsBody.state.vel.set(nx, ny);
   }
 
+  /*public get rad(): number {
+    var mx = this.inputBuffer.focus.x;
+    var my = this.inputBuffer.focus.y;
+    return ~~(Math.atan2(my-this.y, mx-this.x)*180/3.14);
+  }
+  public set rad(v) {}*/
+
   private updateDirection(){
     var mx = this.inputBuffer.focus.x;
     var my = this.inputBuffer.focus.y;
-    this.rad = Math.atan2(my-this.y, mx-this.x);
+    this.focusDir = ~~(Math.atan2(my-this.y, mx-this.x)*180/3.14);
+    this.dir = this.focusDir;
   }
 
+  private leftCooldown = 0;
+  private rightCooldown = 0;
   private execSkills(){
     var mx = this.inputBuffer.focus.x;
     var my = this.inputBuffer.focus.y;
-    if(this.inputBuffer.mouseLeft) {
-      this.stage.addTask(new CreateBullet(this, this.x, this.y, this.rad));
-    }
-    if(this.inputBuffer.mouseRight) {
-      this.stage.addTask(new CreateBulletTrap(this, mx, my, this.rad));
-    }
+    if(this.inputBuffer.mouseLeft && this.leftCooldown <= 0) {
+      this.stage.addTask(new CreateBullet(this, this.x, this.y, this.focusDir));
+      this.leftCooldown = 3;
+    } else if(this.leftCooldown > 0) this.leftCooldown--;
+
+    if(this.inputBuffer.mouseRight && this.rightCooldown <= 0) {
+      this.stage.addTask(new CreateBulletTrap(this, mx, my, this.focusDir));
+      this.rightCooldown = 60;
+    } else if(this.rightCooldown > 0) this.rightCooldown--;
   }
 
   step(){
     this.physicsBody.sleep(false);
-    this.updateVelocity();
     this.updateDirection();
+    this.updateVelocity();
     this.execSkills();
   }
 }
