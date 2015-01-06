@@ -47,7 +47,7 @@ mixin physicsBody(body)
         cy=0
         r= body.radius
         fill= 'none',
-        stroke= 'red'
+        stroke= 'green'
       )
     else if body.name === 'rectangle'
       rect(
@@ -62,7 +62,7 @@ mixin physicsBody(body)
       - var points = vs.map(function(v){return v.x+','+v.y;}).join(' ')
       polygon(
         points = points
-        fill= 'gray'
+        fill= 'green'
       )
       
 mixin focus(x, y)

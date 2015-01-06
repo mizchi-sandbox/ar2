@@ -57,6 +57,7 @@ class Entity extends EventEmitter {
   }
 
   public createPhysicsShape() {
+    // default shape
     return this.physicsBody = Physics.body('circle', {
       radius: 10
     });
