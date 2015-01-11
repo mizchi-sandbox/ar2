@@ -1,0 +1,18 @@
+#!/usr/bin/env coffee
+
+{spawn} = require 'child_process'
+
+startWatch = (cwd) ->
+  name = cwd.replace process.cwd(), ''
+  watchRoot = spawn('gulp', ['watch'], cwd: cwd)
+  watchRoot.stdout.on 'data', (data) ->
+    console.log name + ':' + data
+
+  watchRoot.stderr.on 'data', (data) ->
+    console.log name + ':' + data
+
+  watchRoot.on 'close', (code) ->
+    console.log name + ':' + data
+
+startWatch process.cwd()
+startWatch process.cwd() + '/domains/battlefield'

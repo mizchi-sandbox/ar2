@@ -2,7 +2,8 @@ import Entity = require('../../entity');
 import Battler = require('../../battlers/battler');
 import GroupId = require('../../../values/group-id');
 import Game = require('../../../core');
-declare var Physics: any;
+
+var Physics = require('PhysicsJS');
 
 export = Bullet;
 class Bullet extends Entity {

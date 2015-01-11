@@ -1,0 +1,10 @@
+@import "variables";
+
+// Word break
+@mixin break-word($width: 0) {
+  @if $width != 0 {
+    width: $width;
+  }
+  word-wrap: break-word;
+  word-break: break-all;
+}

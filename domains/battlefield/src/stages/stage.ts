@@ -1,4 +1,5 @@
 global.EventEmitter = require('events').EventEmitter;
+var Physics = require('PhysicsJS');
 
 import Player = require('../entities/battlers/player');
 import Entity = require('../entities/entity');

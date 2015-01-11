@@ -6,19 +6,17 @@ See docs/intro.md
 
 ## Development
 
-```shell
-npm install -g Microsoft/typescript # Install typescript HEAD
-npm install -g dtsm gulp
+Build
 
-dtsm install
+```shell
+npm install -g Microsoft/typescript # Install typescript 1.4
 npm install
-gulp build
-gulp webpack
+./scripts/build
 open public/index.html
 ```
 
-## Tasks
+Watch
 
-- `gulp build`: build all
-- `gulp watch`: start watching
-- `gulp deploy`: deploy to your github pages
+```
+./scripts/build
+```

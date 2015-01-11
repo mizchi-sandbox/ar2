@@ -1,13 +1,11 @@
 global.EventEmitter = require('events').EventEmitter;
 declare var app: any;
+require('./behaviours/constant-friction');
 
-/*vr global = require 'global'*/
 import Player = require('./entities/battlers/player');
 import Stage = require('./stages/stage');
 import BattleStage = require('./stages/battle-stage');
 import serialize = require('./utils/serialize');
-
-var clone = require('clone');
 
 var instance;
 export = Game;
