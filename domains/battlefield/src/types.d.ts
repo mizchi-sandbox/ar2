@@ -1,4 +1,4 @@
-/// <reference path='../typings/bundle.d.ts' />
+/// <reference path='../../../typings/bundle.d.ts' />
 
 declare class EventEmitter {
   on(name: string, fn: Function): void;

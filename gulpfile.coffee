@@ -26,11 +26,12 @@ gulp.task 'build:jade', ->
 ## Watch tasks
 gulp.task 'watch', ['build'], ->
   gulp.watch 'src/**/*.coffee', ['build:coffee']
-  gulp.watch 'src/**/*.ts', ['build:ts']
+  # gulp.watch 'src/**/*.ts', ['build:ts']
   gulp.watch 'src/**/*.jade', ['build:jade']
   gulp.watch 'lib/**/*', ['webpack']
+  gulp.watch 'domains/battlefield/lib/*.js', ['webpack']
 
-gulp.task 'build', ['clear', 'build:coffee', 'build:jade', 'build:ts']
+gulp.task 'build', ['clear', 'build:coffee', 'build:jade']
 gulp.task 'default', ['build']
 
 gulp.task 'clear', shell.task [

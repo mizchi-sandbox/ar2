@@ -1,0 +1,13 @@
+#!/usr/bin/env sh
+
+# battlefield
+cd domains/battlefield
+npm install
+gulp
+
+# here
+cd ../..
+./node_modules/.bin/dtsm install
+npm install
+./node_modules/.bin/gulp build
+./node_modules/.bin/gulp webpack
