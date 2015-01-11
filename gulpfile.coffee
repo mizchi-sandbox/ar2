@@ -2,6 +2,7 @@ gulp = require 'gulp'
 coffee = require 'gulp-coffee'
 webpack = require 'gulp-webpack'
 shell = require 'gulp-shell'
+sass   = require 'gulp-sass'
 
 webpackConfig = require './webpack.config'
 
@@ -23,6 +24,12 @@ gulp.task 'build:jade', ->
   gulp.src('src/**/*.jade')
     .pipe(gulp.dest('lib'))
 
+gulp.task 'build:css', ->
+  gulp
+    .src('styles/style.scss')
+    .pipe(sass())
+    .pipe(gulp.dest('public'))
+
 ## Watch tasks
 gulp.task 'watch', ['build'], ->
   gulp.watch 'src/**/*.coffee', ['build:coffee']
@@ -30,6 +37,7 @@ gulp.task 'watch', ['build'], ->
   gulp.watch 'src/**/*.jade', ['build:jade']
   gulp.watch 'lib/**/*', ['webpack']
   gulp.watch 'domains/battlefield/lib/*.js', ['webpack']
+  gulp.watch 'styles/**/*.scss', ['build:css']
 
 gulp.task 'build', ['clear', 'build:coffee', 'build:jade']
 gulp.task 'default', ['build']

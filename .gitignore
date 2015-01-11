@@ -53,5 +53,6 @@ Temporary Items
 .apdisk
 .tmp
 public/bundle.js
+public/style.css
 lib
 typings

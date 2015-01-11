@@ -1,0 +1,39 @@
+$fa-font-path: "../node_modules/font-awesome/fonts";
+@import "node_modules/font-awesome/scss/font-awesome";
+@import "variables";
+
+// Normalize (Should be replaced by normalize.css.)
+
+body {
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+}
+
+select {
+    color: inherit;
+    font: inherit;
+    margin: 0;
+}
+
+ul {
+    list-style-type: none;
+    padding-left: 2px;
+}
+
+input {
+    outline: 0;
+}
+
+// Styles
+
+// Common styles
+
+html,body {
+    height: 100%;
+}
+
+body {
+    width: 100%;
+    overflow: hidden;
+    font-family: "Helvetica Neue",Helvetica,'游ゴシック', YuGothic, "ヒラギノ角ゴ ProN W3","Hiragino Kaku Gothic ProN","メイリオ",Meiryo,sans-serif;
+}
