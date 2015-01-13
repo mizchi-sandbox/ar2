@@ -18,8 +18,10 @@ class Stage extends EventEmitter {
   public taskRunner: TaskRunner;
   public physicsWorld: any;
 
-  public width: number = 1000;
-  public height: number = 1000;
+  /*public width: number = 1000;
+  public height: number = 1000;*/
+  public width;
+  public height;
 
   addChild(entity: Entity){
     this.entities.push(entity);
@@ -34,17 +36,16 @@ class Stage extends EventEmitter {
     this.cnt = 0;
     this.entities = [];
     this.taskRunner = new TaskRunner();
-    this.physicsWorld = this.createWorld();
   }
 
-  createWorld(){
+  createWorld(width: number, height: number){
     var world = Physics({
       integrator: 'verlet',
       maxIPF: 16,
       timestep: 1000.0 / 60
     });
 
-    var viewportBounds = Physics.aabb(0, 0, this.width, this.height);
+    var viewportBounds = Physics.aabb(0, 0, width, height);
     var edgeBounce = Physics.behavior('edge-collision-detection',{
       aabb: viewportBounds,
       restitution: 0.5,

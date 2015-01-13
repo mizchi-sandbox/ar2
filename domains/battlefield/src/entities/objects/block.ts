@@ -7,7 +7,9 @@ export = Block;
 
 class Block extends Entity {
   static type = 'wall';
-  constructor() {
+  public size: number;
+  constructor(size: number) {
+    this.size = size;
     super();
     this.life = Infinity;
   }
@@ -16,9 +18,9 @@ class Block extends Entity {
 
   public createPhysicsShape() {
     return Physics.body('rectangle', {
-      width: 30,
-      height: 30,
-        /*treatment: 'static'*/
+      width: this.size,
+      height: this.size,
+      treatment: 'static'
     });
   }
 
