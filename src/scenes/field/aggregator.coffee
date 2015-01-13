@@ -11,6 +11,7 @@ module.exports =
       width: 0
       height: 0
     bodies: []
+    paused: false
 
   aggregate: (props, state) ->
     state

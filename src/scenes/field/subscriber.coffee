@@ -17,3 +17,15 @@ module.exports = (subscribe) ->
   subscribe 'io:open-menu', (context) -> (serialized) ->
     console.log 'open menu'
     app.pushWorld 'menu', {}
+
+  subscribe 'field:stop', (context) -> (serialized) ->
+    game.pause()
+    s = clone(context.state)
+    s.paused = true
+    context.update(s)
+
+  subscribe 'field:restart', (context) -> (serialized) ->
+    game.start()
+    s = clone(context.state)
+    s.paused = false
+    context.update(s)

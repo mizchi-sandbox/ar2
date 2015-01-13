@@ -33,3 +33,9 @@ module.exports =
     e.stopPropagation()
     e.preventDefault()
     return
+
+  onClickStop: (e) ->
+    @emit 'field:stop'
+
+  onClickRestart: (e) ->
+    @emit 'field:restart'

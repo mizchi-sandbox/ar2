@@ -103,6 +103,7 @@ svg(
       width=stage.width height=stage.height
       fill='gray'
     )
+    
     //- entities
     for entity in entities
       +entityAvatar(entity)
@@ -114,9 +115,3 @@ svg(
   //- )
   //-   for body in bodies
   //-     +physicsBody(body)
-
-.controll
-  if paused
-    button(onClick=onClickRestart) restart
-  else
-    button(onClick=onClickStop) stop

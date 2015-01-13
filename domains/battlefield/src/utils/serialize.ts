@@ -45,6 +45,7 @@ function serialize(game, stage: Stage, target: Entity){
     },
     entities: stage.entities.map(e => serializeEntity(e)),
     focus: game.inputBuffer.focus,
+    /*running: game.running*/
     /*bodies: formatBodies,*/
   };
 }
