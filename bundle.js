@@ -74,7 +74,7 @@
 
 	  global = __webpack_require__(7);
 
-	  global.Promise = __webpack_require__(20);
+	  global.Promise = __webpack_require__(19);
 
 	  global.React = __webpack_require__(8);
 
@@ -169,7 +169,7 @@
 	};
 	global.EventEmitter = __webpack_require__(24).EventEmitter;
 	__webpack_require__(9);
-	var Player = __webpack_require__(19);
+	var Player = __webpack_require__(20);
 	var BattleStage = __webpack_require__(10);
 	var serialize = __webpack_require__(11);
 	var instance;
@@ -364,7 +364,7 @@
 /* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(26);
+	module.exports = __webpack_require__(25);
 
 
 /***/ },
@@ -374,7 +374,7 @@
 	(function() {
 	  var Physics;
 
-	  Physics = __webpack_require__(69);
+	  Physics = __webpack_require__(98);
 
 	  Physics.behavior('constant-friction', function(parent) {
 	    var defaults;
@@ -432,30 +432,84 @@
 	    __.prototype = b.prototype;
 	    d.prototype = new __();
 	};
-	var Stage = __webpack_require__(25);
-	var DeathChecker = __webpack_require__(27);
-	var SimpleSpawner = __webpack_require__(28);
-	var Block = __webpack_require__(29);
-	var Polygon = __webpack_require__(30);
-	var _ = __webpack_require__(72);
+	var Stage = __webpack_require__(26);
+	var DeathChecker = __webpack_require__(28);
+	var SimpleSpawner = __webpack_require__(29);
+	var Block = __webpack_require__(30);
+	var _ = __webpack_require__(101);
 	var BattleStage = (function (_super) {
 	    __extends(BattleStage, _super);
 	    function BattleStage() {
-	        var _this = this;
 	        _super.call(this);
+	        this.loadMap();
 	        this.addTask(new DeathChecker());
 	        this.addTask(new SimpleSpawner());
-	        _.range(10).forEach(function (i) {
-	            var polygon = new Polygon();
-	            polygon.setPosition(100 * i, 40);
-	            _this.addChild(polygon);
+	        /*_.range(10).forEach((i: number)=>{
+	          var polygon = new Polygon();
+	          polygon.setPosition(100*i, 40)
+	          this.addChild(polygon);
 	        });
-	        _.range(10).forEach(function (i) {
-	            var block = new Block();
-	            block.setPosition(100 * i, 240);
-	            _this.addChild(block);
-	        });
+	    
+	        _.range(10).forEach((i: number)=>{
+	          var block = new Block();
+	          block.setPosition(100*i, 240)
+	          this.addChild(block);
+	        });*/
 	    }
+	    BattleStage.prototype.loadMap = function () {
+	        /*_.range(10).forEach((i: number)=>{
+	          var polygon = new Polygon();
+	          polygon.setPosition(100*i, 40)
+	          this.addChild(polygon);
+	        });*/
+	        var _this = this;
+	        var map = [
+	            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+	            [1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+	            [1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+	            [1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+	            [1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+	            [1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1],
+	            [1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1],
+	            [1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1],
+	            [1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1],
+	            [1, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1],
+	            [1, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1],
+	            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+	            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+	            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+	            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+	            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1],
+	            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+	            [1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1],
+	            [1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1],
+	            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
+	            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+	            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+	            [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+	            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+	        ];
+	        var x_size = map[0].length;
+	        var y_size = map.length;
+	        var size = 30;
+	        this.width = x_size * size;
+	        this.height = y_size * size;
+	        this.physicsWorld = this.createWorld(this.width, this.height);
+	        _.range(y_size).forEach(function (y) {
+	            _.range(x_size).forEach(function (x) {
+	                if (map[y][x]) {
+	                    var block = new Block(size);
+	                    block.setPosition(x * size + size / 2, y * size + size / 2);
+	                    _this.addChild(block);
+	                }
+	            });
+	        });
+	        /*_.range(10).forEach((i: number)=>{
+	          var block = new Block(size);
+	          block.setPosition(i*size, 240)
+	          this.addChild(block);
+	        });*/
+	    };
 	    return BattleStage;
 	})(Stage);
 	module.exports = BattleStage;
@@ -520,10 +574,10 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	///<reference path='../typings/bundle.d.ts' />
-	exports.utils = __webpack_require__(37);
-	exports.mixinFor = __webpack_require__(38);
-	exports.Portal = __webpack_require__(35);
-	exports.World = __webpack_require__(36);
+	exports.utils = __webpack_require__(36);
+	exports.mixinFor = __webpack_require__(37);
+	exports.Portal = __webpack_require__(34);
+	exports.World = __webpack_require__(35);
 	exports.setReact = exports.utils.setReact;
 	exports.aliasForMixin = exports.utils.aliasForMixin;
 	exports.mixinAliasMap = exports.utils.mixinAliasMap;
@@ -551,7 +605,8 @@
 	          width: 0,
 	          height: 0
 	        },
-	        bodies: []
+	        bodies: [],
+	        paused: false
 	      };
 	    },
 	    aggregate: function(props, state) {
@@ -569,7 +624,7 @@
 	(function() {
 	  var clone;
 
-	  clone = __webpack_require__(68);
+	  clone = __webpack_require__(67);
 
 	  module.exports = function(subscribe) {
 	    subscribe('stage:update', function(context) {
@@ -593,10 +648,28 @@
 	        return game.start();
 	      };
 	    });
-	    return subscribe('io:open-menu', function(context) {
+	    subscribe('io:open-menu', function(context) {
 	      return function(serialized) {
 	        console.log('open menu');
 	        return app.pushWorld('menu', {});
+	      };
+	    });
+	    subscribe('field:stop', function(context) {
+	      return function(serialized) {
+	        var s;
+	        game.pause();
+	        s = clone(context.state);
+	        s.paused = true;
+	        return context.update(s);
+	      };
+	    });
+	    return subscribe('field:restart', function(context) {
+	      return function(serialized) {
+	        var s;
+	        game.start();
+	        s = clone(context.state);
+	        s.paused = false;
+	        return context.update(s);
 	      };
 	    });
 	  };
@@ -682,6 +755,46 @@
 /* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/**
+	 * The MIT License (MIT)
+	 * 
+	 * Copyright (c) 2014 Petka Antonov
+	 * 
+	 * Permission is hereby granted, free of charge, to any person obtaining a copy
+	 * of this software and associated documentation files (the "Software"), to deal
+	 * in the Software without restriction, including without limitation the rights
+	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	 * copies of the Software, and to permit persons to whom the Software is
+	 * furnished to do so, subject to the following conditions:</p>
+	 * 
+	 * The above copyright notice and this permission notice shall be included in
+	 * all copies or substantial portions of the Software.
+	 * 
+	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	 * THE SOFTWARE.
+	 * 
+	 */
+	"use strict";
+	var old;
+	if (typeof Promise !== "undefined") old = Promise;
+	function noConflict(bluebird) {
+	    try { if (Promise === bluebird) Promise = old; }
+	    catch (e) {}
+	    return bluebird;
+	}
+	module.exports = __webpack_require__(27)();
+	module.exports.noConflict = noConflict;
+
+
+/***/ },
+/* 20 */
+/***/ function(module, exports, __webpack_require__) {
+
 	var __extends = this.__extends || function (d, b) {
 	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
 	    function __() { this.constructor = d; }
@@ -691,7 +804,7 @@
 	var Battler = __webpack_require__(31);
 	var CreateBullet = __webpack_require__(32);
 	var CreateBulletTrap = __webpack_require__(33);
-	var GroupId = __webpack_require__(39);
+	var GroupId = __webpack_require__(38);
 	var Player = (function (_super) {
 	    __extends(Player, _super);
 	    function Player(inputBuffer) {
@@ -763,61 +876,21 @@
 
 
 /***/ },
-/* 20 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * The MIT License (MIT)
-	 * 
-	 * Copyright (c) 2014 Petka Antonov
-	 * 
-	 * Permission is hereby granted, free of charge, to any person obtaining a copy
-	 * of this software and associated documentation files (the "Software"), to deal
-	 * in the Software without restriction, including without limitation the rights
-	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	 * copies of the Software, and to permit persons to whom the Software is
-	 * furnished to do so, subject to the following conditions:</p>
-	 * 
-	 * The above copyright notice and this permission notice shall be included in
-	 * all copies or substantial portions of the Software.
-	 * 
-	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	 * THE SOFTWARE.
-	 * 
-	 */
-	"use strict";
-	var old;
-	if (typeof Promise !== "undefined") old = Promise;
-	function noConflict(bluebird) {
-	    try { if (Promise === bluebird) Promise = old; }
-	    catch (e) {}
-	    return bluebird;
-	}
-	module.exports = __webpack_require__(34)();
-	module.exports.noConflict = noConflict;
-
-
-/***/ },
 /* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	(function() {
 	  var extend, template;
 
-	  extend = __webpack_require__(105);
+	  extend = __webpack_require__(104);
 
-	  template = __webpack_require__(110);
+	  template = __webpack_require__(108);
 
 	  module.exports = React.createClass({
 	    mixins: [
 	      Overworld.mixinFor(function() {
 	        return app;
-	      }), __webpack_require__(41)
+	      }), __webpack_require__(39)
 	    ],
 	    render: function() {
 	      return template(extend({}, this, this.props, this.state));
@@ -838,7 +911,7 @@
 
 	  actions = __webpack_require__(40);
 
-	  extend = __webpack_require__(105);
+	  extend = __webpack_require__(104);
 
 	  module.exports = React.createClass({
 	    mixins: [
@@ -861,11 +934,11 @@
 	(function() {
 	  var actions, extend, template;
 
-	  template = __webpack_require__(111);
+	  template = __webpack_require__(110);
 
-	  actions = __webpack_require__(42);
+	  actions = __webpack_require__(41);
 
-	  extend = __webpack_require__(105);
+	  extend = __webpack_require__(104);
 
 	  module.exports = React.createClass({
 	    mixins: [
@@ -1192,102 +1265,6 @@
 /* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {var __extends = this.__extends || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    __.prototype = b.prototype;
-	    d.prototype = new __();
-	};
-	global.EventEmitter = __webpack_require__(24).EventEmitter;
-	var Physics = __webpack_require__(69);
-	var TaskRunner = __webpack_require__(43);
-	var _ = __webpack_require__(72);
-	var Stage = (function (_super) {
-	    __extends(Stage, _super);
-	    function Stage() {
-	        _super.call(this);
-	        this.width = 1000;
-	        this.height = 1000;
-	        this.cnt = 0;
-	        this.entities = [];
-	        this.taskRunner = new TaskRunner();
-	        this.physicsWorld = this.createWorld();
-	    }
-	    Stage.prototype.addChild = function (entity) {
-	        this.entities.push(entity);
-	        entity.stage = this;
-	        this.physicsWorld.add(entity.physicsBody);
-	    };
-	    Object.defineProperty(Stage.prototype, "taskQueueCount", {
-	        get: function () {
-	            return this.taskRunner.taskQueues.length;
-	        },
-	        enumerable: true,
-	        configurable: true
-	    });
-	    Stage.prototype.createWorld = function () {
-	        var _this = this;
-	        var world = Physics({
-	            integrator: 'verlet',
-	            maxIPF: 16,
-	            timestep: 1000.0 / 60
-	        });
-	        var viewportBounds = Physics.aabb(0, 0, this.width, this.height);
-	        var edgeBounce = Physics.behavior('edge-collision-detection', {
-	            aabb: viewportBounds,
-	            restitution: 0.5,
-	            cof: 0.05
-	        });
-	        var friction = Physics.behavior('constant-friction');
-	        world.add([
-	            Physics.behavior('body-impulse-response'),
-	            Physics.behavior('body-collision-detection'),
-	            Physics.behavior('sweep-prune'),
-	            friction,
-	            edgeBounce
-	        ]);
-	        world.on('collisions:detected', function (data) {
-	            data.collisions.forEach(function (col) {
-	                var bodyA = col.bodyA;
-	                var bodyB = col.bodyB;
-	                var entityA = _.find(_this.entities, function (e) { return e.physicsBody.uid === bodyA.uid; });
-	                var entityB = _.find(_this.entities, function (e) { return e.physicsBody.uid === bodyB.uid; });
-	                //TODO: research why get null object
-	                if (entityA && entityB) {
-	                    entityA.onHit(entityB);
-	                    entityB.onHit(entityA);
-	                }
-	            });
-	        });
-	        global.world = world;
-	        return world;
-	    };
-	    Stage.prototype.addTask = function (task) {
-	        this.taskRunner.addTask(task);
-	    };
-	    Stage.prototype.updatePhysicsWorld = function () {
-	        this.physicsWorld.step(Date.now());
-	    };
-	    Stage.prototype.update = function () {
-	        var _this = this;
-	        this.cnt++;
-	        this.updatePhysicsWorld();
-	        return new Promise(function (done) {
-	            Promise.all(_this.entities.map(function (e) { return e.step(_this); })).then(function () {
-	                done(_this.taskRunner.run(_this));
-	            });
-	        });
-	    };
-	    return Stage;
-	})(EventEmitter);
-	module.exports = Stage;
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
-
-/***/ },
-/* 26 */
-/***/ function(module, exports, __webpack_require__) {
-
 	/* WEBPACK VAR INJECTION */(function(process) {/**
 	 * Copyright 2013-2014, Facebook, Inc.
 	 * All rights reserved.
@@ -1301,30 +1278,30 @@
 
 	"use strict";
 
-	var DOMPropertyOperations = __webpack_require__(44);
-	var EventPluginUtils = __webpack_require__(45);
-	var ReactChildren = __webpack_require__(46);
-	var ReactComponent = __webpack_require__(47);
-	var ReactCompositeComponent = __webpack_require__(48);
-	var ReactContext = __webpack_require__(49);
-	var ReactCurrentOwner = __webpack_require__(50);
-	var ReactElement = __webpack_require__(51);
-	var ReactElementValidator = __webpack_require__(52);
-	var ReactDOM = __webpack_require__(53);
-	var ReactDOMComponent = __webpack_require__(54);
-	var ReactDefaultInjection = __webpack_require__(55);
-	var ReactInstanceHandles = __webpack_require__(56);
-	var ReactLegacyElement = __webpack_require__(57);
-	var ReactMount = __webpack_require__(58);
-	var ReactMultiChild = __webpack_require__(59);
-	var ReactPerf = __webpack_require__(60);
-	var ReactPropTypes = __webpack_require__(61);
-	var ReactServerRendering = __webpack_require__(62);
-	var ReactTextComponent = __webpack_require__(63);
+	var DOMPropertyOperations = __webpack_require__(42);
+	var EventPluginUtils = __webpack_require__(43);
+	var ReactChildren = __webpack_require__(44);
+	var ReactComponent = __webpack_require__(45);
+	var ReactCompositeComponent = __webpack_require__(46);
+	var ReactContext = __webpack_require__(47);
+	var ReactCurrentOwner = __webpack_require__(48);
+	var ReactElement = __webpack_require__(49);
+	var ReactElementValidator = __webpack_require__(50);
+	var ReactDOM = __webpack_require__(51);
+	var ReactDOMComponent = __webpack_require__(52);
+	var ReactDefaultInjection = __webpack_require__(53);
+	var ReactInstanceHandles = __webpack_require__(54);
+	var ReactLegacyElement = __webpack_require__(55);
+	var ReactMount = __webpack_require__(56);
+	var ReactMultiChild = __webpack_require__(57);
+	var ReactPerf = __webpack_require__(58);
+	var ReactPropTypes = __webpack_require__(59);
+	var ReactServerRendering = __webpack_require__(60);
+	var ReactTextComponent = __webpack_require__(61);
 
-	var assign = __webpack_require__(64);
-	var deprecated = __webpack_require__(65);
-	var onlyChild = __webpack_require__(66);
+	var assign = __webpack_require__(62);
+	var deprecated = __webpack_require__(63);
+	var onlyChild = __webpack_require__(64);
 
 	ReactDefaultInjection.inject();
 
@@ -1423,7 +1400,7 @@
 	}
 
 	if ("production" !== process.env.NODE_ENV) {
-	  var ExecutionEnvironment = __webpack_require__(67);
+	  var ExecutionEnvironment = __webpack_require__(65);
 	  if (ExecutionEnvironment.canUseDOM && window.top === window.self) {
 
 	    // If we're in Chrome, look for the devtools marker and provide a download
@@ -1473,226 +1450,103 @@
 
 	module.exports = React;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(112)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(111)))
+
+/***/ },
+/* 26 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(global) {var __extends = this.__extends || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    __.prototype = b.prototype;
+	    d.prototype = new __();
+	};
+	global.EventEmitter = __webpack_require__(24).EventEmitter;
+	var Physics = __webpack_require__(98);
+	var TaskRunner = __webpack_require__(66);
+	var _ = __webpack_require__(101);
+	var Stage = (function (_super) {
+	    __extends(Stage, _super);
+	    function Stage() {
+	        _super.call(this);
+	        this.cnt = 0;
+	        this.entities = [];
+	        this.taskRunner = new TaskRunner();
+	    }
+	    Stage.prototype.addChild = function (entity) {
+	        this.entities.push(entity);
+	        entity.stage = this;
+	        this.physicsWorld.add(entity.physicsBody);
+	    };
+	    Object.defineProperty(Stage.prototype, "taskQueueCount", {
+	        get: function () {
+	            return this.taskRunner.taskQueues.length;
+	        },
+	        enumerable: true,
+	        configurable: true
+	    });
+	    Stage.prototype.createWorld = function (width, height) {
+	        var _this = this;
+	        var world = Physics({
+	            integrator: 'verlet',
+	            maxIPF: 16,
+	            timestep: 1000.0 / 60
+	        });
+	        var viewportBounds = Physics.aabb(0, 0, width, height);
+	        var edgeBounce = Physics.behavior('edge-collision-detection', {
+	            aabb: viewportBounds,
+	            restitution: 0.5,
+	            cof: 0.05
+	        });
+	        var friction = Physics.behavior('constant-friction');
+	        world.add([
+	            Physics.behavior('body-impulse-response'),
+	            Physics.behavior('body-collision-detection'),
+	            Physics.behavior('sweep-prune'),
+	            friction,
+	            edgeBounce
+	        ]);
+	        world.on('collisions:detected', function (data) {
+	            data.collisions.forEach(function (col) {
+	                var bodyA = col.bodyA;
+	                var bodyB = col.bodyB;
+	                var entityA = _.find(_this.entities, function (e) { return e.physicsBody.uid === bodyA.uid; });
+	                var entityB = _.find(_this.entities, function (e) { return e.physicsBody.uid === bodyB.uid; });
+	                //TODO: research why get null object
+	                if (entityA && entityB) {
+	                    entityA.onHit(entityB);
+	                    entityB.onHit(entityA);
+	                }
+	            });
+	        });
+	        global.world = world;
+	        return world;
+	    };
+	    Stage.prototype.addTask = function (task) {
+	        this.taskRunner.addTask(task);
+	    };
+	    Stage.prototype.updatePhysicsWorld = function () {
+	        this.physicsWorld.step(Date.now());
+	    };
+	    Stage.prototype.update = function () {
+	        var _this = this;
+	        this.cnt++;
+	        this.updatePhysicsWorld();
+	        return new Promise(function (done) {
+	            Promise.all(_this.entities.map(function (e) { return e.step(_this); })).then(function () {
+	                done(_this.taskRunner.run(_this));
+	            });
+	        });
+	    };
+	    return Stage;
+	})(EventEmitter);
+	module.exports = Stage;
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
 /* 27 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Priority = __webpack_require__(70);
-	var GroupId = __webpack_require__(39);
-	var _ = __webpack_require__(72);
-	var DeathChecker = (function () {
-	    function DeathChecker() {
-	    }
-	    Object.defineProperty(DeathChecker.prototype, "priority", {
-	        get: function () {
-	            return 10 /* DEATH_CHECKER */;
-	        },
-	        enumerable: true,
-	        configurable: true
-	    });
-	    DeathChecker.prototype.exec = function (stage) {
-	        // calc point
-	        var deadEntities = stage.entities.filter(function (e) { return e.groupId === 2 /* ENEMY */ && e.isDead(); });
-	        game.addScore(deadEntities.length);
-	        // TODO: work around for miss about death
-	        /*var deadPhysicsIds = deadEntities.map(e => e.physicsBody.uid);
-	        stage.physicsWorld.getBodies().forEach(body => {
-	          if(_.include(deadPhysicsIds, body.uid)){
-	            stage.physicsWorld.remove(body);
-	          }
-	        });
-	        stage.entities = stage.entities
-	          .filter(e => e.isAlive());*/
-	        stage.entities.filter(function (e) { return e.isDead(); }).forEach(function (e) { return e.remove(); });
-	        return true;
-	    };
-	    return DeathChecker;
-	})();
-	module.exports = DeathChecker;
-
-
-/***/ },
-/* 28 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Priority = __webpack_require__(70);
-	var GroupId = __webpack_require__(39);
-	var Enemy = __webpack_require__(106);
-	var _ = __webpack_require__(72);
-	var SimpleSpawner = (function () {
-	    function SimpleSpawner() {
-	    }
-	    Object.defineProperty(SimpleSpawner.prototype, "priority", {
-	        get: function () {
-	            return 5 /* SPAWN */;
-	        },
-	        enumerable: true,
-	        configurable: true
-	    });
-	    SimpleSpawner.prototype.exec = function (stage) {
-	        var enemyCount = stage.entities.filter(function (e) { return e.groupId === 2 /* ENEMY */; }).length;
-	        if (enemyCount < 10) {
-	            _.range(40).forEach(function () {
-	                var enemy = new Enemy();
-	                enemy.setPosition(Math.random() * stage.width, Math.random() * stage.height);
-	                stage.addChild(enemy);
-	            });
-	        }
-	        return true;
-	    };
-	    return SimpleSpawner;
-	})();
-	module.exports = SimpleSpawner;
-
-
-/***/ },
-/* 29 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var __extends = this.__extends || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    __.prototype = b.prototype;
-	    d.prototype = new __();
-	};
-	var Entity = __webpack_require__(71);
-	var Physics = __webpack_require__(69);
-	var Block = (function (_super) {
-	    __extends(Block, _super);
-	    function Block() {
-	        _super.call(this);
-	        this.life = Infinity;
-	    }
-	    Block.prototype.isAlive = function () {
-	        return true;
-	    };
-	    Block.prototype.createPhysicsShape = function () {
-	        return Physics.body('rectangle', {
-	            width: 30,
-	            height: 30,
-	        });
-	    };
-	    Block.prototype.step = function (stage) {
-	    };
-	    Block.type = 'wall';
-	    return Block;
-	})(Entity);
-	module.exports = Block;
-
-
-/***/ },
-/* 30 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var __extends = this.__extends || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    __.prototype = b.prototype;
-	    d.prototype = new __();
-	};
-	var Entity = __webpack_require__(71);
-	var Physics = __webpack_require__(69);
-	var Polygon = (function (_super) {
-	    __extends(Polygon, _super);
-	    function Polygon() {
-	        _super.call(this);
-	        this.life = Infinity;
-	    }
-	    Polygon.prototype.createPhysicsShape = function () {
-	        return Physics.body('convex-polygon', {
-	            vertices: [
-	                { x: 0, y: -30 },
-	                { x: -29, y: -9 },
-	                { x: -18, y: 24 },
-	                { x: 18, y: 24 },
-	                { x: 29, y: -9 }
-	            ],
-	            treatment: 'static',
-	        });
-	    };
-	    Polygon.type = 'polygon';
-	    return Polygon;
-	})(Entity);
-	module.exports = Polygon;
-
-
-/***/ },
-/* 31 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var __extends = this.__extends || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    __.prototype = b.prototype;
-	    d.prototype = new __();
-	};
-	var Entity = __webpack_require__(71);
-	var Battler = (function (_super) {
-	    __extends(Battler, _super);
-	    function Battler() {
-	        _super.apply(this, arguments);
-	    }
-	    Battler.type = 'battler';
-	    return Battler;
-	})(Entity);
-	module.exports = Battler;
-
-
-/***/ },
-/* 32 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Bullet = __webpack_require__(107);
-	var CreateBullet = (function () {
-	    function CreateBullet(owner, x, y, dir) {
-	        this.owner = owner;
-	        this.x = x;
-	        this.y = y;
-	        this.dir = dir;
-	    }
-	    CreateBullet.prototype.exec = function (stage) {
-	        var bullet = new Bullet(this.owner);
-	        bullet.setPosition(this.x, this.y);
-	        bullet.dir = this.dir;
-	        stage.addChild(bullet);
-	        var speed = 0.5;
-	        var rad = this.dir / 180 * 3.14;
-	        var vx = Math.cos(rad) * speed;
-	        var vy = Math.sin(rad) * speed;
-	        bullet.setVelocity(vx, vy);
-	    };
-	    return CreateBullet;
-	})();
-	module.exports = CreateBullet;
-
-
-/***/ },
-/* 33 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var BulletTrap = __webpack_require__(108);
-	var CreateBulletTrap = (function () {
-	    function CreateBulletTrap(owner, x, y, dir) {
-	        this.owner = owner;
-	        this.x = x;
-	        this.y = y;
-	        this.dir = dir;
-	    }
-	    CreateBulletTrap.prototype.exec = function (stage) {
-	        var bulletTrap = new BulletTrap(this.owner);
-	        bulletTrap.setPosition(this.x, this.y);
-	        bulletTrap.dir = this.dir;
-	        stage.addChild(bulletTrap);
-	    };
-	    return CreateBulletTrap;
-	})();
-	module.exports = CreateBulletTrap;
-
-
-/***/ },
-/* 34 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -1727,18 +1581,18 @@
 	var reflect = function() {
 	    return new Promise.PromiseInspection(this._target());
 	};
-	var util = __webpack_require__(73);
-	var async = __webpack_require__(74);
-	var errors = __webpack_require__(75);
+	var util = __webpack_require__(68);
+	var async = __webpack_require__(69);
+	var errors = __webpack_require__(70);
 	var INTERNAL = function(){};
 	var APPLY = {};
 	var NEXT_FILTER = {e: null};
-	var tryConvertToPromise = __webpack_require__(76)(Promise, INTERNAL);
+	var tryConvertToPromise = __webpack_require__(71)(Promise, INTERNAL);
 	var PromiseArray =
-	    __webpack_require__(77)(Promise, INTERNAL, tryConvertToPromise);
-	var CapturedTrace = __webpack_require__(78)();
-	var CatchFilter = __webpack_require__(79)(NEXT_FILTER);
-	var PromiseResolver = __webpack_require__(80);
+	    __webpack_require__(72)(Promise, INTERNAL, tryConvertToPromise);
+	var CapturedTrace = __webpack_require__(73)();
+	var CatchFilter = __webpack_require__(74)(NEXT_FILTER);
+	var PromiseResolver = __webpack_require__(75);
 	var isArray = util.isArray;
 	var errorObj = util.errorObj;
 	var tryCatch1 = util.tryCatch1;
@@ -1752,7 +1606,7 @@
 	var originatesFromRejection = errors.originatesFromRejection;
 	var markAsOriginatingFromRejection = errors.markAsOriginatingFromRejection;
 	var canAttachTrace = errors.canAttachTrace;
-	var apiRejection = __webpack_require__(81)(Promise);
+	var apiRejection = __webpack_require__(76)(Promise);
 	var unhandledRejectionHandled;
 	var debugging = false || !!(
 	    typeof process !== "undefined" &&
@@ -2622,10 +2476,10 @@
 	}
 
 	Promise._makeSelfResolutionError = makeSelfResolutionError;
-	__webpack_require__(82)(Promise, NEXT_FILTER, tryConvertToPromise);
-	__webpack_require__(83)(Promise);
-	__webpack_require__(84)(Promise);
-	__webpack_require__(85)(Promise, PromiseArray, tryConvertToPromise, INTERNAL);
+	__webpack_require__(77)(Promise, NEXT_FILTER, tryConvertToPromise);
+	__webpack_require__(78)(Promise);
+	__webpack_require__(79)(Promise);
+	__webpack_require__(80)(Promise, PromiseArray, tryConvertToPromise, INTERNAL);
 	Promise.RangeError = RangeError;
 	Promise.CancellationError = CancellationError;
 	Promise.TimeoutError = TimeoutError;
@@ -2638,37 +2492,219 @@
 	util.toFastProperties(Promise.prototype);
 	Promise.Promise = Promise;
 	CapturedTrace.setBounds(async.firstLineError, util.lastLineError);
-	__webpack_require__(86)(Promise,INTERNAL,tryConvertToPromise);
-	__webpack_require__(87)(Promise,INTERNAL,tryConvertToPromise);
-	__webpack_require__(88)(Promise);
-	__webpack_require__(89)(Promise,apiRejection,INTERNAL,tryConvertToPromise);
-	__webpack_require__(90)(Promise,PromiseArray,apiRejection,tryConvertToPromise,INTERNAL);
-	__webpack_require__(91)(Promise);
-	__webpack_require__(92)(Promise,INTERNAL);
-	__webpack_require__(93)(Promise,PromiseArray,tryConvertToPromise);
-	__webpack_require__(94)(Promise,PromiseArray,apiRejection,tryConvertToPromise,INTERNAL);
+	__webpack_require__(81)(Promise,INTERNAL,tryConvertToPromise);
+	__webpack_require__(82)(Promise,INTERNAL,tryConvertToPromise);
+	__webpack_require__(83)(Promise);
+	__webpack_require__(84)(Promise,apiRejection,INTERNAL,tryConvertToPromise);
+	__webpack_require__(85)(Promise,PromiseArray,apiRejection,tryConvertToPromise,INTERNAL);
+	__webpack_require__(86)(Promise);
+	__webpack_require__(87)(Promise,INTERNAL);
+	__webpack_require__(88)(Promise,PromiseArray,tryConvertToPromise);
+	__webpack_require__(89)(Promise,PromiseArray,apiRejection,tryConvertToPromise,INTERNAL);
+	__webpack_require__(90)(Promise,PromiseArray);
+	__webpack_require__(91)(Promise,PromiseArray,apiRejection);
+	__webpack_require__(92)(Promise,PromiseArray);
+	__webpack_require__(93)(Promise,INTERNAL);
+	__webpack_require__(94)(Promise,INTERNAL);
 	__webpack_require__(95)(Promise,PromiseArray);
-	__webpack_require__(96)(Promise,PromiseArray,apiRejection);
-	__webpack_require__(97)(Promise,PromiseArray);
-	__webpack_require__(98)(Promise,INTERNAL);
-	__webpack_require__(99)(Promise,INTERNAL);
-	__webpack_require__(100)(Promise,PromiseArray);
-	__webpack_require__(101)(Promise,INTERNAL);
-	__webpack_require__(102)(Promise,apiRejection,tryConvertToPromise);
+	__webpack_require__(96)(Promise,INTERNAL);
+	__webpack_require__(97)(Promise,apiRejection,tryConvertToPromise);
 
 	Promise.prototype = Promise.prototype;
 	return Promise;
 
 	};
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(112)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(111)))
 
 /***/ },
-/* 35 */
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var utils = __webpack_require__(37);
-	var LifeCycle = __webpack_require__(103);
+	var Priority = __webpack_require__(99);
+	var GroupId = __webpack_require__(38);
+	var _ = __webpack_require__(101);
+	var DeathChecker = (function () {
+	    function DeathChecker() {
+	    }
+	    Object.defineProperty(DeathChecker.prototype, "priority", {
+	        get: function () {
+	            return 10 /* DEATH_CHECKER */;
+	        },
+	        enumerable: true,
+	        configurable: true
+	    });
+	    DeathChecker.prototype.exec = function (stage) {
+	        // calc point
+	        var deadEntities = stage.entities.filter(function (e) { return e.groupId === 2 /* ENEMY */ && e.isDead(); });
+	        game.addScore(deadEntities.length);
+	        // TODO: work around for miss about death
+	        /*var deadPhysicsIds = deadEntities.map(e => e.physicsBody.uid);
+	        stage.physicsWorld.getBodies().forEach(body => {
+	          if(_.include(deadPhysicsIds, body.uid)){
+	            stage.physicsWorld.remove(body);
+	          }
+	        });
+	        stage.entities = stage.entities
+	          .filter(e => e.isAlive());*/
+	        stage.entities.filter(function (e) { return e.isDead(); }).forEach(function (e) { return e.remove(); });
+	        return true;
+	    };
+	    return DeathChecker;
+	})();
+	module.exports = DeathChecker;
+
+
+/***/ },
+/* 29 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Priority = __webpack_require__(99);
+	var GroupId = __webpack_require__(38);
+	var Enemy = __webpack_require__(105);
+	var _ = __webpack_require__(101);
+	var SimpleSpawner = (function () {
+	    function SimpleSpawner() {
+	    }
+	    Object.defineProperty(SimpleSpawner.prototype, "priority", {
+	        get: function () {
+	            return 5 /* SPAWN */;
+	        },
+	        enumerable: true,
+	        configurable: true
+	    });
+	    SimpleSpawner.prototype.exec = function (stage) {
+	        var enemyCount = stage.entities.filter(function (e) { return e.groupId === 2 /* ENEMY */; }).length;
+	        if (enemyCount < 3) {
+	            _.range(5).forEach(function () {
+	                var enemy = new Enemy();
+	                enemy.setPosition(Math.random() * stage.width, Math.random() * stage.height);
+	                stage.addChild(enemy);
+	            });
+	        }
+	        return true;
+	    };
+	    return SimpleSpawner;
+	})();
+	module.exports = SimpleSpawner;
+
+
+/***/ },
+/* 30 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __extends = this.__extends || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    __.prototype = b.prototype;
+	    d.prototype = new __();
+	};
+	var Entity = __webpack_require__(100);
+	var Physics = __webpack_require__(98);
+	var Block = (function (_super) {
+	    __extends(Block, _super);
+	    function Block(size) {
+	        this.size = size;
+	        _super.call(this);
+	        this.life = Infinity;
+	    }
+	    Block.prototype.isAlive = function () {
+	        return true;
+	    };
+	    Block.prototype.createPhysicsShape = function () {
+	        return Physics.body('rectangle', {
+	            width: this.size,
+	            height: this.size,
+	            treatment: 'static'
+	        });
+	    };
+	    Block.prototype.step = function (stage) {
+	    };
+	    Block.type = 'wall';
+	    return Block;
+	})(Entity);
+	module.exports = Block;
+
+
+/***/ },
+/* 31 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __extends = this.__extends || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    __.prototype = b.prototype;
+	    d.prototype = new __();
+	};
+	var Entity = __webpack_require__(100);
+	var Battler = (function (_super) {
+	    __extends(Battler, _super);
+	    function Battler() {
+	        _super.apply(this, arguments);
+	    }
+	    Battler.type = 'battler';
+	    return Battler;
+	})(Entity);
+	module.exports = Battler;
+
+
+/***/ },
+/* 32 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Bullet = __webpack_require__(106);
+	var CreateBullet = (function () {
+	    function CreateBullet(owner, x, y, dir) {
+	        this.owner = owner;
+	        this.x = x;
+	        this.y = y;
+	        this.dir = dir;
+	    }
+	    CreateBullet.prototype.exec = function (stage) {
+	        var bullet = new Bullet(this.owner);
+	        bullet.setPosition(this.x, this.y);
+	        bullet.dir = this.dir;
+	        stage.addChild(bullet);
+	        var speed = 0.5;
+	        var rad = this.dir / 180 * 3.14;
+	        var vx = Math.cos(rad) * speed;
+	        var vy = Math.sin(rad) * speed;
+	        bullet.setVelocity(vx, vy);
+	    };
+	    return CreateBullet;
+	})();
+	module.exports = CreateBullet;
+
+
+/***/ },
+/* 33 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var BulletTrap = __webpack_require__(107);
+	var CreateBulletTrap = (function () {
+	    function CreateBulletTrap(owner, x, y, dir) {
+	        this.owner = owner;
+	        this.x = x;
+	        this.y = y;
+	        this.dir = dir;
+	    }
+	    CreateBulletTrap.prototype.exec = function (stage) {
+	        var bulletTrap = new BulletTrap(this.owner);
+	        bulletTrap.setPosition(this.x, this.y);
+	        bulletTrap.dir = this.dir;
+	        stage.addChild(bulletTrap);
+	    };
+	    return CreateBulletTrap;
+	})();
+	module.exports = CreateBulletTrap;
+
+
+/***/ },
+/* 34 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var utils = __webpack_require__(36);
+	var LifeCycle = __webpack_require__(102);
 	var Portal = (function () {
 	    function Portal() {
 	        this._linkMap = {}; //TODO: valid struct
@@ -2861,12 +2897,12 @@
 
 
 /***/ },
-/* 36 */
+/* 35 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var utils = __webpack_require__(37);
-	var Aggregator = __webpack_require__(104);
-	var LifeCycle = __webpack_require__(103);
+	var utils = __webpack_require__(36);
+	var Aggregator = __webpack_require__(103);
+	var LifeCycle = __webpack_require__(102);
 	var subscribe = function (world) {
 	    return function (eventName, fn) {
 	        world.emitter.on(eventName, fn(world, world.props, world.state));
@@ -2981,12 +3017,12 @@
 
 
 /***/ },
-/* 37 */
+/* 36 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var _react;
 	var _immutable;
-	var EventEmitter = __webpack_require__(175);
+	var EventEmitter = __webpack_require__(174);
 	if (EventEmitter.EventEmitter2)
 	    EventEmitter = EventEmitter.EventEmitter2;
 	// alias map
@@ -3044,10 +3080,10 @@
 
 
 /***/ },
-/* 38 */
+/* 37 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var utils = __webpack_require__(37);
+	var utils = __webpack_require__(36);
 	function mixinFor(portal) {
 	    return {
 	        emit: function (eventName) {
@@ -3071,34 +3107,20 @@
 
 
 /***/ },
-/* 39 */
+/* 38 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var GroupId;
 	(function (GroupId) {
 	    GroupId[GroupId["ALLY"] = 1] = "ALLY";
 	    GroupId[GroupId["ENEMY"] = 2] = "ENEMY";
-	    GroupId[GroupId["UNKNOWN"] = 99] = "UNKNOWN";
+	    GroupId[GroupId["UNDEFINED"] = 99] = "UNDEFINED";
 	})(GroupId || (GroupId = {}));
 	module.exports = GroupId;
 
 
 /***/ },
-/* 40 */
-/***/ function(module, exports, __webpack_require__) {
-
-	(function() {
-	  module.exports = {
-	    onClick: function() {
-	      return app.pushWorld('field', {});
-	    }
-	  };
-
-	}).call(this);
-
-
-/***/ },
-/* 41 */
+/* 39 */
 /***/ function(module, exports, __webpack_require__) {
 
 	(function() {
@@ -3147,6 +3169,12 @@
 	    onContextMenu: function(e) {
 	      e.stopPropagation();
 	      e.preventDefault();
+	    },
+	    onClickStop: function(e) {
+	      return this.emit('field:stop');
+	    },
+	    onClickRestart: function(e) {
+	      return this.emit('field:restart');
 	    }
 	  };
 
@@ -3154,7 +3182,21 @@
 
 
 /***/ },
-/* 42 */
+/* 40 */
+/***/ function(module, exports, __webpack_require__) {
+
+	(function() {
+	  module.exports = {
+	    onClick: function() {
+	      return app.pushWorld('field', {});
+	    }
+	  };
+
+	}).call(this);
+
+
+/***/ },
+/* 41 */
 /***/ function(module, exports, __webpack_require__) {
 
 	(function() {
@@ -3168,58 +3210,7 @@
 
 
 /***/ },
-/* 43 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Priority = __webpack_require__(70);
-	var _ = __webpack_require__(72);
-	var TaskRunner = (function () {
-	    function TaskRunner() {
-	        this.taskQueues = [];
-	        this.taskQueues = [];
-	    }
-	    TaskRunner.prototype.addTask = function (task) {
-	        this.taskQueues.push(task);
-	    };
-	    TaskRunner.prototype.sortTasks = function () {
-	        this.taskQueues = _.sortBy(this.taskQueues, function (task) {
-	            return task.priority ? task.priority : 100 /* LOW */;
-	        });
-	    };
-	    TaskRunner.prototype.execAllTasks = function (stage) {
-	        var _this = this;
-	        this.sortTasks();
-	        var nextTasks = [];
-	        var taskQueues = this.taskQueues.slice();
-	        this.taskQueues = [];
-	        return new Promise(function (done) {
-	            Promise.reduce(taskQueues, function (p, task) {
-	                return new Promise(function (done) {
-	                    Promise.resolve(task.exec(stage)).then(function (val) {
-	                        if (val === true)
-	                            nextTasks.push(task);
-	                        done();
-	                    });
-	                });
-	            }, Promise.resolve()).then(function () {
-	                _this.taskQueues = _this.taskQueues.concat(nextTasks);
-	                done();
-	            });
-	        });
-	    };
-	    TaskRunner.prototype.run = function (stage) {
-	        var _this = this;
-	        return new Promise(function (done) {
-	            _this.execAllTasks(stage).then(done);
-	        });
-	    };
-	    return TaskRunner;
-	})();
-	module.exports = TaskRunner;
-
-
-/***/ },
-/* 44 */
+/* 42 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -3236,11 +3227,11 @@
 
 	"use strict";
 
-	var DOMProperty = __webpack_require__(113);
+	var DOMProperty = __webpack_require__(112);
 
-	var escapeTextForBrowser = __webpack_require__(114);
-	var memoizeStringOnly = __webpack_require__(115);
-	var warning = __webpack_require__(116);
+	var escapeTextForBrowser = __webpack_require__(113);
+	var memoizeStringOnly = __webpack_require__(114);
+	var warning = __webpack_require__(115);
 
 	function shouldIgnoreValue(name, value) {
 	  return value == null ||
@@ -3416,10 +3407,10 @@
 
 	module.exports = DOMPropertyOperations;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(112)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(111)))
 
 /***/ },
-/* 45 */
+/* 43 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -3435,9 +3426,9 @@
 
 	"use strict";
 
-	var EventConstants = __webpack_require__(117);
+	var EventConstants = __webpack_require__(122);
 
-	var invariant = __webpack_require__(118);
+	var invariant = __webpack_require__(120);
 
 	/**
 	 * Injected dependencies:
@@ -3640,10 +3631,10 @@
 
 	module.exports = EventPluginUtils;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(112)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(111)))
 
 /***/ },
-/* 46 */
+/* 44 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -3659,10 +3650,10 @@
 
 	"use strict";
 
-	var PooledClass = __webpack_require__(119);
+	var PooledClass = __webpack_require__(116);
 
-	var traverseAllChildren = __webpack_require__(120);
-	var warning = __webpack_require__(116);
+	var traverseAllChildren = __webpack_require__(117);
+	var warning = __webpack_require__(115);
 
 	var twoArgumentPooler = PooledClass.twoArgumentPooler;
 	var threeArgumentPooler = PooledClass.threeArgumentPooler;
@@ -3793,10 +3784,10 @@
 
 	module.exports = ReactChildren;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(112)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(111)))
 
 /***/ },
-/* 47 */
+/* 45 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -3812,13 +3803,13 @@
 
 	"use strict";
 
-	var ReactElement = __webpack_require__(51);
-	var ReactOwner = __webpack_require__(121);
-	var ReactUpdates = __webpack_require__(122);
+	var ReactElement = __webpack_require__(49);
+	var ReactOwner = __webpack_require__(118);
+	var ReactUpdates = __webpack_require__(119);
 
-	var assign = __webpack_require__(64);
-	var invariant = __webpack_require__(118);
-	var keyMirror = __webpack_require__(123);
+	var assign = __webpack_require__(62);
+	var invariant = __webpack_require__(120);
+	var keyMirror = __webpack_require__(121);
 
 	/**
 	 * Every React component is in one of these life cycles.
@@ -4239,10 +4230,10 @@
 
 	module.exports = ReactComponent;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(112)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(111)))
 
 /***/ },
-/* 48 */
+/* 46 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -4258,30 +4249,30 @@
 
 	"use strict";
 
-	var ReactComponent = __webpack_require__(47);
-	var ReactContext = __webpack_require__(49);
-	var ReactCurrentOwner = __webpack_require__(50);
-	var ReactElement = __webpack_require__(51);
-	var ReactElementValidator = __webpack_require__(52);
-	var ReactEmptyComponent = __webpack_require__(124);
-	var ReactErrorUtils = __webpack_require__(125);
-	var ReactLegacyElement = __webpack_require__(57);
-	var ReactOwner = __webpack_require__(121);
-	var ReactPerf = __webpack_require__(60);
-	var ReactPropTransferer = __webpack_require__(126);
-	var ReactPropTypeLocations = __webpack_require__(127);
-	var ReactPropTypeLocationNames = __webpack_require__(128);
-	var ReactUpdates = __webpack_require__(122);
+	var ReactComponent = __webpack_require__(45);
+	var ReactContext = __webpack_require__(47);
+	var ReactCurrentOwner = __webpack_require__(48);
+	var ReactElement = __webpack_require__(49);
+	var ReactElementValidator = __webpack_require__(50);
+	var ReactEmptyComponent = __webpack_require__(123);
+	var ReactErrorUtils = __webpack_require__(124);
+	var ReactLegacyElement = __webpack_require__(55);
+	var ReactOwner = __webpack_require__(118);
+	var ReactPerf = __webpack_require__(58);
+	var ReactPropTransferer = __webpack_require__(125);
+	var ReactPropTypeLocations = __webpack_require__(126);
+	var ReactPropTypeLocationNames = __webpack_require__(127);
+	var ReactUpdates = __webpack_require__(119);
 
-	var assign = __webpack_require__(64);
-	var instantiateReactComponent = __webpack_require__(129);
-	var invariant = __webpack_require__(118);
-	var keyMirror = __webpack_require__(123);
-	var keyOf = __webpack_require__(130);
-	var monitorCodeUse = __webpack_require__(131);
-	var mapObject = __webpack_require__(132);
-	var shouldUpdateReactComponent = __webpack_require__(133);
-	var warning = __webpack_require__(116);
+	var assign = __webpack_require__(62);
+	var instantiateReactComponent = __webpack_require__(128);
+	var invariant = __webpack_require__(120);
+	var keyMirror = __webpack_require__(121);
+	var keyOf = __webpack_require__(129);
+	var monitorCodeUse = __webpack_require__(130);
+	var mapObject = __webpack_require__(131);
+	var shouldUpdateReactComponent = __webpack_require__(132);
+	var warning = __webpack_require__(115);
 
 	var MIXINS_KEY = keyOf({mixins: null});
 
@@ -5682,10 +5673,10 @@
 
 	module.exports = ReactCompositeComponent;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(112)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(111)))
 
 /***/ },
-/* 49 */
+/* 47 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -5701,7 +5692,7 @@
 
 	"use strict";
 
-	var assign = __webpack_require__(64);
+	var assign = __webpack_require__(62);
 
 	/**
 	 * Keeps track of the current context.
@@ -5751,7 +5742,7 @@
 
 
 /***/ },
-/* 50 */
+/* 48 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -5789,7 +5780,7 @@
 
 
 /***/ },
-/* 51 */
+/* 49 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -5805,10 +5796,10 @@
 
 	"use strict";
 
-	var ReactContext = __webpack_require__(49);
-	var ReactCurrentOwner = __webpack_require__(50);
+	var ReactContext = __webpack_require__(47);
+	var ReactCurrentOwner = __webpack_require__(48);
 
-	var warning = __webpack_require__(116);
+	var warning = __webpack_require__(115);
 
 	var RESERVED_PROPS = {
 	  key: true,
@@ -6035,10 +6026,10 @@
 
 	module.exports = ReactElement;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(112)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(111)))
 
 /***/ },
-/* 52 */
+/* 50 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -6061,12 +6052,12 @@
 
 	"use strict";
 
-	var ReactElement = __webpack_require__(51);
-	var ReactPropTypeLocations = __webpack_require__(127);
-	var ReactCurrentOwner = __webpack_require__(50);
+	var ReactElement = __webpack_require__(49);
+	var ReactPropTypeLocations = __webpack_require__(126);
+	var ReactCurrentOwner = __webpack_require__(48);
 
-	var monitorCodeUse = __webpack_require__(131);
-	var warning = __webpack_require__(116);
+	var monitorCodeUse = __webpack_require__(130);
+	var warning = __webpack_require__(115);
 
 	/**
 	 * Warn if there's no key explicitly set on dynamic arrays of children or
@@ -6320,10 +6311,10 @@
 
 	module.exports = ReactElementValidator;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(112)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(111)))
 
 /***/ },
-/* 53 */
+/* 51 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -6340,11 +6331,11 @@
 
 	"use strict";
 
-	var ReactElement = __webpack_require__(51);
-	var ReactElementValidator = __webpack_require__(52);
-	var ReactLegacyElement = __webpack_require__(57);
+	var ReactElement = __webpack_require__(49);
+	var ReactElementValidator = __webpack_require__(50);
+	var ReactLegacyElement = __webpack_require__(55);
 
-	var mapObject = __webpack_require__(132);
+	var mapObject = __webpack_require__(131);
 
 	/**
 	 * Create a factory that creates HTML tag elements.
@@ -6506,10 +6497,10 @@
 
 	module.exports = ReactDOM;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(112)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(111)))
 
 /***/ },
-/* 54 */
+/* 52 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -6526,22 +6517,22 @@
 
 	"use strict";
 
-	var CSSPropertyOperations = __webpack_require__(134);
-	var DOMProperty = __webpack_require__(113);
-	var DOMPropertyOperations = __webpack_require__(44);
-	var ReactBrowserComponentMixin = __webpack_require__(135);
-	var ReactComponent = __webpack_require__(47);
-	var ReactBrowserEventEmitter = __webpack_require__(136);
-	var ReactMount = __webpack_require__(58);
-	var ReactMultiChild = __webpack_require__(59);
-	var ReactPerf = __webpack_require__(60);
+	var CSSPropertyOperations = __webpack_require__(133);
+	var DOMProperty = __webpack_require__(112);
+	var DOMPropertyOperations = __webpack_require__(42);
+	var ReactBrowserComponentMixin = __webpack_require__(134);
+	var ReactComponent = __webpack_require__(45);
+	var ReactBrowserEventEmitter = __webpack_require__(135);
+	var ReactMount = __webpack_require__(56);
+	var ReactMultiChild = __webpack_require__(57);
+	var ReactPerf = __webpack_require__(58);
 
-	var assign = __webpack_require__(64);
-	var escapeTextForBrowser = __webpack_require__(114);
-	var invariant = __webpack_require__(118);
-	var isEventSupported = __webpack_require__(137);
-	var keyOf = __webpack_require__(130);
-	var monitorCodeUse = __webpack_require__(131);
+	var assign = __webpack_require__(62);
+	var escapeTextForBrowser = __webpack_require__(113);
+	var invariant = __webpack_require__(120);
+	var isEventSupported = __webpack_require__(136);
+	var keyOf = __webpack_require__(129);
+	var monitorCodeUse = __webpack_require__(130);
 
 	var deleteListener = ReactBrowserEventEmitter.deleteListener;
 	var listenTo = ReactBrowserEventEmitter.listenTo;
@@ -6996,10 +6987,10 @@
 
 	module.exports = ReactDOMComponent;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(112)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(111)))
 
 /***/ },
-/* 55 */
+/* 53 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -7015,37 +7006,37 @@
 
 	"use strict";
 
-	var BeforeInputEventPlugin = __webpack_require__(138);
-	var ChangeEventPlugin = __webpack_require__(139);
-	var ClientReactRootIndex = __webpack_require__(140);
-	var CompositionEventPlugin = __webpack_require__(141);
-	var DefaultEventPluginOrder = __webpack_require__(142);
-	var EnterLeaveEventPlugin = __webpack_require__(143);
-	var ExecutionEnvironment = __webpack_require__(67);
-	var HTMLDOMPropertyConfig = __webpack_require__(144);
-	var MobileSafariClickEventPlugin = __webpack_require__(145);
-	var ReactBrowserComponentMixin = __webpack_require__(135);
+	var BeforeInputEventPlugin = __webpack_require__(137);
+	var ChangeEventPlugin = __webpack_require__(138);
+	var ClientReactRootIndex = __webpack_require__(139);
+	var CompositionEventPlugin = __webpack_require__(140);
+	var DefaultEventPluginOrder = __webpack_require__(141);
+	var EnterLeaveEventPlugin = __webpack_require__(142);
+	var ExecutionEnvironment = __webpack_require__(65);
+	var HTMLDOMPropertyConfig = __webpack_require__(143);
+	var MobileSafariClickEventPlugin = __webpack_require__(144);
+	var ReactBrowserComponentMixin = __webpack_require__(134);
 	var ReactComponentBrowserEnvironment =
-	  __webpack_require__(146);
-	var ReactDefaultBatchingStrategy = __webpack_require__(147);
-	var ReactDOMComponent = __webpack_require__(54);
-	var ReactDOMButton = __webpack_require__(148);
-	var ReactDOMForm = __webpack_require__(149);
-	var ReactDOMImg = __webpack_require__(150);
-	var ReactDOMInput = __webpack_require__(151);
-	var ReactDOMOption = __webpack_require__(152);
-	var ReactDOMSelect = __webpack_require__(153);
-	var ReactDOMTextarea = __webpack_require__(154);
-	var ReactEventListener = __webpack_require__(155);
-	var ReactInjection = __webpack_require__(156);
-	var ReactInstanceHandles = __webpack_require__(56);
-	var ReactMount = __webpack_require__(58);
-	var SelectEventPlugin = __webpack_require__(157);
-	var ServerReactRootIndex = __webpack_require__(158);
-	var SimpleEventPlugin = __webpack_require__(159);
-	var SVGDOMPropertyConfig = __webpack_require__(160);
+	  __webpack_require__(145);
+	var ReactDefaultBatchingStrategy = __webpack_require__(146);
+	var ReactDOMComponent = __webpack_require__(52);
+	var ReactDOMButton = __webpack_require__(147);
+	var ReactDOMForm = __webpack_require__(148);
+	var ReactDOMImg = __webpack_require__(149);
+	var ReactDOMInput = __webpack_require__(150);
+	var ReactDOMOption = __webpack_require__(151);
+	var ReactDOMSelect = __webpack_require__(152);
+	var ReactDOMTextarea = __webpack_require__(153);
+	var ReactEventListener = __webpack_require__(154);
+	var ReactInjection = __webpack_require__(155);
+	var ReactInstanceHandles = __webpack_require__(54);
+	var ReactMount = __webpack_require__(56);
+	var SelectEventPlugin = __webpack_require__(156);
+	var ServerReactRootIndex = __webpack_require__(157);
+	var SimpleEventPlugin = __webpack_require__(158);
+	var SVGDOMPropertyConfig = __webpack_require__(159);
 
-	var createFullPageComponent = __webpack_require__(161);
+	var createFullPageComponent = __webpack_require__(160);
 
 	function inject() {
 	  ReactInjection.EventEmitter.injectReactEventListener(
@@ -7118,7 +7109,7 @@
 	  if ("production" !== process.env.NODE_ENV) {
 	    var url = (ExecutionEnvironment.canUseDOM && window.location.href) || '';
 	    if ((/[?&]react_perf\b/).test(url)) {
-	      var ReactDefaultPerf = __webpack_require__(162);
+	      var ReactDefaultPerf = __webpack_require__(161);
 	      ReactDefaultPerf.start();
 	    }
 	  }
@@ -7128,10 +7119,10 @@
 	  inject: inject
 	};
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(112)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(111)))
 
 /***/ },
-/* 56 */
+/* 54 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -7148,9 +7139,9 @@
 
 	"use strict";
 
-	var ReactRootIndex = __webpack_require__(163);
+	var ReactRootIndex = __webpack_require__(162);
 
-	var invariant = __webpack_require__(118);
+	var invariant = __webpack_require__(120);
 
 	var SEPARATOR = '.';
 	var SEPARATOR_LENGTH = SEPARATOR.length;
@@ -7466,10 +7457,10 @@
 
 	module.exports = ReactInstanceHandles;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(112)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(111)))
 
 /***/ },
-/* 57 */
+/* 55 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -7485,11 +7476,11 @@
 
 	"use strict";
 
-	var ReactCurrentOwner = __webpack_require__(50);
+	var ReactCurrentOwner = __webpack_require__(48);
 
-	var invariant = __webpack_require__(118);
-	var monitorCodeUse = __webpack_require__(131);
-	var warning = __webpack_require__(116);
+	var invariant = __webpack_require__(120);
+	var monitorCodeUse = __webpack_require__(130);
+	var warning = __webpack_require__(115);
 
 	var legacyFactoryLogs = {};
 	function warnForLegacyFactoryCall() {
@@ -7716,10 +7707,10 @@
 
 	module.exports = ReactLegacyElementFactory;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(112)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(111)))
 
 /***/ },
-/* 58 */
+/* 56 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -7735,21 +7726,21 @@
 
 	"use strict";
 
-	var DOMProperty = __webpack_require__(113);
-	var ReactBrowserEventEmitter = __webpack_require__(136);
-	var ReactCurrentOwner = __webpack_require__(50);
-	var ReactElement = __webpack_require__(51);
-	var ReactLegacyElement = __webpack_require__(57);
-	var ReactInstanceHandles = __webpack_require__(56);
-	var ReactPerf = __webpack_require__(60);
+	var DOMProperty = __webpack_require__(112);
+	var ReactBrowserEventEmitter = __webpack_require__(135);
+	var ReactCurrentOwner = __webpack_require__(48);
+	var ReactElement = __webpack_require__(49);
+	var ReactLegacyElement = __webpack_require__(55);
+	var ReactInstanceHandles = __webpack_require__(54);
+	var ReactPerf = __webpack_require__(58);
 
-	var containsNode = __webpack_require__(166);
-	var deprecated = __webpack_require__(65);
-	var getReactRootElementInContainer = __webpack_require__(167);
-	var instantiateReactComponent = __webpack_require__(129);
-	var invariant = __webpack_require__(118);
-	var shouldUpdateReactComponent = __webpack_require__(133);
-	var warning = __webpack_require__(116);
+	var containsNode = __webpack_require__(163);
+	var deprecated = __webpack_require__(63);
+	var getReactRootElementInContainer = __webpack_require__(164);
+	var instantiateReactComponent = __webpack_require__(128);
+	var invariant = __webpack_require__(120);
+	var shouldUpdateReactComponent = __webpack_require__(132);
+	var warning = __webpack_require__(115);
 
 	var createElement = ReactLegacyElement.wrapCreateElement(
 	  ReactElement.createElement
@@ -8417,10 +8408,10 @@
 
 	module.exports = ReactMount;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(112)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(111)))
 
 /***/ },
-/* 59 */
+/* 57 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -8437,12 +8428,12 @@
 
 	"use strict";
 
-	var ReactComponent = __webpack_require__(47);
-	var ReactMultiChildUpdateTypes = __webpack_require__(164);
+	var ReactComponent = __webpack_require__(45);
+	var ReactMultiChildUpdateTypes = __webpack_require__(165);
 
-	var flattenChildren = __webpack_require__(165);
-	var instantiateReactComponent = __webpack_require__(129);
-	var shouldUpdateReactComponent = __webpack_require__(133);
+	var flattenChildren = __webpack_require__(166);
+	var instantiateReactComponent = __webpack_require__(128);
+	var shouldUpdateReactComponent = __webpack_require__(132);
 
 	/**
 	 * Updating children of a component may trigger recursive updates. The depth is
@@ -8852,7 +8843,7 @@
 
 
 /***/ },
-/* 60 */
+/* 58 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -8936,10 +8927,10 @@
 
 	module.exports = ReactPerf;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(112)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(111)))
 
 /***/ },
-/* 61 */
+/* 59 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -8955,11 +8946,11 @@
 
 	"use strict";
 
-	var ReactElement = __webpack_require__(51);
-	var ReactPropTypeLocationNames = __webpack_require__(128);
+	var ReactElement = __webpack_require__(49);
+	var ReactPropTypeLocationNames = __webpack_require__(127);
 
-	var deprecated = __webpack_require__(65);
-	var emptyFunction = __webpack_require__(168);
+	var deprecated = __webpack_require__(63);
+	var emptyFunction = __webpack_require__(167);
 
 	/**
 	 * Collection of methods that allow declaration and validation of props that are
@@ -9297,7 +9288,7 @@
 
 
 /***/ },
-/* 62 */
+/* 60 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -9313,14 +9304,14 @@
 	 */
 	"use strict";
 
-	var ReactElement = __webpack_require__(51);
-	var ReactInstanceHandles = __webpack_require__(56);
-	var ReactMarkupChecksum = __webpack_require__(169);
+	var ReactElement = __webpack_require__(49);
+	var ReactInstanceHandles = __webpack_require__(54);
+	var ReactMarkupChecksum = __webpack_require__(168);
 	var ReactServerRenderingTransaction =
-	  __webpack_require__(170);
+	  __webpack_require__(169);
 
-	var instantiateReactComponent = __webpack_require__(129);
-	var invariant = __webpack_require__(118);
+	var instantiateReactComponent = __webpack_require__(128);
+	var invariant = __webpack_require__(120);
 
 	/**
 	 * @param {ReactElement} element
@@ -9377,10 +9368,10 @@
 	  renderToStaticMarkup: renderToStaticMarkup
 	};
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(112)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(111)))
 
 /***/ },
-/* 63 */
+/* 61 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -9397,12 +9388,12 @@
 
 	"use strict";
 
-	var DOMPropertyOperations = __webpack_require__(44);
-	var ReactComponent = __webpack_require__(47);
-	var ReactElement = __webpack_require__(51);
+	var DOMPropertyOperations = __webpack_require__(42);
+	var ReactComponent = __webpack_require__(45);
+	var ReactElement = __webpack_require__(49);
 
-	var assign = __webpack_require__(64);
-	var escapeTextForBrowser = __webpack_require__(114);
+	var assign = __webpack_require__(62);
+	var escapeTextForBrowser = __webpack_require__(113);
 
 	/**
 	 * Text nodes violate a couple assumptions that React makes about components:
@@ -9490,7 +9481,7 @@
 
 
 /***/ },
-/* 64 */
+/* 62 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -9541,7 +9532,7 @@
 
 
 /***/ },
-/* 65 */
+/* 63 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -9555,8 +9546,8 @@
 	 * @providesModule deprecated
 	 */
 
-	var assign = __webpack_require__(64);
-	var warning = __webpack_require__(116);
+	var assign = __webpack_require__(62);
+	var warning = __webpack_require__(115);
 
 	/**
 	 * This will log a single deprecation notice per function and forward the call
@@ -9592,10 +9583,10 @@
 
 	module.exports = deprecated;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(112)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(111)))
 
 /***/ },
-/* 66 */
+/* 64 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -9610,9 +9601,9 @@
 	 */
 	"use strict";
 
-	var ReactElement = __webpack_require__(51);
+	var ReactElement = __webpack_require__(49);
 
-	var invariant = __webpack_require__(118);
+	var invariant = __webpack_require__(120);
 
 	/**
 	 * Returns the first child in a collection of children and verifies that there
@@ -9635,10 +9626,10 @@
 
 	module.exports = onlyChild;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(112)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(111)))
 
 /***/ },
-/* 67 */
+/* 65 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -9687,7 +9678,58 @@
 
 
 /***/ },
-/* 68 */
+/* 66 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Priority = __webpack_require__(99);
+	var _ = __webpack_require__(101);
+	var TaskRunner = (function () {
+	    function TaskRunner() {
+	        this.taskQueues = [];
+	        this.taskQueues = [];
+	    }
+	    TaskRunner.prototype.addTask = function (task) {
+	        this.taskQueues.push(task);
+	    };
+	    TaskRunner.prototype.sortTasks = function () {
+	        this.taskQueues = _.sortBy(this.taskQueues, function (task) {
+	            return task.priority ? task.priority : 100 /* LOW */;
+	        });
+	    };
+	    TaskRunner.prototype.execAllTasks = function (stage) {
+	        var _this = this;
+	        this.sortTasks();
+	        var nextTasks = [];
+	        var taskQueues = this.taskQueues.slice();
+	        this.taskQueues = [];
+	        return new Promise(function (done) {
+	            Promise.reduce(taskQueues, function (p, task) {
+	                return new Promise(function (done) {
+	                    Promise.resolve(task.exec(stage)).then(function (val) {
+	                        if (val === true)
+	                            nextTasks.push(task);
+	                        done();
+	                    });
+	                });
+	            }, Promise.resolve()).then(function () {
+	                _this.taskQueues = _this.taskQueues.concat(nextTasks);
+	                done();
+	            });
+	        });
+	    };
+	    TaskRunner.prototype.run = function (stage) {
+	        var _this = this;
+	        return new Promise(function (done) {
+	            _this.execAllTasks(stage).then(done);
+	        });
+	    };
+	    return TaskRunner;
+	})();
+	module.exports = TaskRunner;
+
+
+/***/ },
+/* 67 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(Buffer) {'use strict';
@@ -9835,10 +9877,4117 @@
 	  return new c();
 	};
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(176).Buffer))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(175).Buffer))
+
+/***/ },
+/* 68 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * The MIT License (MIT)
+	 * 
+	 * Copyright (c) 2014 Petka Antonov
+	 * 
+	 * Permission is hereby granted, free of charge, to any person obtaining a copy
+	 * of this software and associated documentation files (the "Software"), to deal
+	 * in the Software without restriction, including without limitation the rights
+	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	 * copies of the Software, and to permit persons to whom the Software is
+	 * furnished to do so, subject to the following conditions:</p>
+	 * 
+	 * The above copyright notice and this permission notice shall be included in
+	 * all copies or substantial portions of the Software.
+	 * 
+	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	 * THE SOFTWARE.
+	 * 
+	 */
+	"use strict";
+	var es5 = __webpack_require__(170);
+	var haveGetters = (function(){
+	    try {
+	        var o = {};
+	        es5.defineProperty(o, "f", {
+	            get: function () {
+	                return 3;
+	            }
+	        });
+	        return o.f === 3;
+	    }
+	    catch (e) {
+	        return false;
+	    }
+
+	})();
+	var canEvaluate = typeof navigator == "undefined";
+	var errorObj = {e: {}};
+	function tryCatch1(fn, receiver, arg) {
+	    try { return fn.call(receiver, arg); }
+	    catch (e) {
+	        errorObj.e = e;
+	        return errorObj;
+	    }
+	}
+
+	function tryCatch2(fn, receiver, arg, arg2) {
+	    try { return fn.call(receiver, arg, arg2); }
+	    catch (e) {
+	        errorObj.e = e;
+	        return errorObj;
+	    }
+	}
+
+	function tryCatch3(fn, receiver, arg, arg2, arg3) {
+	    try { return fn.call(receiver, arg, arg2, arg3); }
+	    catch (e) {
+	        errorObj.e = e;
+	        return errorObj;
+	    }
+	}
+
+	function tryCatch4(fn, receiver, arg, arg2, arg3, arg4) {
+	    try { return fn.call(receiver, arg, arg2, arg3, arg4); }
+	    catch (e) {
+	        errorObj.e = e;
+	        return errorObj;
+	    }
+	}
+
+	function tryCatchApply(fn, args, receiver) {
+	    try { return fn.apply(receiver, args); }
+	    catch (e) {
+	        errorObj.e = e;
+	        return errorObj;
+	    }
+	}
+
+	var inherits = function(Child, Parent) {
+	    var hasProp = {}.hasOwnProperty;
+
+	    function T() {
+	        this.constructor = Child;
+	        this.constructor$ = Parent;
+	        for (var propertyName in Parent.prototype) {
+	            if (hasProp.call(Parent.prototype, propertyName) &&
+	                propertyName.charAt(propertyName.length-1) !== "$"
+	           ) {
+	                this[propertyName + "$"] = Parent.prototype[propertyName];
+	            }
+	        }
+	    }
+	    T.prototype = Parent.prototype;
+	    Child.prototype = new T();
+	    return Child.prototype;
+	};
+
+	function asString(val) {
+	    return typeof val === "string" ? val : ("" + val);
+	}
+
+	function isPrimitive(val) {
+	    return val == null || val === true || val === false ||
+	        typeof val === "string" || typeof val === "number";
+
+	}
+
+	function isObject(value) {
+	    return !isPrimitive(value);
+	}
+
+	function maybeWrapAsError(maybeError) {
+	    if (!isPrimitive(maybeError)) return maybeError;
+
+	    return new Error(asString(maybeError));
+	}
+
+	function withAppended(target, appendee) {
+	    var len = target.length;
+	    var ret = new Array(len + 1);
+	    var i;
+	    for (i = 0; i < len; ++i) {
+	        ret[i] = target[i];
+	    }
+	    ret[i] = appendee;
+	    return ret;
+	}
+
+	function getDataPropertyOrDefault(obj, key, defaultValue) {
+	    if (es5.isES5) {
+	        var desc = Object.getOwnPropertyDescriptor(obj, key);
+	        if (desc != null) {
+	            return desc.get == null && desc.set == null
+	                    ? desc.value
+	                    : defaultValue;
+	        }
+	    } else {
+	        return {}.hasOwnProperty.call(obj, key) ? obj[key] : undefined;
+	    }
+	}
+
+	function notEnumerableProp(obj, name, value) {
+	    if (isPrimitive(obj)) return obj;
+	    var descriptor = {
+	        value: value,
+	        configurable: true,
+	        enumerable: false,
+	        writable: true
+	    };
+	    es5.defineProperty(obj, name, descriptor);
+	    return obj;
+	}
+
+
+	var wrapsPrimitiveReceiver = (function() {
+	    return this !== "string";
+	}).call("string");
+
+	function thrower(r) {
+	    throw r;
+	}
+
+	var inheritedDataKeys = (function() {
+	    if (es5.isES5) {
+	        return function(obj, opts) {
+	            var ret = [];
+	            var visitedKeys = Object.create(null);
+	            var getKeys = Object(opts).includeHidden
+	                ? Object.getOwnPropertyNames
+	                : Object.keys;
+	            while (obj != null) {
+	                var keys;
+	                try {
+	                    keys = getKeys(obj);
+	                } catch (e) {
+	                    return ret;
+	                }
+	                for (var i = 0; i < keys.length; ++i) {
+	                    var key = keys[i];
+	                    if (visitedKeys[key]) continue;
+	                    visitedKeys[key] = true;
+	                    var desc = Object.getOwnPropertyDescriptor(obj, key);
+	                    if (desc != null && desc.get == null && desc.set == null) {
+	                        ret.push(key);
+	                    }
+	                }
+	                obj = es5.getPrototypeOf(obj);
+	            }
+	            return ret;
+	        };
+	    } else {
+	        return function(obj) {
+	            var ret = [];
+	            /*jshint forin:false */
+	            for (var key in obj) {
+	                ret.push(key);
+	            }
+	            return ret;
+	        };
+	    }
+
+	})();
+
+	function isClass(fn) {
+	    try {
+	        if (typeof fn === "function") {
+	            var keys = es5.keys(fn.prototype);
+	            return keys.length > 0 &&
+	                   !(keys.length === 1 && keys[0] === "constructor");
+	        }
+	        return false;
+	    } catch (e) {
+	        return false;
+	    }
+	}
+
+	function toFastProperties(obj) {
+	    /*jshint -W027*/
+	    function f() {}
+	    f.prototype = obj;
+	    return f;
+	    eval(obj);
+	}
+
+	var rident = /^[a-z$_][a-z$_0-9]*$/i;
+	function isIdentifier(str) {
+	    return rident.test(str);
+	}
+
+	function filledRange(count, prefix, suffix) {
+	    var ret = new Array(count);
+	    for(var i = 0; i < count; ++i) {
+	        ret[i] = prefix + i + suffix;
+	    }
+	    return ret;
+	}
+
+	var ret = {
+	    isClass: isClass,
+	    isIdentifier: isIdentifier,
+	    inheritedDataKeys: inheritedDataKeys,
+	    getDataPropertyOrDefault: getDataPropertyOrDefault,
+	    thrower: thrower,
+	    isArray: es5.isArray,
+	    haveGetters: haveGetters,
+	    notEnumerableProp: notEnumerableProp,
+	    isPrimitive: isPrimitive,
+	    isObject: isObject,
+	    canEvaluate: canEvaluate,
+	    errorObj: errorObj,
+	    tryCatch1: tryCatch1,
+	    tryCatch2: tryCatch2,
+	    tryCatch3: tryCatch3,
+	    tryCatch4: tryCatch4,
+	    tryCatchApply: tryCatchApply,
+	    inherits: inherits,
+	    withAppended: withAppended,
+	    asString: asString,
+	    maybeWrapAsError: maybeWrapAsError,
+	    wrapsPrimitiveReceiver: wrapsPrimitiveReceiver,
+	    toFastProperties: toFastProperties,
+	    filledRange: filledRange,
+	    lastLineError: new Error()
+	};
+
+	module.exports = ret;
+
 
 /***/ },
 /* 69 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {/**
+	 * The MIT License (MIT)
+	 * 
+	 * Copyright (c) 2014 Petka Antonov
+	 * 
+	 * Permission is hereby granted, free of charge, to any person obtaining a copy
+	 * of this software and associated documentation files (the "Software"), to deal
+	 * in the Software without restriction, including without limitation the rights
+	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	 * copies of the Software, and to permit persons to whom the Software is
+	 * furnished to do so, subject to the following conditions:</p>
+	 * 
+	 * The above copyright notice and this permission notice shall be included in
+	 * all copies or substantial portions of the Software.
+	 * 
+	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	 * THE SOFTWARE.
+	 * 
+	 */
+	"use strict";
+	var firstLineError = new Error();
+	var schedule = __webpack_require__(171);
+	var Queue = __webpack_require__(172);
+	var errorObj = __webpack_require__(68).errorObj;
+	var tryCatch1 = __webpack_require__(68).tryCatch1;
+	var _process = typeof process !== "undefined" ? process : undefined;
+
+	function Async() {
+	    this._isTickUsed = false;
+	    this._schedule = schedule;
+	    this._lateBuffer = new Queue(16);
+	    this._functionBuffer = new Queue(65536);
+	    var self = this;
+	    this.consumeFunctionBuffer = function () {
+	        self._consumeFunctionBuffer();
+	    };
+	}
+
+	Async.prototype.haveItemsQueued = function () {
+	    return this._functionBuffer.length() > 0;
+	};
+
+	Async.prototype._withDomain = function(fn) {
+	    if (_process !== undefined &&
+	        _process.domain != null &&
+	        !fn.domain) {
+	        fn = _process.domain.bind(fn);
+	    }
+	    return fn;
+	};
+
+	Async.prototype.invokeLater = function (fn, receiver, arg) {
+	    fn = this._withDomain(fn);
+	    this._lateBuffer.push(fn, receiver, arg);
+	    this._queueTick();
+	};
+
+	Async.prototype.invokeFirst = function (fn, receiver, arg) {
+	    fn = this._withDomain(fn);
+	    this._functionBuffer.unshift(fn, receiver, arg);
+	    this._queueTick();
+	};
+
+	Async.prototype.invoke = function (fn, receiver, arg) {
+	    fn = this._withDomain(fn);
+	    this._functionBuffer.push(fn, receiver, arg);
+	    this._queueTick();
+	};
+
+	Async.prototype._consumeFunctionBuffer = function () {
+	    var functionBuffer = this._functionBuffer;
+	    while (functionBuffer.length() > 0) {
+	        var fn = functionBuffer.shift();
+	        var receiver = functionBuffer.shift();
+	        var arg = functionBuffer.shift();
+	        fn.call(receiver, arg);
+	    }
+	    this._reset();
+	    this._consumeLateBuffer();
+	};
+
+	Async.prototype._consumeLateBuffer = function () {
+	    var buffer = this._lateBuffer;
+	    while(buffer.length() > 0) {
+	        var fn = buffer.shift();
+	        var receiver = buffer.shift();
+	        var arg = buffer.shift();
+	        var res = tryCatch1(fn, receiver, arg);
+	        if (res === errorObj) {
+	            this._queueTick();
+	            if (fn.domain != null) {
+	                fn.domain.emit("error", res.e);
+	            } else {
+	                throw res.e;
+	            }
+	        }
+	    }
+	};
+
+	Async.prototype._queueTick = function () {
+	    if (!this._isTickUsed) {
+	        this._isTickUsed = true;
+	        this._schedule(this.consumeFunctionBuffer);
+	    }
+	};
+
+	Async.prototype._reset = function () {
+	    this._isTickUsed = false;
+	};
+
+	module.exports = new Async();
+	module.exports.firstLineError = firstLineError;
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(111)))
+
+/***/ },
+/* 70 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * The MIT License (MIT)
+	 * 
+	 * Copyright (c) 2014 Petka Antonov
+	 * 
+	 * Permission is hereby granted, free of charge, to any person obtaining a copy
+	 * of this software and associated documentation files (the "Software"), to deal
+	 * in the Software without restriction, including without limitation the rights
+	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	 * copies of the Software, and to permit persons to whom the Software is
+	 * furnished to do so, subject to the following conditions:</p>
+	 * 
+	 * The above copyright notice and this permission notice shall be included in
+	 * all copies or substantial portions of the Software.
+	 * 
+	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	 * THE SOFTWARE.
+	 * 
+	 */
+	"use strict";
+	var Objectfreeze = __webpack_require__(170).freeze;
+	var propertyIsWritable = __webpack_require__(170).propertyIsWritable;
+	var util = __webpack_require__(68);
+	var inherits = util.inherits;
+	var notEnumerableProp = util.notEnumerableProp;
+
+	function markAsOriginatingFromRejection(e) {
+	    try {
+	        notEnumerableProp(e, "isOperational", true);
+	    }
+	    catch(ignore) {}
+	}
+
+	function originatesFromRejection(e) {
+	    if (e == null) return false;
+	    return ((e instanceof OperationalError) ||
+	        e["isOperational"] === true);
+	}
+
+	function isError(obj) {
+	    return obj instanceof Error;
+	}
+
+	function canAttachTrace(obj) {
+	    return isError(obj) && propertyIsWritable(obj, "stack");
+	}
+
+	function subError(nameProperty, defaultMessage) {
+	    function SubError(message) {
+	        if (!(this instanceof SubError)) return new SubError(message);
+	        notEnumerableProp(this, "message",
+	            typeof message === "string" ? message : defaultMessage);
+	        notEnumerableProp(this, "name", nameProperty);
+	        if (Error.captureStackTrace) {
+	            Error.captureStackTrace(this, this.constructor);
+	        }
+	    }
+	    inherits(SubError, Error);
+	    return SubError;
+	}
+
+	var _TypeError, _RangeError;
+	var CancellationError = subError("CancellationError", "cancellation error");
+	var TimeoutError = subError("TimeoutError", "timeout error");
+	var AggregateError = subError("AggregateError", "aggregate error");
+	try {
+	    _TypeError = TypeError;
+	    _RangeError = RangeError;
+	} catch(e) {
+	    _TypeError = subError("TypeError", "type error");
+	    _RangeError = subError("RangeError", "range error");
+	}
+
+	var methods = ("join pop push shift unshift slice filter forEach some " +
+	    "every map indexOf lastIndexOf reduce reduceRight sort reverse").split(" ");
+
+	for (var i = 0; i < methods.length; ++i) {
+	    if (typeof Array.prototype[methods[i]] === "function") {
+	        AggregateError.prototype[methods[i]] = Array.prototype[methods[i]];
+	    }
+	}
+
+	AggregateError.prototype.length = 0;
+	AggregateError.prototype["isOperational"] = true;
+	var level = 0;
+	AggregateError.prototype.toString = function() {
+	    var indent = Array(level * 4 + 1).join(" ");
+	    var ret = "\n" + indent + "AggregateError of:" + "\n";
+	    level++;
+	    indent = Array(level * 4 + 1).join(" ");
+	    for (var i = 0; i < this.length; ++i) {
+	        var str = this[i] === this ? "[Circular AggregateError]" : this[i] + "";
+	        var lines = str.split("\n");
+	        for (var j = 0; j < lines.length; ++j) {
+	            lines[j] = indent + lines[j];
+	        }
+	        str = lines.join("\n");
+	        ret += str + "\n";
+	    }
+	    level--;
+	    return ret;
+	};
+
+	function OperationalError(message) {
+	    notEnumerableProp(this, "name", "OperationalError");
+	    notEnumerableProp(this, "message", message);
+	    this.cause = message;
+	    this["isOperational"] = true;
+
+	    if (message instanceof Error) {
+	        notEnumerableProp(this, "message", message.message);
+	        notEnumerableProp(this, "stack", message.stack);
+	    } else if (Error.captureStackTrace) {
+	        Error.captureStackTrace(this, this.constructor);
+	    }
+
+	}
+	inherits(OperationalError, Error);
+
+	var key = "__BluebirdErrorTypes__";
+	var errorTypes = Error[key];
+	if (!errorTypes) {
+	    errorTypes = Objectfreeze({
+	        CancellationError: CancellationError,
+	        TimeoutError: TimeoutError,
+	        OperationalError: OperationalError,
+	        RejectionError: OperationalError,
+	        AggregateError: AggregateError
+	    });
+	    notEnumerableProp(Error, key, errorTypes);
+	}
+
+	module.exports = {
+	    Error: Error,
+	    TypeError: _TypeError,
+	    RangeError: _RangeError,
+	    CancellationError: errorTypes.CancellationError,
+	    OperationalError: errorTypes.OperationalError,
+	    TimeoutError: errorTypes.TimeoutError,
+	    AggregateError: errorTypes.AggregateError,
+	    originatesFromRejection: originatesFromRejection,
+	    markAsOriginatingFromRejection: markAsOriginatingFromRejection,
+	    canAttachTrace: canAttachTrace
+	};
+
+
+/***/ },
+/* 71 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * The MIT License (MIT)
+	 * 
+	 * Copyright (c) 2014 Petka Antonov
+	 * 
+	 * Permission is hereby granted, free of charge, to any person obtaining a copy
+	 * of this software and associated documentation files (the "Software"), to deal
+	 * in the Software without restriction, including without limitation the rights
+	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	 * copies of the Software, and to permit persons to whom the Software is
+	 * furnished to do so, subject to the following conditions:</p>
+	 * 
+	 * The above copyright notice and this permission notice shall be included in
+	 * all copies or substantial portions of the Software.
+	 * 
+	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	 * THE SOFTWARE.
+	 * 
+	 */
+	"use strict";
+	module.exports = function(Promise, INTERNAL) {
+	var util = __webpack_require__(68);
+	var canAttachTrace = __webpack_require__(70).canAttachTrace;
+	var errorObj = util.errorObj;
+	var isObject = util.isObject;
+
+	function getThen(obj) {
+	    try {
+	        return obj.then;
+	    }
+	    catch(e) {
+	        errorObj.e = e;
+	        return errorObj;
+	    }
+	}
+
+	function tryConvertToPromise(obj, traceParent) {
+	    if (isObject(obj)) {
+	        if (obj instanceof Promise) {
+	            return obj;
+	        }
+	        else if (isAnyBluebirdPromise(obj)) {
+	            var ret = new Promise(INTERNAL);
+	            ret._setTrace(undefined);
+	            obj._then(
+	                ret._fulfillUnchecked,
+	                ret._rejectUncheckedCheckError,
+	                ret._progressUnchecked,
+	                ret,
+	                null
+	            );
+	            return ret;
+	        }
+	        var then = getThen(obj);
+	        if (then === errorObj) {
+	            if (traceParent !== undefined && canAttachTrace(then.e)) {
+	                traceParent._attachExtraTrace(then.e);
+	            }
+	            return Promise.reject(then.e);
+	        } else if (typeof then === "function") {
+	            return doThenable(obj, then, traceParent);
+	        }
+	    }
+	    return obj;
+	}
+
+	var hasProp = {}.hasOwnProperty;
+	function isAnyBluebirdPromise(obj) {
+	    return hasProp.call(obj, "_promise0");
+	}
+
+	function doThenable(x, then, traceParent) {
+	    var resolver = Promise.defer();
+	    var called = false;
+	    try {
+	        then.call(
+	            x,
+	            resolveFromThenable,
+	            rejectFromThenable,
+	            progressFromThenable
+	        );
+	    } catch(e) {
+	        if (!called) {
+	            called = true;
+	            var trace = canAttachTrace(e) ? e : new Error(e + "");
+	            if (traceParent !== undefined) {
+	                traceParent._attachExtraTrace(trace);
+	            }
+	            resolver.promise._reject(e, trace);
+	        }
+	    }
+	    return resolver.promise;
+
+	    function resolveFromThenable(y) {
+	        if (called) return;
+	        called = true;
+
+	        if (x === y) {
+	            var e = Promise._makeSelfResolutionError();
+	            if (traceParent !== undefined) {
+	                traceParent._attachExtraTrace(e);
+	            }
+	            resolver.promise._reject(e, undefined);
+	            return;
+	        }
+	        resolver.resolve(y);
+	    }
+
+	    function rejectFromThenable(r) {
+	        if (called) return;
+	        called = true;
+	        var trace = canAttachTrace(r) ? r : new Error(r + "");
+	        if (traceParent !== undefined) {
+	            traceParent._attachExtraTrace(trace);
+	        }
+	        resolver.promise._reject(r, trace);
+	    }
+
+	    function progressFromThenable(v) {
+	        if (called) return;
+	        var promise = resolver.promise;
+	        if (typeof promise._progress === "function") {
+	            promise._progress(v);
+	        }
+	    }
+	}
+
+	return tryConvertToPromise;
+	};
+
+
+/***/ },
+/* 72 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * The MIT License (MIT)
+	 * 
+	 * Copyright (c) 2014 Petka Antonov
+	 * 
+	 * Permission is hereby granted, free of charge, to any person obtaining a copy
+	 * of this software and associated documentation files (the "Software"), to deal
+	 * in the Software without restriction, including without limitation the rights
+	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	 * copies of the Software, and to permit persons to whom the Software is
+	 * furnished to do so, subject to the following conditions:</p>
+	 * 
+	 * The above copyright notice and this permission notice shall be included in
+	 * all copies or substantial portions of the Software.
+	 * 
+	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	 * THE SOFTWARE.
+	 * 
+	 */
+	"use strict";
+	module.exports = function(Promise, INTERNAL, tryConvertToPromise) {
+	var canAttachTrace = __webpack_require__(70).canAttachTrace;
+	var util = __webpack_require__(68);
+	var isArray = util.isArray;
+
+	function toResolutionValue(val) {
+	    switch(val) {
+	    case -1: return undefined;
+	    case -2: return [];
+	    case -3: return {};
+	    }
+	}
+
+	function PromiseArray(values) {
+	    var promise = this._promise = new Promise(INTERNAL);
+	    var parent;
+	    if (values instanceof Promise) {
+	        parent = values;
+	        promise._propagateFrom(parent, 1 | 4);
+	    }
+	    promise._setTrace(parent);
+	    this._values = values;
+	    this._length = 0;
+	    this._totalResolved = 0;
+	    this._init(undefined, -2);
+	}
+	PromiseArray.prototype.length = function () {
+	    return this._length;
+	};
+
+	PromiseArray.prototype.promise = function () {
+	    return this._promise;
+	};
+
+	PromiseArray.prototype._init = function init(_, resolveValueIfEmpty) {
+
+	    var values = tryConvertToPromise(this._values, undefined);
+	    if (values instanceof Promise) {
+	        values._setBoundTo(this._promise._boundTo);
+	        values = values._target();
+	        this._values = values;
+	        if (values._isFulfilled()) {
+	            values = values._value();
+	            if (!isArray(values)) {
+	                var err = new Promise.TypeError("expecting an array, a promise or a thenable\u000a\u000a    See http://goo.gl/s8MMhc\u000a");
+	                this.__hardReject__(err);
+	                return;
+	            }
+	        } else if (values._isPending()) {
+	            values._then(
+	                init,
+	                this._reject,
+	                undefined,
+	                this,
+	                resolveValueIfEmpty
+	           );
+	            return;
+	        } else {
+	            values._unsetRejectionIsUnhandled();
+	            this._reject(values._reason());
+	            return;
+	        }
+	    } else if (!isArray(values)) {
+	        var err = new Promise.TypeError("expecting an array, a promise or a thenable\u000a\u000a    See http://goo.gl/s8MMhc\u000a");
+	        this.__hardReject__(err);
+	        return;
+	    }
+
+	    if (values.length === 0) {
+	        if (resolveValueIfEmpty === -5) {
+	            this._resolveEmptyArray();
+	        }
+	        else {
+	            this._resolve(toResolutionValue(resolveValueIfEmpty));
+	        }
+	        return;
+	    }
+	    var len = this.getActualLength(values.length);
+	    this._length = len;
+	    this._values = this.shouldCopyValues() ? new Array(len) : this._values;
+	    var promise = this._promise;
+	    for (var i = 0; i < len; ++i) {
+	        if (this._isResolved()) return;
+	        var maybePromise = tryConvertToPromise(values[i], promise);
+	        if (maybePromise instanceof Promise) {
+	            maybePromise = maybePromise._target();
+	            if (maybePromise._isPending()) {
+	                maybePromise._proxyPromiseArray(this, i);
+	            } else if (maybePromise._isFulfilled()) {
+	                this._promiseFulfilled(maybePromise._value(), i);
+	            } else {
+	                maybePromise._unsetRejectionIsUnhandled();
+	                this._promiseRejected(maybePromise._reason(), i);
+	            }
+	        } else {
+	            this._promiseFulfilled(maybePromise, i);
+	        }
+	    }
+	};
+
+	PromiseArray.prototype._isResolved = function () {
+	    return this._values === null;
+	};
+
+	PromiseArray.prototype._resolve = function (value) {
+	    this._values = null;
+	    this._promise._fulfill(value);
+	};
+
+	PromiseArray.prototype.__hardReject__ =
+	PromiseArray.prototype._reject = function (reason) {
+	    this._values = null;
+	    var trace = canAttachTrace(reason) ? reason : new Error(reason + "");
+	    this._promise._attachExtraTrace(trace);
+	    this._promise._reject(reason, trace);
+	};
+
+	PromiseArray.prototype._promiseProgressed = function (progressValue, index) {
+	    this._promise._progress({
+	        index: index,
+	        value: progressValue
+	    });
+	};
+
+
+	PromiseArray.prototype._promiseFulfilled = function (value, index) {
+	    this._values[index] = value;
+	    var totalResolved = ++this._totalResolved;
+	    if (totalResolved >= this._length) {
+	        this._resolve(this._values);
+	    }
+	};
+
+	PromiseArray.prototype._promiseRejected = function (reason, index) {
+	    this._totalResolved++;
+	    this._reject(reason);
+	};
+
+	PromiseArray.prototype.shouldCopyValues = function () {
+	    return true;
+	};
+
+	PromiseArray.prototype.getActualLength = function (len) {
+	    return len;
+	};
+
+	return PromiseArray;
+	};
+
+
+/***/ },
+/* 73 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * The MIT License (MIT)
+	 * 
+	 * Copyright (c) 2014 Petka Antonov
+	 * 
+	 * Permission is hereby granted, free of charge, to any person obtaining a copy
+	 * of this software and associated documentation files (the "Software"), to deal
+	 * in the Software without restriction, including without limitation the rights
+	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	 * copies of the Software, and to permit persons to whom the Software is
+	 * furnished to do so, subject to the following conditions:</p>
+	 * 
+	 * The above copyright notice and this permission notice shall be included in
+	 * all copies or substantial portions of the Software.
+	 * 
+	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	 * THE SOFTWARE.
+	 * 
+	 */
+	"use strict";
+	module.exports = function() {
+	var inherits = __webpack_require__(68).inherits;
+	var defineProperty = __webpack_require__(170).defineProperty;
+	var rtraceline = null;
+	var formatStack = null;
+
+	function CapturedTrace(parent) {
+	    this._parent = parent;
+	    captureStackTrace(this, CapturedTrace);
+
+	}
+	inherits(CapturedTrace, Error);
+
+	CapturedTrace.prototype.parent = function() {
+	    return this._parent;
+	};
+
+	CapturedTrace.prototype.setParent = function(parent) {
+	    if (parent === this) return;
+	    this._parent = parent;
+	};
+
+	CapturedTrace.prototype.hasParent = function() {
+	    return this._parent !== undefined;
+	};
+
+	CapturedTrace.prototype.attachExtraTrace = function(error) {
+	    var trace = this;
+	    var stack = error.stack;
+	    stack = typeof stack === "string" ? stack.split("\n") : [];
+	    this.protectErrorMessageNewlines(stack);
+	    var headerLineCount = 1;
+	    var combinedTraces = 1;
+
+	    do {
+	        stack = trace.combine(stack);
+	        combinedTraces++;
+	    } while ((trace = trace.parent()) != null);
+
+	    var stackTraceLimit = Error.stackTraceLimit || 10;
+	    var max = (stackTraceLimit + headerLineCount) * combinedTraces;
+	    var len = stack.length;
+	    if (len > max) {
+	        stack.length = max;
+	    }
+
+	    if (len > 0)
+	        stack[0] = stack[0].split("\u0002\u0000\u0001").join("\n");
+
+	    if (stack.length <= headerLineCount) {
+	        error.stack = "(No stack trace)";
+	    } else {
+	        error.stack = stack.join("\n");
+	    }
+	};
+
+	CapturedTrace.prototype.combine = function(current) {
+	    var prev = this.stack.split("\n");
+	    var currentLastIndex = current.length - 1;
+	    var currentLastLine = current[currentLastIndex];
+	    var commonRootMeetPoint = -1;
+	    for (var i = prev.length - 1; i >= 0; --i) {
+	        if (prev[i] === currentLastLine) {
+	            commonRootMeetPoint = i;
+	            break;
+	        }
+	    }
+
+	    for (var i = commonRootMeetPoint; i >= 0; --i) {
+	        var line = prev[i];
+	        if (current[currentLastIndex] === line) {
+	            current.pop();
+	            currentLastIndex--;
+	        } else {
+	            break;
+	        }
+	    }
+
+	    current.push("From previous event:");
+	    var lines = current.concat(prev);
+
+	    var ret = [];
+
+	    for (var i = 0, len = lines.length; i < len; ++i) {
+	        if (((rtraceline.test(lines[i]) && shouldIgnore(lines[i])) ||
+	            (i > 0 && !rtraceline.test(lines[i])) &&
+	            lines[i] !== "From previous event:")
+	       ) {
+	            continue;
+	        }
+	        ret.push(lines[i]);
+	    }
+	    return ret;
+	};
+
+	CapturedTrace.prototype.protectErrorMessageNewlines = function(stack) {
+	    for (var i = 0; i < stack.length; ++i) {
+	        if (rtraceline.test(stack[i])) {
+	            break;
+	        }
+	    }
+
+	    if (i <= 1) return;
+
+	    var errorMessageLines = [];
+	    for (var j = 0; j < i; ++j) {
+	        errorMessageLines.push(stack.shift());
+	    }
+	    stack.unshift(errorMessageLines.join("\u0002\u0000\u0001"));
+	};
+
+	CapturedTrace.formatAndLogError = function(error, title) {
+	    if (typeof console === "object") {
+	        var message;
+	        if (typeof error === "object" || typeof error === "function") {
+	            var stack = error.stack;
+	            message = title + formatStack(stack, error);
+	        } else {
+	            message = title + String(error);
+	        }
+	        if (typeof console.warn === "function" ||
+	            typeof console.warn === "object") {
+	            console.warn(message);
+	        } else if (typeof console.log === "function" ||
+	            typeof console.log === "object") {
+	            console.log(message);
+	        }
+	    }
+	};
+
+	CapturedTrace.unhandledRejection = function (reason) {
+	    CapturedTrace.formatAndLogError(
+	        reason, "^--- With additional stack trace: ");
+	};
+
+	CapturedTrace.possiblyUnhandledRejection = function (reason) {
+	    CapturedTrace.formatAndLogError(
+	        reason, "Possibly unhandled ");
+	};
+
+	CapturedTrace.isSupported = function () {
+	    return typeof captureStackTrace === "function";
+	};
+
+	function formatNonError(obj) {
+	    var str;
+	    if (typeof obj === "function") {
+	        str = "[function " +
+	            (obj.name || "anonymous") +
+	            "]";
+	    } else {
+	        str = obj.toString();
+	        var ruselessToString = /\[object [a-zA-Z0-9$_]+\]/;
+	        if (ruselessToString.test(str)) {
+	            try {
+	                var newStr = JSON.stringify(obj);
+	                str = newStr;
+	            }
+	            catch(e) {
+
+	            }
+	        }
+	        if (str.length === 0) {
+	            str = "(empty array)";
+	        }
+	    }
+	    return ("(<" + snip(str) + ">, no stack trace)");
+	}
+
+	function snip(str) {
+	    var maxChars = 41;
+	    if (str.length < maxChars) {
+	        return str;
+	    }
+	    return str.substr(0, maxChars - 3) + "...";
+	}
+
+	var shouldIgnore = function() { return false; };
+	var parseLineInfoRegex = /[\/<\(]([^:\/]+):(\d+):(?:\d+)\)?\s*$/;
+	function parseLineInfo(line) {
+	    var matches = line.match(parseLineInfoRegex);
+	    if (matches) {
+	        return {
+	            fileName: matches[1],
+	            line: parseInt(matches[2], 10)
+	        };
+	    }
+	}
+	CapturedTrace.setBounds = function(firstLineError, lastLineError) {
+	    if (!CapturedTrace.isSupported()) return;
+	    var firstStackLines = firstLineError.stack.split("\n");
+	    var lastStackLines = lastLineError.stack.split("\n");
+	    var firstIndex = -1;
+	    var lastIndex = -1;
+	    var firstFileName;
+	    var lastFileName;
+	    for (var i = 0; i < firstStackLines.length; ++i) {
+	        var result = parseLineInfo(firstStackLines[i]);
+	        if (result) {
+	            firstFileName = result.fileName;
+	            firstIndex = result.line;
+	            break;
+	        }
+	    }
+	    for (var i = 0; i < lastStackLines.length; ++i) {
+	        var result = parseLineInfo(lastStackLines[i]);
+	        if (result) {
+	            lastFileName = result.fileName;
+	            lastIndex = result.line;
+	            break;
+	        }
+	    }
+	    if (firstIndex < 0 || lastIndex < 0 || !firstFileName || !lastFileName ||
+	        firstFileName !== lastFileName || firstIndex >= lastIndex) {
+	        return;
+	    }
+
+	    shouldIgnore = function(line) {
+	        var info = parseLineInfo(line);
+	        if (info) {
+	            if (info.fileName === firstFileName &&
+	                (firstIndex <= info.line && info.line <= lastIndex)) {
+	                return true;
+	            }
+	        }
+	        return false;
+	    };
+	};
+
+	var captureStackTrace = (function stackDetection() {
+	    if (typeof Error.stackTraceLimit === "number" &&
+	        typeof Error.captureStackTrace === "function") {
+	        rtraceline = /^\s*at\s*/;
+	        formatStack = function(stack, error) {
+	            if (typeof stack === "string") return stack;
+
+	            if (error.name !== undefined &&
+	                error.message !== undefined) {
+	                return error.name + ". " + error.message;
+	            }
+	            return formatNonError(error);
+
+
+	        };
+	        var captureStackTrace = Error.captureStackTrace;
+	        var bluebirdRegexp = /[\\\/]bluebird[\\\/]js[\\\/](main|debug|zalgo)/;
+	        shouldIgnore = function(line) {
+	            return bluebirdRegexp.test(line);
+	        };
+	        return function(receiver, ignoreUntil) {
+	            captureStackTrace(receiver, ignoreUntil);
+	        };
+	    }
+	    var err = new Error();
+
+	    if (typeof err.stack === "string" &&
+	        typeof "".startsWith === "function" &&
+	        (err.stack.startsWith("stackDetection@")) &&
+	        stackDetection.name === "stackDetection") {
+
+	        defineProperty(Error, "stackTraceLimit", {
+	            writable: true,
+	            enumerable: false,
+	            configurable: false,
+	            value: 25
+	        });
+	        rtraceline = /@/;
+	        var rline = /[@\n]/;
+
+	        formatStack = function(stack, error) {
+	            if (typeof stack === "string") {
+	                return (error.name + ". " + error.message + "\n" + stack);
+	            }
+
+	            if (error.name !== undefined &&
+	                error.message !== undefined) {
+	                return error.name + ". " + error.message;
+	            }
+	            return formatNonError(error);
+	        };
+
+	        return function captureStackTrace(o) {
+	            var stack = new Error().stack;
+	            var split = stack.split(rline);
+	            var len = split.length;
+	            var ret = "";
+	            for (var i = 0; i < len; i += 2) {
+	                ret += split[i];
+	                ret += "@";
+	                ret += split[i + 1];
+	                ret += "\n";
+	            }
+	            o.stack = ret;
+	        };
+	    } else {
+	        formatStack = function(stack, error) {
+	            if (typeof stack === "string") return stack;
+
+	            if ((typeof error === "object" ||
+	                typeof error === "function") &&
+	                error.name !== undefined &&
+	                error.message !== undefined) {
+	                return error.name + ". " + error.message;
+	            }
+	            return formatNonError(error);
+	        };
+
+	        return null;
+	    }
+	})();
+
+	return CapturedTrace;
+	};
+
+
+/***/ },
+/* 74 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * The MIT License (MIT)
+	 * 
+	 * Copyright (c) 2014 Petka Antonov
+	 * 
+	 * Permission is hereby granted, free of charge, to any person obtaining a copy
+	 * of this software and associated documentation files (the "Software"), to deal
+	 * in the Software without restriction, including without limitation the rights
+	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	 * copies of the Software, and to permit persons to whom the Software is
+	 * furnished to do so, subject to the following conditions:</p>
+	 * 
+	 * The above copyright notice and this permission notice shall be included in
+	 * all copies or substantial portions of the Software.
+	 * 
+	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	 * THE SOFTWARE.
+	 * 
+	 */
+	"use strict";
+	module.exports = function(NEXT_FILTER) {
+	var util = __webpack_require__(68);
+	var errors = __webpack_require__(70);
+	var tryCatch1 = util.tryCatch1;
+	var errorObj = util.errorObj;
+	var keys = __webpack_require__(170).keys;
+	var TypeError = errors.TypeError;
+
+	function CatchFilter(instances, callback, promise) {
+	    this._instances = instances;
+	    this._callback = callback;
+	    this._promise = promise;
+	}
+
+	function safePredicate(predicate, e) {
+	    var safeObject = {};
+	    var retfilter = tryCatch1(predicate, safeObject, e);
+
+	    if (retfilter === errorObj) return retfilter;
+
+	    var safeKeys = keys(safeObject);
+	    if (safeKeys.length) {
+	        errorObj.e = new TypeError("Catch filter must inherit from Error or be a simple predicate function\u000a\u000a    See http://goo.gl/o84o68\u000a");
+	        return errorObj;
+	    }
+	    return retfilter;
+	}
+
+	CatchFilter.prototype.doFilter = function (e) {
+	    var cb = this._callback;
+	    var promise = this._promise;
+	    var boundTo = promise._boundTo;
+	    for (var i = 0, len = this._instances.length; i < len; ++i) {
+	        var item = this._instances[i];
+	        var itemIsErrorType = item === Error ||
+	            (item != null && item.prototype instanceof Error);
+
+	        if (itemIsErrorType && e instanceof item) {
+	            var ret = tryCatch1(cb, boundTo, e);
+	            if (ret === errorObj) {
+	                NEXT_FILTER.e = ret.e;
+	                return NEXT_FILTER;
+	            }
+	            return ret;
+	        } else if (typeof item === "function" && !itemIsErrorType) {
+	            var shouldHandle = safePredicate(item, e);
+	            if (shouldHandle === errorObj) {
+	                var trace = errors.canAttachTrace(errorObj.e)
+	                    ? errorObj.e
+	                    : new Error(errorObj.e + "");
+	                this._promise._attachExtraTrace(trace);
+	                e = errorObj.e;
+	                break;
+	            } else if (shouldHandle) {
+	                var ret = tryCatch1(cb, boundTo, e);
+	                if (ret === errorObj) {
+	                    NEXT_FILTER.e = ret.e;
+	                    return NEXT_FILTER;
+	                }
+	                return ret;
+	            }
+	        }
+	    }
+	    NEXT_FILTER.e = e;
+	    return NEXT_FILTER;
+	};
+
+	return CatchFilter;
+	};
+
+
+/***/ },
+/* 75 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * The MIT License (MIT)
+	 * 
+	 * Copyright (c) 2014 Petka Antonov
+	 * 
+	 * Permission is hereby granted, free of charge, to any person obtaining a copy
+	 * of this software and associated documentation files (the "Software"), to deal
+	 * in the Software without restriction, including without limitation the rights
+	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	 * copies of the Software, and to permit persons to whom the Software is
+	 * furnished to do so, subject to the following conditions:</p>
+	 * 
+	 * The above copyright notice and this permission notice shall be included in
+	 * all copies or substantial portions of the Software.
+	 * 
+	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	 * THE SOFTWARE.
+	 * 
+	 */
+	"use strict";
+	var util = __webpack_require__(68);
+	var maybeWrapAsError = util.maybeWrapAsError;
+	var errors = __webpack_require__(70);
+	var TimeoutError = errors.TimeoutError;
+	var OperationalError = errors.OperationalError;
+	var async = __webpack_require__(69);
+	var haveGetters = util.haveGetters;
+	var es5 = __webpack_require__(170);
+
+	function isUntypedError(obj) {
+	    return obj instanceof Error &&
+	        es5.getPrototypeOf(obj) === Error.prototype;
+	}
+
+	function wrapAsOperationalError(obj) {
+	    var ret;
+	    if (isUntypedError(obj)) {
+	        ret = new OperationalError(obj);
+	    } else {
+	        ret = obj;
+	    }
+	    errors.markAsOriginatingFromRejection(ret);
+	    return ret;
+	}
+
+	function nodebackForPromise(promise) {
+	    return function(err, value) {
+	        if (promise === null) return;
+
+	        if (err) {
+	            var wrapped = wrapAsOperationalError(maybeWrapAsError(err));
+	            promise._attachExtraTrace(wrapped);
+	            promise._reject(wrapped);
+	        } else if (arguments.length > 2) {
+	            var $_len = arguments.length;var args = new Array($_len - 1); for(var $_i = 1; $_i < $_len; ++$_i) {args[$_i - 1] = arguments[$_i];}
+	            promise._fulfill(args);
+	        } else {
+	            promise._fulfill(value);
+	        }
+
+	        promise = null;
+	    };
+	}
+
+
+	var PromiseResolver;
+	if (!haveGetters) {
+	    PromiseResolver = function (promise) {
+	        this.promise = promise;
+	        this.asCallback = nodebackForPromise(promise);
+	        this.callback = this.asCallback;
+	    };
+	}
+	else {
+	    PromiseResolver = function (promise) {
+	        this.promise = promise;
+	    };
+	}
+	if (haveGetters) {
+	    var prop = {
+	        get: function() {
+	            return nodebackForPromise(this.promise);
+	        }
+	    };
+	    es5.defineProperty(PromiseResolver.prototype, "asCallback", prop);
+	    es5.defineProperty(PromiseResolver.prototype, "callback", prop);
+	}
+
+	PromiseResolver._nodebackForPromise = nodebackForPromise;
+
+	PromiseResolver.prototype.toString = function () {
+	    return "[object PromiseResolver]";
+	};
+
+	PromiseResolver.prototype.resolve =
+	PromiseResolver.prototype.fulfill = function (value) {
+	    if (!(this instanceof PromiseResolver)) {
+	        throw new TypeError("Illegal invocation, resolver resolve/reject must be called within a resolver context. Consider using the promise constructor instead.\u000a\u000a    See http://goo.gl/sdkXL9\u000a");
+	    }
+
+	    var promise = this.promise;
+	    if (promise._tryFollow(value)) {
+	        return;
+	    }
+	    async.invoke(promise._fulfill, promise, value);
+	};
+
+	PromiseResolver.prototype.reject = function (reason) {
+	    if (!(this instanceof PromiseResolver)) {
+	        throw new TypeError("Illegal invocation, resolver resolve/reject must be called within a resolver context. Consider using the promise constructor instead.\u000a\u000a    See http://goo.gl/sdkXL9\u000a");
+	    }
+
+	    var promise = this.promise;
+	    errors.markAsOriginatingFromRejection(reason);
+	    var trace = errors.canAttachTrace(reason) ? reason : new Error(reason + "");
+	    promise._attachExtraTrace(trace);
+	    async.invoke(promise._reject, promise, reason);
+	    if (trace !== reason) {
+	        async.invoke(this._setCarriedStackTrace, this, trace);
+	    }
+	};
+
+	PromiseResolver.prototype.progress = function (value) {
+	    if (!(this instanceof PromiseResolver)) {
+	        throw new TypeError("Illegal invocation, resolver resolve/reject must be called within a resolver context. Consider using the promise constructor instead.\u000a\u000a    See http://goo.gl/sdkXL9\u000a");
+	    }
+	    async.invoke(this.promise._progress, this.promise, value);
+	};
+
+	PromiseResolver.prototype.cancel = function () {
+	    async.invoke(this.promise.cancel, this.promise, undefined);
+	};
+
+	PromiseResolver.prototype.timeout = function () {
+	    this.reject(new TimeoutError("timeout"));
+	};
+
+	PromiseResolver.prototype.isResolved = function () {
+	    return this.promise.isResolved();
+	};
+
+	PromiseResolver.prototype.toJSON = function () {
+	    return this.promise.toJSON();
+	};
+
+	PromiseResolver.prototype._setCarriedStackTrace = function (trace) {
+	    if (this.promise.isRejected()) {
+	        this.promise._setCarriedStackTrace(trace);
+	    }
+	};
+
+	module.exports = PromiseResolver;
+
+
+/***/ },
+/* 76 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * The MIT License (MIT)
+	 * 
+	 * Copyright (c) 2014 Petka Antonov
+	 * 
+	 * Permission is hereby granted, free of charge, to any person obtaining a copy
+	 * of this software and associated documentation files (the "Software"), to deal
+	 * in the Software without restriction, including without limitation the rights
+	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	 * copies of the Software, and to permit persons to whom the Software is
+	 * furnished to do so, subject to the following conditions:</p>
+	 * 
+	 * The above copyright notice and this permission notice shall be included in
+	 * all copies or substantial portions of the Software.
+	 * 
+	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	 * THE SOFTWARE.
+	 * 
+	 */
+	"use strict";
+	module.exports = function(Promise) {
+	var TypeError = __webpack_require__(70).TypeError;
+
+	function apiRejection(msg) {
+	    var error = new TypeError(msg);
+	    var ret = Promise.rejected(error);
+	    var parent = ret._peekContext();
+	    if (parent != null) {
+	        parent.attachExtraTrace(error);
+	    }
+	    return ret;
+	}
+
+	return apiRejection;
+	};
+
+
+/***/ },
+/* 77 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * The MIT License (MIT)
+	 * 
+	 * Copyright (c) 2014 Petka Antonov
+	 * 
+	 * Permission is hereby granted, free of charge, to any person obtaining a copy
+	 * of this software and associated documentation files (the "Software"), to deal
+	 * in the Software without restriction, including without limitation the rights
+	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	 * copies of the Software, and to permit persons to whom the Software is
+	 * furnished to do so, subject to the following conditions:</p>
+	 * 
+	 * The above copyright notice and this permission notice shall be included in
+	 * all copies or substantial portions of the Software.
+	 * 
+	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	 * THE SOFTWARE.
+	 * 
+	 */
+	"use strict";
+	module.exports = function(Promise, NEXT_FILTER, tryConvertToPromise) {
+	var util = __webpack_require__(68);
+	var wrapsPrimitiveReceiver = util.wrapsPrimitiveReceiver;
+	var isPrimitive = util.isPrimitive;
+	var thrower = util.thrower;
+
+	function returnThis() {
+	    return this;
+	}
+	function throwThis() {
+	    throw this;
+	}
+	function return$(r) {
+	    return function() {
+	        return r;
+	    };
+	}
+	function throw$(r) {
+	    return function() {
+	        throw r;
+	    };
+	}
+	function promisedFinally(ret, reasonOrValue, isFulfilled) {
+	    var then;
+	    if (wrapsPrimitiveReceiver && isPrimitive(reasonOrValue)) {
+	        then = isFulfilled ? return$(reasonOrValue) : throw$(reasonOrValue);
+	    } else {
+	        then = isFulfilled ? returnThis : throwThis;
+	    }
+	    return ret._then(then, thrower, undefined, reasonOrValue, undefined);
+	}
+
+	function finallyHandler(reasonOrValue) {
+	    var promise = this.promise;
+	    var handler = this.handler;
+
+	    var ret = promise._isBound()
+	                    ? handler.call(promise._boundTo)
+	                    : handler();
+
+	    if (ret !== undefined) {
+	        var maybePromise = tryConvertToPromise(ret, undefined);
+	        if (maybePromise instanceof Promise) {
+	            maybePromise = maybePromise._target();
+	            return promisedFinally(maybePromise, reasonOrValue,
+	                                    promise.isFulfilled());
+	        }
+	    }
+
+	    if (promise.isRejected()) {
+	        NEXT_FILTER.e = reasonOrValue;
+	        return NEXT_FILTER;
+	    } else {
+	        return reasonOrValue;
+	    }
+	}
+
+	function tapHandler(value) {
+	    var promise = this.promise;
+	    var handler = this.handler;
+
+	    var ret = promise._isBound()
+	                    ? handler.call(promise._boundTo, value)
+	                    : handler(value);
+
+	    if (ret !== undefined) {
+	        var maybePromise = tryConvertToPromise(ret, undefined);
+	        if (maybePromise instanceof Promise) {
+	            maybePromise = maybePromise._target();
+	            return promisedFinally(maybePromise, value, true);
+	        }
+	    }
+	    return value;
+	}
+
+	Promise.prototype._passThroughHandler = function (handler, isFinally) {
+	    if (typeof handler !== "function") return this.then();
+
+	    var promiseAndHandler = {
+	        promise: this,
+	        handler: handler
+	    };
+
+	    return this._then(
+	            isFinally ? finallyHandler : tapHandler,
+	            isFinally ? finallyHandler : undefined, undefined,
+	            promiseAndHandler, undefined);
+	};
+
+	Promise.prototype.lastly =
+	Promise.prototype["finally"] = function (handler) {
+	    return this._passThroughHandler(handler, true);
+	};
+
+	Promise.prototype.tap = function (handler) {
+	    return this._passThroughHandler(handler, false);
+	};
+	};
+
+
+/***/ },
+/* 78 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * The MIT License (MIT)
+	 * 
+	 * Copyright (c) 2014 Petka Antonov
+	 * 
+	 * Permission is hereby granted, free of charge, to any person obtaining a copy
+	 * of this software and associated documentation files (the "Software"), to deal
+	 * in the Software without restriction, including without limitation the rights
+	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	 * copies of the Software, and to permit persons to whom the Software is
+	 * furnished to do so, subject to the following conditions:</p>
+	 * 
+	 * The above copyright notice and this permission notice shall be included in
+	 * all copies or substantial portions of the Software.
+	 * 
+	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	 * THE SOFTWARE.
+	 * 
+	 */
+	"use strict";
+	var util = __webpack_require__(68);
+	var isPrimitive = util.isPrimitive;
+	var wrapsPrimitiveReceiver = util.wrapsPrimitiveReceiver;
+
+	module.exports = function(Promise) {
+	var returner = function () {
+	    return this;
+	};
+	var thrower = function () {
+	    throw this;
+	};
+
+	var wrapper = function (value, action) {
+	    if (action === 1) {
+	        return function () {
+	            throw value;
+	        };
+	    } else if (action === 2) {
+	        return function () {
+	            return value;
+	        };
+	    }
+	};
+
+
+	Promise.prototype["return"] =
+	Promise.prototype.thenReturn = function (value) {
+	    if (wrapsPrimitiveReceiver && isPrimitive(value)) {
+	        return this._then(
+	            wrapper(value, 2),
+	            undefined,
+	            undefined,
+	            undefined,
+	            undefined
+	       );
+	    }
+	    return this._then(returner, undefined, undefined, value, undefined);
+	};
+
+	Promise.prototype["throw"] =
+	Promise.prototype.thenThrow = function (reason) {
+	    if (wrapsPrimitiveReceiver && isPrimitive(reason)) {
+	        return this._then(
+	            wrapper(reason, 1),
+	            undefined,
+	            undefined,
+	            undefined,
+	            undefined
+	       );
+	    }
+	    return this._then(thrower, undefined, undefined, reason, undefined);
+	};
+	};
+
+
+/***/ },
+/* 79 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * The MIT License (MIT)
+	 * 
+	 * Copyright (c) 2014 Petka Antonov
+	 * 
+	 * Permission is hereby granted, free of charge, to any person obtaining a copy
+	 * of this software and associated documentation files (the "Software"), to deal
+	 * in the Software without restriction, including without limitation the rights
+	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	 * copies of the Software, and to permit persons to whom the Software is
+	 * furnished to do so, subject to the following conditions:</p>
+	 * 
+	 * The above copyright notice and this permission notice shall be included in
+	 * all copies or substantial portions of the Software.
+	 * 
+	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	 * THE SOFTWARE.
+	 * 
+	 */
+	"use strict";
+	module.exports = function(Promise) {
+	function PromiseInspection(promise) {
+	    if (promise !== undefined) {
+	        promise = promise._target();
+	        this._bitField = promise._bitField;
+	        this._settledValue = promise._isResolved()
+	            ? promise._settledValue
+	            : undefined;
+	    }
+	    else {
+	        this._bitField = 0;
+	        this._settledValue = undefined;
+	    }
+	}
+
+	PromiseInspection.prototype.value = function () {
+	    if (!this.isFulfilled()) {
+	        throw new TypeError("cannot get fulfillment value of a non-fulfilled promise\u000a\u000a    See http://goo.gl/hc1DLj\u000a");
+	    }
+	    return this._settledValue;
+	};
+
+	PromiseInspection.prototype.error =
+	PromiseInspection.prototype.reason = function () {
+	    if (!this.isRejected()) {
+	        throw new TypeError("cannot get rejection reason of a non-rejected promise\u000a\u000a    See http://goo.gl/hPuiwB\u000a");
+	    }
+	    return this._settledValue;
+	};
+
+	PromiseInspection.prototype.isFulfilled =
+	Promise.prototype._isFulfilled = function () {
+	    return (this._bitField & 268435456) > 0;
+	};
+
+	PromiseInspection.prototype.isRejected =
+	Promise.prototype._isRejected = function () {
+	    return (this._bitField & 134217728) > 0;
+	};
+
+	PromiseInspection.prototype.isPending =
+	Promise.prototype._isPending = function () {
+	    return (this._bitField & 402653184) === 0;
+	};
+
+	PromiseInspection.prototype.isResolved =
+	Promise.prototype._isResolved = function () {
+	    return (this._bitField & 402653184) > 0;
+	};
+
+	Promise.prototype.isPending = function() {
+	    return this._target()._isPending();
+	};
+
+	Promise.prototype.isRejected = function() {
+	    return this._target()._isRejected();
+	};
+
+	Promise.prototype.isFulfilled = function() {
+	    return this._target()._isFulfilled();
+	};
+
+	Promise.prototype.isResolved = function() {
+	    return this._target()._isResolved();
+	};
+
+	Promise.prototype._value = function() {
+	    return this._settledValue;
+	};
+
+	Promise.prototype._reason = function() {
+	    return this._settledValue;
+	};
+
+	Promise.prototype.value = function() {
+	    var target = this._target();
+	    if (!target.isFulfilled()) {
+	        throw new TypeError("cannot get fulfillment value of a non-fulfilled promise\u000a\u000a    See http://goo.gl/hc1DLj\u000a");
+	    }
+	    return target._settledValue;
+	};
+
+	Promise.prototype.reason = function() {
+	    var target = this._target();
+	    if (!target.isRejected()) {
+	        throw new TypeError("cannot get rejection reason of a non-rejected promise\u000a\u000a    See http://goo.gl/hPuiwB\u000a");
+	    }
+	    return target._settledValue;
+	};
+
+
+	Promise.PromiseInspection = PromiseInspection;
+	};
+
+
+/***/ },
+/* 80 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * The MIT License (MIT)
+	 * 
+	 * Copyright (c) 2014 Petka Antonov
+	 * 
+	 * Permission is hereby granted, free of charge, to any person obtaining a copy
+	 * of this software and associated documentation files (the "Software"), to deal
+	 * in the Software without restriction, including without limitation the rights
+	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	 * copies of the Software, and to permit persons to whom the Software is
+	 * furnished to do so, subject to the following conditions:</p>
+	 * 
+	 * The above copyright notice and this permission notice shall be included in
+	 * all copies or substantial portions of the Software.
+	 * 
+	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	 * THE SOFTWARE.
+	 * 
+	 */
+	"use strict";
+	module.exports =
+	function(Promise, PromiseArray, tryConvertToPromise, INTERNAL) {
+	var util = __webpack_require__(68);
+	var canEvaluate = util.canEvaluate;
+	var tryCatch1 = util.tryCatch1;
+	var errorObj = util.errorObj;
+
+
+	if (canEvaluate) {
+	    var thenCallback = function(i) {
+	        return new Function("value", "holder", "                             \n\
+	            'use strict';                                                    \n\
+	            holder.pIndex = value;                                           \n\
+	            holder.checkFulfillment(this);                                   \n\
+	            ".replace(/Index/g, i));
+	    };
+
+	    var caller = function(count) {
+	        var values = [];
+	        for (var i = 1; i <= count; ++i) values.push("holder.p" + i);
+	        return new Function("holder", "                                      \n\
+	            'use strict';                                                    \n\
+	            var callback = holder.fn;                                        \n\
+	            return callback(values);                                         \n\
+	            ".replace(/values/g, values.join(", ")));
+	    };
+	    var thenCallbacks = [];
+	    var callers = [undefined];
+	    for (var i = 1; i <= 5; ++i) {
+	        thenCallbacks.push(thenCallback(i));
+	        callers.push(caller(i));
+	    }
+
+	    var Holder = function(total, fn) {
+	        this.p1 = this.p2 = this.p3 = this.p4 = this.p5 = null;
+	        this.fn = fn;
+	        this.total = total;
+	        this.now = 0;
+	    };
+
+	    Holder.prototype.callers = callers;
+	    Holder.prototype.checkFulfillment = function(promise) {
+	        var now = this.now;
+	        now++;
+	        var total = this.total;
+	        if (now >= total) {
+	            var handler = this.callers[total];
+	            var ret = tryCatch1(handler, undefined, this);
+	            if (ret === errorObj) {
+	                promise._rejectUnchecked(ret.e);
+	            } else if (!promise._tryFollow(ret)) {
+	                promise._fulfillUnchecked(ret);
+	            }
+	        } else {
+	            this.now = now;
+	        }
+	    };
+	}
+
+	function reject(reason) {
+	    this._reject(reason);
+	}
+
+	Promise.join = function () {
+	    var last = arguments.length - 1;
+	    var fn;
+	    if (last > 0 && typeof arguments[last] === "function") {
+	        fn = arguments[last];
+	        if (last < 6 && canEvaluate) {
+	            var ret = new Promise(INTERNAL);
+	            ret._setTrace(undefined);
+	            var holder = new Holder(last, fn);
+	            var callbacks = thenCallbacks;
+	            for (var i = 0; i < last; ++i) {
+	                var maybePromise = tryConvertToPromise(arguments[i], undefined);
+	                if (maybePromise instanceof Promise) {
+	                    maybePromise = maybePromise._target();
+	                    if (maybePromise._isPending()) {
+	                        maybePromise._then(callbacks[i], reject,
+	                                           undefined, ret, holder);
+	                    } else if (maybePromise._isFulfilled()) {
+	                        callbacks[i].call(ret,
+	                                          maybePromise._value(), holder);
+	                    } else {
+	                        ret._reject(maybePromise._reason());
+	                        maybePromise._unsetRejectionIsUnhandled();
+	                    }
+	                } else {
+	                    callbacks[i].call(ret, maybePromise, holder);
+	                }
+	            }
+	            return ret;
+	        }
+	    }
+	    var $_len = arguments.length;var args = new Array($_len); for(var $_i = 0; $_i < $_len; ++$_i) {args[$_i] = arguments[$_i];}
+	    var ret = new PromiseArray(args).promise();
+	    return fn !== undefined ? ret.spread(fn) : ret;
+	};
+
+	};
+
+
+/***/ },
+/* 81 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * The MIT License (MIT)
+	 * 
+	 * Copyright (c) 2014 Petka Antonov
+	 * 
+	 * Permission is hereby granted, free of charge, to any person obtaining a copy
+	 * of this software and associated documentation files (the "Software"), to deal
+	 * in the Software without restriction, including without limitation the rights
+	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	 * copies of the Software, and to permit persons to whom the Software is
+	 * furnished to do so, subject to the following conditions:</p>
+	 * 
+	 * The above copyright notice and this permission notice shall be included in
+	 * all copies or substantial portions of the Software.
+	 * 
+	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	 * THE SOFTWARE.
+	 * 
+	 */
+	"use strict";
+	module.exports = function(Promise, INTERNAL, tryConvertToPromise) {
+	var util = __webpack_require__(68);
+	var errors = __webpack_require__(70);
+	var apiRejection = __webpack_require__(76)(Promise);
+	var TimeoutError = Promise.TimeoutError;
+
+	var afterTimeout = function (promise, message) {
+	    if (!promise.isPending()) return;
+	    if (typeof message !== "string") {
+	        message = "operation timed out";
+	    }
+	    var err = new TimeoutError(message);
+	    errors.markAsOriginatingFromRejection(err);
+	    promise._attachExtraTrace(err);
+	    promise._cancel(err);
+	};
+
+	var afterDelay = function (value, promise) {
+	    promise._fulfill(value);
+	};
+
+	var delay = Promise.delay = function (value, ms) {
+	    if (ms === undefined) {
+	        ms = value;
+	        value = undefined;
+	    }
+	    ms = +ms;
+	    var maybePromise = tryConvertToPromise(value, undefined);
+	    var promise = new Promise(INTERNAL);
+
+	    if (maybePromise instanceof Promise) {
+	        promise._propagateFrom(maybePromise, 7);
+	        promise._follow(maybePromise._target());
+	        return promise.then(function(value) {
+	            return Promise.delay(value, ms);
+	        });
+	    } else {
+	        promise._setTrace(undefined);
+	        setTimeout(function delayTimeout() {
+	            afterDelay(value, promise);
+	        }, ms);
+	    }
+	    return promise;
+	};
+
+	Promise.prototype.delay = function (ms) {
+	    return delay(this, ms);
+	};
+
+	function successClear(value) {
+	    var handle = this;
+	    if (handle instanceof Number) handle = +handle;
+	    clearTimeout(handle);
+	    return value;
+	}
+
+	function failureClear(reason) {
+	    var handle = this;
+	    if (handle instanceof Number) handle = +handle;
+	    clearTimeout(handle);
+	    throw reason;
+	}
+
+	Promise.prototype.timeout = function (ms, message) {
+	    var target = this._target();
+	    ms = +ms;
+	    var ret = new Promise(INTERNAL).cancellable();
+	    ret._propagateFrom(this, 7);
+	    ret._follow(target);
+	    var handle = setTimeout(function timeoutTimeout() {
+	        afterTimeout(ret, message);
+	    }, ms);
+	    return ret._then(successClear, failureClear, undefined, handle, undefined);
+	};
+
+	};
+
+
+/***/ },
+/* 82 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * The MIT License (MIT)
+	 * 
+	 * Copyright (c) 2014 Petka Antonov
+	 * 
+	 * Permission is hereby granted, free of charge, to any person obtaining a copy
+	 * of this software and associated documentation files (the "Software"), to deal
+	 * in the Software without restriction, including without limitation the rights
+	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	 * copies of the Software, and to permit persons to whom the Software is
+	 * furnished to do so, subject to the following conditions:</p>
+	 * 
+	 * The above copyright notice and this permission notice shall be included in
+	 * all copies or substantial portions of the Software.
+	 * 
+	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	 * THE SOFTWARE.
+	 * 
+	 */
+	"use strict";
+	module.exports = function(Promise, INTERNAL, tryConvertToPromise) {
+	var apiRejection = __webpack_require__(76)(Promise);
+	var isArray = __webpack_require__(68).isArray;
+
+	var raceLater = function (promise) {
+	    return promise.then(function(array) {
+	        return race(array, promise);
+	    });
+	};
+
+	function race(promises, parent) {
+	    var maybePromise = tryConvertToPromise(promises, undefined);
+
+	    if (maybePromise instanceof Promise) {
+	        return raceLater(maybePromise);
+	    } else if (!isArray(promises)) {
+	        return apiRejection("expecting an array, a promise or a thenable\u000a\u000a    See http://goo.gl/s8MMhc\u000a");
+	    }
+
+	    var ret = new Promise(INTERNAL);
+	    if (parent !== undefined) {
+	        ret._propagateFrom(parent, 7);
+	    } else {
+	        ret._setTrace(undefined);
+	    }
+	    var fulfill = ret._fulfill;
+	    var reject = ret._reject;
+	    for (var i = 0, len = promises.length; i < len; ++i) {
+	        var val = promises[i];
+
+	        if (val === undefined && !(i in promises)) {
+	            continue;
+	        }
+
+	        Promise.cast(val)._then(fulfill, reject, undefined, ret, null);
+	    }
+	    return ret;
+	}
+
+	Promise.race = function (promises) {
+	    return race(promises, undefined);
+	};
+
+	Promise.prototype.race = function () {
+	    return race(this, undefined);
+	};
+
+	};
+
+
+/***/ },
+/* 83 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * The MIT License (MIT)
+	 * 
+	 * Copyright (c) 2014 Petka Antonov
+	 * 
+	 * Permission is hereby granted, free of charge, to any person obtaining a copy
+	 * of this software and associated documentation files (the "Software"), to deal
+	 * in the Software without restriction, including without limitation the rights
+	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	 * copies of the Software, and to permit persons to whom the Software is
+	 * furnished to do so, subject to the following conditions:</p>
+	 * 
+	 * The above copyright notice and this permission notice shall be included in
+	 * all copies or substantial portions of the Software.
+	 * 
+	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	 * THE SOFTWARE.
+	 * 
+	 */
+	"use strict";
+	var cr = Object.create;
+	if (cr) {
+	    var callerCache = cr(null);
+	    var getterCache = cr(null);
+	    callerCache[" size"] = getterCache[" size"] = 0;
+	}
+
+	module.exports = function(Promise) {
+	var util = __webpack_require__(68);
+	var canEvaluate = util.canEvaluate;
+	var isIdentifier = util.isIdentifier;
+
+	function makeMethodCaller (methodName) {
+	    return new Function("obj", "                                             \n\
+	        'use strict'                                                         \n\
+	        var len = this.length;                                               \n\
+	        switch(len) {                                                        \n\
+	            case 1: return obj.methodName(this[0]);                          \n\
+	            case 2: return obj.methodName(this[0], this[1]);                 \n\
+	            case 3: return obj.methodName(this[0], this[1], this[2]);        \n\
+	            case 0: return obj.methodName();                                 \n\
+	            default: return obj.methodName.apply(obj, this);                 \n\
+	        }                                                                    \n\
+	        ".replace(/methodName/g, methodName));
+	}
+
+	function makeGetter (propertyName) {
+	    return new Function("obj", "                                             \n\
+	        'use strict';                                                        \n\
+	        return obj.propertyName;                                             \n\
+	        ".replace("propertyName", propertyName));
+	}
+
+	function getCompiled(name, compiler, cache) {
+	    var ret = cache[name];
+	    if (typeof ret !== "function") {
+	        if (!isIdentifier(name)) {
+	            return null;
+	        }
+	        ret = compiler(name);
+	        cache[name] = ret;
+	        cache[" size"]++;
+	        if (cache[" size"] > 512) {
+	            var keys = Object.keys(cache);
+	            for (var i = 0; i < 256; ++i) delete cache[keys[i]];
+	            cache[" size"] = keys.length - 256;
+	        }
+	    }
+	    return ret;
+	}
+
+	function getMethodCaller(name) {
+	    return getCompiled(name, makeMethodCaller, callerCache);
+	}
+
+	function getGetter(name) {
+	    return getCompiled(name, makeGetter, getterCache);
+	}
+
+	function caller(obj) {
+	    return obj[this.pop()].apply(obj, this);
+	}
+	Promise.prototype.call = function (methodName) {
+	    var $_len = arguments.length;var args = new Array($_len - 1); for(var $_i = 1; $_i < $_len; ++$_i) {args[$_i - 1] = arguments[$_i];}
+	    if (canEvaluate) {
+	        var maybeCaller = getMethodCaller(methodName);
+	        if (maybeCaller !== null) {
+	            return this._then(
+	                maybeCaller, undefined, undefined, args, undefined);
+	        }
+	    }
+	    args.push(methodName);
+	    return this._then(caller, undefined, undefined, args, undefined);
+	};
+
+	function namedGetter(obj) {
+	    return obj[this];
+	}
+	function indexedGetter(obj) {
+	    var index = +this;
+	    if (index < 0) index = Math.max(0, index + obj.length);
+	    return obj[index];
+	}
+	Promise.prototype.get = function (propertyName) {
+	    var isIndex = (typeof propertyName === "number");
+	    var getter;
+	    if (!isIndex) {
+	        if (canEvaluate) {
+	            var maybeGetter = getGetter(propertyName);
+	            getter = maybeGetter !== null ? maybeGetter : namedGetter;
+	        } else {
+	            getter = namedGetter;
+	        }
+	    } else {
+	        getter = indexedGetter;
+	    }
+	    return this._then(getter, undefined, undefined, propertyName, undefined);
+	};
+	};
+
+
+/***/ },
+/* 84 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * The MIT License (MIT)
+	 * 
+	 * Copyright (c) 2014 Petka Antonov
+	 * 
+	 * Permission is hereby granted, free of charge, to any person obtaining a copy
+	 * of this software and associated documentation files (the "Software"), to deal
+	 * in the Software without restriction, including without limitation the rights
+	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	 * copies of the Software, and to permit persons to whom the Software is
+	 * furnished to do so, subject to the following conditions:</p>
+	 * 
+	 * The above copyright notice and this permission notice shall be included in
+	 * all copies or substantial portions of the Software.
+	 * 
+	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	 * THE SOFTWARE.
+	 * 
+	 */
+	"use strict";
+	module.exports = function(Promise,
+	                          apiRejection,
+	                          INTERNAL,
+	                          tryConvertToPromise) {
+	var errors = __webpack_require__(70);
+	var TypeError = errors.TypeError;
+	var deprecated = __webpack_require__(68).deprecated;
+	var util = __webpack_require__(68);
+	var errorObj = util.errorObj;
+	var tryCatch1 = util.tryCatch1;
+	var yieldHandlers = [];
+
+	function promiseFromYieldHandler(value, yieldHandlers, traceParent) {
+	    var _errorObj = errorObj;
+	    var _Promise = Promise;
+	    var len = yieldHandlers.length;
+	    for (var i = 0; i < len; ++i) {
+	        var result = tryCatch1(yieldHandlers[i], undefined, value);
+	        if (result === _errorObj) {
+	            return _Promise.reject(_errorObj.e);
+	        }
+	        var maybePromise = tryConvertToPromise(result, traceParent);
+	        if (maybePromise instanceof _Promise) return maybePromise;
+	    }
+	    return null;
+	}
+
+	function PromiseSpawn(generatorFunction, receiver, yieldHandler) {
+	    var promise = this._promise = new Promise(INTERNAL);
+	    promise._setTrace(undefined);
+	    this._generatorFunction = generatorFunction;
+	    this._receiver = receiver;
+	    this._generator = undefined;
+	    this._yieldHandlers = typeof yieldHandler === "function"
+	        ? [yieldHandler].concat(yieldHandlers)
+	        : yieldHandlers;
+	}
+
+	PromiseSpawn.prototype.promise = function () {
+	    return this._promise;
+	};
+
+	PromiseSpawn.prototype._run = function () {
+	    this._generator = this._generatorFunction.call(this._receiver);
+	    this._receiver =
+	        this._generatorFunction = undefined;
+	    this._next(undefined);
+	};
+
+	PromiseSpawn.prototype._continue = function (result) {
+	    if (result === errorObj) {
+	        this._generator = undefined;
+	        var trace = errors.canAttachTrace(result.e)
+	            ? result.e : new Error(result.e + "");
+	        this._promise._attachExtraTrace(trace);
+	        this._promise._reject(result.e, trace);
+	        return;
+	    }
+
+	    var value = result.value;
+	    if (result.done === true) {
+	        this._generator = undefined;
+	        if (!this._promise._tryFollow(value)) {
+	            this._promise._fulfill(value);
+	        }
+	    } else {
+	        var maybePromise = tryConvertToPromise(value, this._promise);
+	        if (!(maybePromise instanceof Promise)) {
+	            maybePromise =
+	                promiseFromYieldHandler(maybePromise,
+	                                        this._yieldHandlers,
+	                                        this._promise);
+	            if (maybePromise === null) {
+	                this._throw(new TypeError("A value was yielded that could not be treated as a promise\u000a\u000a    See http://goo.gl/4Y4pDk\u000a"));
+	                return;
+	            }
+	        }
+	        maybePromise._then(
+	            this._next,
+	            this._throw,
+	            undefined,
+	            this,
+	            null
+	       );
+	    }
+	};
+
+	PromiseSpawn.prototype._throw = function (reason) {
+	    if (errors.canAttachTrace(reason))
+	        this._promise._attachExtraTrace(reason);
+	    this._continue(
+	        tryCatch1(this._generator["throw"], this._generator, reason)
+	   );
+	};
+
+	PromiseSpawn.prototype._next = function (value) {
+	    this._continue(
+	        tryCatch1(this._generator.next, this._generator, value)
+	   );
+	};
+
+	Promise.coroutine = function (generatorFunction, options) {
+	    if (typeof generatorFunction !== "function") {
+	        throw new TypeError("generatorFunction must be a function\u000a\u000a    See http://goo.gl/6Vqhm0\u000a");
+	    }
+	    var yieldHandler = Object(options).yieldHandler;
+	    var PromiseSpawn$ = PromiseSpawn;
+	    return function () {
+	        var generator = generatorFunction.apply(this, arguments);
+	        var spawn = new PromiseSpawn$(undefined, undefined, yieldHandler);
+	        spawn._generator = generator;
+	        spawn._next(undefined);
+	        return spawn.promise();
+	    };
+	};
+
+	Promise.coroutine.addYieldHandler = function(fn) {
+	    if (typeof fn !== "function") throw new TypeError("fn must be a function\u000a\u000a    See http://goo.gl/916lJJ\u000a");
+	    yieldHandlers.push(fn);
+	};
+
+	Promise.spawn = function (generatorFunction) {
+	    deprecated("Promise.spawn is deprecated. Use Promise.coroutine instead.");
+	    if (typeof generatorFunction !== "function") {
+	        return apiRejection("generatorFunction must be a function\u000a\u000a    See http://goo.gl/6Vqhm0\u000a");
+	    }
+	    var spawn = new PromiseSpawn(generatorFunction, this);
+	    var ret = spawn.promise();
+	    spawn._run(Promise.spawn);
+	    return ret;
+	};
+	};
+
+
+/***/ },
+/* 85 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * The MIT License (MIT)
+	 * 
+	 * Copyright (c) 2014 Petka Antonov
+	 * 
+	 * Permission is hereby granted, free of charge, to any person obtaining a copy
+	 * of this software and associated documentation files (the "Software"), to deal
+	 * in the Software without restriction, including without limitation the rights
+	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	 * copies of the Software, and to permit persons to whom the Software is
+	 * furnished to do so, subject to the following conditions:</p>
+	 * 
+	 * The above copyright notice and this permission notice shall be included in
+	 * all copies or substantial portions of the Software.
+	 * 
+	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	 * THE SOFTWARE.
+	 * 
+	 */
+	"use strict";
+	module.exports = function(Promise,
+	                          PromiseArray,
+	                          apiRejection,
+	                          tryConvertToPromise,
+	                          INTERNAL) {
+	var util = __webpack_require__(68);
+	var tryCatch3 = util.tryCatch3;
+	var errorObj = util.errorObj;
+	var PENDING = {};
+	var EMPTY_ARRAY = [];
+
+	function MappingPromiseArray(promises, fn, limit, _filter) {
+	    this.constructor$(promises);
+	    this._callback = fn;
+	    this._preservedValues = _filter === INTERNAL
+	        ? new Array(this.length())
+	        : null;
+	    this._limit = limit;
+	    this._inFlight = 0;
+	    this._queue = limit >= 1 ? [] : EMPTY_ARRAY;
+	    this._init$(undefined, -2);
+	}
+	util.inherits(MappingPromiseArray, PromiseArray);
+
+	MappingPromiseArray.prototype._init = function () {};
+
+	MappingPromiseArray.prototype._promiseFulfilled = function (value, index) {
+	    var values = this._values;
+	    var length = this.length();
+	    var preservedValues = this._preservedValues;
+	    var limit = this._limit;
+	    if (values[index] === PENDING) {
+	        values[index] = value;
+	        if (limit >= 1) {
+	            this._inFlight--;
+	            this._drainQueue();
+	            if (this._isResolved()) return;
+	        }
+	    } else {
+	        if (limit >= 1 && this._inFlight >= limit) {
+	            values[index] = value;
+	            this._queue.push(index);
+	            return;
+	        }
+	        if (preservedValues !== null) preservedValues[index] = value;
+
+	        var callback = this._callback;
+	        var receiver = this._promise._boundTo;
+	        var ret = tryCatch3(callback, receiver, value, index, length);
+	        if (ret === errorObj) return this._reject(ret.e);
+
+	        var maybePromise = tryConvertToPromise(ret, this._promise);
+	        if (maybePromise instanceof Promise) {
+	            maybePromise = maybePromise._target();
+	            if (maybePromise._isPending()) {
+	                if (limit >= 1) this._inFlight++;
+	                values[index] = PENDING;
+	                return maybePromise._proxyPromiseArray(this, index);
+	            } else if (maybePromise._isFulfilled()) {
+	                ret = maybePromise._value();
+	            } else {
+	                maybePromise._unsetRejectionIsUnhandled();
+	                return this._reject(maybePromise._reason());
+	            }
+	        }
+	        values[index] = ret;
+	    }
+	    var totalResolved = ++this._totalResolved;
+	    if (totalResolved >= length) {
+	        if (preservedValues !== null) {
+	            this._filter(values, preservedValues);
+	        } else {
+	            this._resolve(values);
+	        }
+
+	    }
+	};
+
+	MappingPromiseArray.prototype._drainQueue = function () {
+	    var queue = this._queue;
+	    var limit = this._limit;
+	    var values = this._values;
+	    while (queue.length > 0 && this._inFlight < limit) {
+	        if (this._isResolved()) return;
+	        var index = queue.pop();
+	        this._promiseFulfilled(values[index], index);
+	    }
+	};
+
+	MappingPromiseArray.prototype._filter = function (booleans, values) {
+	    var len = values.length;
+	    var ret = new Array(len);
+	    var j = 0;
+	    for (var i = 0; i < len; ++i) {
+	        if (booleans[i]) ret[j++] = values[i];
+	    }
+	    ret.length = j;
+	    this._resolve(ret);
+	};
+
+	MappingPromiseArray.prototype.preservedValues = function () {
+	    return this._preservedValues;
+	};
+
+	function map(promises, fn, options, _filter) {
+	    var limit = typeof options === "object" && options !== null
+	        ? options.concurrency
+	        : 0;
+	    limit = typeof limit === "number" &&
+	        isFinite(limit) && limit >= 1 ? limit : 0;
+	    return new MappingPromiseArray(promises, fn, limit, _filter);
+	}
+
+	Promise.prototype.map = function (fn, options) {
+	    if (typeof fn !== "function") return apiRejection("fn must be a function\u000a\u000a    See http://goo.gl/916lJJ\u000a");
+
+	    return map(this, fn, options, null).promise();
+	};
+
+	Promise.map = function (promises, fn, options, _filter) {
+	    if (typeof fn !== "function") return apiRejection("fn must be a function\u000a\u000a    See http://goo.gl/916lJJ\u000a");
+	    return map(promises, fn, options, _filter).promise();
+	};
+
+
+	};
+
+
+/***/ },
+/* 86 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * The MIT License (MIT)
+	 * 
+	 * Copyright (c) 2014 Petka Antonov
+	 * 
+	 * Permission is hereby granted, free of charge, to any person obtaining a copy
+	 * of this software and associated documentation files (the "Software"), to deal
+	 * in the Software without restriction, including without limitation the rights
+	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	 * copies of the Software, and to permit persons to whom the Software is
+	 * furnished to do so, subject to the following conditions:</p>
+	 * 
+	 * The above copyright notice and this permission notice shall be included in
+	 * all copies or substantial portions of the Software.
+	 * 
+	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	 * THE SOFTWARE.
+	 * 
+	 */
+	"use strict";
+	module.exports = function(Promise) {
+	var util = __webpack_require__(68);
+	var async = __webpack_require__(69);
+	var tryCatch2 = util.tryCatch2;
+	var tryCatch1 = util.tryCatch1;
+	var errorObj = util.errorObj;
+
+	function thrower(r) {
+	    throw r;
+	}
+
+	function spreadAdapter(val, receiver) {
+	    if (!util.isArray(val)) return successAdapter(val, receiver);
+	    var ret = util.tryCatchApply(this, [null].concat(val), receiver);
+	    if (ret === errorObj) {
+	        async.invokeLater(thrower, undefined, ret.e);
+	    }
+	}
+
+	function successAdapter(val, receiver) {
+	    var nodeback = this;
+	    var ret = val === undefined
+	        ? tryCatch1(nodeback, receiver, null)
+	        : tryCatch2(nodeback, receiver, null, val);
+	    if (ret === errorObj) {
+	        async.invokeLater(thrower, undefined, ret.e);
+	    }
+	}
+	function errorAdapter(reason, receiver) {
+	    var nodeback = this;
+	    var ret = tryCatch1(nodeback, receiver, reason);
+	    if (ret === errorObj) {
+	        async.invokeLater(thrower, undefined, ret.e);
+	    }
+	}
+
+	Promise.prototype.nodeify = function (nodeback, options) {
+	    if (typeof nodeback == "function") {
+	        var adapter = successAdapter;
+	        if (options !== undefined && Object(options).spread) {
+	            adapter = spreadAdapter;
+	        }
+	        this._then(
+	            adapter,
+	            errorAdapter,
+	            undefined,
+	            nodeback,
+	            this._boundTo
+	        );
+	    }
+	    return this;
+	};
+	};
+
+
+/***/ },
+/* 87 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * The MIT License (MIT)
+	 * 
+	 * Copyright (c) 2014 Petka Antonov
+	 * 
+	 * Permission is hereby granted, free of charge, to any person obtaining a copy
+	 * of this software and associated documentation files (the "Software"), to deal
+	 * in the Software without restriction, including without limitation the rights
+	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	 * copies of the Software, and to permit persons to whom the Software is
+	 * furnished to do so, subject to the following conditions:</p>
+	 * 
+	 * The above copyright notice and this permission notice shall be included in
+	 * all copies or substantial portions of the Software.
+	 * 
+	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	 * THE SOFTWARE.
+	 * 
+	 */
+	"use strict";
+	module.exports = function(Promise, INTERNAL) {
+	var THIS = {};
+	var util = __webpack_require__(68);
+	var nodebackForPromise = __webpack_require__(75)
+	    ._nodebackForPromise;
+	var withAppended = util.withAppended;
+	var maybeWrapAsError = util.maybeWrapAsError;
+	var canEvaluate = util.canEvaluate;
+	var TypeError = __webpack_require__(70).TypeError;
+	var defaultSuffix = "Async";
+	var defaultFilter = function(name, func) {
+	    return util.isIdentifier(name) &&
+	        name.charAt(0) !== "_" &&
+	        !util.isClass(func);
+	};
+	var defaultPromisified = {__isPromisified__: true};
+
+
+	function escapeIdentRegex(str) {
+	    return str.replace(/([$])/, "\\$");
+	}
+
+	function isPromisified(fn) {
+	    try {
+	        return fn.__isPromisified__ === true;
+	    }
+	    catch (e) {
+	        return false;
+	    }
+	}
+
+	function hasPromisified(obj, key, suffix) {
+	    var val = util.getDataPropertyOrDefault(obj, key + suffix,
+	                                            defaultPromisified);
+	    return val ? isPromisified(val) : false;
+	}
+	function checkValid(ret, suffix, suffixRegexp) {
+	    for (var i = 0; i < ret.length; i += 2) {
+	        var key = ret[i];
+	        if (suffixRegexp.test(key)) {
+	            var keyWithoutAsyncSuffix = key.replace(suffixRegexp, "");
+	            for (var j = 0; j < ret.length; j += 2) {
+	                if (ret[j] === keyWithoutAsyncSuffix) {
+	                    throw new TypeError("Cannot promisify an API that has normal methods with '%s'-suffix\u000a\u000a    See http://goo.gl/iWrZbw\u000a"
+	                        .replace("%s", suffix));
+	                }
+	            }
+	        }
+	    }
+	}
+
+	function promisifiableMethods(obj, suffix, suffixRegexp, filter) {
+	    var keys = util.inheritedDataKeys(obj);
+	    var ret = [];
+	    for (var i = 0; i < keys.length; ++i) {
+	        var key = keys[i];
+	        var value = obj[key];
+	        if (typeof value === "function" &&
+	            !isPromisified(value) &&
+	            !hasPromisified(obj, key, suffix) &&
+	            filter(key, value, obj)) {
+	            ret.push(key, value);
+	        }
+	    }
+	    checkValid(ret, suffix, suffixRegexp);
+	    return ret;
+	}
+
+	function switchCaseArgumentOrder(likelyArgumentCount) {
+	    var ret = [likelyArgumentCount];
+	    var min = Math.max(0, likelyArgumentCount - 1 - 5);
+	    for(var i = likelyArgumentCount - 1; i >= min; --i) {
+	        if (i === likelyArgumentCount) continue;
+	        ret.push(i);
+	    }
+	    for(var i = likelyArgumentCount + 1; i <= 5; ++i) {
+	        ret.push(i);
+	    }
+	    return ret;
+	}
+
+	function argumentSequence(argumentCount) {
+	    return util.filledRange(argumentCount, "arguments[", "]");
+	}
+
+	function parameterDeclaration(parameterCount) {
+	    return util.filledRange(parameterCount, "_arg", "");
+	}
+
+	function parameterCount(fn) {
+	    if (typeof fn.length === "number") {
+	        return Math.max(Math.min(fn.length, 1023 + 1), 0);
+	    }
+	    return 0;
+	}
+
+	function generatePropertyAccess(key) {
+	    if (util.isIdentifier(key)) {
+	        return "." + key;
+	    }
+	    else return "['" + key.replace(/(['\\])/g, "\\$1") + "']";
+	}
+
+	function makeNodePromisifiedEval(callback, receiver, originalName, fn, suffix) {
+	    var newParameterCount = Math.max(0, parameterCount(fn) - 1);
+	    var argumentOrder = switchCaseArgumentOrder(newParameterCount);
+	    var callbackName =
+	        (typeof originalName === "string" && util.isIdentifier(originalName)
+	            ? originalName + suffix
+	            : "promisified");
+
+	    function generateCallForArgumentCount(count) {
+	        var args = argumentSequence(count).join(", ");
+	        var comma = count > 0 ? ", " : "";
+	        var ret;
+	        if (typeof callback === "string") {
+	            ret = "                                                          \n\
+	                this.method({{args}}, fn);                                   \n\
+	                break;                                                       \n\
+	            ".replace(".method", generatePropertyAccess(callback));
+	        } else if (receiver === THIS) {
+	            ret =  "                                                         \n\
+	                callback.call(this, {{args}}, fn);                           \n\
+	                break;                                                       \n\
+	            ";
+	        } else if (receiver !== undefined) {
+	            ret =  "                                                         \n\
+	                callback.call(receiver, {{args}}, fn);                       \n\
+	                break;                                                       \n\
+	            ";
+	        } else {
+	            ret =  "                                                         \n\
+	                callback({{args}}, fn);                                      \n\
+	                break;                                                       \n\
+	            ";
+	        }
+	        return ret.replace("{{args}}", args).replace(", ", comma);
+	    }
+
+	    function generateArgumentSwitchCase() {
+	        var ret = "";
+	        for(var i = 0; i < argumentOrder.length; ++i) {
+	            ret += "case " + argumentOrder[i] +":" +
+	                generateCallForArgumentCount(argumentOrder[i]);
+	        }
+	        var codeForCall;
+	        if (typeof callback === "string") {
+	            codeForCall = "                                                  \n\
+	                this.property.apply(this, args);                             \n\
+	            "
+	                .replace(".property", generatePropertyAccess(callback));
+	        } else if (receiver === THIS) {
+	            codeForCall = "                                                  \n\
+	                callback.apply(this, args);                                  \n\
+	            ";
+	        } else {
+	            codeForCall = "                                                  \n\
+	                callback.apply(receiver, args);                              \n\
+	            ";
+	        }
+
+	        ret += "                                                             \n\
+	        default:                                                             \n\
+	            var args = new Array(len + 1);                                   \n\
+	            var i = 0;                                                       \n\
+	            for (var i = 0; i < len; ++i) {                                  \n\
+	               args[i] = arguments[i];                                       \n\
+	            }                                                                \n\
+	            args[i] = fn;                                                    \n\
+	            [CodeForCall]                                                    \n\
+	            break;                                                           \n\
+	        ".replace("[CodeForCall]", codeForCall);
+	        return ret;
+	    }
+
+	    return new Function("Promise",
+	                        "callback",
+	                        "receiver",
+	                        "withAppended",
+	                        "maybeWrapAsError",
+	                        "nodebackForPromise",
+	                        "INTERNAL","                                         \n\
+	        var ret = function (Parameters) {                        \n\
+	            'use strict';                                                    \n\
+	            var len = arguments.length;                                      \n\
+	            var promise = new Promise(INTERNAL);                             \n\
+	            promise._setTrace(undefined);                                    \n\
+	            var fn = nodebackForPromise(promise);                            \n\
+	            try {                                                            \n\
+	                switch(len) {                                                \n\
+	                    [CodeForSwitchCase]                                      \n\
+	                }                                                            \n\
+	            } catch (e) {                                                    \n\
+	                var wrapped = maybeWrapAsError(e);                           \n\
+	                promise._attachExtraTrace(wrapped);                          \n\
+	                promise._reject(wrapped);                                    \n\
+	            }                                                                \n\
+	            return promise;                                                  \n\
+	        };                                                                   \n\
+	        ret.__isPromisified__ = true;                                        \n\
+	        return ret;                                                          \n\
+	        "
+	        .replace("FunctionName", callbackName)
+	        .replace("Parameters", parameterDeclaration(newParameterCount))
+	        .replace("[CodeForSwitchCase]", generateArgumentSwitchCase()))(
+	            Promise,
+	            callback,
+	            receiver,
+	            withAppended,
+	            maybeWrapAsError,
+	            nodebackForPromise,
+	            INTERNAL
+	        );
+	}
+
+	function makeNodePromisifiedClosure(callback, receiver) {
+	    function promisified() {
+	        var _receiver = receiver;
+	        if (receiver === THIS) _receiver = this;
+	        if (typeof callback === "string") {
+	            callback = _receiver[callback];
+	        }
+	        var promise = new Promise(INTERNAL);
+	        promise._setTrace(undefined);
+	        var fn = nodebackForPromise(promise);
+	        try {
+	            callback.apply(_receiver, withAppended(arguments, fn));
+	        } catch(e) {
+	            var wrapped = maybeWrapAsError(e);
+	            promise._attachExtraTrace(wrapped);
+	            promise._reject(wrapped);
+	        }
+	        return promise;
+	    }
+	    promisified.__isPromisified__ = true;
+	    return promisified;
+	}
+
+	var makeNodePromisified = canEvaluate
+	    ? makeNodePromisifiedEval
+	    : makeNodePromisifiedClosure;
+
+	function promisifyAll(obj, suffix, filter, promisifier) {
+	    var suffixRegexp = new RegExp(escapeIdentRegex(suffix) + "$");
+	    var methods =
+	        promisifiableMethods(obj, suffix, suffixRegexp, filter);
+
+	    for (var i = 0, len = methods.length; i < len; i+= 2) {
+	        var key = methods[i];
+	        var fn = methods[i+1];
+	        var promisifiedKey = key + suffix;
+	        obj[promisifiedKey] = promisifier === makeNodePromisified
+	                ? makeNodePromisified(key, THIS, key, fn, suffix)
+	                : promisifier(fn);
+	    }
+	    util.toFastProperties(obj);
+	    return obj;
+	}
+
+	function promisify(callback, receiver) {
+	    return makeNodePromisified(callback, receiver, undefined, callback);
+	}
+
+	Promise.promisify = function (fn, receiver) {
+	    if (typeof fn !== "function") {
+	        throw new TypeError("fn must be a function\u000a\u000a    See http://goo.gl/916lJJ\u000a");
+	    }
+	    if (isPromisified(fn)) {
+	        return fn;
+	    }
+	    return promisify(fn, arguments.length < 2 ? THIS : receiver);
+	};
+
+	Promise.promisifyAll = function (target, options) {
+	    if (typeof target !== "function" && typeof target !== "object") {
+	        throw new TypeError("the target of promisifyAll must be an object or a function\u000a\u000a    See http://goo.gl/9ITlV0\u000a");
+	    }
+	    options = Object(options);
+	    var suffix = options.suffix;
+	    if (typeof suffix !== "string") suffix = defaultSuffix;
+	    var filter = options.filter;
+	    if (typeof filter !== "function") filter = defaultFilter;
+	    var promisifier = options.promisifier;
+	    if (typeof promisifier !== "function") promisifier = makeNodePromisified;
+
+	    if (!util.isIdentifier(suffix)) {
+	        throw new RangeError("suffix must be a valid identifier\u000a\u000a    See http://goo.gl/8FZo5V\u000a");
+	    }
+
+	    var keys = util.inheritedDataKeys(target, {includeHidden: true});
+	    for (var i = 0; i < keys.length; ++i) {
+	        var value = target[keys[i]];
+	        if (keys[i] !== "constructor" &&
+	            util.isClass(value)) {
+	            promisifyAll(value.prototype, suffix, filter, promisifier);
+	            promisifyAll(value, suffix, filter, promisifier);
+	        }
+	    }
+
+	    return promisifyAll(target, suffix, filter, promisifier);
+	};
+	};
+
+
+
+/***/ },
+/* 88 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * The MIT License (MIT)
+	 * 
+	 * Copyright (c) 2014 Petka Antonov
+	 * 
+	 * Permission is hereby granted, free of charge, to any person obtaining a copy
+	 * of this software and associated documentation files (the "Software"), to deal
+	 * in the Software without restriction, including without limitation the rights
+	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	 * copies of the Software, and to permit persons to whom the Software is
+	 * furnished to do so, subject to the following conditions:</p>
+	 * 
+	 * The above copyright notice and this permission notice shall be included in
+	 * all copies or substantial portions of the Software.
+	 * 
+	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	 * THE SOFTWARE.
+	 * 
+	 */
+	"use strict";
+	module.exports = function(Promise, PromiseArray, tryConvertToPromise) {
+	var util = __webpack_require__(68);
+	var apiRejection = __webpack_require__(76)(Promise);
+	var isObject = util.isObject;
+	var es5 = __webpack_require__(170);
+
+	function PropertiesPromiseArray(obj) {
+	    var keys = es5.keys(obj);
+	    var len = keys.length;
+	    var values = new Array(len * 2);
+	    for (var i = 0; i < len; ++i) {
+	        var key = keys[i];
+	        values[i] = obj[key];
+	        values[i + len] = key;
+	    }
+	    this.constructor$(values);
+	}
+	util.inherits(PropertiesPromiseArray, PromiseArray);
+
+	PropertiesPromiseArray.prototype._init = function () {
+	    this._init$(undefined, -3) ;
+	};
+
+	PropertiesPromiseArray.prototype._promiseFulfilled = function (value, index) {
+	    this._values[index] = value;
+	    var totalResolved = ++this._totalResolved;
+	    if (totalResolved >= this._length) {
+	        var val = {};
+	        var keyOffset = this.length();
+	        for (var i = 0, len = this.length(); i < len; ++i) {
+	            val[this._values[i + keyOffset]] = this._values[i];
+	        }
+	        this._resolve(val);
+	    }
+	};
+
+	PropertiesPromiseArray.prototype._promiseProgressed = function (value, index) {
+	    this._promise._progress({
+	        key: this._values[index + this.length()],
+	        value: value
+	    });
+	};
+
+	PropertiesPromiseArray.prototype.shouldCopyValues = function () {
+	    return false;
+	};
+
+	PropertiesPromiseArray.prototype.getActualLength = function (len) {
+	    return len >> 1;
+	};
+
+	function props(promises) {
+	    var ret;
+	    var castValue = tryConvertToPromise(promises, undefined);
+
+	    if (!isObject(castValue)) {
+	        return apiRejection("cannot await properties of a non-object\u000a\u000a    See http://goo.gl/OsFKC8\u000a");
+	    } else if (castValue instanceof Promise) {
+	        ret = castValue._then(
+	            Promise.props, undefined, undefined, undefined, undefined);
+	    } else {
+	        ret = new PropertiesPromiseArray(castValue).promise();
+	    }
+
+	    if (castValue instanceof Promise) {
+	        ret._propagateFrom(castValue, 4);
+	    }
+	    return ret;
+	}
+
+	Promise.prototype.props = function () {
+	    return props(this);
+	};
+
+	Promise.props = function (promises) {
+	    return props(promises);
+	};
+	};
+
+
+/***/ },
+/* 89 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * The MIT License (MIT)
+	 * 
+	 * Copyright (c) 2014 Petka Antonov
+	 * 
+	 * Permission is hereby granted, free of charge, to any person obtaining a copy
+	 * of this software and associated documentation files (the "Software"), to deal
+	 * in the Software without restriction, including without limitation the rights
+	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	 * copies of the Software, and to permit persons to whom the Software is
+	 * furnished to do so, subject to the following conditions:</p>
+	 * 
+	 * The above copyright notice and this permission notice shall be included in
+	 * all copies or substantial portions of the Software.
+	 * 
+	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	 * THE SOFTWARE.
+	 * 
+	 */
+	"use strict";
+	module.exports = function(Promise,
+	                          PromiseArray,
+	                          apiRejection,
+	                          tryConvertToPromise,
+	                          INTERNAL) {
+	var util = __webpack_require__(68);
+	var tryCatch4 = util.tryCatch4;
+	var tryCatch3 = util.tryCatch3;
+	var errorObj = util.errorObj;
+	function ReductionPromiseArray(promises, fn, accum, _each) {
+	    this.constructor$(promises);
+	    this._preservedValues = _each === INTERNAL ? [] : null;
+	    this._zerothIsAccum = (accum === undefined);
+	    this._gotAccum = false;
+	    this._reducingIndex = (this._zerothIsAccum ? 1 : 0);
+	    this._valuesPhase = undefined;
+
+	    var maybePromise = tryConvertToPromise(accum, undefined);
+	    var rejected = false;
+	    var isPromise = maybePromise instanceof Promise;
+	    if (isPromise) {
+	        maybePromise = maybePromise._target();
+	        if (maybePromise._isPending()) {
+	            maybePromise._proxyPromiseArray(this, -1);
+	        } else if (maybePromise._isFulfilled()) {
+	            accum = maybePromise._value();
+	            this._gotAccum = true;
+	        } else {
+	            maybePromise._unsetRejectionIsUnhandled();
+	            this._reject(maybePromise._reason());
+	            rejected = true;
+	        }
+	    }
+	    if (!(isPromise || this._zerothIsAccum)) this._gotAccum = true;
+	    this._callback = fn;
+	    this._accum = accum;
+	    if (!rejected) this._init$(undefined, -5);
+	}
+	util.inherits(ReductionPromiseArray, PromiseArray);
+
+	ReductionPromiseArray.prototype._init = function () {};
+
+	ReductionPromiseArray.prototype._resolveEmptyArray = function () {
+	    if (this._gotAccum || this._zerothIsAccum) {
+	        this._resolve(this._preservedValues !== null
+	                        ? [] : this._accum);
+	    }
+	};
+
+	ReductionPromiseArray.prototype._promiseFulfilled = function (value, index) {
+	    var values = this._values;
+	    values[index] = value;
+	    var length = this.length();
+	    var preservedValues = this._preservedValues;
+	    var isEach = preservedValues !== null;
+	    var gotAccum = this._gotAccum;
+	    var valuesPhase = this._valuesPhase;
+	    var valuesPhaseIndex;
+	    if (!valuesPhase) {
+	        valuesPhase = this._valuesPhase = Array(length);
+	        for (valuesPhaseIndex=0; valuesPhaseIndex<length; ++valuesPhaseIndex) {
+	            valuesPhase[valuesPhaseIndex] = 0;
+	        }
+	    }
+	    valuesPhaseIndex = valuesPhase[index];
+
+	    if (index === 0 && this._zerothIsAccum) {
+	        if (!gotAccum) {
+	            this._accum = value;
+	            this._gotAccum = gotAccum = true;
+	        }
+	        valuesPhase[index] = ((valuesPhaseIndex === 0)
+	            ? 1 : 2);
+	    } else if (index === -1) {
+	        if (!gotAccum) {
+	            this._accum = value;
+	            this._gotAccum = gotAccum = true;
+	        }
+	    } else {
+	        if (valuesPhaseIndex === 0) {
+	            valuesPhase[index] = 1;
+	        }
+	        else {
+	            valuesPhase[index] = 2;
+	            if (gotAccum) {
+	                this._accum = value;
+	            }
+	        }
+	    }
+	    if (!gotAccum) return;
+
+	    var callback = this._callback;
+	    var receiver = this._promise._boundTo;
+	    var ret;
+
+	    for (var i = this._reducingIndex; i < length; ++i) {
+	        valuesPhaseIndex = valuesPhase[i];
+	        if (valuesPhaseIndex === 2) {
+	            this._reducingIndex = i + 1;
+	            continue;
+	        }
+	        if (valuesPhaseIndex !== 1) return;
+	        value = values[i];
+	        if (value instanceof Promise) {
+	            value = value._target();
+	            if (value._isFulfilled()) {
+	                value = value._value();
+	            } else if (value._isPending()) {
+	                return;
+	            } else {
+	                value._unsetRejectionIsUnhandled();
+	                return this._reject(value._reason());
+	            }
+	        }
+
+	        if (isEach) {
+	            preservedValues.push(value);
+	            ret = tryCatch3(callback, receiver, value, i, length);
+	        }
+	        else {
+	            ret = tryCatch4(callback, receiver, this._accum, value, i, length);
+	        }
+
+	        if (ret === errorObj) return this._reject(ret.e);
+
+	        var maybePromise = tryConvertToPromise(ret, this._promise);
+	        if (maybePromise instanceof Promise) {
+	            maybePromise = maybePromise._target();
+	            if (maybePromise._isPending()) {
+	                valuesPhase[i] = 4;
+	                return maybePromise._proxyPromiseArray(this, i);
+	            } else if (maybePromise._isFulfilled()) {
+	                ret = maybePromise._value();
+	            } else {
+	                maybePromise._unsetRejectionIsUnhandled();
+	                return this._reject(maybePromise._reason());
+	            }
+	        }
+
+	        this._reducingIndex = i + 1;
+	        this._accum = ret;
+	    }
+
+	    if (this._reducingIndex < length) return;
+	    this._resolve(isEach ? preservedValues : this._accum);
+	};
+
+	function reduce(promises, fn, initialValue, _each) {
+	    if (typeof fn !== "function") return apiRejection("fn must be a function\u000a\u000a    See http://goo.gl/916lJJ\u000a");
+	    var array = new ReductionPromiseArray(promises, fn, initialValue, _each);
+	    return array.promise();
+	}
+
+	Promise.prototype.reduce = function (fn, initialValue) {
+	    return reduce(this, fn, initialValue, null);
+	};
+
+	Promise.reduce = function (promises, fn, initialValue, _each) {
+	    return reduce(promises, fn, initialValue, _each);
+	};
+	};
+
+
+/***/ },
+/* 90 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * The MIT License (MIT)
+	 * 
+	 * Copyright (c) 2014 Petka Antonov
+	 * 
+	 * Permission is hereby granted, free of charge, to any person obtaining a copy
+	 * of this software and associated documentation files (the "Software"), to deal
+	 * in the Software without restriction, including without limitation the rights
+	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	 * copies of the Software, and to permit persons to whom the Software is
+	 * furnished to do so, subject to the following conditions:</p>
+	 * 
+	 * The above copyright notice and this permission notice shall be included in
+	 * all copies or substantial portions of the Software.
+	 * 
+	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	 * THE SOFTWARE.
+	 * 
+	 */
+	"use strict";
+	module.exports =
+	    function(Promise, PromiseArray) {
+	var PromiseInspection = Promise.PromiseInspection;
+	var util = __webpack_require__(68);
+
+	function SettledPromiseArray(values) {
+	    this.constructor$(values);
+	}
+	util.inherits(SettledPromiseArray, PromiseArray);
+
+	SettledPromiseArray.prototype._promiseResolved = function (index, inspection) {
+	    this._values[index] = inspection;
+	    var totalResolved = ++this._totalResolved;
+	    if (totalResolved >= this._length) {
+	        this._resolve(this._values);
+	    }
+	};
+
+	SettledPromiseArray.prototype._promiseFulfilled = function (value, index) {
+	    var ret = new PromiseInspection();
+	    ret._bitField = 268435456;
+	    ret._settledValue = value;
+	    this._promiseResolved(index, ret);
+	};
+	SettledPromiseArray.prototype._promiseRejected = function (reason, index) {
+	    var ret = new PromiseInspection();
+	    ret._bitField = 134217728;
+	    ret._settledValue = reason;
+	    this._promiseResolved(index, ret);
+	};
+
+	Promise.settle = function (promises) {
+	    return new SettledPromiseArray(promises).promise();
+	};
+
+	Promise.prototype.settle = function () {
+	    return new SettledPromiseArray(this).promise();
+	};
+	};
+
+
+/***/ },
+/* 91 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * The MIT License (MIT)
+	 * 
+	 * Copyright (c) 2014 Petka Antonov
+	 * 
+	 * Permission is hereby granted, free of charge, to any person obtaining a copy
+	 * of this software and associated documentation files (the "Software"), to deal
+	 * in the Software without restriction, including without limitation the rights
+	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	 * copies of the Software, and to permit persons to whom the Software is
+	 * furnished to do so, subject to the following conditions:</p>
+	 * 
+	 * The above copyright notice and this permission notice shall be included in
+	 * all copies or substantial portions of the Software.
+	 * 
+	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	 * THE SOFTWARE.
+	 * 
+	 */
+	"use strict";
+	module.exports =
+	function(Promise, PromiseArray, apiRejection) {
+	var util = __webpack_require__(68);
+	var RangeError = __webpack_require__(70).RangeError;
+	var AggregateError = __webpack_require__(70).AggregateError;
+	var isArray = util.isArray;
+
+
+	function SomePromiseArray(values) {
+	    this.constructor$(values);
+	    this._howMany = 0;
+	    this._unwrap = false;
+	    this._initialized = false;
+	}
+	util.inherits(SomePromiseArray, PromiseArray);
+
+	SomePromiseArray.prototype._init = function () {
+	    if (!this._initialized) {
+	        return;
+	    }
+	    if (this._howMany === 0) {
+	        this._resolve([]);
+	        return;
+	    }
+	    this._init$(undefined, -5);
+	    var isArrayResolved = isArray(this._values);
+	    if (!this._isResolved() &&
+	        isArrayResolved &&
+	        this._howMany > this._canPossiblyFulfill()) {
+	        this._reject(this._getRangeError(this.length()));
+	    }
+	};
+
+	SomePromiseArray.prototype.init = function () {
+	    this._initialized = true;
+	    this._init();
+	};
+
+	SomePromiseArray.prototype.setUnwrap = function () {
+	    this._unwrap = true;
+	};
+
+	SomePromiseArray.prototype.howMany = function () {
+	    return this._howMany;
+	};
+
+	SomePromiseArray.prototype.setHowMany = function (count) {
+	    if (this._isResolved()) return;
+	    this._howMany = count;
+	};
+
+	SomePromiseArray.prototype._promiseFulfilled = function (value) {
+	    this._addFulfilled(value);
+	    if (this._fulfilled() === this.howMany()) {
+	        this._values.length = this.howMany();
+	        if (this.howMany() === 1 && this._unwrap) {
+	            this._resolve(this._values[0]);
+	        } else {
+	            this._resolve(this._values);
+	        }
+	    }
+
+	};
+	SomePromiseArray.prototype._promiseRejected = function (reason) {
+	    this._addRejected(reason);
+	    if (this.howMany() > this._canPossiblyFulfill()) {
+	        var e = new AggregateError();
+	        for (var i = this.length(); i < this._values.length; ++i) {
+	            e.push(this._values[i]);
+	        }
+	        this._reject(e);
+	    }
+	};
+
+	SomePromiseArray.prototype._fulfilled = function () {
+	    return this._totalResolved;
+	};
+
+	SomePromiseArray.prototype._rejected = function () {
+	    return this._values.length - this.length();
+	};
+
+	SomePromiseArray.prototype._addRejected = function (reason) {
+	    this._values.push(reason);
+	};
+
+	SomePromiseArray.prototype._addFulfilled = function (value) {
+	    this._values[this._totalResolved++] = value;
+	};
+
+	SomePromiseArray.prototype._canPossiblyFulfill = function () {
+	    return this.length() - this._rejected();
+	};
+
+	SomePromiseArray.prototype._getRangeError = function (count) {
+	    var message = "Input array must contain at least " +
+	            this._howMany + " items but contains only " + count + " items";
+	    return new RangeError(message);
+	};
+
+	SomePromiseArray.prototype._resolveEmptyArray = function () {
+	    this._reject(this._getRangeError(0));
+	};
+
+	function some(promises, howMany) {
+	    if ((howMany | 0) !== howMany || howMany < 0) {
+	        return apiRejection("expecting a positive integer\u000a\u000a    See http://goo.gl/1wAmHx\u000a");
+	    }
+	    var ret = new SomePromiseArray(promises);
+	    var promise = ret.promise();
+	    if (promise.isRejected()) {
+	        return promise;
+	    }
+	    ret.setHowMany(howMany);
+	    ret.init();
+	    return promise;
+	}
+
+	Promise.some = function (promises, howMany) {
+	    return some(promises, howMany);
+	};
+
+	Promise.prototype.some = function (howMany) {
+	    return some(this, howMany);
+	};
+
+	Promise._SomePromiseArray = SomePromiseArray;
+	};
+
+
+/***/ },
+/* 92 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * The MIT License (MIT)
+	 * 
+	 * Copyright (c) 2014 Petka Antonov
+	 * 
+	 * Permission is hereby granted, free of charge, to any person obtaining a copy
+	 * of this software and associated documentation files (the "Software"), to deal
+	 * in the Software without restriction, including without limitation the rights
+	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	 * copies of the Software, and to permit persons to whom the Software is
+	 * furnished to do so, subject to the following conditions:</p>
+	 * 
+	 * The above copyright notice and this permission notice shall be included in
+	 * all copies or substantial portions of the Software.
+	 * 
+	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	 * THE SOFTWARE.
+	 * 
+	 */
+	"use strict";
+	module.exports = function(Promise, PromiseArray) {
+	var util = __webpack_require__(68);
+	var async = __webpack_require__(69);
+	var errors = __webpack_require__(70);
+	var tryCatch1 = util.tryCatch1;
+	var errorObj = util.errorObj;
+
+	Promise.prototype.progressed = function (handler) {
+	    return this._then(undefined, undefined, handler, undefined, undefined);
+	};
+
+	Promise.prototype._progress = function (progressValue) {
+	    if (this._isFollowingOrFulfilledOrRejected()) return;
+	    this._target()._progressUnchecked(progressValue);
+
+	};
+
+	Promise.prototype._progressHandlerAt = function (index) {
+	    return index === 0
+	        ? this._progressHandler0
+	        : this[(index << 2) + index - 5 + 2];
+	};
+
+	Promise.prototype._doProgressWith = function (progression) {
+	    var progressValue = progression.value;
+	    var handler = progression.handler;
+	    var promise = progression.promise;
+	    var receiver = progression.receiver;
+
+	    var ret = tryCatch1(handler, receiver, progressValue);
+	    if (ret === errorObj) {
+	        if (ret.e != null &&
+	            ret.e.name !== "StopProgressPropagation") {
+	            var trace = errors.canAttachTrace(ret.e)
+	                ? ret.e : new Error(ret.e + "");
+	            promise._attachExtraTrace(trace);
+	            promise._progress(ret.e);
+	        }
+	    } else if (ret instanceof Promise) {
+	        ret._then(promise._progress, null, null, promise, undefined);
+	    } else {
+	        promise._progress(ret);
+	    }
+	};
+
+
+	Promise.prototype._progressUnchecked = function (progressValue) {
+	    var len = this._length();
+	    var progress = this._progress;
+	    for (var i = 0; i < len; i++) {
+	        var handler = this._progressHandlerAt(i);
+	        var promise = this._promiseAt(i);
+	        if (!(promise instanceof Promise)) {
+	            var receiver = this._receiverAt(i);
+	            if (typeof handler === "function") {
+	                handler.call(receiver, progressValue, promise);
+	            } else if (receiver instanceof PromiseArray &&
+	                       !receiver._isResolved()) {
+	                receiver._promiseProgressed(progressValue, promise);
+	            }
+	            continue;
+	        }
+
+	        if (typeof handler === "function") {
+	            async.invoke(this._doProgressWith, this, {
+	                handler: handler,
+	                promise: promise,
+	                receiver: this._receiverAt(i),
+	                value: progressValue
+	            });
+	        } else {
+	            async.invoke(progress, promise, progressValue);
+	        }
+	    }
+	};
+	};
+
+
+/***/ },
+/* 93 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * The MIT License (MIT)
+	 * 
+	 * Copyright (c) 2014 Petka Antonov
+	 * 
+	 * Permission is hereby granted, free of charge, to any person obtaining a copy
+	 * of this software and associated documentation files (the "Software"), to deal
+	 * in the Software without restriction, including without limitation the rights
+	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	 * copies of the Software, and to permit persons to whom the Software is
+	 * furnished to do so, subject to the following conditions:</p>
+	 * 
+	 * The above copyright notice and this permission notice shall be included in
+	 * all copies or substantial portions of the Software.
+	 * 
+	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	 * THE SOFTWARE.
+	 * 
+	 */
+	"use strict";
+	module.exports = function(Promise, INTERNAL) {
+	var errors = __webpack_require__(70);
+	var canAttachTrace = errors.canAttachTrace;
+	var async = __webpack_require__(69);
+	var CancellationError = errors.CancellationError;
+
+	Promise.prototype._cancel = function (reason) {
+	    if (!this.isCancellable()) return this;
+	    var parent;
+	    var promiseToReject = this;
+	    while ((parent = promiseToReject._cancellationParent) !== undefined &&
+	        parent.isCancellable()) {
+	        promiseToReject = parent;
+	    }
+	    this._unsetCancellable();
+	    promiseToReject._attachExtraTrace(reason);
+	    promiseToReject._target()._rejectUnchecked(reason);
+	};
+
+	Promise.prototype.cancel = function (reason) {
+	    if (!this.isCancellable()) return this;
+	    reason = reason !== undefined
+	        ? (canAttachTrace(reason) ? reason : new Error(reason + ""))
+	        : new CancellationError();
+	    async.invokeLater(this._cancel, this, reason);
+	    return this;
+	};
+
+	Promise.prototype.cancellable = function () {
+	    if (this._cancellable()) return this;
+	    this._setCancellable();
+	    this._cancellationParent = undefined;
+	    return this;
+	};
+
+	Promise.prototype.uncancellable = function () {
+	    var ret = new Promise(INTERNAL);
+	    ret._propagateFrom(this, 2 | 4);
+	    ret._follow(this);
+	    ret._unsetCancellable();
+	    return ret;
+	};
+
+	Promise.prototype.fork = function (didFulfill, didReject, didProgress) {
+	    var ret = this._then(didFulfill, didReject, didProgress,
+	                         undefined, undefined);
+
+	    ret._setCancellable();
+	    ret._cancellationParent = undefined;
+	    return ret;
+	};
+	};
+
+
+/***/ },
+/* 94 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * The MIT License (MIT)
+	 * 
+	 * Copyright (c) 2014 Petka Antonov
+	 * 
+	 * Permission is hereby granted, free of charge, to any person obtaining a copy
+	 * of this software and associated documentation files (the "Software"), to deal
+	 * in the Software without restriction, including without limitation the rights
+	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	 * copies of the Software, and to permit persons to whom the Software is
+	 * furnished to do so, subject to the following conditions:</p>
+	 * 
+	 * The above copyright notice and this permission notice shall be included in
+	 * all copies or substantial portions of the Software.
+	 * 
+	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	 * THE SOFTWARE.
+	 * 
+	 */
+	"use strict";
+	module.exports = function(Promise, INTERNAL) {
+	var PromiseMap = Promise.map;
+
+	Promise.prototype.filter = function (fn, options) {
+	    return PromiseMap(this, fn, options, INTERNAL);
+	};
+
+	Promise.filter = function (promises, fn, options) {
+	    return PromiseMap(promises, fn, options, INTERNAL);
+	};
+	};
+
+
+/***/ },
+/* 95 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * The MIT License (MIT)
+	 * 
+	 * Copyright (c) 2014 Petka Antonov
+	 * 
+	 * Permission is hereby granted, free of charge, to any person obtaining a copy
+	 * of this software and associated documentation files (the "Software"), to deal
+	 * in the Software without restriction, including without limitation the rights
+	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	 * copies of the Software, and to permit persons to whom the Software is
+	 * furnished to do so, subject to the following conditions:</p>
+	 * 
+	 * The above copyright notice and this permission notice shall be included in
+	 * all copies or substantial portions of the Software.
+	 * 
+	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	 * THE SOFTWARE.
+	 * 
+	 */
+	"use strict";
+	module.exports = function(Promise) {
+	var SomePromiseArray = Promise._SomePromiseArray;
+	function any(promises) {
+	    var ret = new SomePromiseArray(promises);
+	    var promise = ret.promise();
+	    if (promise.isRejected()) {
+	        return promise;
+	    }
+	    ret.setHowMany(1);
+	    ret.setUnwrap();
+	    ret.init();
+	    return promise;
+	}
+
+	Promise.any = function (promises) {
+	    return any(promises);
+	};
+
+	Promise.prototype.any = function () {
+	    return any(this);
+	};
+
+	};
+
+
+/***/ },
+/* 96 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * The MIT License (MIT)
+	 * 
+	 * Copyright (c) 2014 Petka Antonov
+	 * 
+	 * Permission is hereby granted, free of charge, to any person obtaining a copy
+	 * of this software and associated documentation files (the "Software"), to deal
+	 * in the Software without restriction, including without limitation the rights
+	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	 * copies of the Software, and to permit persons to whom the Software is
+	 * furnished to do so, subject to the following conditions:</p>
+	 * 
+	 * The above copyright notice and this permission notice shall be included in
+	 * all copies or substantial portions of the Software.
+	 * 
+	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	 * THE SOFTWARE.
+	 * 
+	 */
+	"use strict";
+	module.exports = function(Promise, INTERNAL) {
+	var PromiseReduce = Promise.reduce;
+
+	Promise.prototype.each = function (fn) {
+	    return PromiseReduce(this, fn, null, INTERNAL);
+	};
+
+	Promise.each = function (promises, fn) {
+	    return PromiseReduce(promises, fn, null, INTERNAL);
+	};
+	};
+
+
+/***/ },
+/* 97 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * The MIT License (MIT)
+	 * 
+	 * Copyright (c) 2014 Petka Antonov
+	 * 
+	 * Permission is hereby granted, free of charge, to any person obtaining a copy
+	 * of this software and associated documentation files (the "Software"), to deal
+	 * in the Software without restriction, including without limitation the rights
+	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	 * copies of the Software, and to permit persons to whom the Software is
+	 * furnished to do so, subject to the following conditions:</p>
+	 * 
+	 * The above copyright notice and this permission notice shall be included in
+	 * all copies or substantial portions of the Software.
+	 * 
+	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	 * THE SOFTWARE.
+	 * 
+	 */
+	"use strict";
+	module.exports = function (Promise, apiRejection, tryConvertToPromise) {
+	    var TypeError = __webpack_require__(70).TypeError;
+	    var inherits = __webpack_require__(68).inherits;
+	    var PromiseInspection = Promise.PromiseInspection;
+
+	    function inspectionMapper(inspections) {
+	        var len = inspections.length;
+	        for (var i = 0; i < len; ++i) {
+	            var inspection = inspections[i];
+	            if (inspection.isRejected()) {
+	                return Promise.reject(inspection.error());
+	            }
+	            inspections[i] = inspection._settledValue;
+	        }
+	        return inspections;
+	    }
+
+	    function thrower(e) {
+	        setTimeout(function(){throw e;}, 0);
+	    }
+
+	    function castPreservingDisposable(thenable) {
+	        var maybePromise = tryConvertToPromise(thenable, undefined);
+	        if (maybePromise !== thenable &&
+	            typeof thenable._isDisposable === "function" &&
+	            typeof thenable._getDisposer === "function" &&
+	            thenable._isDisposable()) {
+	            maybePromise._setDisposable(thenable._getDisposer());
+	        }
+	        return maybePromise;
+	    }
+	    function dispose(resources, inspection) {
+	        var i = 0;
+	        var len = resources.length;
+	        var ret = Promise.defer();
+	        function iterator() {
+	            if (i >= len) return ret.resolve();
+	            var maybePromise = castPreservingDisposable(resources[i++]);
+	            if (maybePromise instanceof Promise &&
+	                maybePromise._isDisposable()) {
+	                try {
+	                    maybePromise = tryConvertToPromise(
+	                        maybePromise._getDisposer().tryDispose(inspection),
+	                        undefined);
+	                } catch (e) {
+	                    return thrower(e);
+	                }
+	                if (maybePromise instanceof Promise) {
+	                    return maybePromise._then(iterator, thrower,
+	                                              null, null, null);
+	                }
+	            }
+	            iterator();
+	        }
+	        iterator();
+	        return ret.promise;
+	    }
+
+	    function disposerSuccess(value) {
+	        var inspection = new PromiseInspection();
+	        inspection._settledValue = value;
+	        inspection._bitField = 268435456;
+	        return dispose(this, inspection).thenReturn(value);
+	    }
+
+	    function disposerFail(reason) {
+	        var inspection = new PromiseInspection();
+	        inspection._settledValue = reason;
+	        inspection._bitField = 134217728;
+	        return dispose(this, inspection).thenThrow(reason);
+	    }
+
+	    function Disposer(data, promise) {
+	        this._data = data;
+	        this._promise = promise;
+	    }
+
+	    Disposer.prototype.data = function () {
+	        return this._data;
+	    };
+
+	    Disposer.prototype.promise = function () {
+	        return this._promise;
+	    };
+
+	    Disposer.prototype.resource = function () {
+	        if (this.promise()._isFulfilled()) {
+	            return this.promise()._value();
+	        }
+	        return null;
+	    };
+
+	    Disposer.prototype.tryDispose = function(inspection) {
+	        var resource = this.resource();
+	        var ret = resource !== null
+	            ? this.doDispose(resource, inspection) : null;
+	        this._promise._unsetDisposable();
+	        this._data = this._promise = null;
+	        return ret;
+	    };
+
+	    Disposer.isDisposer = function (d) {
+	        return (d != null &&
+	                typeof d.resource === "function" &&
+	                typeof d.tryDispose === "function");
+	    };
+
+	    function FunctionDisposer(fn, promise) {
+	        this.constructor$(fn, promise);
+	    }
+	    inherits(FunctionDisposer, Disposer);
+
+	    FunctionDisposer.prototype.doDispose = function (resource, inspection) {
+	        var fn = this.data();
+	        return fn.call(resource, resource, inspection);
+	    };
+
+	    Promise.using = function () {
+	        var len = arguments.length;
+	        if (len < 2) return apiRejection(
+	                        "you must pass at least 2 arguments to Promise.using");
+	        var fn = arguments[len - 1];
+	        if (typeof fn !== "function") return apiRejection("fn must be a function\u000a\u000a    See http://goo.gl/916lJJ\u000a");
+	        len--;
+	        var resources = new Array(len);
+	        for (var i = 0; i < len; ++i) {
+	            var resource = arguments[i];
+	            if (Disposer.isDisposer(resource)) {
+	                var disposer = resource;
+	                resource = resource.promise();
+	                resource._setDisposable(disposer);
+	            }
+	            resources[i] = resource;
+	        }
+
+	        return Promise.settle(resources)
+	            .then(inspectionMapper)
+	            .spread(fn)
+	            ._then(
+	                disposerSuccess, disposerFail, undefined, resources, undefined);
+	    };
+
+	    Promise.prototype._setDisposable = function (disposer) {
+	        this._bitField = this._bitField | 262144;
+	        this._disposer = disposer;
+	    };
+
+	    Promise.prototype._isDisposable = function () {
+	        return (this._bitField & 262144) > 0;
+	    };
+
+	    Promise.prototype._getDisposer = function () {
+	        return this._disposer;
+	    };
+
+	    Promise.prototype._unsetDisposable = function () {
+	        this._bitField = this._bitField & (~262144);
+	        this._disposer = undefined;
+	    };
+
+	    Promise.prototype.disposer = function (fn) {
+	        if (typeof fn === "function") {
+	            return new FunctionDisposer(fn, this._target());
+	        }
+	        throw new TypeError();
+	    };
+
+	};
+
+
+/***/ },
+/* 98 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -21806,7 +25955,7 @@
 	}));
 
 /***/ },
-/* 70 */
+/* 99 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Priority;
@@ -21823,7 +25972,7 @@
 
 
 /***/ },
-/* 71 */
+/* 100 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {var __extends = this.__extends || function (d, b) {
@@ -21832,11 +25981,11 @@
 	    __.prototype = b.prototype;
 	    d.prototype = new __();
 	};
-	var uuid = __webpack_require__(222);
-	var _ = __webpack_require__(72);
-	var Physics = __webpack_require__(69);
+	var uuid = __webpack_require__(221);
+	var _ = __webpack_require__(101);
+	var Physics = __webpack_require__(98);
 	global.EventEmitter = __webpack_require__(24).EventEmitter;
-	var RemoveEntity = __webpack_require__(171);
+	var RemoveEntity = __webpack_require__(173);
 	var Entity = (function (_super) {
 	    __extends(Entity, _super);
 	    function Entity() {
@@ -21935,7 +26084,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 72 */
+/* 101 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(module, global) {/**
@@ -29096,4117 +33245,10 @@
 	  }
 	}.call(this));
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(223)(module), (function() { return this; }())))
-
-/***/ },
-/* 73 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * The MIT License (MIT)
-	 * 
-	 * Copyright (c) 2014 Petka Antonov
-	 * 
-	 * Permission is hereby granted, free of charge, to any person obtaining a copy
-	 * of this software and associated documentation files (the "Software"), to deal
-	 * in the Software without restriction, including without limitation the rights
-	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	 * copies of the Software, and to permit persons to whom the Software is
-	 * furnished to do so, subject to the following conditions:</p>
-	 * 
-	 * The above copyright notice and this permission notice shall be included in
-	 * all copies or substantial portions of the Software.
-	 * 
-	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	 * THE SOFTWARE.
-	 * 
-	 */
-	"use strict";
-	var es5 = __webpack_require__(172);
-	var haveGetters = (function(){
-	    try {
-	        var o = {};
-	        es5.defineProperty(o, "f", {
-	            get: function () {
-	                return 3;
-	            }
-	        });
-	        return o.f === 3;
-	    }
-	    catch (e) {
-	        return false;
-	    }
-
-	})();
-	var canEvaluate = typeof navigator == "undefined";
-	var errorObj = {e: {}};
-	function tryCatch1(fn, receiver, arg) {
-	    try { return fn.call(receiver, arg); }
-	    catch (e) {
-	        errorObj.e = e;
-	        return errorObj;
-	    }
-	}
-
-	function tryCatch2(fn, receiver, arg, arg2) {
-	    try { return fn.call(receiver, arg, arg2); }
-	    catch (e) {
-	        errorObj.e = e;
-	        return errorObj;
-	    }
-	}
-
-	function tryCatch3(fn, receiver, arg, arg2, arg3) {
-	    try { return fn.call(receiver, arg, arg2, arg3); }
-	    catch (e) {
-	        errorObj.e = e;
-	        return errorObj;
-	    }
-	}
-
-	function tryCatch4(fn, receiver, arg, arg2, arg3, arg4) {
-	    try { return fn.call(receiver, arg, arg2, arg3, arg4); }
-	    catch (e) {
-	        errorObj.e = e;
-	        return errorObj;
-	    }
-	}
-
-	function tryCatchApply(fn, args, receiver) {
-	    try { return fn.apply(receiver, args); }
-	    catch (e) {
-	        errorObj.e = e;
-	        return errorObj;
-	    }
-	}
-
-	var inherits = function(Child, Parent) {
-	    var hasProp = {}.hasOwnProperty;
-
-	    function T() {
-	        this.constructor = Child;
-	        this.constructor$ = Parent;
-	        for (var propertyName in Parent.prototype) {
-	            if (hasProp.call(Parent.prototype, propertyName) &&
-	                propertyName.charAt(propertyName.length-1) !== "$"
-	           ) {
-	                this[propertyName + "$"] = Parent.prototype[propertyName];
-	            }
-	        }
-	    }
-	    T.prototype = Parent.prototype;
-	    Child.prototype = new T();
-	    return Child.prototype;
-	};
-
-	function asString(val) {
-	    return typeof val === "string" ? val : ("" + val);
-	}
-
-	function isPrimitive(val) {
-	    return val == null || val === true || val === false ||
-	        typeof val === "string" || typeof val === "number";
-
-	}
-
-	function isObject(value) {
-	    return !isPrimitive(value);
-	}
-
-	function maybeWrapAsError(maybeError) {
-	    if (!isPrimitive(maybeError)) return maybeError;
-
-	    return new Error(asString(maybeError));
-	}
-
-	function withAppended(target, appendee) {
-	    var len = target.length;
-	    var ret = new Array(len + 1);
-	    var i;
-	    for (i = 0; i < len; ++i) {
-	        ret[i] = target[i];
-	    }
-	    ret[i] = appendee;
-	    return ret;
-	}
-
-	function getDataPropertyOrDefault(obj, key, defaultValue) {
-	    if (es5.isES5) {
-	        var desc = Object.getOwnPropertyDescriptor(obj, key);
-	        if (desc != null) {
-	            return desc.get == null && desc.set == null
-	                    ? desc.value
-	                    : defaultValue;
-	        }
-	    } else {
-	        return {}.hasOwnProperty.call(obj, key) ? obj[key] : undefined;
-	    }
-	}
-
-	function notEnumerableProp(obj, name, value) {
-	    if (isPrimitive(obj)) return obj;
-	    var descriptor = {
-	        value: value,
-	        configurable: true,
-	        enumerable: false,
-	        writable: true
-	    };
-	    es5.defineProperty(obj, name, descriptor);
-	    return obj;
-	}
-
-
-	var wrapsPrimitiveReceiver = (function() {
-	    return this !== "string";
-	}).call("string");
-
-	function thrower(r) {
-	    throw r;
-	}
-
-	var inheritedDataKeys = (function() {
-	    if (es5.isES5) {
-	        return function(obj, opts) {
-	            var ret = [];
-	            var visitedKeys = Object.create(null);
-	            var getKeys = Object(opts).includeHidden
-	                ? Object.getOwnPropertyNames
-	                : Object.keys;
-	            while (obj != null) {
-	                var keys;
-	                try {
-	                    keys = getKeys(obj);
-	                } catch (e) {
-	                    return ret;
-	                }
-	                for (var i = 0; i < keys.length; ++i) {
-	                    var key = keys[i];
-	                    if (visitedKeys[key]) continue;
-	                    visitedKeys[key] = true;
-	                    var desc = Object.getOwnPropertyDescriptor(obj, key);
-	                    if (desc != null && desc.get == null && desc.set == null) {
-	                        ret.push(key);
-	                    }
-	                }
-	                obj = es5.getPrototypeOf(obj);
-	            }
-	            return ret;
-	        };
-	    } else {
-	        return function(obj) {
-	            var ret = [];
-	            /*jshint forin:false */
-	            for (var key in obj) {
-	                ret.push(key);
-	            }
-	            return ret;
-	        };
-	    }
-
-	})();
-
-	function isClass(fn) {
-	    try {
-	        if (typeof fn === "function") {
-	            var keys = es5.keys(fn.prototype);
-	            return keys.length > 0 &&
-	                   !(keys.length === 1 && keys[0] === "constructor");
-	        }
-	        return false;
-	    } catch (e) {
-	        return false;
-	    }
-	}
-
-	function toFastProperties(obj) {
-	    /*jshint -W027*/
-	    function f() {}
-	    f.prototype = obj;
-	    return f;
-	    eval(obj);
-	}
-
-	var rident = /^[a-z$_][a-z$_0-9]*$/i;
-	function isIdentifier(str) {
-	    return rident.test(str);
-	}
-
-	function filledRange(count, prefix, suffix) {
-	    var ret = new Array(count);
-	    for(var i = 0; i < count; ++i) {
-	        ret[i] = prefix + i + suffix;
-	    }
-	    return ret;
-	}
-
-	var ret = {
-	    isClass: isClass,
-	    isIdentifier: isIdentifier,
-	    inheritedDataKeys: inheritedDataKeys,
-	    getDataPropertyOrDefault: getDataPropertyOrDefault,
-	    thrower: thrower,
-	    isArray: es5.isArray,
-	    haveGetters: haveGetters,
-	    notEnumerableProp: notEnumerableProp,
-	    isPrimitive: isPrimitive,
-	    isObject: isObject,
-	    canEvaluate: canEvaluate,
-	    errorObj: errorObj,
-	    tryCatch1: tryCatch1,
-	    tryCatch2: tryCatch2,
-	    tryCatch3: tryCatch3,
-	    tryCatch4: tryCatch4,
-	    tryCatchApply: tryCatchApply,
-	    inherits: inherits,
-	    withAppended: withAppended,
-	    asString: asString,
-	    maybeWrapAsError: maybeWrapAsError,
-	    wrapsPrimitiveReceiver: wrapsPrimitiveReceiver,
-	    toFastProperties: toFastProperties,
-	    filledRange: filledRange,
-	    lastLineError: new Error()
-	};
-
-	module.exports = ret;
-
-
-/***/ },
-/* 74 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(process) {/**
-	 * The MIT License (MIT)
-	 * 
-	 * Copyright (c) 2014 Petka Antonov
-	 * 
-	 * Permission is hereby granted, free of charge, to any person obtaining a copy
-	 * of this software and associated documentation files (the "Software"), to deal
-	 * in the Software without restriction, including without limitation the rights
-	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	 * copies of the Software, and to permit persons to whom the Software is
-	 * furnished to do so, subject to the following conditions:</p>
-	 * 
-	 * The above copyright notice and this permission notice shall be included in
-	 * all copies or substantial portions of the Software.
-	 * 
-	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	 * THE SOFTWARE.
-	 * 
-	 */
-	"use strict";
-	var firstLineError = new Error();
-	var schedule = __webpack_require__(173);
-	var Queue = __webpack_require__(174);
-	var errorObj = __webpack_require__(73).errorObj;
-	var tryCatch1 = __webpack_require__(73).tryCatch1;
-	var _process = typeof process !== "undefined" ? process : undefined;
-
-	function Async() {
-	    this._isTickUsed = false;
-	    this._schedule = schedule;
-	    this._lateBuffer = new Queue(16);
-	    this._functionBuffer = new Queue(65536);
-	    var self = this;
-	    this.consumeFunctionBuffer = function () {
-	        self._consumeFunctionBuffer();
-	    };
-	}
-
-	Async.prototype.haveItemsQueued = function () {
-	    return this._functionBuffer.length() > 0;
-	};
-
-	Async.prototype._withDomain = function(fn) {
-	    if (_process !== undefined &&
-	        _process.domain != null &&
-	        !fn.domain) {
-	        fn = _process.domain.bind(fn);
-	    }
-	    return fn;
-	};
-
-	Async.prototype.invokeLater = function (fn, receiver, arg) {
-	    fn = this._withDomain(fn);
-	    this._lateBuffer.push(fn, receiver, arg);
-	    this._queueTick();
-	};
-
-	Async.prototype.invokeFirst = function (fn, receiver, arg) {
-	    fn = this._withDomain(fn);
-	    this._functionBuffer.unshift(fn, receiver, arg);
-	    this._queueTick();
-	};
-
-	Async.prototype.invoke = function (fn, receiver, arg) {
-	    fn = this._withDomain(fn);
-	    this._functionBuffer.push(fn, receiver, arg);
-	    this._queueTick();
-	};
-
-	Async.prototype._consumeFunctionBuffer = function () {
-	    var functionBuffer = this._functionBuffer;
-	    while (functionBuffer.length() > 0) {
-	        var fn = functionBuffer.shift();
-	        var receiver = functionBuffer.shift();
-	        var arg = functionBuffer.shift();
-	        fn.call(receiver, arg);
-	    }
-	    this._reset();
-	    this._consumeLateBuffer();
-	};
-
-	Async.prototype._consumeLateBuffer = function () {
-	    var buffer = this._lateBuffer;
-	    while(buffer.length() > 0) {
-	        var fn = buffer.shift();
-	        var receiver = buffer.shift();
-	        var arg = buffer.shift();
-	        var res = tryCatch1(fn, receiver, arg);
-	        if (res === errorObj) {
-	            this._queueTick();
-	            if (fn.domain != null) {
-	                fn.domain.emit("error", res.e);
-	            } else {
-	                throw res.e;
-	            }
-	        }
-	    }
-	};
-
-	Async.prototype._queueTick = function () {
-	    if (!this._isTickUsed) {
-	        this._isTickUsed = true;
-	        this._schedule(this.consumeFunctionBuffer);
-	    }
-	};
-
-	Async.prototype._reset = function () {
-	    this._isTickUsed = false;
-	};
-
-	module.exports = new Async();
-	module.exports.firstLineError = firstLineError;
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(112)))
-
-/***/ },
-/* 75 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * The MIT License (MIT)
-	 * 
-	 * Copyright (c) 2014 Petka Antonov
-	 * 
-	 * Permission is hereby granted, free of charge, to any person obtaining a copy
-	 * of this software and associated documentation files (the "Software"), to deal
-	 * in the Software without restriction, including without limitation the rights
-	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	 * copies of the Software, and to permit persons to whom the Software is
-	 * furnished to do so, subject to the following conditions:</p>
-	 * 
-	 * The above copyright notice and this permission notice shall be included in
-	 * all copies or substantial portions of the Software.
-	 * 
-	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	 * THE SOFTWARE.
-	 * 
-	 */
-	"use strict";
-	var Objectfreeze = __webpack_require__(172).freeze;
-	var propertyIsWritable = __webpack_require__(172).propertyIsWritable;
-	var util = __webpack_require__(73);
-	var inherits = util.inherits;
-	var notEnumerableProp = util.notEnumerableProp;
-
-	function markAsOriginatingFromRejection(e) {
-	    try {
-	        notEnumerableProp(e, "isOperational", true);
-	    }
-	    catch(ignore) {}
-	}
-
-	function originatesFromRejection(e) {
-	    if (e == null) return false;
-	    return ((e instanceof OperationalError) ||
-	        e["isOperational"] === true);
-	}
-
-	function isError(obj) {
-	    return obj instanceof Error;
-	}
-
-	function canAttachTrace(obj) {
-	    return isError(obj) && propertyIsWritable(obj, "stack");
-	}
-
-	function subError(nameProperty, defaultMessage) {
-	    function SubError(message) {
-	        if (!(this instanceof SubError)) return new SubError(message);
-	        notEnumerableProp(this, "message",
-	            typeof message === "string" ? message : defaultMessage);
-	        notEnumerableProp(this, "name", nameProperty);
-	        if (Error.captureStackTrace) {
-	            Error.captureStackTrace(this, this.constructor);
-	        }
-	    }
-	    inherits(SubError, Error);
-	    return SubError;
-	}
-
-	var _TypeError, _RangeError;
-	var CancellationError = subError("CancellationError", "cancellation error");
-	var TimeoutError = subError("TimeoutError", "timeout error");
-	var AggregateError = subError("AggregateError", "aggregate error");
-	try {
-	    _TypeError = TypeError;
-	    _RangeError = RangeError;
-	} catch(e) {
-	    _TypeError = subError("TypeError", "type error");
-	    _RangeError = subError("RangeError", "range error");
-	}
-
-	var methods = ("join pop push shift unshift slice filter forEach some " +
-	    "every map indexOf lastIndexOf reduce reduceRight sort reverse").split(" ");
-
-	for (var i = 0; i < methods.length; ++i) {
-	    if (typeof Array.prototype[methods[i]] === "function") {
-	        AggregateError.prototype[methods[i]] = Array.prototype[methods[i]];
-	    }
-	}
-
-	AggregateError.prototype.length = 0;
-	AggregateError.prototype["isOperational"] = true;
-	var level = 0;
-	AggregateError.prototype.toString = function() {
-	    var indent = Array(level * 4 + 1).join(" ");
-	    var ret = "\n" + indent + "AggregateError of:" + "\n";
-	    level++;
-	    indent = Array(level * 4 + 1).join(" ");
-	    for (var i = 0; i < this.length; ++i) {
-	        var str = this[i] === this ? "[Circular AggregateError]" : this[i] + "";
-	        var lines = str.split("\n");
-	        for (var j = 0; j < lines.length; ++j) {
-	            lines[j] = indent + lines[j];
-	        }
-	        str = lines.join("\n");
-	        ret += str + "\n";
-	    }
-	    level--;
-	    return ret;
-	};
-
-	function OperationalError(message) {
-	    notEnumerableProp(this, "name", "OperationalError");
-	    notEnumerableProp(this, "message", message);
-	    this.cause = message;
-	    this["isOperational"] = true;
-
-	    if (message instanceof Error) {
-	        notEnumerableProp(this, "message", message.message);
-	        notEnumerableProp(this, "stack", message.stack);
-	    } else if (Error.captureStackTrace) {
-	        Error.captureStackTrace(this, this.constructor);
-	    }
-
-	}
-	inherits(OperationalError, Error);
-
-	var key = "__BluebirdErrorTypes__";
-	var errorTypes = Error[key];
-	if (!errorTypes) {
-	    errorTypes = Objectfreeze({
-	        CancellationError: CancellationError,
-	        TimeoutError: TimeoutError,
-	        OperationalError: OperationalError,
-	        RejectionError: OperationalError,
-	        AggregateError: AggregateError
-	    });
-	    notEnumerableProp(Error, key, errorTypes);
-	}
-
-	module.exports = {
-	    Error: Error,
-	    TypeError: _TypeError,
-	    RangeError: _RangeError,
-	    CancellationError: errorTypes.CancellationError,
-	    OperationalError: errorTypes.OperationalError,
-	    TimeoutError: errorTypes.TimeoutError,
-	    AggregateError: errorTypes.AggregateError,
-	    originatesFromRejection: originatesFromRejection,
-	    markAsOriginatingFromRejection: markAsOriginatingFromRejection,
-	    canAttachTrace: canAttachTrace
-	};
-
-
-/***/ },
-/* 76 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * The MIT License (MIT)
-	 * 
-	 * Copyright (c) 2014 Petka Antonov
-	 * 
-	 * Permission is hereby granted, free of charge, to any person obtaining a copy
-	 * of this software and associated documentation files (the "Software"), to deal
-	 * in the Software without restriction, including without limitation the rights
-	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	 * copies of the Software, and to permit persons to whom the Software is
-	 * furnished to do so, subject to the following conditions:</p>
-	 * 
-	 * The above copyright notice and this permission notice shall be included in
-	 * all copies or substantial portions of the Software.
-	 * 
-	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	 * THE SOFTWARE.
-	 * 
-	 */
-	"use strict";
-	module.exports = function(Promise, INTERNAL) {
-	var util = __webpack_require__(73);
-	var canAttachTrace = __webpack_require__(75).canAttachTrace;
-	var errorObj = util.errorObj;
-	var isObject = util.isObject;
-
-	function getThen(obj) {
-	    try {
-	        return obj.then;
-	    }
-	    catch(e) {
-	        errorObj.e = e;
-	        return errorObj;
-	    }
-	}
-
-	function tryConvertToPromise(obj, traceParent) {
-	    if (isObject(obj)) {
-	        if (obj instanceof Promise) {
-	            return obj;
-	        }
-	        else if (isAnyBluebirdPromise(obj)) {
-	            var ret = new Promise(INTERNAL);
-	            ret._setTrace(undefined);
-	            obj._then(
-	                ret._fulfillUnchecked,
-	                ret._rejectUncheckedCheckError,
-	                ret._progressUnchecked,
-	                ret,
-	                null
-	            );
-	            return ret;
-	        }
-	        var then = getThen(obj);
-	        if (then === errorObj) {
-	            if (traceParent !== undefined && canAttachTrace(then.e)) {
-	                traceParent._attachExtraTrace(then.e);
-	            }
-	            return Promise.reject(then.e);
-	        } else if (typeof then === "function") {
-	            return doThenable(obj, then, traceParent);
-	        }
-	    }
-	    return obj;
-	}
-
-	var hasProp = {}.hasOwnProperty;
-	function isAnyBluebirdPromise(obj) {
-	    return hasProp.call(obj, "_promise0");
-	}
-
-	function doThenable(x, then, traceParent) {
-	    var resolver = Promise.defer();
-	    var called = false;
-	    try {
-	        then.call(
-	            x,
-	            resolveFromThenable,
-	            rejectFromThenable,
-	            progressFromThenable
-	        );
-	    } catch(e) {
-	        if (!called) {
-	            called = true;
-	            var trace = canAttachTrace(e) ? e : new Error(e + "");
-	            if (traceParent !== undefined) {
-	                traceParent._attachExtraTrace(trace);
-	            }
-	            resolver.promise._reject(e, trace);
-	        }
-	    }
-	    return resolver.promise;
-
-	    function resolveFromThenable(y) {
-	        if (called) return;
-	        called = true;
-
-	        if (x === y) {
-	            var e = Promise._makeSelfResolutionError();
-	            if (traceParent !== undefined) {
-	                traceParent._attachExtraTrace(e);
-	            }
-	            resolver.promise._reject(e, undefined);
-	            return;
-	        }
-	        resolver.resolve(y);
-	    }
-
-	    function rejectFromThenable(r) {
-	        if (called) return;
-	        called = true;
-	        var trace = canAttachTrace(r) ? r : new Error(r + "");
-	        if (traceParent !== undefined) {
-	            traceParent._attachExtraTrace(trace);
-	        }
-	        resolver.promise._reject(r, trace);
-	    }
-
-	    function progressFromThenable(v) {
-	        if (called) return;
-	        var promise = resolver.promise;
-	        if (typeof promise._progress === "function") {
-	            promise._progress(v);
-	        }
-	    }
-	}
-
-	return tryConvertToPromise;
-	};
-
-
-/***/ },
-/* 77 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * The MIT License (MIT)
-	 * 
-	 * Copyright (c) 2014 Petka Antonov
-	 * 
-	 * Permission is hereby granted, free of charge, to any person obtaining a copy
-	 * of this software and associated documentation files (the "Software"), to deal
-	 * in the Software without restriction, including without limitation the rights
-	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	 * copies of the Software, and to permit persons to whom the Software is
-	 * furnished to do so, subject to the following conditions:</p>
-	 * 
-	 * The above copyright notice and this permission notice shall be included in
-	 * all copies or substantial portions of the Software.
-	 * 
-	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	 * THE SOFTWARE.
-	 * 
-	 */
-	"use strict";
-	module.exports = function(Promise, INTERNAL, tryConvertToPromise) {
-	var canAttachTrace = __webpack_require__(75).canAttachTrace;
-	var util = __webpack_require__(73);
-	var isArray = util.isArray;
-
-	function toResolutionValue(val) {
-	    switch(val) {
-	    case -1: return undefined;
-	    case -2: return [];
-	    case -3: return {};
-	    }
-	}
-
-	function PromiseArray(values) {
-	    var promise = this._promise = new Promise(INTERNAL);
-	    var parent;
-	    if (values instanceof Promise) {
-	        parent = values;
-	        promise._propagateFrom(parent, 1 | 4);
-	    }
-	    promise._setTrace(parent);
-	    this._values = values;
-	    this._length = 0;
-	    this._totalResolved = 0;
-	    this._init(undefined, -2);
-	}
-	PromiseArray.prototype.length = function () {
-	    return this._length;
-	};
-
-	PromiseArray.prototype.promise = function () {
-	    return this._promise;
-	};
-
-	PromiseArray.prototype._init = function init(_, resolveValueIfEmpty) {
-
-	    var values = tryConvertToPromise(this._values, undefined);
-	    if (values instanceof Promise) {
-	        values._setBoundTo(this._promise._boundTo);
-	        values = values._target();
-	        this._values = values;
-	        if (values._isFulfilled()) {
-	            values = values._value();
-	            if (!isArray(values)) {
-	                var err = new Promise.TypeError("expecting an array, a promise or a thenable\u000a\u000a    See http://goo.gl/s8MMhc\u000a");
-	                this.__hardReject__(err);
-	                return;
-	            }
-	        } else if (values._isPending()) {
-	            values._then(
-	                init,
-	                this._reject,
-	                undefined,
-	                this,
-	                resolveValueIfEmpty
-	           );
-	            return;
-	        } else {
-	            values._unsetRejectionIsUnhandled();
-	            this._reject(values._reason());
-	            return;
-	        }
-	    } else if (!isArray(values)) {
-	        var err = new Promise.TypeError("expecting an array, a promise or a thenable\u000a\u000a    See http://goo.gl/s8MMhc\u000a");
-	        this.__hardReject__(err);
-	        return;
-	    }
-
-	    if (values.length === 0) {
-	        if (resolveValueIfEmpty === -5) {
-	            this._resolveEmptyArray();
-	        }
-	        else {
-	            this._resolve(toResolutionValue(resolveValueIfEmpty));
-	        }
-	        return;
-	    }
-	    var len = this.getActualLength(values.length);
-	    this._length = len;
-	    this._values = this.shouldCopyValues() ? new Array(len) : this._values;
-	    var promise = this._promise;
-	    for (var i = 0; i < len; ++i) {
-	        if (this._isResolved()) return;
-	        var maybePromise = tryConvertToPromise(values[i], promise);
-	        if (maybePromise instanceof Promise) {
-	            maybePromise = maybePromise._target();
-	            if (maybePromise._isPending()) {
-	                maybePromise._proxyPromiseArray(this, i);
-	            } else if (maybePromise._isFulfilled()) {
-	                this._promiseFulfilled(maybePromise._value(), i);
-	            } else {
-	                maybePromise._unsetRejectionIsUnhandled();
-	                this._promiseRejected(maybePromise._reason(), i);
-	            }
-	        } else {
-	            this._promiseFulfilled(maybePromise, i);
-	        }
-	    }
-	};
-
-	PromiseArray.prototype._isResolved = function () {
-	    return this._values === null;
-	};
-
-	PromiseArray.prototype._resolve = function (value) {
-	    this._values = null;
-	    this._promise._fulfill(value);
-	};
-
-	PromiseArray.prototype.__hardReject__ =
-	PromiseArray.prototype._reject = function (reason) {
-	    this._values = null;
-	    var trace = canAttachTrace(reason) ? reason : new Error(reason + "");
-	    this._promise._attachExtraTrace(trace);
-	    this._promise._reject(reason, trace);
-	};
-
-	PromiseArray.prototype._promiseProgressed = function (progressValue, index) {
-	    this._promise._progress({
-	        index: index,
-	        value: progressValue
-	    });
-	};
-
-
-	PromiseArray.prototype._promiseFulfilled = function (value, index) {
-	    this._values[index] = value;
-	    var totalResolved = ++this._totalResolved;
-	    if (totalResolved >= this._length) {
-	        this._resolve(this._values);
-	    }
-	};
-
-	PromiseArray.prototype._promiseRejected = function (reason, index) {
-	    this._totalResolved++;
-	    this._reject(reason);
-	};
-
-	PromiseArray.prototype.shouldCopyValues = function () {
-	    return true;
-	};
-
-	PromiseArray.prototype.getActualLength = function (len) {
-	    return len;
-	};
-
-	return PromiseArray;
-	};
-
-
-/***/ },
-/* 78 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * The MIT License (MIT)
-	 * 
-	 * Copyright (c) 2014 Petka Antonov
-	 * 
-	 * Permission is hereby granted, free of charge, to any person obtaining a copy
-	 * of this software and associated documentation files (the "Software"), to deal
-	 * in the Software without restriction, including without limitation the rights
-	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	 * copies of the Software, and to permit persons to whom the Software is
-	 * furnished to do so, subject to the following conditions:</p>
-	 * 
-	 * The above copyright notice and this permission notice shall be included in
-	 * all copies or substantial portions of the Software.
-	 * 
-	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	 * THE SOFTWARE.
-	 * 
-	 */
-	"use strict";
-	module.exports = function() {
-	var inherits = __webpack_require__(73).inherits;
-	var defineProperty = __webpack_require__(172).defineProperty;
-	var rtraceline = null;
-	var formatStack = null;
-
-	function CapturedTrace(parent) {
-	    this._parent = parent;
-	    captureStackTrace(this, CapturedTrace);
-
-	}
-	inherits(CapturedTrace, Error);
-
-	CapturedTrace.prototype.parent = function() {
-	    return this._parent;
-	};
-
-	CapturedTrace.prototype.setParent = function(parent) {
-	    if (parent === this) return;
-	    this._parent = parent;
-	};
-
-	CapturedTrace.prototype.hasParent = function() {
-	    return this._parent !== undefined;
-	};
-
-	CapturedTrace.prototype.attachExtraTrace = function(error) {
-	    var trace = this;
-	    var stack = error.stack;
-	    stack = typeof stack === "string" ? stack.split("\n") : [];
-	    this.protectErrorMessageNewlines(stack);
-	    var headerLineCount = 1;
-	    var combinedTraces = 1;
-
-	    do {
-	        stack = trace.combine(stack);
-	        combinedTraces++;
-	    } while ((trace = trace.parent()) != null);
-
-	    var stackTraceLimit = Error.stackTraceLimit || 10;
-	    var max = (stackTraceLimit + headerLineCount) * combinedTraces;
-	    var len = stack.length;
-	    if (len > max) {
-	        stack.length = max;
-	    }
-
-	    if (len > 0)
-	        stack[0] = stack[0].split("\u0002\u0000\u0001").join("\n");
-
-	    if (stack.length <= headerLineCount) {
-	        error.stack = "(No stack trace)";
-	    } else {
-	        error.stack = stack.join("\n");
-	    }
-	};
-
-	CapturedTrace.prototype.combine = function(current) {
-	    var prev = this.stack.split("\n");
-	    var currentLastIndex = current.length - 1;
-	    var currentLastLine = current[currentLastIndex];
-	    var commonRootMeetPoint = -1;
-	    for (var i = prev.length - 1; i >= 0; --i) {
-	        if (prev[i] === currentLastLine) {
-	            commonRootMeetPoint = i;
-	            break;
-	        }
-	    }
-
-	    for (var i = commonRootMeetPoint; i >= 0; --i) {
-	        var line = prev[i];
-	        if (current[currentLastIndex] === line) {
-	            current.pop();
-	            currentLastIndex--;
-	        } else {
-	            break;
-	        }
-	    }
-
-	    current.push("From previous event:");
-	    var lines = current.concat(prev);
-
-	    var ret = [];
-
-	    for (var i = 0, len = lines.length; i < len; ++i) {
-	        if (((rtraceline.test(lines[i]) && shouldIgnore(lines[i])) ||
-	            (i > 0 && !rtraceline.test(lines[i])) &&
-	            lines[i] !== "From previous event:")
-	       ) {
-	            continue;
-	        }
-	        ret.push(lines[i]);
-	    }
-	    return ret;
-	};
-
-	CapturedTrace.prototype.protectErrorMessageNewlines = function(stack) {
-	    for (var i = 0; i < stack.length; ++i) {
-	        if (rtraceline.test(stack[i])) {
-	            break;
-	        }
-	    }
-
-	    if (i <= 1) return;
-
-	    var errorMessageLines = [];
-	    for (var j = 0; j < i; ++j) {
-	        errorMessageLines.push(stack.shift());
-	    }
-	    stack.unshift(errorMessageLines.join("\u0002\u0000\u0001"));
-	};
-
-	CapturedTrace.formatAndLogError = function(error, title) {
-	    if (typeof console === "object") {
-	        var message;
-	        if (typeof error === "object" || typeof error === "function") {
-	            var stack = error.stack;
-	            message = title + formatStack(stack, error);
-	        } else {
-	            message = title + String(error);
-	        }
-	        if (typeof console.warn === "function" ||
-	            typeof console.warn === "object") {
-	            console.warn(message);
-	        } else if (typeof console.log === "function" ||
-	            typeof console.log === "object") {
-	            console.log(message);
-	        }
-	    }
-	};
-
-	CapturedTrace.unhandledRejection = function (reason) {
-	    CapturedTrace.formatAndLogError(
-	        reason, "^--- With additional stack trace: ");
-	};
-
-	CapturedTrace.possiblyUnhandledRejection = function (reason) {
-	    CapturedTrace.formatAndLogError(
-	        reason, "Possibly unhandled ");
-	};
-
-	CapturedTrace.isSupported = function () {
-	    return typeof captureStackTrace === "function";
-	};
-
-	function formatNonError(obj) {
-	    var str;
-	    if (typeof obj === "function") {
-	        str = "[function " +
-	            (obj.name || "anonymous") +
-	            "]";
-	    } else {
-	        str = obj.toString();
-	        var ruselessToString = /\[object [a-zA-Z0-9$_]+\]/;
-	        if (ruselessToString.test(str)) {
-	            try {
-	                var newStr = JSON.stringify(obj);
-	                str = newStr;
-	            }
-	            catch(e) {
-
-	            }
-	        }
-	        if (str.length === 0) {
-	            str = "(empty array)";
-	        }
-	    }
-	    return ("(<" + snip(str) + ">, no stack trace)");
-	}
-
-	function snip(str) {
-	    var maxChars = 41;
-	    if (str.length < maxChars) {
-	        return str;
-	    }
-	    return str.substr(0, maxChars - 3) + "...";
-	}
-
-	var shouldIgnore = function() { return false; };
-	var parseLineInfoRegex = /[\/<\(]([^:\/]+):(\d+):(?:\d+)\)?\s*$/;
-	function parseLineInfo(line) {
-	    var matches = line.match(parseLineInfoRegex);
-	    if (matches) {
-	        return {
-	            fileName: matches[1],
-	            line: parseInt(matches[2], 10)
-	        };
-	    }
-	}
-	CapturedTrace.setBounds = function(firstLineError, lastLineError) {
-	    if (!CapturedTrace.isSupported()) return;
-	    var firstStackLines = firstLineError.stack.split("\n");
-	    var lastStackLines = lastLineError.stack.split("\n");
-	    var firstIndex = -1;
-	    var lastIndex = -1;
-	    var firstFileName;
-	    var lastFileName;
-	    for (var i = 0; i < firstStackLines.length; ++i) {
-	        var result = parseLineInfo(firstStackLines[i]);
-	        if (result) {
-	            firstFileName = result.fileName;
-	            firstIndex = result.line;
-	            break;
-	        }
-	    }
-	    for (var i = 0; i < lastStackLines.length; ++i) {
-	        var result = parseLineInfo(lastStackLines[i]);
-	        if (result) {
-	            lastFileName = result.fileName;
-	            lastIndex = result.line;
-	            break;
-	        }
-	    }
-	    if (firstIndex < 0 || lastIndex < 0 || !firstFileName || !lastFileName ||
-	        firstFileName !== lastFileName || firstIndex >= lastIndex) {
-	        return;
-	    }
-
-	    shouldIgnore = function(line) {
-	        var info = parseLineInfo(line);
-	        if (info) {
-	            if (info.fileName === firstFileName &&
-	                (firstIndex <= info.line && info.line <= lastIndex)) {
-	                return true;
-	            }
-	        }
-	        return false;
-	    };
-	};
-
-	var captureStackTrace = (function stackDetection() {
-	    if (typeof Error.stackTraceLimit === "number" &&
-	        typeof Error.captureStackTrace === "function") {
-	        rtraceline = /^\s*at\s*/;
-	        formatStack = function(stack, error) {
-	            if (typeof stack === "string") return stack;
-
-	            if (error.name !== undefined &&
-	                error.message !== undefined) {
-	                return error.name + ". " + error.message;
-	            }
-	            return formatNonError(error);
-
-
-	        };
-	        var captureStackTrace = Error.captureStackTrace;
-	        var bluebirdRegexp = /[\\\/]bluebird[\\\/]js[\\\/](main|debug|zalgo)/;
-	        shouldIgnore = function(line) {
-	            return bluebirdRegexp.test(line);
-	        };
-	        return function(receiver, ignoreUntil) {
-	            captureStackTrace(receiver, ignoreUntil);
-	        };
-	    }
-	    var err = new Error();
-
-	    if (typeof err.stack === "string" &&
-	        typeof "".startsWith === "function" &&
-	        (err.stack.startsWith("stackDetection@")) &&
-	        stackDetection.name === "stackDetection") {
-
-	        defineProperty(Error, "stackTraceLimit", {
-	            writable: true,
-	            enumerable: false,
-	            configurable: false,
-	            value: 25
-	        });
-	        rtraceline = /@/;
-	        var rline = /[@\n]/;
-
-	        formatStack = function(stack, error) {
-	            if (typeof stack === "string") {
-	                return (error.name + ". " + error.message + "\n" + stack);
-	            }
-
-	            if (error.name !== undefined &&
-	                error.message !== undefined) {
-	                return error.name + ". " + error.message;
-	            }
-	            return formatNonError(error);
-	        };
-
-	        return function captureStackTrace(o) {
-	            var stack = new Error().stack;
-	            var split = stack.split(rline);
-	            var len = split.length;
-	            var ret = "";
-	            for (var i = 0; i < len; i += 2) {
-	                ret += split[i];
-	                ret += "@";
-	                ret += split[i + 1];
-	                ret += "\n";
-	            }
-	            o.stack = ret;
-	        };
-	    } else {
-	        formatStack = function(stack, error) {
-	            if (typeof stack === "string") return stack;
-
-	            if ((typeof error === "object" ||
-	                typeof error === "function") &&
-	                error.name !== undefined &&
-	                error.message !== undefined) {
-	                return error.name + ". " + error.message;
-	            }
-	            return formatNonError(error);
-	        };
-
-	        return null;
-	    }
-	})();
-
-	return CapturedTrace;
-	};
-
-
-/***/ },
-/* 79 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * The MIT License (MIT)
-	 * 
-	 * Copyright (c) 2014 Petka Antonov
-	 * 
-	 * Permission is hereby granted, free of charge, to any person obtaining a copy
-	 * of this software and associated documentation files (the "Software"), to deal
-	 * in the Software without restriction, including without limitation the rights
-	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	 * copies of the Software, and to permit persons to whom the Software is
-	 * furnished to do so, subject to the following conditions:</p>
-	 * 
-	 * The above copyright notice and this permission notice shall be included in
-	 * all copies or substantial portions of the Software.
-	 * 
-	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	 * THE SOFTWARE.
-	 * 
-	 */
-	"use strict";
-	module.exports = function(NEXT_FILTER) {
-	var util = __webpack_require__(73);
-	var errors = __webpack_require__(75);
-	var tryCatch1 = util.tryCatch1;
-	var errorObj = util.errorObj;
-	var keys = __webpack_require__(172).keys;
-	var TypeError = errors.TypeError;
-
-	function CatchFilter(instances, callback, promise) {
-	    this._instances = instances;
-	    this._callback = callback;
-	    this._promise = promise;
-	}
-
-	function safePredicate(predicate, e) {
-	    var safeObject = {};
-	    var retfilter = tryCatch1(predicate, safeObject, e);
-
-	    if (retfilter === errorObj) return retfilter;
-
-	    var safeKeys = keys(safeObject);
-	    if (safeKeys.length) {
-	        errorObj.e = new TypeError("Catch filter must inherit from Error or be a simple predicate function\u000a\u000a    See http://goo.gl/o84o68\u000a");
-	        return errorObj;
-	    }
-	    return retfilter;
-	}
-
-	CatchFilter.prototype.doFilter = function (e) {
-	    var cb = this._callback;
-	    var promise = this._promise;
-	    var boundTo = promise._boundTo;
-	    for (var i = 0, len = this._instances.length; i < len; ++i) {
-	        var item = this._instances[i];
-	        var itemIsErrorType = item === Error ||
-	            (item != null && item.prototype instanceof Error);
-
-	        if (itemIsErrorType && e instanceof item) {
-	            var ret = tryCatch1(cb, boundTo, e);
-	            if (ret === errorObj) {
-	                NEXT_FILTER.e = ret.e;
-	                return NEXT_FILTER;
-	            }
-	            return ret;
-	        } else if (typeof item === "function" && !itemIsErrorType) {
-	            var shouldHandle = safePredicate(item, e);
-	            if (shouldHandle === errorObj) {
-	                var trace = errors.canAttachTrace(errorObj.e)
-	                    ? errorObj.e
-	                    : new Error(errorObj.e + "");
-	                this._promise._attachExtraTrace(trace);
-	                e = errorObj.e;
-	                break;
-	            } else if (shouldHandle) {
-	                var ret = tryCatch1(cb, boundTo, e);
-	                if (ret === errorObj) {
-	                    NEXT_FILTER.e = ret.e;
-	                    return NEXT_FILTER;
-	                }
-	                return ret;
-	            }
-	        }
-	    }
-	    NEXT_FILTER.e = e;
-	    return NEXT_FILTER;
-	};
-
-	return CatchFilter;
-	};
-
-
-/***/ },
-/* 80 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * The MIT License (MIT)
-	 * 
-	 * Copyright (c) 2014 Petka Antonov
-	 * 
-	 * Permission is hereby granted, free of charge, to any person obtaining a copy
-	 * of this software and associated documentation files (the "Software"), to deal
-	 * in the Software without restriction, including without limitation the rights
-	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	 * copies of the Software, and to permit persons to whom the Software is
-	 * furnished to do so, subject to the following conditions:</p>
-	 * 
-	 * The above copyright notice and this permission notice shall be included in
-	 * all copies or substantial portions of the Software.
-	 * 
-	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	 * THE SOFTWARE.
-	 * 
-	 */
-	"use strict";
-	var util = __webpack_require__(73);
-	var maybeWrapAsError = util.maybeWrapAsError;
-	var errors = __webpack_require__(75);
-	var TimeoutError = errors.TimeoutError;
-	var OperationalError = errors.OperationalError;
-	var async = __webpack_require__(74);
-	var haveGetters = util.haveGetters;
-	var es5 = __webpack_require__(172);
-
-	function isUntypedError(obj) {
-	    return obj instanceof Error &&
-	        es5.getPrototypeOf(obj) === Error.prototype;
-	}
-
-	function wrapAsOperationalError(obj) {
-	    var ret;
-	    if (isUntypedError(obj)) {
-	        ret = new OperationalError(obj);
-	    } else {
-	        ret = obj;
-	    }
-	    errors.markAsOriginatingFromRejection(ret);
-	    return ret;
-	}
-
-	function nodebackForPromise(promise) {
-	    return function(err, value) {
-	        if (promise === null) return;
-
-	        if (err) {
-	            var wrapped = wrapAsOperationalError(maybeWrapAsError(err));
-	            promise._attachExtraTrace(wrapped);
-	            promise._reject(wrapped);
-	        } else if (arguments.length > 2) {
-	            var $_len = arguments.length;var args = new Array($_len - 1); for(var $_i = 1; $_i < $_len; ++$_i) {args[$_i - 1] = arguments[$_i];}
-	            promise._fulfill(args);
-	        } else {
-	            promise._fulfill(value);
-	        }
-
-	        promise = null;
-	    };
-	}
-
-
-	var PromiseResolver;
-	if (!haveGetters) {
-	    PromiseResolver = function (promise) {
-	        this.promise = promise;
-	        this.asCallback = nodebackForPromise(promise);
-	        this.callback = this.asCallback;
-	    };
-	}
-	else {
-	    PromiseResolver = function (promise) {
-	        this.promise = promise;
-	    };
-	}
-	if (haveGetters) {
-	    var prop = {
-	        get: function() {
-	            return nodebackForPromise(this.promise);
-	        }
-	    };
-	    es5.defineProperty(PromiseResolver.prototype, "asCallback", prop);
-	    es5.defineProperty(PromiseResolver.prototype, "callback", prop);
-	}
-
-	PromiseResolver._nodebackForPromise = nodebackForPromise;
-
-	PromiseResolver.prototype.toString = function () {
-	    return "[object PromiseResolver]";
-	};
-
-	PromiseResolver.prototype.resolve =
-	PromiseResolver.prototype.fulfill = function (value) {
-	    if (!(this instanceof PromiseResolver)) {
-	        throw new TypeError("Illegal invocation, resolver resolve/reject must be called within a resolver context. Consider using the promise constructor instead.\u000a\u000a    See http://goo.gl/sdkXL9\u000a");
-	    }
-
-	    var promise = this.promise;
-	    if (promise._tryFollow(value)) {
-	        return;
-	    }
-	    async.invoke(promise._fulfill, promise, value);
-	};
-
-	PromiseResolver.prototype.reject = function (reason) {
-	    if (!(this instanceof PromiseResolver)) {
-	        throw new TypeError("Illegal invocation, resolver resolve/reject must be called within a resolver context. Consider using the promise constructor instead.\u000a\u000a    See http://goo.gl/sdkXL9\u000a");
-	    }
-
-	    var promise = this.promise;
-	    errors.markAsOriginatingFromRejection(reason);
-	    var trace = errors.canAttachTrace(reason) ? reason : new Error(reason + "");
-	    promise._attachExtraTrace(trace);
-	    async.invoke(promise._reject, promise, reason);
-	    if (trace !== reason) {
-	        async.invoke(this._setCarriedStackTrace, this, trace);
-	    }
-	};
-
-	PromiseResolver.prototype.progress = function (value) {
-	    if (!(this instanceof PromiseResolver)) {
-	        throw new TypeError("Illegal invocation, resolver resolve/reject must be called within a resolver context. Consider using the promise constructor instead.\u000a\u000a    See http://goo.gl/sdkXL9\u000a");
-	    }
-	    async.invoke(this.promise._progress, this.promise, value);
-	};
-
-	PromiseResolver.prototype.cancel = function () {
-	    async.invoke(this.promise.cancel, this.promise, undefined);
-	};
-
-	PromiseResolver.prototype.timeout = function () {
-	    this.reject(new TimeoutError("timeout"));
-	};
-
-	PromiseResolver.prototype.isResolved = function () {
-	    return this.promise.isResolved();
-	};
-
-	PromiseResolver.prototype.toJSON = function () {
-	    return this.promise.toJSON();
-	};
-
-	PromiseResolver.prototype._setCarriedStackTrace = function (trace) {
-	    if (this.promise.isRejected()) {
-	        this.promise._setCarriedStackTrace(trace);
-	    }
-	};
-
-	module.exports = PromiseResolver;
-
-
-/***/ },
-/* 81 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * The MIT License (MIT)
-	 * 
-	 * Copyright (c) 2014 Petka Antonov
-	 * 
-	 * Permission is hereby granted, free of charge, to any person obtaining a copy
-	 * of this software and associated documentation files (the "Software"), to deal
-	 * in the Software without restriction, including without limitation the rights
-	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	 * copies of the Software, and to permit persons to whom the Software is
-	 * furnished to do so, subject to the following conditions:</p>
-	 * 
-	 * The above copyright notice and this permission notice shall be included in
-	 * all copies or substantial portions of the Software.
-	 * 
-	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	 * THE SOFTWARE.
-	 * 
-	 */
-	"use strict";
-	module.exports = function(Promise) {
-	var TypeError = __webpack_require__(75).TypeError;
-
-	function apiRejection(msg) {
-	    var error = new TypeError(msg);
-	    var ret = Promise.rejected(error);
-	    var parent = ret._peekContext();
-	    if (parent != null) {
-	        parent.attachExtraTrace(error);
-	    }
-	    return ret;
-	}
-
-	return apiRejection;
-	};
-
-
-/***/ },
-/* 82 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * The MIT License (MIT)
-	 * 
-	 * Copyright (c) 2014 Petka Antonov
-	 * 
-	 * Permission is hereby granted, free of charge, to any person obtaining a copy
-	 * of this software and associated documentation files (the "Software"), to deal
-	 * in the Software without restriction, including without limitation the rights
-	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	 * copies of the Software, and to permit persons to whom the Software is
-	 * furnished to do so, subject to the following conditions:</p>
-	 * 
-	 * The above copyright notice and this permission notice shall be included in
-	 * all copies or substantial portions of the Software.
-	 * 
-	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	 * THE SOFTWARE.
-	 * 
-	 */
-	"use strict";
-	module.exports = function(Promise, NEXT_FILTER, tryConvertToPromise) {
-	var util = __webpack_require__(73);
-	var wrapsPrimitiveReceiver = util.wrapsPrimitiveReceiver;
-	var isPrimitive = util.isPrimitive;
-	var thrower = util.thrower;
-
-	function returnThis() {
-	    return this;
-	}
-	function throwThis() {
-	    throw this;
-	}
-	function return$(r) {
-	    return function() {
-	        return r;
-	    };
-	}
-	function throw$(r) {
-	    return function() {
-	        throw r;
-	    };
-	}
-	function promisedFinally(ret, reasonOrValue, isFulfilled) {
-	    var then;
-	    if (wrapsPrimitiveReceiver && isPrimitive(reasonOrValue)) {
-	        then = isFulfilled ? return$(reasonOrValue) : throw$(reasonOrValue);
-	    } else {
-	        then = isFulfilled ? returnThis : throwThis;
-	    }
-	    return ret._then(then, thrower, undefined, reasonOrValue, undefined);
-	}
-
-	function finallyHandler(reasonOrValue) {
-	    var promise = this.promise;
-	    var handler = this.handler;
-
-	    var ret = promise._isBound()
-	                    ? handler.call(promise._boundTo)
-	                    : handler();
-
-	    if (ret !== undefined) {
-	        var maybePromise = tryConvertToPromise(ret, undefined);
-	        if (maybePromise instanceof Promise) {
-	            maybePromise = maybePromise._target();
-	            return promisedFinally(maybePromise, reasonOrValue,
-	                                    promise.isFulfilled());
-	        }
-	    }
-
-	    if (promise.isRejected()) {
-	        NEXT_FILTER.e = reasonOrValue;
-	        return NEXT_FILTER;
-	    } else {
-	        return reasonOrValue;
-	    }
-	}
-
-	function tapHandler(value) {
-	    var promise = this.promise;
-	    var handler = this.handler;
-
-	    var ret = promise._isBound()
-	                    ? handler.call(promise._boundTo, value)
-	                    : handler(value);
-
-	    if (ret !== undefined) {
-	        var maybePromise = tryConvertToPromise(ret, undefined);
-	        if (maybePromise instanceof Promise) {
-	            maybePromise = maybePromise._target();
-	            return promisedFinally(maybePromise, value, true);
-	        }
-	    }
-	    return value;
-	}
-
-	Promise.prototype._passThroughHandler = function (handler, isFinally) {
-	    if (typeof handler !== "function") return this.then();
-
-	    var promiseAndHandler = {
-	        promise: this,
-	        handler: handler
-	    };
-
-	    return this._then(
-	            isFinally ? finallyHandler : tapHandler,
-	            isFinally ? finallyHandler : undefined, undefined,
-	            promiseAndHandler, undefined);
-	};
-
-	Promise.prototype.lastly =
-	Promise.prototype["finally"] = function (handler) {
-	    return this._passThroughHandler(handler, true);
-	};
-
-	Promise.prototype.tap = function (handler) {
-	    return this._passThroughHandler(handler, false);
-	};
-	};
-
-
-/***/ },
-/* 83 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * The MIT License (MIT)
-	 * 
-	 * Copyright (c) 2014 Petka Antonov
-	 * 
-	 * Permission is hereby granted, free of charge, to any person obtaining a copy
-	 * of this software and associated documentation files (the "Software"), to deal
-	 * in the Software without restriction, including without limitation the rights
-	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	 * copies of the Software, and to permit persons to whom the Software is
-	 * furnished to do so, subject to the following conditions:</p>
-	 * 
-	 * The above copyright notice and this permission notice shall be included in
-	 * all copies or substantial portions of the Software.
-	 * 
-	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	 * THE SOFTWARE.
-	 * 
-	 */
-	"use strict";
-	var util = __webpack_require__(73);
-	var isPrimitive = util.isPrimitive;
-	var wrapsPrimitiveReceiver = util.wrapsPrimitiveReceiver;
-
-	module.exports = function(Promise) {
-	var returner = function () {
-	    return this;
-	};
-	var thrower = function () {
-	    throw this;
-	};
-
-	var wrapper = function (value, action) {
-	    if (action === 1) {
-	        return function () {
-	            throw value;
-	        };
-	    } else if (action === 2) {
-	        return function () {
-	            return value;
-	        };
-	    }
-	};
-
-
-	Promise.prototype["return"] =
-	Promise.prototype.thenReturn = function (value) {
-	    if (wrapsPrimitiveReceiver && isPrimitive(value)) {
-	        return this._then(
-	            wrapper(value, 2),
-	            undefined,
-	            undefined,
-	            undefined,
-	            undefined
-	       );
-	    }
-	    return this._then(returner, undefined, undefined, value, undefined);
-	};
-
-	Promise.prototype["throw"] =
-	Promise.prototype.thenThrow = function (reason) {
-	    if (wrapsPrimitiveReceiver && isPrimitive(reason)) {
-	        return this._then(
-	            wrapper(reason, 1),
-	            undefined,
-	            undefined,
-	            undefined,
-	            undefined
-	       );
-	    }
-	    return this._then(thrower, undefined, undefined, reason, undefined);
-	};
-	};
-
-
-/***/ },
-/* 84 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * The MIT License (MIT)
-	 * 
-	 * Copyright (c) 2014 Petka Antonov
-	 * 
-	 * Permission is hereby granted, free of charge, to any person obtaining a copy
-	 * of this software and associated documentation files (the "Software"), to deal
-	 * in the Software without restriction, including without limitation the rights
-	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	 * copies of the Software, and to permit persons to whom the Software is
-	 * furnished to do so, subject to the following conditions:</p>
-	 * 
-	 * The above copyright notice and this permission notice shall be included in
-	 * all copies or substantial portions of the Software.
-	 * 
-	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	 * THE SOFTWARE.
-	 * 
-	 */
-	"use strict";
-	module.exports = function(Promise) {
-	function PromiseInspection(promise) {
-	    if (promise !== undefined) {
-	        promise = promise._target();
-	        this._bitField = promise._bitField;
-	        this._settledValue = promise._isResolved()
-	            ? promise._settledValue
-	            : undefined;
-	    }
-	    else {
-	        this._bitField = 0;
-	        this._settledValue = undefined;
-	    }
-	}
-
-	PromiseInspection.prototype.value = function () {
-	    if (!this.isFulfilled()) {
-	        throw new TypeError("cannot get fulfillment value of a non-fulfilled promise\u000a\u000a    See http://goo.gl/hc1DLj\u000a");
-	    }
-	    return this._settledValue;
-	};
-
-	PromiseInspection.prototype.error =
-	PromiseInspection.prototype.reason = function () {
-	    if (!this.isRejected()) {
-	        throw new TypeError("cannot get rejection reason of a non-rejected promise\u000a\u000a    See http://goo.gl/hPuiwB\u000a");
-	    }
-	    return this._settledValue;
-	};
-
-	PromiseInspection.prototype.isFulfilled =
-	Promise.prototype._isFulfilled = function () {
-	    return (this._bitField & 268435456) > 0;
-	};
-
-	PromiseInspection.prototype.isRejected =
-	Promise.prototype._isRejected = function () {
-	    return (this._bitField & 134217728) > 0;
-	};
-
-	PromiseInspection.prototype.isPending =
-	Promise.prototype._isPending = function () {
-	    return (this._bitField & 402653184) === 0;
-	};
-
-	PromiseInspection.prototype.isResolved =
-	Promise.prototype._isResolved = function () {
-	    return (this._bitField & 402653184) > 0;
-	};
-
-	Promise.prototype.isPending = function() {
-	    return this._target()._isPending();
-	};
-
-	Promise.prototype.isRejected = function() {
-	    return this._target()._isRejected();
-	};
-
-	Promise.prototype.isFulfilled = function() {
-	    return this._target()._isFulfilled();
-	};
-
-	Promise.prototype.isResolved = function() {
-	    return this._target()._isResolved();
-	};
-
-	Promise.prototype._value = function() {
-	    return this._settledValue;
-	};
-
-	Promise.prototype._reason = function() {
-	    return this._settledValue;
-	};
-
-	Promise.prototype.value = function() {
-	    var target = this._target();
-	    if (!target.isFulfilled()) {
-	        throw new TypeError("cannot get fulfillment value of a non-fulfilled promise\u000a\u000a    See http://goo.gl/hc1DLj\u000a");
-	    }
-	    return target._settledValue;
-	};
-
-	Promise.prototype.reason = function() {
-	    var target = this._target();
-	    if (!target.isRejected()) {
-	        throw new TypeError("cannot get rejection reason of a non-rejected promise\u000a\u000a    See http://goo.gl/hPuiwB\u000a");
-	    }
-	    return target._settledValue;
-	};
-
-
-	Promise.PromiseInspection = PromiseInspection;
-	};
-
-
-/***/ },
-/* 85 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * The MIT License (MIT)
-	 * 
-	 * Copyright (c) 2014 Petka Antonov
-	 * 
-	 * Permission is hereby granted, free of charge, to any person obtaining a copy
-	 * of this software and associated documentation files (the "Software"), to deal
-	 * in the Software without restriction, including without limitation the rights
-	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	 * copies of the Software, and to permit persons to whom the Software is
-	 * furnished to do so, subject to the following conditions:</p>
-	 * 
-	 * The above copyright notice and this permission notice shall be included in
-	 * all copies or substantial portions of the Software.
-	 * 
-	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	 * THE SOFTWARE.
-	 * 
-	 */
-	"use strict";
-	module.exports =
-	function(Promise, PromiseArray, tryConvertToPromise, INTERNAL) {
-	var util = __webpack_require__(73);
-	var canEvaluate = util.canEvaluate;
-	var tryCatch1 = util.tryCatch1;
-	var errorObj = util.errorObj;
-
-
-	if (canEvaluate) {
-	    var thenCallback = function(i) {
-	        return new Function("value", "holder", "                             \n\
-	            'use strict';                                                    \n\
-	            holder.pIndex = value;                                           \n\
-	            holder.checkFulfillment(this);                                   \n\
-	            ".replace(/Index/g, i));
-	    };
-
-	    var caller = function(count) {
-	        var values = [];
-	        for (var i = 1; i <= count; ++i) values.push("holder.p" + i);
-	        return new Function("holder", "                                      \n\
-	            'use strict';                                                    \n\
-	            var callback = holder.fn;                                        \n\
-	            return callback(values);                                         \n\
-	            ".replace(/values/g, values.join(", ")));
-	    };
-	    var thenCallbacks = [];
-	    var callers = [undefined];
-	    for (var i = 1; i <= 5; ++i) {
-	        thenCallbacks.push(thenCallback(i));
-	        callers.push(caller(i));
-	    }
-
-	    var Holder = function(total, fn) {
-	        this.p1 = this.p2 = this.p3 = this.p4 = this.p5 = null;
-	        this.fn = fn;
-	        this.total = total;
-	        this.now = 0;
-	    };
-
-	    Holder.prototype.callers = callers;
-	    Holder.prototype.checkFulfillment = function(promise) {
-	        var now = this.now;
-	        now++;
-	        var total = this.total;
-	        if (now >= total) {
-	            var handler = this.callers[total];
-	            var ret = tryCatch1(handler, undefined, this);
-	            if (ret === errorObj) {
-	                promise._rejectUnchecked(ret.e);
-	            } else if (!promise._tryFollow(ret)) {
-	                promise._fulfillUnchecked(ret);
-	            }
-	        } else {
-	            this.now = now;
-	        }
-	    };
-	}
-
-	function reject(reason) {
-	    this._reject(reason);
-	}
-
-	Promise.join = function () {
-	    var last = arguments.length - 1;
-	    var fn;
-	    if (last > 0 && typeof arguments[last] === "function") {
-	        fn = arguments[last];
-	        if (last < 6 && canEvaluate) {
-	            var ret = new Promise(INTERNAL);
-	            ret._setTrace(undefined);
-	            var holder = new Holder(last, fn);
-	            var callbacks = thenCallbacks;
-	            for (var i = 0; i < last; ++i) {
-	                var maybePromise = tryConvertToPromise(arguments[i], undefined);
-	                if (maybePromise instanceof Promise) {
-	                    maybePromise = maybePromise._target();
-	                    if (maybePromise._isPending()) {
-	                        maybePromise._then(callbacks[i], reject,
-	                                           undefined, ret, holder);
-	                    } else if (maybePromise._isFulfilled()) {
-	                        callbacks[i].call(ret,
-	                                          maybePromise._value(), holder);
-	                    } else {
-	                        ret._reject(maybePromise._reason());
-	                        maybePromise._unsetRejectionIsUnhandled();
-	                    }
-	                } else {
-	                    callbacks[i].call(ret, maybePromise, holder);
-	                }
-	            }
-	            return ret;
-	        }
-	    }
-	    var $_len = arguments.length;var args = new Array($_len); for(var $_i = 0; $_i < $_len; ++$_i) {args[$_i] = arguments[$_i];}
-	    var ret = new PromiseArray(args).promise();
-	    return fn !== undefined ? ret.spread(fn) : ret;
-	};
-
-	};
-
-
-/***/ },
-/* 86 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * The MIT License (MIT)
-	 * 
-	 * Copyright (c) 2014 Petka Antonov
-	 * 
-	 * Permission is hereby granted, free of charge, to any person obtaining a copy
-	 * of this software and associated documentation files (the "Software"), to deal
-	 * in the Software without restriction, including without limitation the rights
-	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	 * copies of the Software, and to permit persons to whom the Software is
-	 * furnished to do so, subject to the following conditions:</p>
-	 * 
-	 * The above copyright notice and this permission notice shall be included in
-	 * all copies or substantial portions of the Software.
-	 * 
-	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	 * THE SOFTWARE.
-	 * 
-	 */
-	"use strict";
-	module.exports = function(Promise, INTERNAL, tryConvertToPromise) {
-	var util = __webpack_require__(73);
-	var errors = __webpack_require__(75);
-	var apiRejection = __webpack_require__(81)(Promise);
-	var TimeoutError = Promise.TimeoutError;
-
-	var afterTimeout = function (promise, message) {
-	    if (!promise.isPending()) return;
-	    if (typeof message !== "string") {
-	        message = "operation timed out";
-	    }
-	    var err = new TimeoutError(message);
-	    errors.markAsOriginatingFromRejection(err);
-	    promise._attachExtraTrace(err);
-	    promise._cancel(err);
-	};
-
-	var afterDelay = function (value, promise) {
-	    promise._fulfill(value);
-	};
-
-	var delay = Promise.delay = function (value, ms) {
-	    if (ms === undefined) {
-	        ms = value;
-	        value = undefined;
-	    }
-	    ms = +ms;
-	    var maybePromise = tryConvertToPromise(value, undefined);
-	    var promise = new Promise(INTERNAL);
-
-	    if (maybePromise instanceof Promise) {
-	        promise._propagateFrom(maybePromise, 7);
-	        promise._follow(maybePromise._target());
-	        return promise.then(function(value) {
-	            return Promise.delay(value, ms);
-	        });
-	    } else {
-	        promise._setTrace(undefined);
-	        setTimeout(function delayTimeout() {
-	            afterDelay(value, promise);
-	        }, ms);
-	    }
-	    return promise;
-	};
-
-	Promise.prototype.delay = function (ms) {
-	    return delay(this, ms);
-	};
-
-	function successClear(value) {
-	    var handle = this;
-	    if (handle instanceof Number) handle = +handle;
-	    clearTimeout(handle);
-	    return value;
-	}
-
-	function failureClear(reason) {
-	    var handle = this;
-	    if (handle instanceof Number) handle = +handle;
-	    clearTimeout(handle);
-	    throw reason;
-	}
-
-	Promise.prototype.timeout = function (ms, message) {
-	    var target = this._target();
-	    ms = +ms;
-	    var ret = new Promise(INTERNAL).cancellable();
-	    ret._propagateFrom(this, 7);
-	    ret._follow(target);
-	    var handle = setTimeout(function timeoutTimeout() {
-	        afterTimeout(ret, message);
-	    }, ms);
-	    return ret._then(successClear, failureClear, undefined, handle, undefined);
-	};
-
-	};
-
-
-/***/ },
-/* 87 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * The MIT License (MIT)
-	 * 
-	 * Copyright (c) 2014 Petka Antonov
-	 * 
-	 * Permission is hereby granted, free of charge, to any person obtaining a copy
-	 * of this software and associated documentation files (the "Software"), to deal
-	 * in the Software without restriction, including without limitation the rights
-	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	 * copies of the Software, and to permit persons to whom the Software is
-	 * furnished to do so, subject to the following conditions:</p>
-	 * 
-	 * The above copyright notice and this permission notice shall be included in
-	 * all copies or substantial portions of the Software.
-	 * 
-	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	 * THE SOFTWARE.
-	 * 
-	 */
-	"use strict";
-	module.exports = function(Promise, INTERNAL, tryConvertToPromise) {
-	var apiRejection = __webpack_require__(81)(Promise);
-	var isArray = __webpack_require__(73).isArray;
-
-	var raceLater = function (promise) {
-	    return promise.then(function(array) {
-	        return race(array, promise);
-	    });
-	};
-
-	function race(promises, parent) {
-	    var maybePromise = tryConvertToPromise(promises, undefined);
-
-	    if (maybePromise instanceof Promise) {
-	        return raceLater(maybePromise);
-	    } else if (!isArray(promises)) {
-	        return apiRejection("expecting an array, a promise or a thenable\u000a\u000a    See http://goo.gl/s8MMhc\u000a");
-	    }
-
-	    var ret = new Promise(INTERNAL);
-	    if (parent !== undefined) {
-	        ret._propagateFrom(parent, 7);
-	    } else {
-	        ret._setTrace(undefined);
-	    }
-	    var fulfill = ret._fulfill;
-	    var reject = ret._reject;
-	    for (var i = 0, len = promises.length; i < len; ++i) {
-	        var val = promises[i];
-
-	        if (val === undefined && !(i in promises)) {
-	            continue;
-	        }
-
-	        Promise.cast(val)._then(fulfill, reject, undefined, ret, null);
-	    }
-	    return ret;
-	}
-
-	Promise.race = function (promises) {
-	    return race(promises, undefined);
-	};
-
-	Promise.prototype.race = function () {
-	    return race(this, undefined);
-	};
-
-	};
-
-
-/***/ },
-/* 88 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * The MIT License (MIT)
-	 * 
-	 * Copyright (c) 2014 Petka Antonov
-	 * 
-	 * Permission is hereby granted, free of charge, to any person obtaining a copy
-	 * of this software and associated documentation files (the "Software"), to deal
-	 * in the Software without restriction, including without limitation the rights
-	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	 * copies of the Software, and to permit persons to whom the Software is
-	 * furnished to do so, subject to the following conditions:</p>
-	 * 
-	 * The above copyright notice and this permission notice shall be included in
-	 * all copies or substantial portions of the Software.
-	 * 
-	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	 * THE SOFTWARE.
-	 * 
-	 */
-	"use strict";
-	var cr = Object.create;
-	if (cr) {
-	    var callerCache = cr(null);
-	    var getterCache = cr(null);
-	    callerCache[" size"] = getterCache[" size"] = 0;
-	}
-
-	module.exports = function(Promise) {
-	var util = __webpack_require__(73);
-	var canEvaluate = util.canEvaluate;
-	var isIdentifier = util.isIdentifier;
-
-	function makeMethodCaller (methodName) {
-	    return new Function("obj", "                                             \n\
-	        'use strict'                                                         \n\
-	        var len = this.length;                                               \n\
-	        switch(len) {                                                        \n\
-	            case 1: return obj.methodName(this[0]);                          \n\
-	            case 2: return obj.methodName(this[0], this[1]);                 \n\
-	            case 3: return obj.methodName(this[0], this[1], this[2]);        \n\
-	            case 0: return obj.methodName();                                 \n\
-	            default: return obj.methodName.apply(obj, this);                 \n\
-	        }                                                                    \n\
-	        ".replace(/methodName/g, methodName));
-	}
-
-	function makeGetter (propertyName) {
-	    return new Function("obj", "                                             \n\
-	        'use strict';                                                        \n\
-	        return obj.propertyName;                                             \n\
-	        ".replace("propertyName", propertyName));
-	}
-
-	function getCompiled(name, compiler, cache) {
-	    var ret = cache[name];
-	    if (typeof ret !== "function") {
-	        if (!isIdentifier(name)) {
-	            return null;
-	        }
-	        ret = compiler(name);
-	        cache[name] = ret;
-	        cache[" size"]++;
-	        if (cache[" size"] > 512) {
-	            var keys = Object.keys(cache);
-	            for (var i = 0; i < 256; ++i) delete cache[keys[i]];
-	            cache[" size"] = keys.length - 256;
-	        }
-	    }
-	    return ret;
-	}
-
-	function getMethodCaller(name) {
-	    return getCompiled(name, makeMethodCaller, callerCache);
-	}
-
-	function getGetter(name) {
-	    return getCompiled(name, makeGetter, getterCache);
-	}
-
-	function caller(obj) {
-	    return obj[this.pop()].apply(obj, this);
-	}
-	Promise.prototype.call = function (methodName) {
-	    var $_len = arguments.length;var args = new Array($_len - 1); for(var $_i = 1; $_i < $_len; ++$_i) {args[$_i - 1] = arguments[$_i];}
-	    if (canEvaluate) {
-	        var maybeCaller = getMethodCaller(methodName);
-	        if (maybeCaller !== null) {
-	            return this._then(
-	                maybeCaller, undefined, undefined, args, undefined);
-	        }
-	    }
-	    args.push(methodName);
-	    return this._then(caller, undefined, undefined, args, undefined);
-	};
-
-	function namedGetter(obj) {
-	    return obj[this];
-	}
-	function indexedGetter(obj) {
-	    var index = +this;
-	    if (index < 0) index = Math.max(0, index + obj.length);
-	    return obj[index];
-	}
-	Promise.prototype.get = function (propertyName) {
-	    var isIndex = (typeof propertyName === "number");
-	    var getter;
-	    if (!isIndex) {
-	        if (canEvaluate) {
-	            var maybeGetter = getGetter(propertyName);
-	            getter = maybeGetter !== null ? maybeGetter : namedGetter;
-	        } else {
-	            getter = namedGetter;
-	        }
-	    } else {
-	        getter = indexedGetter;
-	    }
-	    return this._then(getter, undefined, undefined, propertyName, undefined);
-	};
-	};
-
-
-/***/ },
-/* 89 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * The MIT License (MIT)
-	 * 
-	 * Copyright (c) 2014 Petka Antonov
-	 * 
-	 * Permission is hereby granted, free of charge, to any person obtaining a copy
-	 * of this software and associated documentation files (the "Software"), to deal
-	 * in the Software without restriction, including without limitation the rights
-	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	 * copies of the Software, and to permit persons to whom the Software is
-	 * furnished to do so, subject to the following conditions:</p>
-	 * 
-	 * The above copyright notice and this permission notice shall be included in
-	 * all copies or substantial portions of the Software.
-	 * 
-	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	 * THE SOFTWARE.
-	 * 
-	 */
-	"use strict";
-	module.exports = function(Promise,
-	                          apiRejection,
-	                          INTERNAL,
-	                          tryConvertToPromise) {
-	var errors = __webpack_require__(75);
-	var TypeError = errors.TypeError;
-	var deprecated = __webpack_require__(73).deprecated;
-	var util = __webpack_require__(73);
-	var errorObj = util.errorObj;
-	var tryCatch1 = util.tryCatch1;
-	var yieldHandlers = [];
-
-	function promiseFromYieldHandler(value, yieldHandlers, traceParent) {
-	    var _errorObj = errorObj;
-	    var _Promise = Promise;
-	    var len = yieldHandlers.length;
-	    for (var i = 0; i < len; ++i) {
-	        var result = tryCatch1(yieldHandlers[i], undefined, value);
-	        if (result === _errorObj) {
-	            return _Promise.reject(_errorObj.e);
-	        }
-	        var maybePromise = tryConvertToPromise(result, traceParent);
-	        if (maybePromise instanceof _Promise) return maybePromise;
-	    }
-	    return null;
-	}
-
-	function PromiseSpawn(generatorFunction, receiver, yieldHandler) {
-	    var promise = this._promise = new Promise(INTERNAL);
-	    promise._setTrace(undefined);
-	    this._generatorFunction = generatorFunction;
-	    this._receiver = receiver;
-	    this._generator = undefined;
-	    this._yieldHandlers = typeof yieldHandler === "function"
-	        ? [yieldHandler].concat(yieldHandlers)
-	        : yieldHandlers;
-	}
-
-	PromiseSpawn.prototype.promise = function () {
-	    return this._promise;
-	};
-
-	PromiseSpawn.prototype._run = function () {
-	    this._generator = this._generatorFunction.call(this._receiver);
-	    this._receiver =
-	        this._generatorFunction = undefined;
-	    this._next(undefined);
-	};
-
-	PromiseSpawn.prototype._continue = function (result) {
-	    if (result === errorObj) {
-	        this._generator = undefined;
-	        var trace = errors.canAttachTrace(result.e)
-	            ? result.e : new Error(result.e + "");
-	        this._promise._attachExtraTrace(trace);
-	        this._promise._reject(result.e, trace);
-	        return;
-	    }
-
-	    var value = result.value;
-	    if (result.done === true) {
-	        this._generator = undefined;
-	        if (!this._promise._tryFollow(value)) {
-	            this._promise._fulfill(value);
-	        }
-	    } else {
-	        var maybePromise = tryConvertToPromise(value, this._promise);
-	        if (!(maybePromise instanceof Promise)) {
-	            maybePromise =
-	                promiseFromYieldHandler(maybePromise,
-	                                        this._yieldHandlers,
-	                                        this._promise);
-	            if (maybePromise === null) {
-	                this._throw(new TypeError("A value was yielded that could not be treated as a promise\u000a\u000a    See http://goo.gl/4Y4pDk\u000a"));
-	                return;
-	            }
-	        }
-	        maybePromise._then(
-	            this._next,
-	            this._throw,
-	            undefined,
-	            this,
-	            null
-	       );
-	    }
-	};
-
-	PromiseSpawn.prototype._throw = function (reason) {
-	    if (errors.canAttachTrace(reason))
-	        this._promise._attachExtraTrace(reason);
-	    this._continue(
-	        tryCatch1(this._generator["throw"], this._generator, reason)
-	   );
-	};
-
-	PromiseSpawn.prototype._next = function (value) {
-	    this._continue(
-	        tryCatch1(this._generator.next, this._generator, value)
-	   );
-	};
-
-	Promise.coroutine = function (generatorFunction, options) {
-	    if (typeof generatorFunction !== "function") {
-	        throw new TypeError("generatorFunction must be a function\u000a\u000a    See http://goo.gl/6Vqhm0\u000a");
-	    }
-	    var yieldHandler = Object(options).yieldHandler;
-	    var PromiseSpawn$ = PromiseSpawn;
-	    return function () {
-	        var generator = generatorFunction.apply(this, arguments);
-	        var spawn = new PromiseSpawn$(undefined, undefined, yieldHandler);
-	        spawn._generator = generator;
-	        spawn._next(undefined);
-	        return spawn.promise();
-	    };
-	};
-
-	Promise.coroutine.addYieldHandler = function(fn) {
-	    if (typeof fn !== "function") throw new TypeError("fn must be a function\u000a\u000a    See http://goo.gl/916lJJ\u000a");
-	    yieldHandlers.push(fn);
-	};
-
-	Promise.spawn = function (generatorFunction) {
-	    deprecated("Promise.spawn is deprecated. Use Promise.coroutine instead.");
-	    if (typeof generatorFunction !== "function") {
-	        return apiRejection("generatorFunction must be a function\u000a\u000a    See http://goo.gl/6Vqhm0\u000a");
-	    }
-	    var spawn = new PromiseSpawn(generatorFunction, this);
-	    var ret = spawn.promise();
-	    spawn._run(Promise.spawn);
-	    return ret;
-	};
-	};
-
-
-/***/ },
-/* 90 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * The MIT License (MIT)
-	 * 
-	 * Copyright (c) 2014 Petka Antonov
-	 * 
-	 * Permission is hereby granted, free of charge, to any person obtaining a copy
-	 * of this software and associated documentation files (the "Software"), to deal
-	 * in the Software without restriction, including without limitation the rights
-	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	 * copies of the Software, and to permit persons to whom the Software is
-	 * furnished to do so, subject to the following conditions:</p>
-	 * 
-	 * The above copyright notice and this permission notice shall be included in
-	 * all copies or substantial portions of the Software.
-	 * 
-	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	 * THE SOFTWARE.
-	 * 
-	 */
-	"use strict";
-	module.exports = function(Promise,
-	                          PromiseArray,
-	                          apiRejection,
-	                          tryConvertToPromise,
-	                          INTERNAL) {
-	var util = __webpack_require__(73);
-	var tryCatch3 = util.tryCatch3;
-	var errorObj = util.errorObj;
-	var PENDING = {};
-	var EMPTY_ARRAY = [];
-
-	function MappingPromiseArray(promises, fn, limit, _filter) {
-	    this.constructor$(promises);
-	    this._callback = fn;
-	    this._preservedValues = _filter === INTERNAL
-	        ? new Array(this.length())
-	        : null;
-	    this._limit = limit;
-	    this._inFlight = 0;
-	    this._queue = limit >= 1 ? [] : EMPTY_ARRAY;
-	    this._init$(undefined, -2);
-	}
-	util.inherits(MappingPromiseArray, PromiseArray);
-
-	MappingPromiseArray.prototype._init = function () {};
-
-	MappingPromiseArray.prototype._promiseFulfilled = function (value, index) {
-	    var values = this._values;
-	    var length = this.length();
-	    var preservedValues = this._preservedValues;
-	    var limit = this._limit;
-	    if (values[index] === PENDING) {
-	        values[index] = value;
-	        if (limit >= 1) {
-	            this._inFlight--;
-	            this._drainQueue();
-	            if (this._isResolved()) return;
-	        }
-	    } else {
-	        if (limit >= 1 && this._inFlight >= limit) {
-	            values[index] = value;
-	            this._queue.push(index);
-	            return;
-	        }
-	        if (preservedValues !== null) preservedValues[index] = value;
-
-	        var callback = this._callback;
-	        var receiver = this._promise._boundTo;
-	        var ret = tryCatch3(callback, receiver, value, index, length);
-	        if (ret === errorObj) return this._reject(ret.e);
-
-	        var maybePromise = tryConvertToPromise(ret, this._promise);
-	        if (maybePromise instanceof Promise) {
-	            maybePromise = maybePromise._target();
-	            if (maybePromise._isPending()) {
-	                if (limit >= 1) this._inFlight++;
-	                values[index] = PENDING;
-	                return maybePromise._proxyPromiseArray(this, index);
-	            } else if (maybePromise._isFulfilled()) {
-	                ret = maybePromise._value();
-	            } else {
-	                maybePromise._unsetRejectionIsUnhandled();
-	                return this._reject(maybePromise._reason());
-	            }
-	        }
-	        values[index] = ret;
-	    }
-	    var totalResolved = ++this._totalResolved;
-	    if (totalResolved >= length) {
-	        if (preservedValues !== null) {
-	            this._filter(values, preservedValues);
-	        } else {
-	            this._resolve(values);
-	        }
-
-	    }
-	};
-
-	MappingPromiseArray.prototype._drainQueue = function () {
-	    var queue = this._queue;
-	    var limit = this._limit;
-	    var values = this._values;
-	    while (queue.length > 0 && this._inFlight < limit) {
-	        if (this._isResolved()) return;
-	        var index = queue.pop();
-	        this._promiseFulfilled(values[index], index);
-	    }
-	};
-
-	MappingPromiseArray.prototype._filter = function (booleans, values) {
-	    var len = values.length;
-	    var ret = new Array(len);
-	    var j = 0;
-	    for (var i = 0; i < len; ++i) {
-	        if (booleans[i]) ret[j++] = values[i];
-	    }
-	    ret.length = j;
-	    this._resolve(ret);
-	};
-
-	MappingPromiseArray.prototype.preservedValues = function () {
-	    return this._preservedValues;
-	};
-
-	function map(promises, fn, options, _filter) {
-	    var limit = typeof options === "object" && options !== null
-	        ? options.concurrency
-	        : 0;
-	    limit = typeof limit === "number" &&
-	        isFinite(limit) && limit >= 1 ? limit : 0;
-	    return new MappingPromiseArray(promises, fn, limit, _filter);
-	}
-
-	Promise.prototype.map = function (fn, options) {
-	    if (typeof fn !== "function") return apiRejection("fn must be a function\u000a\u000a    See http://goo.gl/916lJJ\u000a");
-
-	    return map(this, fn, options, null).promise();
-	};
-
-	Promise.map = function (promises, fn, options, _filter) {
-	    if (typeof fn !== "function") return apiRejection("fn must be a function\u000a\u000a    See http://goo.gl/916lJJ\u000a");
-	    return map(promises, fn, options, _filter).promise();
-	};
-
-
-	};
-
-
-/***/ },
-/* 91 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * The MIT License (MIT)
-	 * 
-	 * Copyright (c) 2014 Petka Antonov
-	 * 
-	 * Permission is hereby granted, free of charge, to any person obtaining a copy
-	 * of this software and associated documentation files (the "Software"), to deal
-	 * in the Software without restriction, including without limitation the rights
-	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	 * copies of the Software, and to permit persons to whom the Software is
-	 * furnished to do so, subject to the following conditions:</p>
-	 * 
-	 * The above copyright notice and this permission notice shall be included in
-	 * all copies or substantial portions of the Software.
-	 * 
-	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	 * THE SOFTWARE.
-	 * 
-	 */
-	"use strict";
-	module.exports = function(Promise) {
-	var util = __webpack_require__(73);
-	var async = __webpack_require__(74);
-	var tryCatch2 = util.tryCatch2;
-	var tryCatch1 = util.tryCatch1;
-	var errorObj = util.errorObj;
-
-	function thrower(r) {
-	    throw r;
-	}
-
-	function spreadAdapter(val, receiver) {
-	    if (!util.isArray(val)) return successAdapter(val, receiver);
-	    var ret = util.tryCatchApply(this, [null].concat(val), receiver);
-	    if (ret === errorObj) {
-	        async.invokeLater(thrower, undefined, ret.e);
-	    }
-	}
-
-	function successAdapter(val, receiver) {
-	    var nodeback = this;
-	    var ret = val === undefined
-	        ? tryCatch1(nodeback, receiver, null)
-	        : tryCatch2(nodeback, receiver, null, val);
-	    if (ret === errorObj) {
-	        async.invokeLater(thrower, undefined, ret.e);
-	    }
-	}
-	function errorAdapter(reason, receiver) {
-	    var nodeback = this;
-	    var ret = tryCatch1(nodeback, receiver, reason);
-	    if (ret === errorObj) {
-	        async.invokeLater(thrower, undefined, ret.e);
-	    }
-	}
-
-	Promise.prototype.nodeify = function (nodeback, options) {
-	    if (typeof nodeback == "function") {
-	        var adapter = successAdapter;
-	        if (options !== undefined && Object(options).spread) {
-	            adapter = spreadAdapter;
-	        }
-	        this._then(
-	            adapter,
-	            errorAdapter,
-	            undefined,
-	            nodeback,
-	            this._boundTo
-	        );
-	    }
-	    return this;
-	};
-	};
-
-
-/***/ },
-/* 92 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * The MIT License (MIT)
-	 * 
-	 * Copyright (c) 2014 Petka Antonov
-	 * 
-	 * Permission is hereby granted, free of charge, to any person obtaining a copy
-	 * of this software and associated documentation files (the "Software"), to deal
-	 * in the Software without restriction, including without limitation the rights
-	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	 * copies of the Software, and to permit persons to whom the Software is
-	 * furnished to do so, subject to the following conditions:</p>
-	 * 
-	 * The above copyright notice and this permission notice shall be included in
-	 * all copies or substantial portions of the Software.
-	 * 
-	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	 * THE SOFTWARE.
-	 * 
-	 */
-	"use strict";
-	module.exports = function(Promise, INTERNAL) {
-	var THIS = {};
-	var util = __webpack_require__(73);
-	var nodebackForPromise = __webpack_require__(80)
-	    ._nodebackForPromise;
-	var withAppended = util.withAppended;
-	var maybeWrapAsError = util.maybeWrapAsError;
-	var canEvaluate = util.canEvaluate;
-	var TypeError = __webpack_require__(75).TypeError;
-	var defaultSuffix = "Async";
-	var defaultFilter = function(name, func) {
-	    return util.isIdentifier(name) &&
-	        name.charAt(0) !== "_" &&
-	        !util.isClass(func);
-	};
-	var defaultPromisified = {__isPromisified__: true};
-
-
-	function escapeIdentRegex(str) {
-	    return str.replace(/([$])/, "\\$");
-	}
-
-	function isPromisified(fn) {
-	    try {
-	        return fn.__isPromisified__ === true;
-	    }
-	    catch (e) {
-	        return false;
-	    }
-	}
-
-	function hasPromisified(obj, key, suffix) {
-	    var val = util.getDataPropertyOrDefault(obj, key + suffix,
-	                                            defaultPromisified);
-	    return val ? isPromisified(val) : false;
-	}
-	function checkValid(ret, suffix, suffixRegexp) {
-	    for (var i = 0; i < ret.length; i += 2) {
-	        var key = ret[i];
-	        if (suffixRegexp.test(key)) {
-	            var keyWithoutAsyncSuffix = key.replace(suffixRegexp, "");
-	            for (var j = 0; j < ret.length; j += 2) {
-	                if (ret[j] === keyWithoutAsyncSuffix) {
-	                    throw new TypeError("Cannot promisify an API that has normal methods with '%s'-suffix\u000a\u000a    See http://goo.gl/iWrZbw\u000a"
-	                        .replace("%s", suffix));
-	                }
-	            }
-	        }
-	    }
-	}
-
-	function promisifiableMethods(obj, suffix, suffixRegexp, filter) {
-	    var keys = util.inheritedDataKeys(obj);
-	    var ret = [];
-	    for (var i = 0; i < keys.length; ++i) {
-	        var key = keys[i];
-	        var value = obj[key];
-	        if (typeof value === "function" &&
-	            !isPromisified(value) &&
-	            !hasPromisified(obj, key, suffix) &&
-	            filter(key, value, obj)) {
-	            ret.push(key, value);
-	        }
-	    }
-	    checkValid(ret, suffix, suffixRegexp);
-	    return ret;
-	}
-
-	function switchCaseArgumentOrder(likelyArgumentCount) {
-	    var ret = [likelyArgumentCount];
-	    var min = Math.max(0, likelyArgumentCount - 1 - 5);
-	    for(var i = likelyArgumentCount - 1; i >= min; --i) {
-	        if (i === likelyArgumentCount) continue;
-	        ret.push(i);
-	    }
-	    for(var i = likelyArgumentCount + 1; i <= 5; ++i) {
-	        ret.push(i);
-	    }
-	    return ret;
-	}
-
-	function argumentSequence(argumentCount) {
-	    return util.filledRange(argumentCount, "arguments[", "]");
-	}
-
-	function parameterDeclaration(parameterCount) {
-	    return util.filledRange(parameterCount, "_arg", "");
-	}
-
-	function parameterCount(fn) {
-	    if (typeof fn.length === "number") {
-	        return Math.max(Math.min(fn.length, 1023 + 1), 0);
-	    }
-	    return 0;
-	}
-
-	function generatePropertyAccess(key) {
-	    if (util.isIdentifier(key)) {
-	        return "." + key;
-	    }
-	    else return "['" + key.replace(/(['\\])/g, "\\$1") + "']";
-	}
-
-	function makeNodePromisifiedEval(callback, receiver, originalName, fn, suffix) {
-	    var newParameterCount = Math.max(0, parameterCount(fn) - 1);
-	    var argumentOrder = switchCaseArgumentOrder(newParameterCount);
-	    var callbackName =
-	        (typeof originalName === "string" && util.isIdentifier(originalName)
-	            ? originalName + suffix
-	            : "promisified");
-
-	    function generateCallForArgumentCount(count) {
-	        var args = argumentSequence(count).join(", ");
-	        var comma = count > 0 ? ", " : "";
-	        var ret;
-	        if (typeof callback === "string") {
-	            ret = "                                                          \n\
-	                this.method({{args}}, fn);                                   \n\
-	                break;                                                       \n\
-	            ".replace(".method", generatePropertyAccess(callback));
-	        } else if (receiver === THIS) {
-	            ret =  "                                                         \n\
-	                callback.call(this, {{args}}, fn);                           \n\
-	                break;                                                       \n\
-	            ";
-	        } else if (receiver !== undefined) {
-	            ret =  "                                                         \n\
-	                callback.call(receiver, {{args}}, fn);                       \n\
-	                break;                                                       \n\
-	            ";
-	        } else {
-	            ret =  "                                                         \n\
-	                callback({{args}}, fn);                                      \n\
-	                break;                                                       \n\
-	            ";
-	        }
-	        return ret.replace("{{args}}", args).replace(", ", comma);
-	    }
-
-	    function generateArgumentSwitchCase() {
-	        var ret = "";
-	        for(var i = 0; i < argumentOrder.length; ++i) {
-	            ret += "case " + argumentOrder[i] +":" +
-	                generateCallForArgumentCount(argumentOrder[i]);
-	        }
-	        var codeForCall;
-	        if (typeof callback === "string") {
-	            codeForCall = "                                                  \n\
-	                this.property.apply(this, args);                             \n\
-	            "
-	                .replace(".property", generatePropertyAccess(callback));
-	        } else if (receiver === THIS) {
-	            codeForCall = "                                                  \n\
-	                callback.apply(this, args);                                  \n\
-	            ";
-	        } else {
-	            codeForCall = "                                                  \n\
-	                callback.apply(receiver, args);                              \n\
-	            ";
-	        }
-
-	        ret += "                                                             \n\
-	        default:                                                             \n\
-	            var args = new Array(len + 1);                                   \n\
-	            var i = 0;                                                       \n\
-	            for (var i = 0; i < len; ++i) {                                  \n\
-	               args[i] = arguments[i];                                       \n\
-	            }                                                                \n\
-	            args[i] = fn;                                                    \n\
-	            [CodeForCall]                                                    \n\
-	            break;                                                           \n\
-	        ".replace("[CodeForCall]", codeForCall);
-	        return ret;
-	    }
-
-	    return new Function("Promise",
-	                        "callback",
-	                        "receiver",
-	                        "withAppended",
-	                        "maybeWrapAsError",
-	                        "nodebackForPromise",
-	                        "INTERNAL","                                         \n\
-	        var ret = function (Parameters) {                        \n\
-	            'use strict';                                                    \n\
-	            var len = arguments.length;                                      \n\
-	            var promise = new Promise(INTERNAL);                             \n\
-	            promise._setTrace(undefined);                                    \n\
-	            var fn = nodebackForPromise(promise);                            \n\
-	            try {                                                            \n\
-	                switch(len) {                                                \n\
-	                    [CodeForSwitchCase]                                      \n\
-	                }                                                            \n\
-	            } catch (e) {                                                    \n\
-	                var wrapped = maybeWrapAsError(e);                           \n\
-	                promise._attachExtraTrace(wrapped);                          \n\
-	                promise._reject(wrapped);                                    \n\
-	            }                                                                \n\
-	            return promise;                                                  \n\
-	        };                                                                   \n\
-	        ret.__isPromisified__ = true;                                        \n\
-	        return ret;                                                          \n\
-	        "
-	        .replace("FunctionName", callbackName)
-	        .replace("Parameters", parameterDeclaration(newParameterCount))
-	        .replace("[CodeForSwitchCase]", generateArgumentSwitchCase()))(
-	            Promise,
-	            callback,
-	            receiver,
-	            withAppended,
-	            maybeWrapAsError,
-	            nodebackForPromise,
-	            INTERNAL
-	        );
-	}
-
-	function makeNodePromisifiedClosure(callback, receiver) {
-	    function promisified() {
-	        var _receiver = receiver;
-	        if (receiver === THIS) _receiver = this;
-	        if (typeof callback === "string") {
-	            callback = _receiver[callback];
-	        }
-	        var promise = new Promise(INTERNAL);
-	        promise._setTrace(undefined);
-	        var fn = nodebackForPromise(promise);
-	        try {
-	            callback.apply(_receiver, withAppended(arguments, fn));
-	        } catch(e) {
-	            var wrapped = maybeWrapAsError(e);
-	            promise._attachExtraTrace(wrapped);
-	            promise._reject(wrapped);
-	        }
-	        return promise;
-	    }
-	    promisified.__isPromisified__ = true;
-	    return promisified;
-	}
-
-	var makeNodePromisified = canEvaluate
-	    ? makeNodePromisifiedEval
-	    : makeNodePromisifiedClosure;
-
-	function promisifyAll(obj, suffix, filter, promisifier) {
-	    var suffixRegexp = new RegExp(escapeIdentRegex(suffix) + "$");
-	    var methods =
-	        promisifiableMethods(obj, suffix, suffixRegexp, filter);
-
-	    for (var i = 0, len = methods.length; i < len; i+= 2) {
-	        var key = methods[i];
-	        var fn = methods[i+1];
-	        var promisifiedKey = key + suffix;
-	        obj[promisifiedKey] = promisifier === makeNodePromisified
-	                ? makeNodePromisified(key, THIS, key, fn, suffix)
-	                : promisifier(fn);
-	    }
-	    util.toFastProperties(obj);
-	    return obj;
-	}
-
-	function promisify(callback, receiver) {
-	    return makeNodePromisified(callback, receiver, undefined, callback);
-	}
-
-	Promise.promisify = function (fn, receiver) {
-	    if (typeof fn !== "function") {
-	        throw new TypeError("fn must be a function\u000a\u000a    See http://goo.gl/916lJJ\u000a");
-	    }
-	    if (isPromisified(fn)) {
-	        return fn;
-	    }
-	    return promisify(fn, arguments.length < 2 ? THIS : receiver);
-	};
-
-	Promise.promisifyAll = function (target, options) {
-	    if (typeof target !== "function" && typeof target !== "object") {
-	        throw new TypeError("the target of promisifyAll must be an object or a function\u000a\u000a    See http://goo.gl/9ITlV0\u000a");
-	    }
-	    options = Object(options);
-	    var suffix = options.suffix;
-	    if (typeof suffix !== "string") suffix = defaultSuffix;
-	    var filter = options.filter;
-	    if (typeof filter !== "function") filter = defaultFilter;
-	    var promisifier = options.promisifier;
-	    if (typeof promisifier !== "function") promisifier = makeNodePromisified;
-
-	    if (!util.isIdentifier(suffix)) {
-	        throw new RangeError("suffix must be a valid identifier\u000a\u000a    See http://goo.gl/8FZo5V\u000a");
-	    }
-
-	    var keys = util.inheritedDataKeys(target, {includeHidden: true});
-	    for (var i = 0; i < keys.length; ++i) {
-	        var value = target[keys[i]];
-	        if (keys[i] !== "constructor" &&
-	            util.isClass(value)) {
-	            promisifyAll(value.prototype, suffix, filter, promisifier);
-	            promisifyAll(value, suffix, filter, promisifier);
-	        }
-	    }
-
-	    return promisifyAll(target, suffix, filter, promisifier);
-	};
-	};
-
-
-
-/***/ },
-/* 93 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * The MIT License (MIT)
-	 * 
-	 * Copyright (c) 2014 Petka Antonov
-	 * 
-	 * Permission is hereby granted, free of charge, to any person obtaining a copy
-	 * of this software and associated documentation files (the "Software"), to deal
-	 * in the Software without restriction, including without limitation the rights
-	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	 * copies of the Software, and to permit persons to whom the Software is
-	 * furnished to do so, subject to the following conditions:</p>
-	 * 
-	 * The above copyright notice and this permission notice shall be included in
-	 * all copies or substantial portions of the Software.
-	 * 
-	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	 * THE SOFTWARE.
-	 * 
-	 */
-	"use strict";
-	module.exports = function(Promise, PromiseArray, tryConvertToPromise) {
-	var util = __webpack_require__(73);
-	var apiRejection = __webpack_require__(81)(Promise);
-	var isObject = util.isObject;
-	var es5 = __webpack_require__(172);
-
-	function PropertiesPromiseArray(obj) {
-	    var keys = es5.keys(obj);
-	    var len = keys.length;
-	    var values = new Array(len * 2);
-	    for (var i = 0; i < len; ++i) {
-	        var key = keys[i];
-	        values[i] = obj[key];
-	        values[i + len] = key;
-	    }
-	    this.constructor$(values);
-	}
-	util.inherits(PropertiesPromiseArray, PromiseArray);
-
-	PropertiesPromiseArray.prototype._init = function () {
-	    this._init$(undefined, -3) ;
-	};
-
-	PropertiesPromiseArray.prototype._promiseFulfilled = function (value, index) {
-	    this._values[index] = value;
-	    var totalResolved = ++this._totalResolved;
-	    if (totalResolved >= this._length) {
-	        var val = {};
-	        var keyOffset = this.length();
-	        for (var i = 0, len = this.length(); i < len; ++i) {
-	            val[this._values[i + keyOffset]] = this._values[i];
-	        }
-	        this._resolve(val);
-	    }
-	};
-
-	PropertiesPromiseArray.prototype._promiseProgressed = function (value, index) {
-	    this._promise._progress({
-	        key: this._values[index + this.length()],
-	        value: value
-	    });
-	};
-
-	PropertiesPromiseArray.prototype.shouldCopyValues = function () {
-	    return false;
-	};
-
-	PropertiesPromiseArray.prototype.getActualLength = function (len) {
-	    return len >> 1;
-	};
-
-	function props(promises) {
-	    var ret;
-	    var castValue = tryConvertToPromise(promises, undefined);
-
-	    if (!isObject(castValue)) {
-	        return apiRejection("cannot await properties of a non-object\u000a\u000a    See http://goo.gl/OsFKC8\u000a");
-	    } else if (castValue instanceof Promise) {
-	        ret = castValue._then(
-	            Promise.props, undefined, undefined, undefined, undefined);
-	    } else {
-	        ret = new PropertiesPromiseArray(castValue).promise();
-	    }
-
-	    if (castValue instanceof Promise) {
-	        ret._propagateFrom(castValue, 4);
-	    }
-	    return ret;
-	}
-
-	Promise.prototype.props = function () {
-	    return props(this);
-	};
-
-	Promise.props = function (promises) {
-	    return props(promises);
-	};
-	};
-
-
-/***/ },
-/* 94 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * The MIT License (MIT)
-	 * 
-	 * Copyright (c) 2014 Petka Antonov
-	 * 
-	 * Permission is hereby granted, free of charge, to any person obtaining a copy
-	 * of this software and associated documentation files (the "Software"), to deal
-	 * in the Software without restriction, including without limitation the rights
-	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	 * copies of the Software, and to permit persons to whom the Software is
-	 * furnished to do so, subject to the following conditions:</p>
-	 * 
-	 * The above copyright notice and this permission notice shall be included in
-	 * all copies or substantial portions of the Software.
-	 * 
-	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	 * THE SOFTWARE.
-	 * 
-	 */
-	"use strict";
-	module.exports = function(Promise,
-	                          PromiseArray,
-	                          apiRejection,
-	                          tryConvertToPromise,
-	                          INTERNAL) {
-	var util = __webpack_require__(73);
-	var tryCatch4 = util.tryCatch4;
-	var tryCatch3 = util.tryCatch3;
-	var errorObj = util.errorObj;
-	function ReductionPromiseArray(promises, fn, accum, _each) {
-	    this.constructor$(promises);
-	    this._preservedValues = _each === INTERNAL ? [] : null;
-	    this._zerothIsAccum = (accum === undefined);
-	    this._gotAccum = false;
-	    this._reducingIndex = (this._zerothIsAccum ? 1 : 0);
-	    this._valuesPhase = undefined;
-
-	    var maybePromise = tryConvertToPromise(accum, undefined);
-	    var rejected = false;
-	    var isPromise = maybePromise instanceof Promise;
-	    if (isPromise) {
-	        maybePromise = maybePromise._target();
-	        if (maybePromise._isPending()) {
-	            maybePromise._proxyPromiseArray(this, -1);
-	        } else if (maybePromise._isFulfilled()) {
-	            accum = maybePromise._value();
-	            this._gotAccum = true;
-	        } else {
-	            maybePromise._unsetRejectionIsUnhandled();
-	            this._reject(maybePromise._reason());
-	            rejected = true;
-	        }
-	    }
-	    if (!(isPromise || this._zerothIsAccum)) this._gotAccum = true;
-	    this._callback = fn;
-	    this._accum = accum;
-	    if (!rejected) this._init$(undefined, -5);
-	}
-	util.inherits(ReductionPromiseArray, PromiseArray);
-
-	ReductionPromiseArray.prototype._init = function () {};
-
-	ReductionPromiseArray.prototype._resolveEmptyArray = function () {
-	    if (this._gotAccum || this._zerothIsAccum) {
-	        this._resolve(this._preservedValues !== null
-	                        ? [] : this._accum);
-	    }
-	};
-
-	ReductionPromiseArray.prototype._promiseFulfilled = function (value, index) {
-	    var values = this._values;
-	    values[index] = value;
-	    var length = this.length();
-	    var preservedValues = this._preservedValues;
-	    var isEach = preservedValues !== null;
-	    var gotAccum = this._gotAccum;
-	    var valuesPhase = this._valuesPhase;
-	    var valuesPhaseIndex;
-	    if (!valuesPhase) {
-	        valuesPhase = this._valuesPhase = Array(length);
-	        for (valuesPhaseIndex=0; valuesPhaseIndex<length; ++valuesPhaseIndex) {
-	            valuesPhase[valuesPhaseIndex] = 0;
-	        }
-	    }
-	    valuesPhaseIndex = valuesPhase[index];
-
-	    if (index === 0 && this._zerothIsAccum) {
-	        if (!gotAccum) {
-	            this._accum = value;
-	            this._gotAccum = gotAccum = true;
-	        }
-	        valuesPhase[index] = ((valuesPhaseIndex === 0)
-	            ? 1 : 2);
-	    } else if (index === -1) {
-	        if (!gotAccum) {
-	            this._accum = value;
-	            this._gotAccum = gotAccum = true;
-	        }
-	    } else {
-	        if (valuesPhaseIndex === 0) {
-	            valuesPhase[index] = 1;
-	        }
-	        else {
-	            valuesPhase[index] = 2;
-	            if (gotAccum) {
-	                this._accum = value;
-	            }
-	        }
-	    }
-	    if (!gotAccum) return;
-
-	    var callback = this._callback;
-	    var receiver = this._promise._boundTo;
-	    var ret;
-
-	    for (var i = this._reducingIndex; i < length; ++i) {
-	        valuesPhaseIndex = valuesPhase[i];
-	        if (valuesPhaseIndex === 2) {
-	            this._reducingIndex = i + 1;
-	            continue;
-	        }
-	        if (valuesPhaseIndex !== 1) return;
-	        value = values[i];
-	        if (value instanceof Promise) {
-	            value = value._target();
-	            if (value._isFulfilled()) {
-	                value = value._value();
-	            } else if (value._isPending()) {
-	                return;
-	            } else {
-	                value._unsetRejectionIsUnhandled();
-	                return this._reject(value._reason());
-	            }
-	        }
-
-	        if (isEach) {
-	            preservedValues.push(value);
-	            ret = tryCatch3(callback, receiver, value, i, length);
-	        }
-	        else {
-	            ret = tryCatch4(callback, receiver, this._accum, value, i, length);
-	        }
-
-	        if (ret === errorObj) return this._reject(ret.e);
-
-	        var maybePromise = tryConvertToPromise(ret, this._promise);
-	        if (maybePromise instanceof Promise) {
-	            maybePromise = maybePromise._target();
-	            if (maybePromise._isPending()) {
-	                valuesPhase[i] = 4;
-	                return maybePromise._proxyPromiseArray(this, i);
-	            } else if (maybePromise._isFulfilled()) {
-	                ret = maybePromise._value();
-	            } else {
-	                maybePromise._unsetRejectionIsUnhandled();
-	                return this._reject(maybePromise._reason());
-	            }
-	        }
-
-	        this._reducingIndex = i + 1;
-	        this._accum = ret;
-	    }
-
-	    if (this._reducingIndex < length) return;
-	    this._resolve(isEach ? preservedValues : this._accum);
-	};
-
-	function reduce(promises, fn, initialValue, _each) {
-	    if (typeof fn !== "function") return apiRejection("fn must be a function\u000a\u000a    See http://goo.gl/916lJJ\u000a");
-	    var array = new ReductionPromiseArray(promises, fn, initialValue, _each);
-	    return array.promise();
-	}
-
-	Promise.prototype.reduce = function (fn, initialValue) {
-	    return reduce(this, fn, initialValue, null);
-	};
-
-	Promise.reduce = function (promises, fn, initialValue, _each) {
-	    return reduce(promises, fn, initialValue, _each);
-	};
-	};
-
-
-/***/ },
-/* 95 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * The MIT License (MIT)
-	 * 
-	 * Copyright (c) 2014 Petka Antonov
-	 * 
-	 * Permission is hereby granted, free of charge, to any person obtaining a copy
-	 * of this software and associated documentation files (the "Software"), to deal
-	 * in the Software without restriction, including without limitation the rights
-	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	 * copies of the Software, and to permit persons to whom the Software is
-	 * furnished to do so, subject to the following conditions:</p>
-	 * 
-	 * The above copyright notice and this permission notice shall be included in
-	 * all copies or substantial portions of the Software.
-	 * 
-	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	 * THE SOFTWARE.
-	 * 
-	 */
-	"use strict";
-	module.exports =
-	    function(Promise, PromiseArray) {
-	var PromiseInspection = Promise.PromiseInspection;
-	var util = __webpack_require__(73);
-
-	function SettledPromiseArray(values) {
-	    this.constructor$(values);
-	}
-	util.inherits(SettledPromiseArray, PromiseArray);
-
-	SettledPromiseArray.prototype._promiseResolved = function (index, inspection) {
-	    this._values[index] = inspection;
-	    var totalResolved = ++this._totalResolved;
-	    if (totalResolved >= this._length) {
-	        this._resolve(this._values);
-	    }
-	};
-
-	SettledPromiseArray.prototype._promiseFulfilled = function (value, index) {
-	    var ret = new PromiseInspection();
-	    ret._bitField = 268435456;
-	    ret._settledValue = value;
-	    this._promiseResolved(index, ret);
-	};
-	SettledPromiseArray.prototype._promiseRejected = function (reason, index) {
-	    var ret = new PromiseInspection();
-	    ret._bitField = 134217728;
-	    ret._settledValue = reason;
-	    this._promiseResolved(index, ret);
-	};
-
-	Promise.settle = function (promises) {
-	    return new SettledPromiseArray(promises).promise();
-	};
-
-	Promise.prototype.settle = function () {
-	    return new SettledPromiseArray(this).promise();
-	};
-	};
-
-
-/***/ },
-/* 96 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * The MIT License (MIT)
-	 * 
-	 * Copyright (c) 2014 Petka Antonov
-	 * 
-	 * Permission is hereby granted, free of charge, to any person obtaining a copy
-	 * of this software and associated documentation files (the "Software"), to deal
-	 * in the Software without restriction, including without limitation the rights
-	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	 * copies of the Software, and to permit persons to whom the Software is
-	 * furnished to do so, subject to the following conditions:</p>
-	 * 
-	 * The above copyright notice and this permission notice shall be included in
-	 * all copies or substantial portions of the Software.
-	 * 
-	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	 * THE SOFTWARE.
-	 * 
-	 */
-	"use strict";
-	module.exports =
-	function(Promise, PromiseArray, apiRejection) {
-	var util = __webpack_require__(73);
-	var RangeError = __webpack_require__(75).RangeError;
-	var AggregateError = __webpack_require__(75).AggregateError;
-	var isArray = util.isArray;
-
-
-	function SomePromiseArray(values) {
-	    this.constructor$(values);
-	    this._howMany = 0;
-	    this._unwrap = false;
-	    this._initialized = false;
-	}
-	util.inherits(SomePromiseArray, PromiseArray);
-
-	SomePromiseArray.prototype._init = function () {
-	    if (!this._initialized) {
-	        return;
-	    }
-	    if (this._howMany === 0) {
-	        this._resolve([]);
-	        return;
-	    }
-	    this._init$(undefined, -5);
-	    var isArrayResolved = isArray(this._values);
-	    if (!this._isResolved() &&
-	        isArrayResolved &&
-	        this._howMany > this._canPossiblyFulfill()) {
-	        this._reject(this._getRangeError(this.length()));
-	    }
-	};
-
-	SomePromiseArray.prototype.init = function () {
-	    this._initialized = true;
-	    this._init();
-	};
-
-	SomePromiseArray.prototype.setUnwrap = function () {
-	    this._unwrap = true;
-	};
-
-	SomePromiseArray.prototype.howMany = function () {
-	    return this._howMany;
-	};
-
-	SomePromiseArray.prototype.setHowMany = function (count) {
-	    if (this._isResolved()) return;
-	    this._howMany = count;
-	};
-
-	SomePromiseArray.prototype._promiseFulfilled = function (value) {
-	    this._addFulfilled(value);
-	    if (this._fulfilled() === this.howMany()) {
-	        this._values.length = this.howMany();
-	        if (this.howMany() === 1 && this._unwrap) {
-	            this._resolve(this._values[0]);
-	        } else {
-	            this._resolve(this._values);
-	        }
-	    }
-
-	};
-	SomePromiseArray.prototype._promiseRejected = function (reason) {
-	    this._addRejected(reason);
-	    if (this.howMany() > this._canPossiblyFulfill()) {
-	        var e = new AggregateError();
-	        for (var i = this.length(); i < this._values.length; ++i) {
-	            e.push(this._values[i]);
-	        }
-	        this._reject(e);
-	    }
-	};
-
-	SomePromiseArray.prototype._fulfilled = function () {
-	    return this._totalResolved;
-	};
-
-	SomePromiseArray.prototype._rejected = function () {
-	    return this._values.length - this.length();
-	};
-
-	SomePromiseArray.prototype._addRejected = function (reason) {
-	    this._values.push(reason);
-	};
-
-	SomePromiseArray.prototype._addFulfilled = function (value) {
-	    this._values[this._totalResolved++] = value;
-	};
-
-	SomePromiseArray.prototype._canPossiblyFulfill = function () {
-	    return this.length() - this._rejected();
-	};
-
-	SomePromiseArray.prototype._getRangeError = function (count) {
-	    var message = "Input array must contain at least " +
-	            this._howMany + " items but contains only " + count + " items";
-	    return new RangeError(message);
-	};
-
-	SomePromiseArray.prototype._resolveEmptyArray = function () {
-	    this._reject(this._getRangeError(0));
-	};
-
-	function some(promises, howMany) {
-	    if ((howMany | 0) !== howMany || howMany < 0) {
-	        return apiRejection("expecting a positive integer\u000a\u000a    See http://goo.gl/1wAmHx\u000a");
-	    }
-	    var ret = new SomePromiseArray(promises);
-	    var promise = ret.promise();
-	    if (promise.isRejected()) {
-	        return promise;
-	    }
-	    ret.setHowMany(howMany);
-	    ret.init();
-	    return promise;
-	}
-
-	Promise.some = function (promises, howMany) {
-	    return some(promises, howMany);
-	};
-
-	Promise.prototype.some = function (howMany) {
-	    return some(this, howMany);
-	};
-
-	Promise._SomePromiseArray = SomePromiseArray;
-	};
-
-
-/***/ },
-/* 97 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * The MIT License (MIT)
-	 * 
-	 * Copyright (c) 2014 Petka Antonov
-	 * 
-	 * Permission is hereby granted, free of charge, to any person obtaining a copy
-	 * of this software and associated documentation files (the "Software"), to deal
-	 * in the Software without restriction, including without limitation the rights
-	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	 * copies of the Software, and to permit persons to whom the Software is
-	 * furnished to do so, subject to the following conditions:</p>
-	 * 
-	 * The above copyright notice and this permission notice shall be included in
-	 * all copies or substantial portions of the Software.
-	 * 
-	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	 * THE SOFTWARE.
-	 * 
-	 */
-	"use strict";
-	module.exports = function(Promise, PromiseArray) {
-	var util = __webpack_require__(73);
-	var async = __webpack_require__(74);
-	var errors = __webpack_require__(75);
-	var tryCatch1 = util.tryCatch1;
-	var errorObj = util.errorObj;
-
-	Promise.prototype.progressed = function (handler) {
-	    return this._then(undefined, undefined, handler, undefined, undefined);
-	};
-
-	Promise.prototype._progress = function (progressValue) {
-	    if (this._isFollowingOrFulfilledOrRejected()) return;
-	    this._target()._progressUnchecked(progressValue);
-
-	};
-
-	Promise.prototype._progressHandlerAt = function (index) {
-	    return index === 0
-	        ? this._progressHandler0
-	        : this[(index << 2) + index - 5 + 2];
-	};
-
-	Promise.prototype._doProgressWith = function (progression) {
-	    var progressValue = progression.value;
-	    var handler = progression.handler;
-	    var promise = progression.promise;
-	    var receiver = progression.receiver;
-
-	    var ret = tryCatch1(handler, receiver, progressValue);
-	    if (ret === errorObj) {
-	        if (ret.e != null &&
-	            ret.e.name !== "StopProgressPropagation") {
-	            var trace = errors.canAttachTrace(ret.e)
-	                ? ret.e : new Error(ret.e + "");
-	            promise._attachExtraTrace(trace);
-	            promise._progress(ret.e);
-	        }
-	    } else if (ret instanceof Promise) {
-	        ret._then(promise._progress, null, null, promise, undefined);
-	    } else {
-	        promise._progress(ret);
-	    }
-	};
-
-
-	Promise.prototype._progressUnchecked = function (progressValue) {
-	    var len = this._length();
-	    var progress = this._progress;
-	    for (var i = 0; i < len; i++) {
-	        var handler = this._progressHandlerAt(i);
-	        var promise = this._promiseAt(i);
-	        if (!(promise instanceof Promise)) {
-	            var receiver = this._receiverAt(i);
-	            if (typeof handler === "function") {
-	                handler.call(receiver, progressValue, promise);
-	            } else if (receiver instanceof PromiseArray &&
-	                       !receiver._isResolved()) {
-	                receiver._promiseProgressed(progressValue, promise);
-	            }
-	            continue;
-	        }
-
-	        if (typeof handler === "function") {
-	            async.invoke(this._doProgressWith, this, {
-	                handler: handler,
-	                promise: promise,
-	                receiver: this._receiverAt(i),
-	                value: progressValue
-	            });
-	        } else {
-	            async.invoke(progress, promise, progressValue);
-	        }
-	    }
-	};
-	};
-
-
-/***/ },
-/* 98 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * The MIT License (MIT)
-	 * 
-	 * Copyright (c) 2014 Petka Antonov
-	 * 
-	 * Permission is hereby granted, free of charge, to any person obtaining a copy
-	 * of this software and associated documentation files (the "Software"), to deal
-	 * in the Software without restriction, including without limitation the rights
-	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	 * copies of the Software, and to permit persons to whom the Software is
-	 * furnished to do so, subject to the following conditions:</p>
-	 * 
-	 * The above copyright notice and this permission notice shall be included in
-	 * all copies or substantial portions of the Software.
-	 * 
-	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	 * THE SOFTWARE.
-	 * 
-	 */
-	"use strict";
-	module.exports = function(Promise, INTERNAL) {
-	var errors = __webpack_require__(75);
-	var canAttachTrace = errors.canAttachTrace;
-	var async = __webpack_require__(74);
-	var CancellationError = errors.CancellationError;
-
-	Promise.prototype._cancel = function (reason) {
-	    if (!this.isCancellable()) return this;
-	    var parent;
-	    var promiseToReject = this;
-	    while ((parent = promiseToReject._cancellationParent) !== undefined &&
-	        parent.isCancellable()) {
-	        promiseToReject = parent;
-	    }
-	    this._unsetCancellable();
-	    promiseToReject._attachExtraTrace(reason);
-	    promiseToReject._target()._rejectUnchecked(reason);
-	};
-
-	Promise.prototype.cancel = function (reason) {
-	    if (!this.isCancellable()) return this;
-	    reason = reason !== undefined
-	        ? (canAttachTrace(reason) ? reason : new Error(reason + ""))
-	        : new CancellationError();
-	    async.invokeLater(this._cancel, this, reason);
-	    return this;
-	};
-
-	Promise.prototype.cancellable = function () {
-	    if (this._cancellable()) return this;
-	    this._setCancellable();
-	    this._cancellationParent = undefined;
-	    return this;
-	};
-
-	Promise.prototype.uncancellable = function () {
-	    var ret = new Promise(INTERNAL);
-	    ret._propagateFrom(this, 2 | 4);
-	    ret._follow(this);
-	    ret._unsetCancellable();
-	    return ret;
-	};
-
-	Promise.prototype.fork = function (didFulfill, didReject, didProgress) {
-	    var ret = this._then(didFulfill, didReject, didProgress,
-	                         undefined, undefined);
-
-	    ret._setCancellable();
-	    ret._cancellationParent = undefined;
-	    return ret;
-	};
-	};
-
-
-/***/ },
-/* 99 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * The MIT License (MIT)
-	 * 
-	 * Copyright (c) 2014 Petka Antonov
-	 * 
-	 * Permission is hereby granted, free of charge, to any person obtaining a copy
-	 * of this software and associated documentation files (the "Software"), to deal
-	 * in the Software without restriction, including without limitation the rights
-	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	 * copies of the Software, and to permit persons to whom the Software is
-	 * furnished to do so, subject to the following conditions:</p>
-	 * 
-	 * The above copyright notice and this permission notice shall be included in
-	 * all copies or substantial portions of the Software.
-	 * 
-	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	 * THE SOFTWARE.
-	 * 
-	 */
-	"use strict";
-	module.exports = function(Promise, INTERNAL) {
-	var PromiseMap = Promise.map;
-
-	Promise.prototype.filter = function (fn, options) {
-	    return PromiseMap(this, fn, options, INTERNAL);
-	};
-
-	Promise.filter = function (promises, fn, options) {
-	    return PromiseMap(promises, fn, options, INTERNAL);
-	};
-	};
-
-
-/***/ },
-/* 100 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * The MIT License (MIT)
-	 * 
-	 * Copyright (c) 2014 Petka Antonov
-	 * 
-	 * Permission is hereby granted, free of charge, to any person obtaining a copy
-	 * of this software and associated documentation files (the "Software"), to deal
-	 * in the Software without restriction, including without limitation the rights
-	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	 * copies of the Software, and to permit persons to whom the Software is
-	 * furnished to do so, subject to the following conditions:</p>
-	 * 
-	 * The above copyright notice and this permission notice shall be included in
-	 * all copies or substantial portions of the Software.
-	 * 
-	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	 * THE SOFTWARE.
-	 * 
-	 */
-	"use strict";
-	module.exports = function(Promise) {
-	var SomePromiseArray = Promise._SomePromiseArray;
-	function any(promises) {
-	    var ret = new SomePromiseArray(promises);
-	    var promise = ret.promise();
-	    if (promise.isRejected()) {
-	        return promise;
-	    }
-	    ret.setHowMany(1);
-	    ret.setUnwrap();
-	    ret.init();
-	    return promise;
-	}
-
-	Promise.any = function (promises) {
-	    return any(promises);
-	};
-
-	Promise.prototype.any = function () {
-	    return any(this);
-	};
-
-	};
-
-
-/***/ },
-/* 101 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * The MIT License (MIT)
-	 * 
-	 * Copyright (c) 2014 Petka Antonov
-	 * 
-	 * Permission is hereby granted, free of charge, to any person obtaining a copy
-	 * of this software and associated documentation files (the "Software"), to deal
-	 * in the Software without restriction, including without limitation the rights
-	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	 * copies of the Software, and to permit persons to whom the Software is
-	 * furnished to do so, subject to the following conditions:</p>
-	 * 
-	 * The above copyright notice and this permission notice shall be included in
-	 * all copies or substantial portions of the Software.
-	 * 
-	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	 * THE SOFTWARE.
-	 * 
-	 */
-	"use strict";
-	module.exports = function(Promise, INTERNAL) {
-	var PromiseReduce = Promise.reduce;
-
-	Promise.prototype.each = function (fn) {
-	    return PromiseReduce(this, fn, null, INTERNAL);
-	};
-
-	Promise.each = function (promises, fn) {
-	    return PromiseReduce(promises, fn, null, INTERNAL);
-	};
-	};
-
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(222)(module), (function() { return this; }())))
 
 /***/ },
 /* 102 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * The MIT License (MIT)
-	 * 
-	 * Copyright (c) 2014 Petka Antonov
-	 * 
-	 * Permission is hereby granted, free of charge, to any person obtaining a copy
-	 * of this software and associated documentation files (the "Software"), to deal
-	 * in the Software without restriction, including without limitation the rights
-	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	 * copies of the Software, and to permit persons to whom the Software is
-	 * furnished to do so, subject to the following conditions:</p>
-	 * 
-	 * The above copyright notice and this permission notice shall be included in
-	 * all copies or substantial portions of the Software.
-	 * 
-	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	 * THE SOFTWARE.
-	 * 
-	 */
-	"use strict";
-	module.exports = function (Promise, apiRejection, tryConvertToPromise) {
-	    var TypeError = __webpack_require__(75).TypeError;
-	    var inherits = __webpack_require__(73).inherits;
-	    var PromiseInspection = Promise.PromiseInspection;
-
-	    function inspectionMapper(inspections) {
-	        var len = inspections.length;
-	        for (var i = 0; i < len; ++i) {
-	            var inspection = inspections[i];
-	            if (inspection.isRejected()) {
-	                return Promise.reject(inspection.error());
-	            }
-	            inspections[i] = inspection._settledValue;
-	        }
-	        return inspections;
-	    }
-
-	    function thrower(e) {
-	        setTimeout(function(){throw e;}, 0);
-	    }
-
-	    function castPreservingDisposable(thenable) {
-	        var maybePromise = tryConvertToPromise(thenable, undefined);
-	        if (maybePromise !== thenable &&
-	            typeof thenable._isDisposable === "function" &&
-	            typeof thenable._getDisposer === "function" &&
-	            thenable._isDisposable()) {
-	            maybePromise._setDisposable(thenable._getDisposer());
-	        }
-	        return maybePromise;
-	    }
-	    function dispose(resources, inspection) {
-	        var i = 0;
-	        var len = resources.length;
-	        var ret = Promise.defer();
-	        function iterator() {
-	            if (i >= len) return ret.resolve();
-	            var maybePromise = castPreservingDisposable(resources[i++]);
-	            if (maybePromise instanceof Promise &&
-	                maybePromise._isDisposable()) {
-	                try {
-	                    maybePromise = tryConvertToPromise(
-	                        maybePromise._getDisposer().tryDispose(inspection),
-	                        undefined);
-	                } catch (e) {
-	                    return thrower(e);
-	                }
-	                if (maybePromise instanceof Promise) {
-	                    return maybePromise._then(iterator, thrower,
-	                                              null, null, null);
-	                }
-	            }
-	            iterator();
-	        }
-	        iterator();
-	        return ret.promise;
-	    }
-
-	    function disposerSuccess(value) {
-	        var inspection = new PromiseInspection();
-	        inspection._settledValue = value;
-	        inspection._bitField = 268435456;
-	        return dispose(this, inspection).thenReturn(value);
-	    }
-
-	    function disposerFail(reason) {
-	        var inspection = new PromiseInspection();
-	        inspection._settledValue = reason;
-	        inspection._bitField = 134217728;
-	        return dispose(this, inspection).thenThrow(reason);
-	    }
-
-	    function Disposer(data, promise) {
-	        this._data = data;
-	        this._promise = promise;
-	    }
-
-	    Disposer.prototype.data = function () {
-	        return this._data;
-	    };
-
-	    Disposer.prototype.promise = function () {
-	        return this._promise;
-	    };
-
-	    Disposer.prototype.resource = function () {
-	        if (this.promise()._isFulfilled()) {
-	            return this.promise()._value();
-	        }
-	        return null;
-	    };
-
-	    Disposer.prototype.tryDispose = function(inspection) {
-	        var resource = this.resource();
-	        var ret = resource !== null
-	            ? this.doDispose(resource, inspection) : null;
-	        this._promise._unsetDisposable();
-	        this._data = this._promise = null;
-	        return ret;
-	    };
-
-	    Disposer.isDisposer = function (d) {
-	        return (d != null &&
-	                typeof d.resource === "function" &&
-	                typeof d.tryDispose === "function");
-	    };
-
-	    function FunctionDisposer(fn, promise) {
-	        this.constructor$(fn, promise);
-	    }
-	    inherits(FunctionDisposer, Disposer);
-
-	    FunctionDisposer.prototype.doDispose = function (resource, inspection) {
-	        var fn = this.data();
-	        return fn.call(resource, resource, inspection);
-	    };
-
-	    Promise.using = function () {
-	        var len = arguments.length;
-	        if (len < 2) return apiRejection(
-	                        "you must pass at least 2 arguments to Promise.using");
-	        var fn = arguments[len - 1];
-	        if (typeof fn !== "function") return apiRejection("fn must be a function\u000a\u000a    See http://goo.gl/916lJJ\u000a");
-	        len--;
-	        var resources = new Array(len);
-	        for (var i = 0; i < len; ++i) {
-	            var resource = arguments[i];
-	            if (Disposer.isDisposer(resource)) {
-	                var disposer = resource;
-	                resource = resource.promise();
-	                resource._setDisposable(disposer);
-	            }
-	            resources[i] = resource;
-	        }
-
-	        return Promise.settle(resources)
-	            .then(inspectionMapper)
-	            .spread(fn)
-	            ._then(
-	                disposerSuccess, disposerFail, undefined, resources, undefined);
-	    };
-
-	    Promise.prototype._setDisposable = function (disposer) {
-	        this._bitField = this._bitField | 262144;
-	        this._disposer = disposer;
-	    };
-
-	    Promise.prototype._isDisposable = function () {
-	        return (this._bitField & 262144) > 0;
-	    };
-
-	    Promise.prototype._getDisposer = function () {
-	        return this._disposer;
-	    };
-
-	    Promise.prototype._unsetDisposable = function () {
-	        this._bitField = this._bitField & (~262144);
-	        this._disposer = undefined;
-	    };
-
-	    Promise.prototype.disposer = function (fn) {
-	        if (typeof fn === "function") {
-	            return new FunctionDisposer(fn, this._target());
-	        }
-	        throw new TypeError();
-	    };
-
-	};
-
-
-/***/ },
-/* 103 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var LifeCycle = {
@@ -33222,7 +33264,7 @@
 
 
 /***/ },
-/* 104 */
+/* 103 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// This class is real Aggregator instance
@@ -33261,7 +33303,7 @@
 
 
 /***/ },
-/* 105 */
+/* 104 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var hasOwn = Object.prototype.hasOwnProperty;
@@ -33348,7 +33390,7 @@
 
 
 /***/ },
-/* 106 */
+/* 105 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __extends = this.__extends || function (d, b) {
@@ -33358,7 +33400,7 @@
 	    d.prototype = new __();
 	};
 	var Battler = __webpack_require__(31);
-	var GroupId = __webpack_require__(39);
+	var GroupId = __webpack_require__(38);
 	var CreateBullet = __webpack_require__(32);
 	var Enemy = (function (_super) {
 	    __extends(Enemy, _super);
@@ -33382,7 +33424,7 @@
 
 
 /***/ },
-/* 107 */
+/* 106 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __extends = this.__extends || function (d, b) {
@@ -33391,8 +33433,8 @@
 	    __.prototype = b.prototype;
 	    d.prototype = new __();
 	};
-	var Entity = __webpack_require__(71);
-	var Physics = __webpack_require__(69);
+	var Entity = __webpack_require__(100);
+	var Physics = __webpack_require__(98);
 	var Bullet = (function (_super) {
 	    __extends(Bullet, _super);
 	    function Bullet(owner) {
@@ -33410,7 +33452,7 @@
 	        });
 	    };
 	    Bullet.prototype.onHit = function (other) {
-	        if (this.groupId !== other.groupId) {
+	        if (other.groupId && this.groupId !== other.groupId) {
 	            this.attack(other);
 	            this.remove();
 	        }
@@ -33435,7 +33477,7 @@
 
 
 /***/ },
-/* 108 */
+/* 107 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __extends = this.__extends || function (d, b) {
@@ -33473,26 +33515,7 @@
 
 
 /***/ },
-/* 109 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(8);
-	module.exports= function (locals) {  var onClick = "onClick" in locals ? locals.onClick : jade_globals_onClick;
-	  return function() {
-	    var tags = [];
-	    tags.push(React.createElement("div", {
-	      className: "opening"
-	    }, React.createElement("h1", {}, "Actrogue2"), React.createElement("p", {}, "~ under technical testings"), React.createElement("button", {
-	      onClick: onClick
-	    }, "Game Start"), React.createElement("h2", {}, "操作方法"), React.createElement("p", {}, React.createElement("dl", {}, React.createElement("dt", {}, "WASD or ↑←↓"), React.createElement("dd", {}, "プレイヤーの移動"), React.createElement("dt", {}, "マウス"), React.createElement("dd", {}, "照準の移動"), React.createElement("dt", {}, "左クリック"), React.createElement("dd", {}, "発射"), React.createElement("dt", {}, "右クリック"), React.createElement("dd", {}, "弾を発射するトラップ")))));
-	    if (1 === tags.length) return tags.pop();
-	    tags.unshift("div", null);
-	    return React.createElement.apply(React, tags);
-	  }.call(this);
-	}
-
-/***/ },
-/* 110 */
+/* 108 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(8);
@@ -33506,6 +33529,9 @@
 	  var stage = "stage" in locals ? locals.stage : jade_globals_stage;
 	  var entities = "entities" in locals ? locals.entities : jade_globals_entities;
 	  var focus = "focus" in locals ? locals.focus : jade_globals_focus;
+	  var paused = "paused" in locals ? locals.paused : jade_globals_paused;
+	  var onClickRestart = "onClickRestart" in locals ? locals.onClickRestart : jade_globals_onClickRestart;
+	  var onClickStop = "onClickStop" in locals ? locals.onClickStop : jade_globals_onClickStop;
 	  return function() {
 	    var tags = [];
 	    jade_mixins.entityAvatar = function(entity) {
@@ -33647,6 +33673,13 @@
 	      tags = tags.concat(jade_mixins.focus.apply(this, [ focus.x, focus.y ]));
 	      return tags;
 	    }.call(this)))));
+	    tags.push(React.createElement("div", {
+	      className: "controll"
+	    }, paused ? React.createElement("button", {
+	      onClick: onClickRestart
+	    }, "restart") : React.createElement("button", {
+	      onClick: onClickStop
+	    }, "stop")));
 	    if (1 === tags.length) return tags.pop();
 	    tags.unshift("div", null);
 	    return React.createElement.apply(React, tags);
@@ -33654,7 +33687,26 @@
 	}
 
 /***/ },
-/* 111 */
+/* 109 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(8);
+	module.exports= function (locals) {  var onClick = "onClick" in locals ? locals.onClick : jade_globals_onClick;
+	  return function() {
+	    var tags = [];
+	    tags.push(React.createElement("div", {
+	      className: "opening"
+	    }, React.createElement("h1", {}, "Actrogue2"), React.createElement("p", {}, "~ under technical testings"), React.createElement("button", {
+	      onClick: onClick
+	    }, "Game Start"), React.createElement("h2", {}, "操作方法"), React.createElement("p", {}, React.createElement("dl", {}, React.createElement("dt", {}, "WASD or ↑←↓"), React.createElement("dd", {}, "プレイヤーの移動"), React.createElement("dt", {}, "マウス"), React.createElement("dd", {}, "照準の移動"), React.createElement("dt", {}, "左クリック"), React.createElement("dd", {}, "発射"), React.createElement("dt", {}, "右クリック"), React.createElement("dd", {}, "弾を発射するトラップ")))));
+	    if (1 === tags.length) return tags.pop();
+	    tags.unshift("div", null);
+	    return React.createElement.apply(React, tags);
+	  }.call(this);
+	}
+
+/***/ },
+/* 110 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(8);
@@ -33673,7 +33725,7 @@
 	}
 
 /***/ },
-/* 112 */
+/* 111 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// shim for using process in browser
@@ -33765,7 +33817,7 @@
 
 
 /***/ },
-/* 113 */
+/* 112 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -33784,7 +33836,7 @@
 
 	"use strict";
 
-	var invariant = __webpack_require__(118);
+	var invariant = __webpack_require__(120);
 
 	function checkMask(value, bitmask) {
 	  return (value & bitmask) === bitmask;
@@ -34064,10 +34116,10 @@
 
 	module.exports = DOMProperty;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(112)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(111)))
 
 /***/ },
-/* 114 */
+/* 113 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -34112,7 +34164,7 @@
 
 
 /***/ },
-/* 115 */
+/* 114 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -34150,7 +34202,7 @@
 
 
 /***/ },
-/* 116 */
+/* 115 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -34166,7 +34218,7 @@
 
 	"use strict";
 
-	var emptyFunction = __webpack_require__(168);
+	var emptyFunction = __webpack_require__(167);
 
 	/**
 	 * Similar to invariant but only logs a warning if the condition is not met.
@@ -34195,146 +34247,10 @@
 
 	module.exports = warning;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(112)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(111)))
 
 /***/ },
-/* 117 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-2014, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule EventConstants
-	 */
-
-	"use strict";
-
-	var keyMirror = __webpack_require__(123);
-
-	var PropagationPhases = keyMirror({bubbled: null, captured: null});
-
-	/**
-	 * Types of raw signals from the browser caught at the top level.
-	 */
-	var topLevelTypes = keyMirror({
-	  topBlur: null,
-	  topChange: null,
-	  topClick: null,
-	  topCompositionEnd: null,
-	  topCompositionStart: null,
-	  topCompositionUpdate: null,
-	  topContextMenu: null,
-	  topCopy: null,
-	  topCut: null,
-	  topDoubleClick: null,
-	  topDrag: null,
-	  topDragEnd: null,
-	  topDragEnter: null,
-	  topDragExit: null,
-	  topDragLeave: null,
-	  topDragOver: null,
-	  topDragStart: null,
-	  topDrop: null,
-	  topError: null,
-	  topFocus: null,
-	  topInput: null,
-	  topKeyDown: null,
-	  topKeyPress: null,
-	  topKeyUp: null,
-	  topLoad: null,
-	  topMouseDown: null,
-	  topMouseMove: null,
-	  topMouseOut: null,
-	  topMouseOver: null,
-	  topMouseUp: null,
-	  topPaste: null,
-	  topReset: null,
-	  topScroll: null,
-	  topSelectionChange: null,
-	  topSubmit: null,
-	  topTextInput: null,
-	  topTouchCancel: null,
-	  topTouchEnd: null,
-	  topTouchMove: null,
-	  topTouchStart: null,
-	  topWheel: null
-	});
-
-	var EventConstants = {
-	  topLevelTypes: topLevelTypes,
-	  PropagationPhases: PropagationPhases
-	};
-
-	module.exports = EventConstants;
-
-
-/***/ },
-/* 118 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(process) {/**
-	 * Copyright 2013-2014, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule invariant
-	 */
-
-	"use strict";
-
-	/**
-	 * Use invariant() to assert state which your program assumes to be true.
-	 *
-	 * Provide sprintf-style format (only %s is supported) and arguments
-	 * to provide information about what broke and what you were
-	 * expecting.
-	 *
-	 * The invariant message will be stripped in production, but the invariant
-	 * will remain to ensure logic does not differ in production.
-	 */
-
-	var invariant = function(condition, format, a, b, c, d, e, f) {
-	  if ("production" !== process.env.NODE_ENV) {
-	    if (format === undefined) {
-	      throw new Error('invariant requires an error message argument');
-	    }
-	  }
-
-	  if (!condition) {
-	    var error;
-	    if (format === undefined) {
-	      error = new Error(
-	        'Minified exception occurred; use the non-minified dev environment ' +
-	        'for the full error message and additional helpful warnings.'
-	      );
-	    } else {
-	      var args = [a, b, c, d, e, f];
-	      var argIndex = 0;
-	      error = new Error(
-	        'Invariant Violation: ' +
-	        format.replace(/%s/g, function() { return args[argIndex++]; })
-	      );
-	    }
-
-	    error.framesToPop = 1; // we don't care about invariant's own frame
-	    throw error;
-	  }
-	};
-
-	module.exports = invariant;
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(112)))
-
-/***/ },
-/* 119 */
+/* 116 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -34350,7 +34266,7 @@
 
 	"use strict";
 
-	var invariant = __webpack_require__(118);
+	var invariant = __webpack_require__(120);
 
 	/**
 	 * Static poolers. Several custom versions for each potential number of
@@ -34450,10 +34366,10 @@
 
 	module.exports = PooledClass;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(112)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(111)))
 
 /***/ },
-/* 120 */
+/* 117 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -34469,10 +34385,10 @@
 
 	"use strict";
 
-	var ReactElement = __webpack_require__(51);
-	var ReactInstanceHandles = __webpack_require__(56);
+	var ReactElement = __webpack_require__(49);
+	var ReactInstanceHandles = __webpack_require__(54);
 
-	var invariant = __webpack_require__(118);
+	var invariant = __webpack_require__(120);
 
 	var SEPARATOR = ReactInstanceHandles.SEPARATOR;
 	var SUBSEPARATOR = ':';
@@ -34636,10 +34552,10 @@
 
 	module.exports = traverseAllChildren;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(112)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(111)))
 
 /***/ },
-/* 121 */
+/* 118 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -34655,8 +34571,8 @@
 
 	"use strict";
 
-	var emptyObject = __webpack_require__(177);
-	var invariant = __webpack_require__(118);
+	var emptyObject = __webpack_require__(178);
+	var invariant = __webpack_require__(120);
 
 	/**
 	 * ReactOwners are capable of storing references to owned components.
@@ -34795,10 +34711,10 @@
 
 	module.exports = ReactOwner;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(112)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(111)))
 
 /***/ },
-/* 122 */
+/* 119 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -34814,15 +34730,15 @@
 
 	"use strict";
 
-	var CallbackQueue = __webpack_require__(178);
-	var PooledClass = __webpack_require__(119);
-	var ReactCurrentOwner = __webpack_require__(50);
-	var ReactPerf = __webpack_require__(60);
-	var Transaction = __webpack_require__(179);
+	var CallbackQueue = __webpack_require__(176);
+	var PooledClass = __webpack_require__(116);
+	var ReactCurrentOwner = __webpack_require__(48);
+	var ReactPerf = __webpack_require__(58);
+	var Transaction = __webpack_require__(177);
 
-	var assign = __webpack_require__(64);
-	var invariant = __webpack_require__(118);
-	var warning = __webpack_require__(116);
+	var assign = __webpack_require__(62);
+	var invariant = __webpack_require__(120);
+	var warning = __webpack_require__(115);
 
 	var dirtyComponents = [];
 	var asapCallbackQueue = CallbackQueue.getPooled();
@@ -35088,10 +35004,70 @@
 
 	module.exports = ReactUpdates;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(112)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(111)))
 
 /***/ },
-/* 123 */
+/* 120 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {/**
+	 * Copyright 2013-2014, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule invariant
+	 */
+
+	"use strict";
+
+	/**
+	 * Use invariant() to assert state which your program assumes to be true.
+	 *
+	 * Provide sprintf-style format (only %s is supported) and arguments
+	 * to provide information about what broke and what you were
+	 * expecting.
+	 *
+	 * The invariant message will be stripped in production, but the invariant
+	 * will remain to ensure logic does not differ in production.
+	 */
+
+	var invariant = function(condition, format, a, b, c, d, e, f) {
+	  if ("production" !== process.env.NODE_ENV) {
+	    if (format === undefined) {
+	      throw new Error('invariant requires an error message argument');
+	    }
+	  }
+
+	  if (!condition) {
+	    var error;
+	    if (format === undefined) {
+	      error = new Error(
+	        'Minified exception occurred; use the non-minified dev environment ' +
+	        'for the full error message and additional helpful warnings.'
+	      );
+	    } else {
+	      var args = [a, b, c, d, e, f];
+	      var argIndex = 0;
+	      error = new Error(
+	        'Invariant Violation: ' +
+	        format.replace(/%s/g, function() { return args[argIndex++]; })
+	      );
+	    }
+
+	    error.framesToPop = 1; // we don't care about invariant's own frame
+	    throw error;
+	  }
+	};
+
+	module.exports = invariant;
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(111)))
+
+/***/ },
+/* 121 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -35108,7 +35084,7 @@
 
 	"use strict";
 
-	var invariant = __webpack_require__(118);
+	var invariant = __webpack_require__(120);
 
 	/**
 	 * Constructs an enumeration with keys equal to their value.
@@ -35146,10 +35122,86 @@
 
 	module.exports = keyMirror;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(112)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(111)))
 
 /***/ },
-/* 124 */
+/* 122 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2014, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule EventConstants
+	 */
+
+	"use strict";
+
+	var keyMirror = __webpack_require__(121);
+
+	var PropagationPhases = keyMirror({bubbled: null, captured: null});
+
+	/**
+	 * Types of raw signals from the browser caught at the top level.
+	 */
+	var topLevelTypes = keyMirror({
+	  topBlur: null,
+	  topChange: null,
+	  topClick: null,
+	  topCompositionEnd: null,
+	  topCompositionStart: null,
+	  topCompositionUpdate: null,
+	  topContextMenu: null,
+	  topCopy: null,
+	  topCut: null,
+	  topDoubleClick: null,
+	  topDrag: null,
+	  topDragEnd: null,
+	  topDragEnter: null,
+	  topDragExit: null,
+	  topDragLeave: null,
+	  topDragOver: null,
+	  topDragStart: null,
+	  topDrop: null,
+	  topError: null,
+	  topFocus: null,
+	  topInput: null,
+	  topKeyDown: null,
+	  topKeyPress: null,
+	  topKeyUp: null,
+	  topLoad: null,
+	  topMouseDown: null,
+	  topMouseMove: null,
+	  topMouseOut: null,
+	  topMouseOver: null,
+	  topMouseUp: null,
+	  topPaste: null,
+	  topReset: null,
+	  topScroll: null,
+	  topSelectionChange: null,
+	  topSubmit: null,
+	  topTextInput: null,
+	  topTouchCancel: null,
+	  topTouchEnd: null,
+	  topTouchMove: null,
+	  topTouchStart: null,
+	  topWheel: null
+	});
+
+	var EventConstants = {
+	  topLevelTypes: topLevelTypes,
+	  PropagationPhases: PropagationPhases
+	};
+
+	module.exports = EventConstants;
+
+
+/***/ },
+/* 123 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -35165,9 +35217,9 @@
 
 	"use strict";
 
-	var ReactElement = __webpack_require__(51);
+	var ReactElement = __webpack_require__(49);
 
-	var invariant = __webpack_require__(118);
+	var invariant = __webpack_require__(120);
 
 	var component;
 	// This registry keeps track of the React IDs of the components that rendered to
@@ -35226,10 +35278,10 @@
 
 	module.exports = ReactEmptyComponent;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(112)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(111)))
 
 /***/ },
-/* 125 */
+/* 124 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -35265,7 +35317,7 @@
 
 
 /***/ },
-/* 126 */
+/* 125 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -35281,11 +35333,11 @@
 
 	"use strict";
 
-	var assign = __webpack_require__(64);
-	var emptyFunction = __webpack_require__(168);
-	var invariant = __webpack_require__(118);
-	var joinClasses = __webpack_require__(180);
-	var warning = __webpack_require__(116);
+	var assign = __webpack_require__(62);
+	var emptyFunction = __webpack_require__(167);
+	var invariant = __webpack_require__(120);
+	var joinClasses = __webpack_require__(179);
+	var warning = __webpack_require__(115);
 
 	var didWarn = false;
 
@@ -35432,10 +35484,10 @@
 
 	module.exports = ReactPropTransferer;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(112)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(111)))
 
 /***/ },
-/* 127 */
+/* 126 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -35451,7 +35503,7 @@
 
 	"use strict";
 
-	var keyMirror = __webpack_require__(123);
+	var keyMirror = __webpack_require__(121);
 
 	var ReactPropTypeLocations = keyMirror({
 	  prop: null,
@@ -35463,7 +35515,7 @@
 
 
 /***/ },
-/* 128 */
+/* 127 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -35491,10 +35543,10 @@
 
 	module.exports = ReactPropTypeLocationNames;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(112)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(111)))
 
 /***/ },
-/* 129 */
+/* 128 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -35511,12 +35563,12 @@
 
 	"use strict";
 
-	var warning = __webpack_require__(116);
+	var warning = __webpack_require__(115);
 
-	var ReactElement = __webpack_require__(51);
-	var ReactLegacyElement = __webpack_require__(57);
-	var ReactNativeComponent = __webpack_require__(181);
-	var ReactEmptyComponent = __webpack_require__(124);
+	var ReactElement = __webpack_require__(49);
+	var ReactLegacyElement = __webpack_require__(55);
+	var ReactNativeComponent = __webpack_require__(180);
+	var ReactEmptyComponent = __webpack_require__(123);
 
 	/**
 	 * Given an `element` create an instance that will actually be mounted.
@@ -35608,10 +35660,10 @@
 
 	module.exports = instantiateReactComponent;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(112)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(111)))
 
 /***/ },
-/* 130 */
+/* 129 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -35651,7 +35703,7 @@
 
 
 /***/ },
-/* 131 */
+/* 130 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -35667,7 +35719,7 @@
 
 	"use strict";
 
-	var invariant = __webpack_require__(118);
+	var invariant = __webpack_require__(120);
 
 	/**
 	 * Provides open-source compatible instrumentation for monitoring certain API
@@ -35685,10 +35737,10 @@
 
 	module.exports = monitorCodeUse;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(112)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(111)))
 
 /***/ },
-/* 132 */
+/* 131 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -35745,7 +35797,7 @@
 
 
 /***/ },
-/* 133 */
+/* 132 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -35787,7 +35839,7 @@
 
 
 /***/ },
-/* 134 */
+/* 133 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -35804,14 +35856,14 @@
 
 	"use strict";
 
-	var CSSProperty = __webpack_require__(182);
-	var ExecutionEnvironment = __webpack_require__(67);
+	var CSSProperty = __webpack_require__(181);
+	var ExecutionEnvironment = __webpack_require__(65);
 
-	var camelizeStyleName = __webpack_require__(183);
-	var dangerousStyleValue = __webpack_require__(184);
-	var hyphenateStyleName = __webpack_require__(185);
-	var memoizeStringOnly = __webpack_require__(115);
-	var warning = __webpack_require__(116);
+	var camelizeStyleName = __webpack_require__(182);
+	var dangerousStyleValue = __webpack_require__(183);
+	var hyphenateStyleName = __webpack_require__(184);
+	var memoizeStringOnly = __webpack_require__(114);
+	var warning = __webpack_require__(115);
 
 	var processStyleName = memoizeStringOnly(function(styleName) {
 	  return hyphenateStyleName(styleName);
@@ -35922,10 +35974,10 @@
 
 	module.exports = CSSPropertyOperations;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(112)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(111)))
 
 /***/ },
-/* 135 */
+/* 134 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -35941,10 +35993,10 @@
 
 	"use strict";
 
-	var ReactEmptyComponent = __webpack_require__(124);
-	var ReactMount = __webpack_require__(58);
+	var ReactEmptyComponent = __webpack_require__(123);
+	var ReactMount = __webpack_require__(56);
 
-	var invariant = __webpack_require__(118);
+	var invariant = __webpack_require__(120);
 
 	var ReactBrowserComponentMixin = {
 	  /**
@@ -35968,10 +36020,10 @@
 
 	module.exports = ReactBrowserComponentMixin;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(112)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(111)))
 
 /***/ },
-/* 136 */
+/* 135 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -35988,14 +36040,14 @@
 
 	"use strict";
 
-	var EventConstants = __webpack_require__(117);
-	var EventPluginHub = __webpack_require__(186);
-	var EventPluginRegistry = __webpack_require__(187);
-	var ReactEventEmitterMixin = __webpack_require__(188);
-	var ViewportMetrics = __webpack_require__(189);
+	var EventConstants = __webpack_require__(122);
+	var EventPluginHub = __webpack_require__(185);
+	var EventPluginRegistry = __webpack_require__(186);
+	var ReactEventEmitterMixin = __webpack_require__(187);
+	var ViewportMetrics = __webpack_require__(188);
 
-	var assign = __webpack_require__(64);
-	var isEventSupported = __webpack_require__(137);
+	var assign = __webpack_require__(62);
+	var isEventSupported = __webpack_require__(136);
 
 	/**
 	 * Summary of `ReactBrowserEventEmitter` event handling:
@@ -36330,7 +36382,7 @@
 
 
 /***/ },
-/* 137 */
+/* 136 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -36346,7 +36398,7 @@
 
 	"use strict";
 
-	var ExecutionEnvironment = __webpack_require__(67);
+	var ExecutionEnvironment = __webpack_require__(65);
 
 	var useHasFeature;
 	if (ExecutionEnvironment.canUseDOM) {
@@ -36399,7 +36451,7 @@
 
 
 /***/ },
-/* 138 */
+/* 137 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -36416,12 +36468,12 @@
 
 	"use strict";
 
-	var EventConstants = __webpack_require__(117);
-	var EventPropagators = __webpack_require__(190);
-	var ExecutionEnvironment = __webpack_require__(67);
-	var SyntheticInputEvent = __webpack_require__(191);
+	var EventConstants = __webpack_require__(122);
+	var EventPropagators = __webpack_require__(189);
+	var ExecutionEnvironment = __webpack_require__(65);
+	var SyntheticInputEvent = __webpack_require__(190);
 
-	var keyOf = __webpack_require__(130);
+	var keyOf = __webpack_require__(129);
 
 	var canUseTextInputEvent = (
 	  ExecutionEnvironment.canUseDOM &&
@@ -36625,7 +36677,7 @@
 
 
 /***/ },
-/* 139 */
+/* 138 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -36641,16 +36693,16 @@
 
 	"use strict";
 
-	var EventConstants = __webpack_require__(117);
-	var EventPluginHub = __webpack_require__(186);
-	var EventPropagators = __webpack_require__(190);
-	var ExecutionEnvironment = __webpack_require__(67);
-	var ReactUpdates = __webpack_require__(122);
-	var SyntheticEvent = __webpack_require__(192);
+	var EventConstants = __webpack_require__(122);
+	var EventPluginHub = __webpack_require__(185);
+	var EventPropagators = __webpack_require__(189);
+	var ExecutionEnvironment = __webpack_require__(65);
+	var ReactUpdates = __webpack_require__(119);
+	var SyntheticEvent = __webpack_require__(191);
 
-	var isEventSupported = __webpack_require__(137);
-	var isTextInputElement = __webpack_require__(193);
-	var keyOf = __webpack_require__(130);
+	var isEventSupported = __webpack_require__(136);
+	var isTextInputElement = __webpack_require__(192);
+	var keyOf = __webpack_require__(129);
 
 	var topLevelTypes = EventConstants.topLevelTypes;
 
@@ -37011,7 +37063,7 @@
 
 
 /***/ },
-/* 140 */
+/* 139 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -37040,7 +37092,7 @@
 
 
 /***/ },
-/* 141 */
+/* 140 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -37057,14 +37109,14 @@
 
 	"use strict";
 
-	var EventConstants = __webpack_require__(117);
-	var EventPropagators = __webpack_require__(190);
-	var ExecutionEnvironment = __webpack_require__(67);
-	var ReactInputSelection = __webpack_require__(194);
-	var SyntheticCompositionEvent = __webpack_require__(195);
+	var EventConstants = __webpack_require__(122);
+	var EventPropagators = __webpack_require__(189);
+	var ExecutionEnvironment = __webpack_require__(65);
+	var ReactInputSelection = __webpack_require__(193);
+	var SyntheticCompositionEvent = __webpack_require__(194);
 
-	var getTextContentAccessor = __webpack_require__(196);
-	var keyOf = __webpack_require__(130);
+	var getTextContentAccessor = __webpack_require__(195);
+	var keyOf = __webpack_require__(129);
 
 	var END_KEYCODES = [9, 13, 27, 32]; // Tab, Return, Esc, Space
 	var START_KEYCODE = 229;
@@ -37303,7 +37355,7 @@
 
 
 /***/ },
-/* 142 */
+/* 141 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -37319,7 +37371,7 @@
 
 	"use strict";
 
-	 var keyOf = __webpack_require__(130);
+	 var keyOf = __webpack_require__(129);
 
 	/**
 	 * Module that is injectable into `EventPluginHub`, that specifies a
@@ -37347,7 +37399,7 @@
 
 
 /***/ },
-/* 143 */
+/* 142 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -37364,12 +37416,12 @@
 
 	"use strict";
 
-	var EventConstants = __webpack_require__(117);
-	var EventPropagators = __webpack_require__(190);
-	var SyntheticMouseEvent = __webpack_require__(197);
+	var EventConstants = __webpack_require__(122);
+	var EventPropagators = __webpack_require__(189);
+	var SyntheticMouseEvent = __webpack_require__(196);
 
-	var ReactMount = __webpack_require__(58);
-	var keyOf = __webpack_require__(130);
+	var ReactMount = __webpack_require__(56);
+	var keyOf = __webpack_require__(129);
 
 	var topLevelTypes = EventConstants.topLevelTypes;
 	var getFirstReactDOM = ReactMount.getFirstReactDOM;
@@ -37491,7 +37543,7 @@
 
 
 /***/ },
-/* 144 */
+/* 143 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -37509,8 +37561,8 @@
 
 	"use strict";
 
-	var DOMProperty = __webpack_require__(113);
-	var ExecutionEnvironment = __webpack_require__(67);
+	var DOMProperty = __webpack_require__(112);
+	var ExecutionEnvironment = __webpack_require__(65);
 
 	var MUST_USE_ATTRIBUTE = DOMProperty.injection.MUST_USE_ATTRIBUTE;
 	var MUST_USE_PROPERTY = DOMProperty.injection.MUST_USE_PROPERTY;
@@ -37687,7 +37739,7 @@
 
 
 /***/ },
-/* 145 */
+/* 144 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -37704,9 +37756,9 @@
 
 	"use strict";
 
-	var EventConstants = __webpack_require__(117);
+	var EventConstants = __webpack_require__(122);
 
-	var emptyFunction = __webpack_require__(168);
+	var emptyFunction = __webpack_require__(167);
 
 	var topLevelTypes = EventConstants.topLevelTypes;
 
@@ -37749,7 +37801,7 @@
 
 
 /***/ },
-/* 146 */
+/* 145 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -37767,15 +37819,15 @@
 
 	"use strict";
 
-	var ReactDOMIDOperations = __webpack_require__(198);
-	var ReactMarkupChecksum = __webpack_require__(169);
-	var ReactMount = __webpack_require__(58);
-	var ReactPerf = __webpack_require__(60);
-	var ReactReconcileTransaction = __webpack_require__(199);
+	var ReactDOMIDOperations = __webpack_require__(197);
+	var ReactMarkupChecksum = __webpack_require__(168);
+	var ReactMount = __webpack_require__(56);
+	var ReactPerf = __webpack_require__(58);
+	var ReactReconcileTransaction = __webpack_require__(198);
 
-	var getReactRootElementInContainer = __webpack_require__(167);
-	var invariant = __webpack_require__(118);
-	var setInnerHTML = __webpack_require__(200);
+	var getReactRootElementInContainer = __webpack_require__(164);
+	var invariant = __webpack_require__(120);
+	var setInnerHTML = __webpack_require__(199);
 
 
 	var ELEMENT_NODE_TYPE = 1;
@@ -37871,10 +37923,10 @@
 
 	module.exports = ReactComponentBrowserEnvironment;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(112)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(111)))
 
 /***/ },
-/* 147 */
+/* 146 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -37890,11 +37942,11 @@
 
 	"use strict";
 
-	var ReactUpdates = __webpack_require__(122);
-	var Transaction = __webpack_require__(179);
+	var ReactUpdates = __webpack_require__(119);
+	var Transaction = __webpack_require__(177);
 
-	var assign = __webpack_require__(64);
-	var emptyFunction = __webpack_require__(168);
+	var assign = __webpack_require__(62);
+	var emptyFunction = __webpack_require__(167);
 
 	var RESET_BATCHED_UPDATES = {
 	  initialize: emptyFunction,
@@ -37951,7 +38003,7 @@
 
 
 /***/ },
-/* 148 */
+/* 147 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -37967,13 +38019,13 @@
 
 	"use strict";
 
-	var AutoFocusMixin = __webpack_require__(201);
-	var ReactBrowserComponentMixin = __webpack_require__(135);
-	var ReactCompositeComponent = __webpack_require__(48);
-	var ReactElement = __webpack_require__(51);
-	var ReactDOM = __webpack_require__(53);
+	var AutoFocusMixin = __webpack_require__(200);
+	var ReactBrowserComponentMixin = __webpack_require__(134);
+	var ReactCompositeComponent = __webpack_require__(46);
+	var ReactElement = __webpack_require__(49);
+	var ReactDOM = __webpack_require__(51);
 
-	var keyMirror = __webpack_require__(123);
+	var keyMirror = __webpack_require__(121);
 
 	// Store a reference to the <button> `ReactDOMComponent`. TODO: use string
 	var button = ReactElement.createFactory(ReactDOM.button.type);
@@ -38020,7 +38072,7 @@
 
 
 /***/ },
-/* 149 */
+/* 148 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -38036,12 +38088,12 @@
 
 	"use strict";
 
-	var EventConstants = __webpack_require__(117);
-	var LocalEventTrapMixin = __webpack_require__(202);
-	var ReactBrowserComponentMixin = __webpack_require__(135);
-	var ReactCompositeComponent = __webpack_require__(48);
-	var ReactElement = __webpack_require__(51);
-	var ReactDOM = __webpack_require__(53);
+	var EventConstants = __webpack_require__(122);
+	var LocalEventTrapMixin = __webpack_require__(201);
+	var ReactBrowserComponentMixin = __webpack_require__(134);
+	var ReactCompositeComponent = __webpack_require__(46);
+	var ReactElement = __webpack_require__(49);
+	var ReactDOM = __webpack_require__(51);
 
 	// Store a reference to the <form> `ReactDOMComponent`. TODO: use string
 	var form = ReactElement.createFactory(ReactDOM.form.type);
@@ -38074,7 +38126,7 @@
 
 
 /***/ },
-/* 150 */
+/* 149 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -38090,12 +38142,12 @@
 
 	"use strict";
 
-	var EventConstants = __webpack_require__(117);
-	var LocalEventTrapMixin = __webpack_require__(202);
-	var ReactBrowserComponentMixin = __webpack_require__(135);
-	var ReactCompositeComponent = __webpack_require__(48);
-	var ReactElement = __webpack_require__(51);
-	var ReactDOM = __webpack_require__(53);
+	var EventConstants = __webpack_require__(122);
+	var LocalEventTrapMixin = __webpack_require__(201);
+	var ReactBrowserComponentMixin = __webpack_require__(134);
+	var ReactCompositeComponent = __webpack_require__(46);
+	var ReactElement = __webpack_require__(49);
+	var ReactDOM = __webpack_require__(51);
 
 	// Store a reference to the <img> `ReactDOMComponent`. TODO: use string
 	var img = ReactElement.createFactory(ReactDOM.img.type);
@@ -38126,7 +38178,7 @@
 
 
 /***/ },
-/* 151 */
+/* 150 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -38142,18 +38194,18 @@
 
 	"use strict";
 
-	var AutoFocusMixin = __webpack_require__(201);
-	var DOMPropertyOperations = __webpack_require__(44);
-	var LinkedValueUtils = __webpack_require__(203);
-	var ReactBrowserComponentMixin = __webpack_require__(135);
-	var ReactCompositeComponent = __webpack_require__(48);
-	var ReactElement = __webpack_require__(51);
-	var ReactDOM = __webpack_require__(53);
-	var ReactMount = __webpack_require__(58);
-	var ReactUpdates = __webpack_require__(122);
+	var AutoFocusMixin = __webpack_require__(200);
+	var DOMPropertyOperations = __webpack_require__(42);
+	var LinkedValueUtils = __webpack_require__(202);
+	var ReactBrowserComponentMixin = __webpack_require__(134);
+	var ReactCompositeComponent = __webpack_require__(46);
+	var ReactElement = __webpack_require__(49);
+	var ReactDOM = __webpack_require__(51);
+	var ReactMount = __webpack_require__(56);
+	var ReactUpdates = __webpack_require__(119);
 
-	var assign = __webpack_require__(64);
-	var invariant = __webpack_require__(118);
+	var assign = __webpack_require__(62);
+	var invariant = __webpack_require__(120);
 
 	// Store a reference to the <input> `ReactDOMComponent`. TODO: use string
 	var input = ReactElement.createFactory(ReactDOM.input.type);
@@ -38304,10 +38356,10 @@
 
 	module.exports = ReactDOMInput;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(112)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(111)))
 
 /***/ },
-/* 152 */
+/* 151 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -38323,12 +38375,12 @@
 
 	"use strict";
 
-	var ReactBrowserComponentMixin = __webpack_require__(135);
-	var ReactCompositeComponent = __webpack_require__(48);
-	var ReactElement = __webpack_require__(51);
-	var ReactDOM = __webpack_require__(53);
+	var ReactBrowserComponentMixin = __webpack_require__(134);
+	var ReactCompositeComponent = __webpack_require__(46);
+	var ReactElement = __webpack_require__(49);
+	var ReactDOM = __webpack_require__(51);
 
-	var warning = __webpack_require__(116);
+	var warning = __webpack_require__(115);
 
 	// Store a reference to the <option> `ReactDOMComponent`. TODO: use string
 	var option = ReactElement.createFactory(ReactDOM.option.type);
@@ -38360,10 +38412,10 @@
 
 	module.exports = ReactDOMOption;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(112)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(111)))
 
 /***/ },
-/* 153 */
+/* 152 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -38379,15 +38431,15 @@
 
 	"use strict";
 
-	var AutoFocusMixin = __webpack_require__(201);
-	var LinkedValueUtils = __webpack_require__(203);
-	var ReactBrowserComponentMixin = __webpack_require__(135);
-	var ReactCompositeComponent = __webpack_require__(48);
-	var ReactElement = __webpack_require__(51);
-	var ReactDOM = __webpack_require__(53);
-	var ReactUpdates = __webpack_require__(122);
+	var AutoFocusMixin = __webpack_require__(200);
+	var LinkedValueUtils = __webpack_require__(202);
+	var ReactBrowserComponentMixin = __webpack_require__(134);
+	var ReactCompositeComponent = __webpack_require__(46);
+	var ReactElement = __webpack_require__(49);
+	var ReactDOM = __webpack_require__(51);
+	var ReactUpdates = __webpack_require__(119);
 
-	var assign = __webpack_require__(64);
+	var assign = __webpack_require__(62);
 
 	// Store a reference to the <select> `ReactDOMComponent`. TODO: use string
 	var select = ReactElement.createFactory(ReactDOM.select.type);
@@ -38551,7 +38603,7 @@
 
 
 /***/ },
-/* 154 */
+/* 153 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -38567,19 +38619,19 @@
 
 	"use strict";
 
-	var AutoFocusMixin = __webpack_require__(201);
-	var DOMPropertyOperations = __webpack_require__(44);
-	var LinkedValueUtils = __webpack_require__(203);
-	var ReactBrowserComponentMixin = __webpack_require__(135);
-	var ReactCompositeComponent = __webpack_require__(48);
-	var ReactElement = __webpack_require__(51);
-	var ReactDOM = __webpack_require__(53);
-	var ReactUpdates = __webpack_require__(122);
+	var AutoFocusMixin = __webpack_require__(200);
+	var DOMPropertyOperations = __webpack_require__(42);
+	var LinkedValueUtils = __webpack_require__(202);
+	var ReactBrowserComponentMixin = __webpack_require__(134);
+	var ReactCompositeComponent = __webpack_require__(46);
+	var ReactElement = __webpack_require__(49);
+	var ReactDOM = __webpack_require__(51);
+	var ReactUpdates = __webpack_require__(119);
 
-	var assign = __webpack_require__(64);
-	var invariant = __webpack_require__(118);
+	var assign = __webpack_require__(62);
+	var invariant = __webpack_require__(120);
 
-	var warning = __webpack_require__(116);
+	var warning = __webpack_require__(115);
 
 	// Store a reference to the <textarea> `ReactDOMComponent`. TODO: use string
 	var textarea = ReactElement.createFactory(ReactDOM.textarea.type);
@@ -38692,10 +38744,10 @@
 
 	module.exports = ReactDOMTextarea;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(112)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(111)))
 
 /***/ },
-/* 155 */
+/* 154 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -38712,16 +38764,16 @@
 
 	"use strict";
 
-	var EventListener = __webpack_require__(204);
-	var ExecutionEnvironment = __webpack_require__(67);
-	var PooledClass = __webpack_require__(119);
-	var ReactInstanceHandles = __webpack_require__(56);
-	var ReactMount = __webpack_require__(58);
-	var ReactUpdates = __webpack_require__(122);
+	var EventListener = __webpack_require__(203);
+	var ExecutionEnvironment = __webpack_require__(65);
+	var PooledClass = __webpack_require__(116);
+	var ReactInstanceHandles = __webpack_require__(54);
+	var ReactMount = __webpack_require__(56);
+	var ReactUpdates = __webpack_require__(119);
 
-	var assign = __webpack_require__(64);
-	var getEventTarget = __webpack_require__(205);
-	var getUnboundedScrollPosition = __webpack_require__(206);
+	var assign = __webpack_require__(62);
+	var getEventTarget = __webpack_require__(204);
+	var getUnboundedScrollPosition = __webpack_require__(205);
 
 	/**
 	 * Finds the parent React component of `node`.
@@ -38883,7 +38935,7 @@
 
 
 /***/ },
-/* 156 */
+/* 155 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -38899,16 +38951,16 @@
 
 	"use strict";
 
-	var DOMProperty = __webpack_require__(113);
-	var EventPluginHub = __webpack_require__(186);
-	var ReactComponent = __webpack_require__(47);
-	var ReactCompositeComponent = __webpack_require__(48);
-	var ReactEmptyComponent = __webpack_require__(124);
-	var ReactBrowserEventEmitter = __webpack_require__(136);
-	var ReactNativeComponent = __webpack_require__(181);
-	var ReactPerf = __webpack_require__(60);
-	var ReactRootIndex = __webpack_require__(163);
-	var ReactUpdates = __webpack_require__(122);
+	var DOMProperty = __webpack_require__(112);
+	var EventPluginHub = __webpack_require__(185);
+	var ReactComponent = __webpack_require__(45);
+	var ReactCompositeComponent = __webpack_require__(46);
+	var ReactEmptyComponent = __webpack_require__(123);
+	var ReactBrowserEventEmitter = __webpack_require__(135);
+	var ReactNativeComponent = __webpack_require__(180);
+	var ReactPerf = __webpack_require__(58);
+	var ReactRootIndex = __webpack_require__(162);
+	var ReactUpdates = __webpack_require__(119);
 
 	var ReactInjection = {
 	  Component: ReactComponent.injection,
@@ -38927,7 +38979,7 @@
 
 
 /***/ },
-/* 157 */
+/* 156 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -38943,15 +38995,15 @@
 
 	"use strict";
 
-	var EventConstants = __webpack_require__(117);
-	var EventPropagators = __webpack_require__(190);
-	var ReactInputSelection = __webpack_require__(194);
-	var SyntheticEvent = __webpack_require__(192);
+	var EventConstants = __webpack_require__(122);
+	var EventPropagators = __webpack_require__(189);
+	var ReactInputSelection = __webpack_require__(193);
+	var SyntheticEvent = __webpack_require__(191);
 
-	var getActiveElement = __webpack_require__(207);
-	var isTextInputElement = __webpack_require__(193);
-	var keyOf = __webpack_require__(130);
-	var shallowEqual = __webpack_require__(208);
+	var getActiveElement = __webpack_require__(206);
+	var isTextInputElement = __webpack_require__(192);
+	var keyOf = __webpack_require__(129);
+	var shallowEqual = __webpack_require__(207);
 
 	var topLevelTypes = EventConstants.topLevelTypes;
 
@@ -39126,7 +39178,7 @@
 
 
 /***/ },
-/* 158 */
+/* 157 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -39161,7 +39213,7 @@
 
 
 /***/ },
-/* 159 */
+/* 158 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -39177,24 +39229,24 @@
 
 	"use strict";
 
-	var EventConstants = __webpack_require__(117);
-	var EventPluginUtils = __webpack_require__(45);
-	var EventPropagators = __webpack_require__(190);
-	var SyntheticClipboardEvent = __webpack_require__(209);
-	var SyntheticEvent = __webpack_require__(192);
-	var SyntheticFocusEvent = __webpack_require__(210);
-	var SyntheticKeyboardEvent = __webpack_require__(211);
-	var SyntheticMouseEvent = __webpack_require__(197);
-	var SyntheticDragEvent = __webpack_require__(212);
-	var SyntheticTouchEvent = __webpack_require__(213);
-	var SyntheticUIEvent = __webpack_require__(214);
-	var SyntheticWheelEvent = __webpack_require__(215);
+	var EventConstants = __webpack_require__(122);
+	var EventPluginUtils = __webpack_require__(43);
+	var EventPropagators = __webpack_require__(189);
+	var SyntheticClipboardEvent = __webpack_require__(208);
+	var SyntheticEvent = __webpack_require__(191);
+	var SyntheticFocusEvent = __webpack_require__(209);
+	var SyntheticKeyboardEvent = __webpack_require__(210);
+	var SyntheticMouseEvent = __webpack_require__(196);
+	var SyntheticDragEvent = __webpack_require__(211);
+	var SyntheticTouchEvent = __webpack_require__(212);
+	var SyntheticUIEvent = __webpack_require__(213);
+	var SyntheticWheelEvent = __webpack_require__(214);
 
-	var getEventCharCode = __webpack_require__(216);
+	var getEventCharCode = __webpack_require__(215);
 
-	var invariant = __webpack_require__(118);
-	var keyOf = __webpack_require__(130);
-	var warning = __webpack_require__(116);
+	var invariant = __webpack_require__(120);
+	var keyOf = __webpack_require__(129);
+	var warning = __webpack_require__(115);
 
 	var topLevelTypes = EventConstants.topLevelTypes;
 
@@ -39589,10 +39641,10 @@
 
 	module.exports = SimpleEventPlugin;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(112)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(111)))
 
 /***/ },
-/* 160 */
+/* 159 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -39610,7 +39662,7 @@
 
 	"use strict";
 
-	var DOMProperty = __webpack_require__(113);
+	var DOMProperty = __webpack_require__(112);
 
 	var MUST_USE_ATTRIBUTE = DOMProperty.injection.MUST_USE_ATTRIBUTE;
 
@@ -39688,7 +39740,7 @@
 
 
 /***/ },
-/* 161 */
+/* 160 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -39706,10 +39758,10 @@
 	"use strict";
 
 	// Defeat circular references by requiring this directly.
-	var ReactCompositeComponent = __webpack_require__(48);
-	var ReactElement = __webpack_require__(51);
+	var ReactCompositeComponent = __webpack_require__(46);
+	var ReactElement = __webpack_require__(49);
 
-	var invariant = __webpack_require__(118);
+	var invariant = __webpack_require__(120);
 
 	/**
 	 * Create a component that will throw an exception when unmounted.
@@ -39749,10 +39801,10 @@
 
 	module.exports = createFullPageComponent;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(112)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(111)))
 
 /***/ },
-/* 162 */
+/* 161 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -39769,12 +39821,12 @@
 
 	"use strict";
 
-	var DOMProperty = __webpack_require__(113);
-	var ReactDefaultPerfAnalysis = __webpack_require__(217);
-	var ReactMount = __webpack_require__(58);
-	var ReactPerf = __webpack_require__(60);
+	var DOMProperty = __webpack_require__(112);
+	var ReactDefaultPerfAnalysis = __webpack_require__(216);
+	var ReactMount = __webpack_require__(56);
+	var ReactPerf = __webpack_require__(58);
 
-	var performanceNow = __webpack_require__(218);
+	var performanceNow = __webpack_require__(217);
 
 	function roundFloat(val) {
 	  return Math.floor(val * 100) / 100;
@@ -40016,7 +40068,7 @@
 
 
 /***/ },
-/* 163 */
+/* 162 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -40051,7 +40103,94 @@
 
 
 /***/ },
+/* 163 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2014, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule containsNode
+	 * @typechecks
+	 */
+
+	var isTextNode = __webpack_require__(218);
+
+	/*jslint bitwise:true */
+
+	/**
+	 * Checks if a given DOM node contains or is another DOM node.
+	 *
+	 * @param {?DOMNode} outerNode Outer DOM node.
+	 * @param {?DOMNode} innerNode Inner DOM node.
+	 * @return {boolean} True if `outerNode` contains or is `innerNode`.
+	 */
+	function containsNode(outerNode, innerNode) {
+	  if (!outerNode || !innerNode) {
+	    return false;
+	  } else if (outerNode === innerNode) {
+	    return true;
+	  } else if (isTextNode(outerNode)) {
+	    return false;
+	  } else if (isTextNode(innerNode)) {
+	    return containsNode(outerNode, innerNode.parentNode);
+	  } else if (outerNode.contains) {
+	    return outerNode.contains(innerNode);
+	  } else if (outerNode.compareDocumentPosition) {
+	    return !!(outerNode.compareDocumentPosition(innerNode) & 16);
+	  } else {
+	    return false;
+	  }
+	}
+
+	module.exports = containsNode;
+
+
+/***/ },
 /* 164 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2014, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule getReactRootElementInContainer
+	 */
+
+	"use strict";
+
+	var DOC_NODE_TYPE = 9;
+
+	/**
+	 * @param {DOMElement|DOMDocument} container DOM element that may contain
+	 *                                           a React component
+	 * @return {?*} DOM element that may have the reactRoot ID, or null.
+	 */
+	function getReactRootElementInContainer(container) {
+	  if (!container) {
+	    return null;
+	  }
+
+	  if (container.nodeType === DOC_NODE_TYPE) {
+	    return container.documentElement;
+	  } else {
+	    return container.firstChild;
+	  }
+	}
+
+	module.exports = getReactRootElementInContainer;
+
+
+/***/ },
+/* 165 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -40067,7 +40206,7 @@
 
 	"use strict";
 
-	var keyMirror = __webpack_require__(123);
+	var keyMirror = __webpack_require__(121);
 
 	/**
 	 * When a component's children are updated, a series of update configuration
@@ -40088,7 +40227,7 @@
 
 
 /***/ },
-/* 165 */
+/* 166 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -40104,10 +40243,10 @@
 
 	"use strict";
 
-	var ReactTextComponent = __webpack_require__(63);
+	var ReactTextComponent = __webpack_require__(61);
 
-	var traverseAllChildren = __webpack_require__(120);
-	var warning = __webpack_require__(116);
+	var traverseAllChildren = __webpack_require__(117);
+	var warning = __webpack_require__(115);
 
 	/**
 	 * @param {function} traverseContext Context passed through traversal.
@@ -40157,97 +40296,10 @@
 
 	module.exports = flattenChildren;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(112)))
-
-/***/ },
-/* 166 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-2014, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule containsNode
-	 * @typechecks
-	 */
-
-	var isTextNode = __webpack_require__(219);
-
-	/*jslint bitwise:true */
-
-	/**
-	 * Checks if a given DOM node contains or is another DOM node.
-	 *
-	 * @param {?DOMNode} outerNode Outer DOM node.
-	 * @param {?DOMNode} innerNode Inner DOM node.
-	 * @return {boolean} True if `outerNode` contains or is `innerNode`.
-	 */
-	function containsNode(outerNode, innerNode) {
-	  if (!outerNode || !innerNode) {
-	    return false;
-	  } else if (outerNode === innerNode) {
-	    return true;
-	  } else if (isTextNode(outerNode)) {
-	    return false;
-	  } else if (isTextNode(innerNode)) {
-	    return containsNode(outerNode, innerNode.parentNode);
-	  } else if (outerNode.contains) {
-	    return outerNode.contains(innerNode);
-	  } else if (outerNode.compareDocumentPosition) {
-	    return !!(outerNode.compareDocumentPosition(innerNode) & 16);
-	  } else {
-	    return false;
-	  }
-	}
-
-	module.exports = containsNode;
-
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(111)))
 
 /***/ },
 /* 167 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-2014, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule getReactRootElementInContainer
-	 */
-
-	"use strict";
-
-	var DOC_NODE_TYPE = 9;
-
-	/**
-	 * @param {DOMElement|DOMDocument} container DOM element that may contain
-	 *                                           a React component
-	 * @return {?*} DOM element that may have the reactRoot ID, or null.
-	 */
-	function getReactRootElementInContainer(container) {
-	  if (!container) {
-	    return null;
-	  }
-
-	  if (container.nodeType === DOC_NODE_TYPE) {
-	    return container.documentElement;
-	  } else {
-	    return container.firstChild;
-	  }
-	}
-
-	module.exports = getReactRootElementInContainer;
-
-
-/***/ },
-/* 168 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -40285,7 +40337,7 @@
 
 
 /***/ },
-/* 169 */
+/* 168 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -40301,7 +40353,7 @@
 
 	"use strict";
 
-	var adler32 = __webpack_require__(220);
+	var adler32 = __webpack_require__(219);
 
 	var ReactMarkupChecksum = {
 	  CHECKSUM_ATTR_NAME: 'data-react-checksum',
@@ -40337,7 +40389,7 @@
 
 
 /***/ },
-/* 170 */
+/* 169 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -40354,13 +40406,13 @@
 
 	"use strict";
 
-	var PooledClass = __webpack_require__(119);
-	var CallbackQueue = __webpack_require__(178);
-	var ReactPutListenerQueue = __webpack_require__(221);
-	var Transaction = __webpack_require__(179);
+	var PooledClass = __webpack_require__(116);
+	var CallbackQueue = __webpack_require__(176);
+	var ReactPutListenerQueue = __webpack_require__(220);
+	var Transaction = __webpack_require__(177);
 
-	var assign = __webpack_require__(64);
-	var emptyFunction = __webpack_require__(168);
+	var assign = __webpack_require__(62);
+	var emptyFunction = __webpack_require__(167);
 
 	/**
 	 * Provides a `CallbackQueue` queue for collecting `onDOMReady` callbacks
@@ -40454,36 +40506,7 @@
 
 
 /***/ },
-/* 171 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Priority = __webpack_require__(70);
-	var _ = __webpack_require__(72);
-	var RemoveEntity = (function () {
-	    function RemoveEntity(entityId) {
-	        this.entityId = entityId;
-	    }
-	    Object.defineProperty(RemoveEntity.prototype, "priority", {
-	        get: function () {
-	            return 9 /* REMOVE_ENTITIES */;
-	        },
-	        enumerable: true,
-	        configurable: true
-	    });
-	    RemoveEntity.prototype.exec = function (stage) {
-	        var _this = this;
-	        var target = _.find(stage.entities, function (e) { return e.id === _this.entityId; });
-	        if (target)
-	            stage.physicsWorld.remove(target.physicsBody);
-	        stage.entities = stage.entities.filter(function (e) { return e.id !== _this.entityId; });
-	    };
-	    return RemoveEntity;
-	})();
-	module.exports = RemoveEntity;
-
-
-/***/ },
-/* 172 */
+/* 170 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -40585,7 +40608,7 @@
 
 
 /***/ },
-/* 173 */
+/* 171 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -40654,10 +40677,10 @@
 	}
 	module.exports = schedule;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(112)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(111)))
 
 /***/ },
-/* 174 */
+/* 172 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -40796,7 +40819,36 @@
 
 
 /***/ },
-/* 175 */
+/* 173 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Priority = __webpack_require__(99);
+	var _ = __webpack_require__(101);
+	var RemoveEntity = (function () {
+	    function RemoveEntity(entityId) {
+	        this.entityId = entityId;
+	    }
+	    Object.defineProperty(RemoveEntity.prototype, "priority", {
+	        get: function () {
+	            return 9 /* REMOVE_ENTITIES */;
+	        },
+	        enumerable: true,
+	        configurable: true
+	    });
+	    RemoveEntity.prototype.exec = function (stage) {
+	        var _this = this;
+	        var target = _.find(stage.entities, function (e) { return e.id === _this.entityId; });
+	        if (target)
+	            stage.physicsWorld.remove(target.physicsBody);
+	        stage.entities = stage.entities.filter(function (e) { return e.id !== _this.entityId; });
+	    };
+	    return RemoveEntity;
+	})();
+	module.exports = RemoveEntity;
+
+
+/***/ },
+/* 174 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -41375,7 +41427,7 @@
 
 
 /***/ },
-/* 176 */
+/* 175 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(Buffer) {/*!
@@ -41385,9 +41437,9 @@
 	 * @license  MIT
 	 */
 
-	var base64 = __webpack_require__(239)
-	var ieee754 = __webpack_require__(235)
-	var isArray = __webpack_require__(236)
+	var base64 = __webpack_require__(238)
+	var ieee754 = __webpack_require__(234)
+	var isArray = __webpack_require__(235)
 
 	exports.Buffer = Buffer
 	exports.SlowBuffer = Buffer
@@ -42431,37 +42483,10 @@
 	  }
 	}
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(176).Buffer))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(175).Buffer))
 
 /***/ },
-/* 177 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(process) {/**
-	 * Copyright 2013-2014, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule emptyObject
-	 */
-
-	"use strict";
-
-	var emptyObject = {};
-
-	if ("production" !== process.env.NODE_ENV) {
-	  Object.freeze(emptyObject);
-	}
-
-	module.exports = emptyObject;
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(112)))
-
-/***/ },
-/* 178 */
+/* 176 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -42477,10 +42502,10 @@
 
 	"use strict";
 
-	var PooledClass = __webpack_require__(119);
+	var PooledClass = __webpack_require__(116);
 
-	var assign = __webpack_require__(64);
-	var invariant = __webpack_require__(118);
+	var assign = __webpack_require__(62);
+	var invariant = __webpack_require__(120);
 
 	/**
 	 * A specialized pseudo-event module to help keep track of components waiting to
@@ -42561,10 +42586,10 @@
 
 	module.exports = CallbackQueue;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(112)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(111)))
 
 /***/ },
-/* 179 */
+/* 177 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -42580,7 +42605,7 @@
 
 	"use strict";
 
-	var invariant = __webpack_require__(118);
+	var invariant = __webpack_require__(120);
 
 	/**
 	 * `Transaction` creates a black box that is able to wrap any method such that
@@ -42805,10 +42830,37 @@
 
 	module.exports = Transaction;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(112)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(111)))
 
 /***/ },
-/* 180 */
+/* 178 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {/**
+	 * Copyright 2013-2014, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule emptyObject
+	 */
+
+	"use strict";
+
+	var emptyObject = {};
+
+	if ("production" !== process.env.NODE_ENV) {
+	  Object.freeze(emptyObject);
+	}
+
+	module.exports = emptyObject;
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(111)))
+
+/***/ },
+/* 179 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -42853,7 +42905,7 @@
 
 
 /***/ },
-/* 181 */
+/* 180 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -42869,8 +42921,8 @@
 
 	"use strict";
 
-	var assign = __webpack_require__(64);
-	var invariant = __webpack_require__(118);
+	var assign = __webpack_require__(62);
+	var invariant = __webpack_require__(120);
 
 	var genericComponentClass = null;
 	// This registry keeps track of wrapper classes around native tags
@@ -42926,10 +42978,10 @@
 
 	module.exports = ReactNativeComponent;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(112)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(111)))
 
 /***/ },
-/* 182 */
+/* 181 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -43052,7 +43104,7 @@
 
 
 /***/ },
-/* 183 */
+/* 182 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -43069,7 +43121,7 @@
 
 	"use strict";
 
-	var camelize = __webpack_require__(224);
+	var camelize = __webpack_require__(223);
 
 	var msPattern = /^-ms-/;
 
@@ -43098,7 +43150,7 @@
 
 
 /***/ },
-/* 184 */
+/* 183 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -43115,7 +43167,7 @@
 
 	"use strict";
 
-	var CSSProperty = __webpack_require__(182);
+	var CSSProperty = __webpack_require__(181);
 
 	var isUnitlessNumber = CSSProperty.isUnitlessNumber;
 
@@ -43160,7 +43212,7 @@
 
 
 /***/ },
-/* 185 */
+/* 184 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -43177,7 +43229,7 @@
 
 	"use strict";
 
-	var hyphenate = __webpack_require__(225);
+	var hyphenate = __webpack_require__(224);
 
 	var msPattern = /^ms-/;
 
@@ -43205,7 +43257,7 @@
 
 
 /***/ },
-/* 186 */
+/* 185 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -43221,12 +43273,12 @@
 
 	"use strict";
 
-	var EventPluginRegistry = __webpack_require__(187);
-	var EventPluginUtils = __webpack_require__(45);
+	var EventPluginRegistry = __webpack_require__(186);
+	var EventPluginUtils = __webpack_require__(43);
 
-	var accumulateInto = __webpack_require__(226);
-	var forEachAccumulated = __webpack_require__(227);
-	var invariant = __webpack_require__(118);
+	var accumulateInto = __webpack_require__(225);
+	var forEachAccumulated = __webpack_require__(226);
+	var invariant = __webpack_require__(120);
 
 	/**
 	 * Internal store for event listeners
@@ -43481,10 +43533,10 @@
 
 	module.exports = EventPluginHub;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(112)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(111)))
 
 /***/ },
-/* 187 */
+/* 186 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -43501,7 +43553,7 @@
 
 	"use strict";
 
-	var invariant = __webpack_require__(118);
+	var invariant = __webpack_require__(120);
 
 	/**
 	 * Injectable ordering of event plugins.
@@ -43764,10 +43816,10 @@
 
 	module.exports = EventPluginRegistry;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(112)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(111)))
 
 /***/ },
-/* 188 */
+/* 187 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -43783,7 +43835,7 @@
 
 	"use strict";
 
-	var EventPluginHub = __webpack_require__(186);
+	var EventPluginHub = __webpack_require__(185);
 
 	function runEventQueueInBatch(events) {
 	  EventPluginHub.enqueueEvents(events);
@@ -43821,7 +43873,7 @@
 
 
 /***/ },
-/* 189 */
+/* 188 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -43837,7 +43889,7 @@
 
 	"use strict";
 
-	var getUnboundedScrollPosition = __webpack_require__(206);
+	var getUnboundedScrollPosition = __webpack_require__(205);
 
 	var ViewportMetrics = {
 
@@ -43857,7 +43909,7 @@
 
 
 /***/ },
-/* 190 */
+/* 189 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -43873,11 +43925,11 @@
 
 	"use strict";
 
-	var EventConstants = __webpack_require__(117);
-	var EventPluginHub = __webpack_require__(186);
+	var EventConstants = __webpack_require__(122);
+	var EventPluginHub = __webpack_require__(185);
 
-	var accumulateInto = __webpack_require__(226);
-	var forEachAccumulated = __webpack_require__(227);
+	var accumulateInto = __webpack_require__(225);
+	var forEachAccumulated = __webpack_require__(226);
 
 	var PropagationPhases = EventConstants.PropagationPhases;
 	var getListener = EventPluginHub.getListener;
@@ -43999,10 +44051,10 @@
 
 	module.exports = EventPropagators;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(112)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(111)))
 
 /***/ },
-/* 191 */
+/* 190 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -44019,7 +44071,7 @@
 
 	"use strict";
 
-	var SyntheticEvent = __webpack_require__(192);
+	var SyntheticEvent = __webpack_require__(191);
 
 	/**
 	 * @interface Event
@@ -44053,7 +44105,7 @@
 
 
 /***/ },
-/* 192 */
+/* 191 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -44070,11 +44122,11 @@
 
 	"use strict";
 
-	var PooledClass = __webpack_require__(119);
+	var PooledClass = __webpack_require__(116);
 
-	var assign = __webpack_require__(64);
-	var emptyFunction = __webpack_require__(168);
-	var getEventTarget = __webpack_require__(205);
+	var assign = __webpack_require__(62);
+	var emptyFunction = __webpack_require__(167);
+	var getEventTarget = __webpack_require__(204);
 
 	/**
 	 * @interface Event
@@ -44215,7 +44267,7 @@
 
 
 /***/ },
-/* 193 */
+/* 192 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -44263,7 +44315,7 @@
 
 
 /***/ },
-/* 194 */
+/* 193 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -44279,11 +44331,11 @@
 
 	"use strict";
 
-	var ReactDOMSelection = __webpack_require__(228);
+	var ReactDOMSelection = __webpack_require__(227);
 
-	var containsNode = __webpack_require__(166);
-	var focusNode = __webpack_require__(229);
-	var getActiveElement = __webpack_require__(207);
+	var containsNode = __webpack_require__(163);
+	var focusNode = __webpack_require__(228);
+	var getActiveElement = __webpack_require__(206);
 
 	function isInDocument(node) {
 	  return containsNode(document.documentElement, node);
@@ -44403,7 +44455,7 @@
 
 
 /***/ },
-/* 195 */
+/* 194 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -44420,7 +44472,7 @@
 
 	"use strict";
 
-	var SyntheticEvent = __webpack_require__(192);
+	var SyntheticEvent = __webpack_require__(191);
 
 	/**
 	 * @interface Event
@@ -44453,7 +44505,7 @@
 
 
 /***/ },
-/* 196 */
+/* 195 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -44469,7 +44521,7 @@
 
 	"use strict";
 
-	var ExecutionEnvironment = __webpack_require__(67);
+	var ExecutionEnvironment = __webpack_require__(65);
 
 	var contentKey = null;
 
@@ -44494,7 +44546,7 @@
 
 
 /***/ },
-/* 197 */
+/* 196 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -44511,10 +44563,10 @@
 
 	"use strict";
 
-	var SyntheticUIEvent = __webpack_require__(214);
-	var ViewportMetrics = __webpack_require__(189);
+	var SyntheticUIEvent = __webpack_require__(213);
+	var ViewportMetrics = __webpack_require__(188);
 
-	var getEventModifierState = __webpack_require__(230);
+	var getEventModifierState = __webpack_require__(229);
 
 	/**
 	 * @interface MouseEvent
@@ -44581,7 +44633,7 @@
 
 
 /***/ },
-/* 198 */
+/* 197 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -44600,14 +44652,14 @@
 
 	"use strict";
 
-	var CSSPropertyOperations = __webpack_require__(134);
-	var DOMChildrenOperations = __webpack_require__(231);
-	var DOMPropertyOperations = __webpack_require__(44);
-	var ReactMount = __webpack_require__(58);
-	var ReactPerf = __webpack_require__(60);
+	var CSSPropertyOperations = __webpack_require__(133);
+	var DOMChildrenOperations = __webpack_require__(230);
+	var DOMPropertyOperations = __webpack_require__(42);
+	var ReactMount = __webpack_require__(56);
+	var ReactPerf = __webpack_require__(58);
 
-	var invariant = __webpack_require__(118);
-	var setInnerHTML = __webpack_require__(200);
+	var invariant = __webpack_require__(120);
+	var setInnerHTML = __webpack_require__(199);
 
 	/**
 	 * Errors for properties that should not be updated with `updatePropertyById()`.
@@ -44767,10 +44819,10 @@
 
 	module.exports = ReactDOMIDOperations;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(112)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(111)))
 
 /***/ },
-/* 199 */
+/* 198 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -44787,14 +44839,14 @@
 
 	"use strict";
 
-	var CallbackQueue = __webpack_require__(178);
-	var PooledClass = __webpack_require__(119);
-	var ReactBrowserEventEmitter = __webpack_require__(136);
-	var ReactInputSelection = __webpack_require__(194);
-	var ReactPutListenerQueue = __webpack_require__(221);
-	var Transaction = __webpack_require__(179);
+	var CallbackQueue = __webpack_require__(176);
+	var PooledClass = __webpack_require__(116);
+	var ReactBrowserEventEmitter = __webpack_require__(135);
+	var ReactInputSelection = __webpack_require__(193);
+	var ReactPutListenerQueue = __webpack_require__(220);
+	var Transaction = __webpack_require__(177);
 
-	var assign = __webpack_require__(64);
+	var assign = __webpack_require__(62);
 
 	/**
 	 * Ensures that, when possible, the selection range (currently selected text
@@ -44950,7 +45002,7 @@
 
 
 /***/ },
-/* 200 */
+/* 199 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -44966,7 +45018,7 @@
 
 	"use strict";
 
-	var ExecutionEnvironment = __webpack_require__(67);
+	var ExecutionEnvironment = __webpack_require__(65);
 
 	var WHITESPACE_TEST = /^[ \r\n\t\f]/;
 	var NONVISIBLE_TEST = /<(!--|link|noscript|meta|script|style)[ \r\n\t\f\/>]/;
@@ -45032,7 +45084,7 @@
 
 
 /***/ },
-/* 201 */
+/* 200 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -45049,7 +45101,7 @@
 
 	"use strict";
 
-	var focusNode = __webpack_require__(229);
+	var focusNode = __webpack_require__(228);
 
 	var AutoFocusMixin = {
 	  componentDidMount: function() {
@@ -45063,7 +45115,7 @@
 
 
 /***/ },
-/* 202 */
+/* 201 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -45079,11 +45131,11 @@
 
 	"use strict";
 
-	var ReactBrowserEventEmitter = __webpack_require__(136);
+	var ReactBrowserEventEmitter = __webpack_require__(135);
 
-	var accumulateInto = __webpack_require__(226);
-	var forEachAccumulated = __webpack_require__(227);
-	var invariant = __webpack_require__(118);
+	var accumulateInto = __webpack_require__(225);
+	var forEachAccumulated = __webpack_require__(226);
+	var invariant = __webpack_require__(120);
 
 	function remove(event) {
 	  event.remove();
@@ -45113,10 +45165,10 @@
 
 	module.exports = LocalEventTrapMixin;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(112)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(111)))
 
 /***/ },
-/* 203 */
+/* 202 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -45133,9 +45185,9 @@
 
 	"use strict";
 
-	var ReactPropTypes = __webpack_require__(61);
+	var ReactPropTypes = __webpack_require__(59);
 
-	var invariant = __webpack_require__(118);
+	var invariant = __webpack_require__(120);
 
 	var hasReadOnlyValue = {
 	  'button': true,
@@ -45272,10 +45324,10 @@
 
 	module.exports = LinkedValueUtils;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(112)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(111)))
 
 /***/ },
-/* 204 */
+/* 203 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -45297,7 +45349,7 @@
 	 * @typechecks
 	 */
 
-	var emptyFunction = __webpack_require__(168);
+	var emptyFunction = __webpack_require__(167);
 
 	/**
 	 * Upstream version of event listener. Does not take into account specific
@@ -45365,10 +45417,10 @@
 
 	module.exports = EventListener;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(112)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(111)))
 
 /***/ },
-/* 205 */
+/* 204 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -45403,7 +45455,7 @@
 
 
 /***/ },
-/* 206 */
+/* 205 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -45447,7 +45499,7 @@
 
 
 /***/ },
-/* 207 */
+/* 206 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -45480,7 +45532,7 @@
 
 
 /***/ },
-/* 208 */
+/* 207 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -45528,7 +45580,7 @@
 
 
 /***/ },
-/* 209 */
+/* 208 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -45545,7 +45597,7 @@
 
 	"use strict";
 
-	var SyntheticEvent = __webpack_require__(192);
+	var SyntheticEvent = __webpack_require__(191);
 
 	/**
 	 * @interface Event
@@ -45578,7 +45630,7 @@
 
 
 /***/ },
-/* 210 */
+/* 209 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -45595,7 +45647,7 @@
 
 	"use strict";
 
-	var SyntheticUIEvent = __webpack_require__(214);
+	var SyntheticUIEvent = __webpack_require__(213);
 
 	/**
 	 * @interface FocusEvent
@@ -45621,7 +45673,7 @@
 
 
 /***/ },
-/* 211 */
+/* 210 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -45638,11 +45690,11 @@
 
 	"use strict";
 
-	var SyntheticUIEvent = __webpack_require__(214);
+	var SyntheticUIEvent = __webpack_require__(213);
 
-	var getEventCharCode = __webpack_require__(216);
-	var getEventKey = __webpack_require__(232);
-	var getEventModifierState = __webpack_require__(230);
+	var getEventCharCode = __webpack_require__(215);
+	var getEventKey = __webpack_require__(231);
+	var getEventModifierState = __webpack_require__(229);
 
 	/**
 	 * @interface KeyboardEvent
@@ -45712,7 +45764,7 @@
 
 
 /***/ },
-/* 212 */
+/* 211 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -45729,7 +45781,7 @@
 
 	"use strict";
 
-	var SyntheticMouseEvent = __webpack_require__(197);
+	var SyntheticMouseEvent = __webpack_require__(196);
 
 	/**
 	 * @interface DragEvent
@@ -45755,7 +45807,7 @@
 
 
 /***/ },
-/* 213 */
+/* 212 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -45772,9 +45824,9 @@
 
 	"use strict";
 
-	var SyntheticUIEvent = __webpack_require__(214);
+	var SyntheticUIEvent = __webpack_require__(213);
 
-	var getEventModifierState = __webpack_require__(230);
+	var getEventModifierState = __webpack_require__(229);
 
 	/**
 	 * @interface TouchEvent
@@ -45807,7 +45859,7 @@
 
 
 /***/ },
-/* 214 */
+/* 213 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -45824,9 +45876,9 @@
 
 	"use strict";
 
-	var SyntheticEvent = __webpack_require__(192);
+	var SyntheticEvent = __webpack_require__(191);
 
-	var getEventTarget = __webpack_require__(205);
+	var getEventTarget = __webpack_require__(204);
 
 	/**
 	 * @interface UIEvent
@@ -45873,7 +45925,7 @@
 
 
 /***/ },
-/* 215 */
+/* 214 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -45890,7 +45942,7 @@
 
 	"use strict";
 
-	var SyntheticMouseEvent = __webpack_require__(197);
+	var SyntheticMouseEvent = __webpack_require__(196);
 
 	/**
 	 * @interface WheelEvent
@@ -45938,7 +45990,7 @@
 
 
 /***/ },
-/* 216 */
+/* 215 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -45994,7 +46046,7 @@
 
 
 /***/ },
-/* 217 */
+/* 216 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -46008,7 +46060,7 @@
 	 * @providesModule ReactDefaultPerfAnalysis
 	 */
 
-	var assign = __webpack_require__(64);
+	var assign = __webpack_require__(62);
 
 	// Don't try to save users less than 1.2ms (a number I made up)
 	var DONT_CARE_THRESHOLD = 1.2;
@@ -46204,7 +46256,7 @@
 
 
 /***/ },
-/* 218 */
+/* 217 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -46219,7 +46271,7 @@
 	 * @typechecks
 	 */
 
-	var performance = __webpack_require__(233);
+	var performance = __webpack_require__(232);
 
 	/**
 	 * Detect if we can use `window.performance.now()` and gracefully fallback to
@@ -46236,7 +46288,7 @@
 
 
 /***/ },
-/* 219 */
+/* 218 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -46251,7 +46303,7 @@
 	 * @typechecks
 	 */
 
-	var isNode = __webpack_require__(234);
+	var isNode = __webpack_require__(233);
 
 	/**
 	 * @param {*} object The object to check.
@@ -46265,7 +46317,7 @@
 
 
 /***/ },
-/* 220 */
+/* 219 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -46303,7 +46355,7 @@
 
 
 /***/ },
-/* 221 */
+/* 220 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -46319,10 +46371,10 @@
 
 	"use strict";
 
-	var PooledClass = __webpack_require__(119);
-	var ReactBrowserEventEmitter = __webpack_require__(136);
+	var PooledClass = __webpack_require__(116);
+	var ReactBrowserEventEmitter = __webpack_require__(135);
 
-	var assign = __webpack_require__(64);
+	var assign = __webpack_require__(62);
 
 	function ReactPutListenerQueue() {
 	  this.listenersToPut = [];
@@ -46363,7 +46415,7 @@
 
 
 /***/ },
-/* 222 */
+/* 221 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;//     uuid.js
@@ -46614,7 +46666,7 @@
 
 
 /***/ },
-/* 223 */
+/* 222 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function(module) {
@@ -46630,7 +46682,7 @@
 
 
 /***/ },
-/* 224 */
+/* 223 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -46666,7 +46718,7 @@
 
 
 /***/ },
-/* 225 */
+/* 224 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -46703,7 +46755,7 @@
 
 
 /***/ },
-/* 226 */
+/* 225 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -46719,7 +46771,7 @@
 
 	"use strict";
 
-	var invariant = __webpack_require__(118);
+	var invariant = __webpack_require__(120);
 
 	/**
 	 *
@@ -46769,10 +46821,10 @@
 
 	module.exports = accumulateInto;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(112)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(111)))
 
 /***/ },
-/* 227 */
+/* 226 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -46807,7 +46859,7 @@
 
 
 /***/ },
-/* 228 */
+/* 227 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -46823,10 +46875,10 @@
 
 	"use strict";
 
-	var ExecutionEnvironment = __webpack_require__(67);
+	var ExecutionEnvironment = __webpack_require__(65);
 
-	var getNodeForCharacterOffset = __webpack_require__(237);
-	var getTextContentAccessor = __webpack_require__(196);
+	var getNodeForCharacterOffset = __webpack_require__(236);
+	var getTextContentAccessor = __webpack_require__(195);
 
 	/**
 	 * While `isCollapsed` is available on the Selection object and `collapsed`
@@ -47020,7 +47072,7 @@
 
 
 /***/ },
-/* 229 */
+/* 228 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -47053,7 +47105,7 @@
 
 
 /***/ },
-/* 230 */
+/* 229 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -47104,7 +47156,7 @@
 
 
 /***/ },
-/* 231 */
+/* 230 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -47121,11 +47173,11 @@
 
 	"use strict";
 
-	var Danger = __webpack_require__(238);
-	var ReactMultiChildUpdateTypes = __webpack_require__(164);
+	var Danger = __webpack_require__(237);
+	var ReactMultiChildUpdateTypes = __webpack_require__(165);
 
-	var getTextContentAccessor = __webpack_require__(196);
-	var invariant = __webpack_require__(118);
+	var getTextContentAccessor = __webpack_require__(195);
+	var invariant = __webpack_require__(120);
 
 	/**
 	 * The DOM property to use when setting text content.
@@ -47279,10 +47331,10 @@
 
 	module.exports = DOMChildrenOperations;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(112)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(111)))
 
 /***/ },
-/* 232 */
+/* 231 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -47299,7 +47351,7 @@
 
 	"use strict";
 
-	var getEventCharCode = __webpack_require__(216);
+	var getEventCharCode = __webpack_require__(215);
 
 	/**
 	 * Normalization of deprecated HTML5 `key` values
@@ -47391,7 +47443,7 @@
 
 
 /***/ },
-/* 233 */
+/* 232 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -47408,7 +47460,7 @@
 
 	"use strict";
 
-	var ExecutionEnvironment = __webpack_require__(67);
+	var ExecutionEnvironment = __webpack_require__(65);
 
 	var performance;
 
@@ -47423,7 +47475,7 @@
 
 
 /***/ },
-/* 234 */
+/* 233 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -47455,7 +47507,7 @@
 
 
 /***/ },
-/* 235 */
+/* 234 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports.read = function(buffer, offset, isLE, mLen, nBytes) {
@@ -47545,7 +47597,7 @@
 
 
 /***/ },
-/* 236 */
+/* 235 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -47584,7 +47636,7 @@
 
 
 /***/ },
-/* 237 */
+/* 236 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -47663,7 +47715,7 @@
 
 
 /***/ },
-/* 238 */
+/* 237 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -47682,12 +47734,12 @@
 
 	"use strict";
 
-	var ExecutionEnvironment = __webpack_require__(67);
+	var ExecutionEnvironment = __webpack_require__(65);
 
-	var createNodesFromMarkup = __webpack_require__(240);
-	var emptyFunction = __webpack_require__(168);
-	var getMarkupWrap = __webpack_require__(241);
-	var invariant = __webpack_require__(118);
+	var createNodesFromMarkup = __webpack_require__(239);
+	var emptyFunction = __webpack_require__(167);
+	var getMarkupWrap = __webpack_require__(240);
+	var invariant = __webpack_require__(120);
 
 	var OPEN_TAG_NAME_EXP = /^(<[^ \/>]+)/;
 	var RESULT_INDEX_ATTR = 'data-danger-index';
@@ -47849,10 +47901,10 @@
 
 	module.exports = Danger;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(112)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(111)))
 
 /***/ },
-/* 239 */
+/* 238 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
@@ -47978,7 +48030,7 @@
 
 
 /***/ },
-/* 240 */
+/* 239 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -47995,11 +48047,11 @@
 
 	/*jslint evil: true, sub: true */
 
-	var ExecutionEnvironment = __webpack_require__(67);
+	var ExecutionEnvironment = __webpack_require__(65);
 
-	var createArrayFrom = __webpack_require__(242);
-	var getMarkupWrap = __webpack_require__(241);
-	var invariant = __webpack_require__(118);
+	var createArrayFrom = __webpack_require__(241);
+	var getMarkupWrap = __webpack_require__(240);
+	var invariant = __webpack_require__(120);
 
 	/**
 	 * Dummy container used to render all markup.
@@ -48068,10 +48120,10 @@
 
 	module.exports = createNodesFromMarkup;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(112)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(111)))
 
 /***/ },
-/* 241 */
+/* 240 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -48085,9 +48137,9 @@
 	 * @providesModule getMarkupWrap
 	 */
 
-	var ExecutionEnvironment = __webpack_require__(67);
+	var ExecutionEnvironment = __webpack_require__(65);
 
-	var invariant = __webpack_require__(118);
+	var invariant = __webpack_require__(120);
 
 	/**
 	 * Dummy container used to detect which wraps are necessary.
@@ -48188,10 +48240,10 @@
 
 	module.exports = getMarkupWrap;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(112)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(111)))
 
 /***/ },
-/* 242 */
+/* 241 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -48206,7 +48258,7 @@
 	 * @typechecks
 	 */
 
-	var toArray = __webpack_require__(243);
+	var toArray = __webpack_require__(242);
 
 	/**
 	 * Perform a heuristic test to determine if an object is "array-like".
@@ -48281,7 +48333,7 @@
 
 
 /***/ },
-/* 243 */
+/* 242 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -48296,7 +48348,7 @@
 	 * @typechecks
 	 */
 
-	var invariant = __webpack_require__(118);
+	var invariant = __webpack_require__(120);
 
 	/**
 	 * Convert array-like objects to arrays.
@@ -48353,7 +48405,7 @@
 
 	module.exports = toArray;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(112)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(111)))
 
 /***/ }
 /******/ ])
