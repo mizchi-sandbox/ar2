@@ -25,7 +25,7 @@ class Bullet extends Entity {
   }
 
   onHit(other: Battler) {
-    if(this.groupId !== other.groupId){
+    if(other.groupId && this.groupId !== other.groupId){
       this.attack(other);
       this.remove();
     }

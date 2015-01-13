@@ -9,8 +9,8 @@ class SimpleSpawner implements Task {
   public get priority(): Priority {return Priority.SPAWN;}
   exec(stage){
     var enemyCount = stage.entities.filter(e => e.groupId === GroupId.ENEMY).length;
-    if(enemyCount < 10) {
-      _.range(40).forEach(() => {
+    if(enemyCount < 3) {
+      _.range(5).forEach(() => {
         var enemy = new Enemy();
         enemy.setPosition(
           Math.random() * stage.width,
